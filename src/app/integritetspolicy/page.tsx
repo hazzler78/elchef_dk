@@ -52,7 +52,7 @@ export default function Integritetspolicy() {
 
         <SectionTitle>PERSONUPPGIFTER</SectionTitle>
         <Paragraph>
-          Denna policy förklarar hur Normann Salg, organisationsnummer 927 985 780 (nedan kallat "Företaget"), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker eller använder våra tjänster.
+          Denna policy förklarar hur Normann Salg, organisationsnummer 927 985 780 (nedan kallat &quot;Företaget&quot;), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker eller använder våra tjänster.
         </Paragraph>
         <Paragraph>
           <b>Personuppgifter</b> är information som kan kopplas till en identifierbar person. Att behandla personuppgifter innebär alla typer av hantering, som insamling, strukturering, lagring och radering.
