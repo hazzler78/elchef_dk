@@ -55,9 +55,9 @@ function BottomNavContent() {
         Jämför
         {pathname === '/jamfor-elpriser' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href="/byt-elavtal" className={pathname === '/byt-elavtal' ? 'active' : ''}>
-        Byt
-        {pathname === '/byt-elavtal' && <ActiveIndicator />}
+      <NavItem href="/foretag" className={pathname === '/foretag' ? 'active' : ''}>
+        Företag
+        {pathname === '/foretag' && <ActiveIndicator />}
       </NavItem>
       <NavItem href="/om-oss" className={pathname === '/om-oss' ? 'active' : ''}>
         Om oss
