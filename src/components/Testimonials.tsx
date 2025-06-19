@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { FaStar } from 'react-icons/fa';
+import Image from 'next/image';
 
 const TestimonialsSection = styled.section`
   padding: var(--section-spacing) 0;
@@ -124,13 +125,14 @@ export default function Testimonials() {
         <TestimonialGrid>
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={index}>
-              <p>"{testimonial.text}"</p>
+              <p>&quot;{testimonial.text}&quot;</p>
               <CustomerInfo>
-                <img
+                <Image
                   src={testimonial.image}
                   alt={testimonial.name}
                   width={48}
                   height={48}
+                  style={{ borderRadius: '50%' }}
                 />
                 <div>
                   <h4>{testimonial.name}</h4>
