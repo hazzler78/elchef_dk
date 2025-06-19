@@ -59,9 +59,9 @@ function BottomNavContent() {
         Byt
         {pathname === '/byt-elavtal' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href="/vanliga-fragor" className={pathname === '/vanliga-fragor' ? 'active' : ''}>
-        FAQ
-        {pathname === '/vanliga-fragor' && <ActiveIndicator />}
+      <NavItem href="/om-oss" className={pathname === '/om-oss' ? 'active' : ''}>
+        Om oss
+        {pathname === '/om-oss' && <ActiveIndicator />}
       </NavItem>
     </Nav>
   );
