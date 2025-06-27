@@ -3,24 +3,43 @@ import { CheapEnergyPrices } from '@/lib/types';
 
 export async function GET() {
   try {
+    console.log('Fetching prices from Cheap Energy...');
+    
     const response = await fetch('https://www.cheapenergy.se/Site_Priser_CheapEnergy_de.json', {
       next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         'Accept': 'application/json',
+        'User-Agent': 'Elchef-Price-Checker/1.0'
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch prices from Cheap Energy');
+      console.error('Failed to fetch from Cheap Energy:', response.status, response.statusText);
+      throw new Error(`Failed to fetch prices from Cheap Energy: ${response.status}`);
     }
 
     const data: CheapEnergyPrices = await response.json();
+    
+    console.log('Successfully fetched prices from Cheap Energy');
+    console.log('Spot prices:', data.spot_prices);
+    console.log('Fixed prices (6 months):', {
+      se1: data.variable_fixed_prices.se1['6_months'],
+      se2: data.variable_fixed_prices.se2['6_months'],
+      se3: data.variable_fixed_prices.se3['6_months'],
+      se4: data.variable_fixed_prices.se4['6_months']
+    });
+    console.log('Fixed prices (12 months):', {
+      se1: data.variable_fixed_prices.se1['1_year'],
+      se2: data.variable_fixed_prices.se2['1_year'],
+      se3: data.variable_fixed_prices.se3['1_year'],
+      se4: data.variable_fixed_prices.se4['1_year']
+    });
 
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching prices:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch prices' },
+      { error: 'Failed to fetch prices', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
