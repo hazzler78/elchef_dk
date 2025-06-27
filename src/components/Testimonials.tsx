@@ -1,7 +1,6 @@
 "use client";
 
 import styled from 'styled-components';
-import { FaStar } from 'react-icons/fa';
 import Image from 'next/image';
 
 const TestimonialsSection = styled.section`
@@ -9,33 +8,11 @@ const TestimonialsSection = styled.section`
   background: var(--gray-50);
 `;
 
-const TrustpilotScore = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 3rem;
+const SectionTitle = styled.h2`
   text-align: center;
-
-  h2 {
-    margin-bottom: 1rem;
-  }
-`;
-
-const Stars = styled.div`
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-
-  svg {
-    color: #00b67a; // Trustpilot green
-    font-size: 2rem;
-  }
-`;
-
-const Score = styled.div`
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--gray-700);
+  margin-bottom: 3rem;
+  color: var(--gray-900);
+  font-size: 2rem;
 `;
 
 const TestimonialGrid = styled.div`
@@ -108,19 +85,7 @@ export default function Testimonials() {
   return (
     <TestimonialsSection>
       <div className="container">
-        <TrustpilotScore>
-          <h2>Våra kunder älskar oss</h2>
-          <Stars>
-            {[...Array(5)].map((_, i) => (
-              <FaStar key={i} />
-            ))}
-          </Stars>
-          <Score>
-            4.8 av 5 på Trustpilot
-            <br />
-            Baserat på över 1000 recensioner
-          </Score>
-        </TrustpilotScore>
+        <SectionTitle>Vad våra kunder säger</SectionTitle>
 
         <TestimonialGrid>
           {testimonials.map((testimonial, index) => (
