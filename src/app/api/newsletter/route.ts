@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Bygg body för Mailerlite
-    const body: any = {
+    const body: Record<string, unknown> = {
       email: email,
       status: 'active',
     };

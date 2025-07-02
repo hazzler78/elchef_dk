@@ -196,7 +196,7 @@ export default function NewsletterHero() {
         const data = await response.json();
         setError(data.error || 'Ett fel uppstod. Försök igen senare.');
       }
-    } catch (err) {
+    } catch {
       setError('Ett fel uppstod. Försök igen senare.');
     } finally {
       setIsSubmitting(false);
