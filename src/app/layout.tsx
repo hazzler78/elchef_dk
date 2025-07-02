@@ -4,6 +4,7 @@ import "./globals.css";
 import StyledComponentsRegistry from '../lib/registry';
 import BottomNav from '@/components/BottomNav';
 import { Analytics } from "@vercel/analytics/next";
+import CampaignBanner from '@/components/CampaignBanner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="sv">
       <body className={inter.className}>
         <StyledComponentsRegistry>
+          <CampaignBanner />
           <div id="app">
             {children}
             <BottomNav />

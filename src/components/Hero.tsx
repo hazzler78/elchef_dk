@@ -95,11 +95,10 @@ export default function Hero() {
           <TextContent>
             <h1>Spara pengar på ditt elavtal</h1>
             <p>
-              Med Elchef hittar du enkelt marknadens bästa elavtal. Vi jämför alla leverantörer 
-              och hjälper dig byta - helt kostnadsfritt!
+              Med Elchef får du exklusiva rabatter på elavtal. Vi hjälper dig spara pengar på din elräkning - helt kostnadsfritt!
             </p>
             <ButtonRow>
-              <CTAButton href="https://www.cheapenergy.se/elchef-rorligt/" target="_blank" rel="noopener noreferrer">
+              <CTAButton href="https://www.svekraft.com/elchef-rorligt/" target="_blank" rel="noopener noreferrer">
                 Rörligt avtal
               </CTAButton>
               <CTAButton href="https://www.svealandselbolag.se/elchef-fastpris/" target="_blank" rel="noopener noreferrer">
