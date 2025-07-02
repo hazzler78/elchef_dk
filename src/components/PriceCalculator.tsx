@@ -235,6 +235,8 @@ export default function PriceCalculator() {
 
   const shouldShowPrices = prices && postalCode.length === 5 && livingArea;
 
+  const getSafeTotal = (obj: any) => (obj && typeof obj.total === 'number' ? obj.total : undefined);
+
   const renderPriceOption = (
     title: string,
     price: string,
@@ -310,71 +312,83 @@ export default function PriceCalculator() {
               <ContractOptions>
                 {renderPriceOption(
                   'Rörligt elavtal',
-                  prices ? getFormattedPrice(prices.spot_prices[getElectricityArea(postalCode)]) : '...',
+                  prices && typeof prices.spot_prices[getElectricityArea(postalCode)] === 'object'
+                    ? getFormattedPrice(getSafeTotal(prices.spot_prices[getElectricityArea(postalCode)]))
+                    : prices
+                    ? getFormattedPrice(prices.spot_prices[getElectricityArea(postalCode)])
+                    : '...',
                   'Följer elpriset på marknaden.\nIngen bindningstid.',
                   'https://www.cheapenergy.se/elchef-rorligt/',
                   'Välj rörligt avtal'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 3 månader',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['3_months']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['3_months']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['3_months']))
+                    : '...',
                   'Tryggt pris i 3 månader.\nKort bindningstid.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 3 månader'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 6 månader',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['6_months']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['6_months']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['6_months']))
+                    : '...',
                   'Tryggt pris i 6 månader.\nPerfekt för kortsiktig planering.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 6 månader'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 12 månader',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['1_year']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['1_year']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['1_year']))
+                    : '...',
                   'Tryggt pris i 12 månader.\nBäst för långsiktig planering.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 12 månader'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 2 år',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['2_years']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['2_years']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['2_years']))
+                    : '...',
                   'Tryggt pris i 2 år.\nLångsiktig säkerhet.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 2 år'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 3 år',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['3_years']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['3_years']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['3_years']))
+                    : '...',
                   'Tryggt pris i 3 år.\nMaximal säkerhet.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 3 år'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 4 år',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['4_years']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['4_years']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['4_years']))
+                    : '...',
                   'Tryggt pris i 4 år.\nMycket långsiktig planering.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 4 år'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 5 år',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['5_years']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['5_years']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['5_years']))
+                    : '...',
                   'Tryggt pris i 5 år.\nExtra lång bindningstid.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 5 år'
                 )}
-                
                 {renderPriceOption(
                   'Fast pris 10 år',
-                  prices ? getFormattedPrice(prices.variable_fixed_prices[getElectricityArea(postalCode)]['10_years']) : '...',
+                  prices && getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['10_years']) !== undefined
+                    ? getFormattedPrice(getSafeTotal(prices.variable_fixed_prices[getElectricityArea(postalCode)]['10_years']))
+                    : '...',
                   'Tryggt pris i 10 år.\nMaximal långsiktig säkerhet.',
                   'https://www.cheapenergy.se/elchef-fastpris/',
                   'Välj 10 år'

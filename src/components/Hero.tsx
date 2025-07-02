@@ -47,7 +47,14 @@ const TextContent = styled.div`
   }
 `;
 
-const CTAButton = styled.button`
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+`;
+
+const CTAButton = styled.a`
   background: var(--primary);
   color: white;
   font-size: 1.25rem;
@@ -58,7 +65,8 @@ const CTAButton = styled.button`
   transition: all 0.2s;
   font-weight: 600;
   box-shadow: var(--shadow-md);
-
+  text-decoration: none;
+  display: inline-block;
   &:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
@@ -90,9 +98,14 @@ export default function Hero() {
               Med Elchef hittar du enkelt marknadens bästa elavtal. Vi jämför alla leverantörer 
               och hjälper dig byta - helt kostnadsfritt!
             </p>
-            <CTAButton onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}>
-              Se ditt pris nu
-            </CTAButton>
+            <ButtonRow>
+              <CTAButton href="https://www.cheapenergy.se/elchef-rorligt/" target="_blank" rel="noopener noreferrer">
+                Rörligt avtal
+              </CTAButton>
+              <CTAButton href="https://www.svealandselbolag.se/elchef-fastpris/" target="_blank" rel="noopener noreferrer">
+                Fastpris
+              </CTAButton>
+            </ButtonRow>
           </TextContent>
           <ImageWrapper>
             <Image

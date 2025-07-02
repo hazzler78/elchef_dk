@@ -3,9 +3,9 @@ import { CheapEnergyPrices } from '@/lib/types';
 
 export async function GET() {
   try {
-    console.log('Fetching prices from Cheap Energy...');
+    console.log('Fetching prices from Stockholms Elbolag...');
     
-    const response = await fetch('https://www.cheapenergy.se/Site_Priser_CheapEnergy_de.json', {
+    const response = await fetch('https://www.stockholmselbolag.se/Site_Priser_SthlmsEL_de2.json', {
       next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         'Accept': 'application/json',
@@ -14,13 +14,13 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch from Cheap Energy:', response.status, response.statusText);
-      throw new Error(`Failed to fetch prices from Cheap Energy: ${response.status}`);
+      console.error('Failed to fetch from Stockholms Elbolag:', response.status, response.statusText);
+      throw new Error(`Failed to fetch prices from Stockholms Elbolag: ${response.status}`);
     }
 
     const data: CheapEnergyPrices = await response.json();
     
-    console.log('Successfully fetched prices from Cheap Energy');
+    console.log('Successfully fetched prices from Stockholms Elbolag');
     console.log('Spot prices:', data.spot_prices);
     console.log('Fixed prices (6 months):', {
       se1: data.variable_fixed_prices.se1['6_months'],
