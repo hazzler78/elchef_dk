@@ -1,6 +1,51 @@
 "use client";
 
 import styled from 'styled-components';
+import React from 'react';
+
+// Ikon-komponenter
+const BlueDot = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: 10, flexShrink: 0}}>
+    <circle cx="6" cy="6" r="5" fill="var(--primary)" />
+  </svg>
+);
+const GreenDot = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: 10, flexShrink: 0}}>
+    <circle cx="6" cy="6" r="5" fill="var(--secondary)" />
+  </svg>
+);
+const RedDot = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: 10, flexShrink: 0}}>
+    <circle cx="6" cy="6" r="5" fill="#ef4444" />
+  </svg>
+);
+const GreenCheck = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" style={{marginRight: 10, flexShrink: 0}}>
+    <polyline points="3,9 7,13 13,5" fill="none" stroke="var(--secondary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const YouTubeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{marginRight: 10, flexShrink: 0, verticalAlign: 'middle'}}>
+    <rect width="24" height="24" rx="6" fill="#FF0000"/>
+    <polygon points="10,8 16,12 10,16" fill="#fff" />
+  </svg>
+);
+
+const NewspaperIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{marginRight: 10, flexShrink: 0, verticalAlign: 'middle'}}>
+    <rect x="3" y="5" width="18" height="14" rx="3" fill="var(--primary)"/>
+    <rect x="6" y="8" width="8" height="2" rx="1" fill="#fff"/>
+    <rect x="6" y="12" width="5" height="2" rx="1" fill="#fff"/>
+    <rect x="13" y="12" width="5" height="2" rx="1" fill="#fff"/>
+  </svg>
+);
+
+const ArrowIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{marginLeft: 10, flexShrink: 0, verticalAlign: 'middle'}}>
+    <path d="M7 5l5 5-5 5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 const Section = styled.section`
   padding: var(--section-spacing) 0;
@@ -53,44 +98,26 @@ const VideoBox = styled.div`
   margin: 1.5rem 0;
 `;
 
-const WeatherList = styled.ul`
+const CustomList = styled.ul`
   margin: 1.5rem 0;
+  padding: 0;
   list-style: none;
-  
-  li {
-    margin-bottom: 1rem;
-    padding-left: 1.5rem;
-    position: relative;
-    
-    &:before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--secondary);
-      font-weight: bold;
-    }
-    
-    &.negative:before {
-      color: #ef4444;
-    }
-  }
+`;
+const CustomListItem = styled.li`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  font-size: 1.08rem;
+  line-height: 1.6;
 `;
 
-const CheckList = styled.ul`
+const Quote = styled.blockquote`
+  font-style: italic;
+  color: var(--primary);
+  border-left: 4px solid var(--primary);
+  padding-left: 1rem;
   margin: 1.5rem 0;
-  list-style: none;
-  
-  li {
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: flex-start;
-    
-    &:before {
-      content: "✅";
-      margin-right: 0.5rem;
-      color: var(--secondary);
-    }
-  }
+  font-weight: 600;
 `;
 
 const InfoBox = styled.div`
@@ -103,22 +130,6 @@ const InfoBox = styled.div`
   h4 {
     margin-bottom: 1rem;
     color: white;
-  }
-  
-  ul {
-    list-style: none;
-    
-    li {
-      margin-bottom: 0.5rem;
-      padding-left: 1rem;
-      position: relative;
-      
-      &:before {
-        content: "•";
-        position: absolute;
-        left: 0;
-      }
-    }
   }
 `;
 
@@ -155,7 +166,9 @@ const YouTubeButton = styled.a`
   transition: all 0.2s;
   font-weight: 600;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   
   &:hover {
     background: #cc0000;
@@ -163,13 +176,19 @@ const YouTubeButton = styled.a`
   }
 `;
 
-const Quote = styled.blockquote`
-  font-style: italic;
+const HallandspostenLink = styled.a`
   color: var(--primary);
-  border-left: 4px solid var(--primary);
-  padding-left: 1rem;
-  margin: 1.5rem 0;
+  text-decoration: none;
   font-weight: 600;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+  &:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }
 `;
 
 export default function Media() {
@@ -186,11 +205,9 @@ export default function Media() {
         
         <Article>
           <ArticleTitle>Så påverkar vädret elpriset – förklarat på ett enkelt sätt</ArticleTitle>
-          
           <p>
             Elpriset svänger hela tiden – och vädret är en av de viktigaste faktorerna. På sommaren är priserna ofta lägre, men variationerna styrs ändå av regn, vind och temperatur.
           </p>
-
           <VideoBox>
             <p>
               I det här klippet från <b>Tidslinjen Podcast</b> får du en lättförståelig genomgång:
@@ -200,129 +217,95 @@ export default function Media() {
               target="_blank" 
               rel="noopener noreferrer"
             >
-              🎥 Se klippet på YouTube
+              <YouTubeIcon />
+              Se klippet på YouTube
             </YouTubeButton>
           </VideoBox>
-
           <SubTitle>Kort – så styr vädret elpriset:</SubTitle>
-          
-          <WeatherList>
-            <li>
-              <b>Regn → lägre pris</b><br />
-              Fyller vattenmagasin i norr → billig vattenkraft.
-            </li>
-            <li>
-              <b>Vind → lägre pris</b><br />
-              Mycket vindkraftproduktion pressar priset.
-            </li>
-            <li>
-              <b>Värme → ofta lägre pris</b><br />
-              Mindre efterfrågan på uppvärmning.
-            </li>
-            <li className="negative">
-              <b>Torka eller vindstilla → högre pris</b><br />
-              Mindre billig el → vi importerar dyrare el.
-            </li>
-          </WeatherList>
-
+          <CustomList>
+            <CustomListItem><GreenDot /> <b>Regn → lägre pris</b><span style={{marginLeft: 4}}>Fyller vattenmagasin i norr – billig vattenkraft.</span></CustomListItem>
+            <CustomListItem><GreenDot /> <b>Vind → lägre pris</b><span style={{marginLeft: 4}}>Mycket vindkraftproduktion pressar priset.</span></CustomListItem>
+            <CustomListItem><GreenDot /> <b>Värme → ofta lägre pris</b><span style={{marginLeft: 4}}>Mindre efterfrågan på uppvärmning.</span></CustomListItem>
+            <CustomListItem><RedDot /> <b>Torka eller vindstilla → högre pris</b><span style={{marginLeft: 4}}>Mindre billig el – vi importerar dyrare el.</span></CustomListItem>
+          </CustomList>
           <Quote>
             Tänk på rörligt elpris som bensinpriset – det varierar med tillgång och efterfrågan.
           </Quote>
-
           <SubTitle>Sommaren är perfekt för att säkra ett bra elavtal</SubTitle>
-          
-          <CheckList>
-            <li>Många vill passa på att låsa in låga sommarpriser inför hösten.</li>
-            <li>Hos elchef.se väljer du <b>rörligt pris utan påslag eller månadsavgifter</b> – du betalar bara marknadspriset.</li>
-            <li>Vi visar även fasta elavtal – perfekt för dig som vill slippa prischocker i vinter.</li>
-          </CheckList>
-
+          <CustomList>
+            <CustomListItem><GreenCheck /> Många vill låsa in låga sommarpriser inför hösten.</CustomListItem>
+            <CustomListItem><GreenCheck /> Hos oss elchef.se får du <b>rörligt pris utan påslag</b> – bara marknadspriset.</CustomListItem>
+            <CustomListItem><GreenCheck /> Vi visar även fasta elavtal för dig som vill slippa prischocker.</CustomListItem>
+          </CustomList>
           <InfoBox>
             <h4>Bytet är alltid gratis och enkelt:</h4>
-            <ul>
-              <li>Helt digitalt.</li>
-              <li>Vi fixar uppsägningen hos ditt gamla elbolag.</li>
-              <li>Inga papper eller samtal.</li>
-              <li>Klart på 14 dagar.</li>
-            </ul>
+            <CustomList>
+              <CustomListItem><BlueDot /> Helt digitalt.</CustomListItem>
+              <CustomListItem><BlueDot /> Vi fixar uppsägningen hos ditt gamla elbolag.</CustomListItem>
+              <CustomListItem><BlueDot /> Inga papper eller samtal.</CustomListItem>
+              <CustomListItem><BlueDot /> Klart på 14 dagar.</CustomListItem>
+            </CustomList>
           </InfoBox>
-
           <div style={{ textAlign: 'center' }}>
             <CTAButton 
               href="https://elchef.se" 
               target="_blank" 
               rel="noopener noreferrer"
             >
-              👉 Redo att fixa bästa elavtalet? Byt direkt på elchef.se
+              Redo att fixa bästa elavtalet? Byt direkt på elchef.se <ArrowIcon />
             </CTAButton>
           </div>
         </Article>
 
         <Article>
           <ArticleTitle>Han vill ha billigare el åt folket</ArticleTitle>
-          
           <p>
             Många är trötta på krångliga elavtal, dolda avgifter och dyra mellanhänder. I den här artikeln i Hallandsposten berättar elchef.se:s grundare om sin idé: att <b>göra elmarknaden mer rättvis och ge billigare el åt alla</b>.
           </p>
-
           <VideoBox>
-            <a 
-              href="https://www.hallandsposten.se/hallands-affarer/han-vill-ha-billigare-el-at-folket.857df3f6-83cd-495c-b0bb-8f44359758e3" 
-              target="_blank" 
+            <HallandspostenLink
+              href="https://www.hallandsposten.se/hallands-affarer/han-vill-ha-billigare-el-at-folket.857df3f6-83cd-495c-b0bb-8f44359758e3"
+              target="_blank"
               rel="noopener noreferrer"
-              style={{ 
-                color: 'var(--primary)', 
-                textDecoration: 'none', 
-                fontWeight: '600',
-                fontSize: '1.1rem'
-              }}
             >
-              📰 Läs artikeln i Hallandsposten
-            </a>
+              <NewspaperIcon />
+              Läs artikeln i Hallandsposten
+            </HallandspostenLink>
           </VideoBox>
-
           <SubTitle>Elchef.se vill göra skillnad:</SubTitle>
-          
-          <CheckList>
-            <li><b>Inga dolda påslag eller avgifter</b> – du ser det riktiga priset.</li>
-            <li><b>Full valfrihet</b> – välj mellan rörligt eller fast pris på ett ställe.</li>
-            <li><b>Kostnadsfritt att byta</b> – vi sköter allt åt dig.</li>
-            <li><b>Transparens och enkelhet</b> – så att alla kan fatta bra beslut.</li>
-          </CheckList>
-
+          <CustomList>
+            <CustomListItem><GreenCheck /> <b>Inga dolda påslag eller avgifter</b> – du ser det riktiga priset.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Full valfrihet</b> – välj mellan rörligt eller fast pris på ett ställe.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Kostnadsfritt att byta</b> – vi sköter allt åt dig.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Transparens och enkelhet</b> – så att alla kan fatta bra beslut.</CustomListItem>
+          </CustomList>
           <SubTitle>Sommaren – bästa tiden att byta elavtal</SubTitle>
-          
           <p>
             Just nu är elpriserna ofta lägre tack vare:
           </p>
-          
-          <WeatherList>
-            <li>Fyllda vattenmagasin efter vårfloden.</li>
-            <li>Mycket vindkraftproduktion.</li>
-            <li>Lägre efterfrågan på uppvärmning.</li>
-          </WeatherList>
-
+          <CustomList>
+            <CustomListItem><GreenDot /> Fyllda vattenmagasin efter vårfloden.</CustomListItem>
+            <CustomListItem><GreenDot /> Mycket vindkraftproduktion.</CustomListItem>
+            <CustomListItem><GreenDot /> Lägre efterfrågan på uppvärmning.</CustomListItem>
+          </CustomList>
           <p>
             Smart att teckna rörligt pris till sommarprisnivå.<br />
             Eller välja fast pris och slippa höstrusket i plånboken.
           </p>
-
           <SubTitle>Därför ska du byta med elchef.se</SubTitle>
-          
-          <CheckList>
-            <li>Helt digitalt – inga papper eller samtal.</li>
-            <li>Vi säger upp ditt gamla avtal åt dig.</li>
-            <li><b>14 dagar från signering till start – börja planera redan nu.</b></li>
-            <li>Alltid marknadens bästa översikt – så du slipper leta själv.</li>
-          </CheckList>
-
+          <CustomList>
+            <CustomListItem><GreenCheck /> Helt digitalt – inga papper eller samtal.</CustomListItem>
+            <CustomListItem><GreenCheck /> Vi säger upp ditt gamla avtal åt dig.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>14 dagar från signering till start – börja planera redan nu.</b></CustomListItem>
+            <CustomListItem><GreenCheck /> Alltid marknadens bästa översikt – så du slipper leta själv.</CustomListItem>
+          </CustomList>
           <div style={{ textAlign: 'center' }}>
             <CTAButton 
               href="https://elchef.se" 
               target="_blank" 
               rel="noopener noreferrer"
             >
-              👉 Redo att hitta bästa elavtalet? Byt enkelt på elchef.se
+              Redo att hitta bästa elavtalet? Byt enkelt på elchef.se <ArrowIcon />
             </CTAButton>
           </div>
         </Article>
