@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { appendFile } from 'fs/promises';
+import { join } from 'path';
 
 const XAI_API_KEY = process.env.XAI_API_KEY;
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
@@ -69,8 +71,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Fel från X.ai', details: err }, { status: 500 });
     }
     const data = await xaiRes.json();
+
+    // Logga konversationen (senaste användarens fråga och Grodans svar)
+    try {
+      const userMsg = messages[messages.length - 1]?.content;
+      const aiMsg = data.choices?.[0]?.message?.content;
+      const logObj = {
+        timestamp: new Date().toISOString(),
+        user: userMsg,
+        assistant: aiMsg,
+      };
+      const logLine = JSON.stringify(logObj) + '\n';
+      const logPath = join(process.cwd(), 'grokchat.log');
+      await appendFile(logPath, logLine, { encoding: 'utf8', flag: 'a' });
+    } catch {}
+
     return NextResponse.json(data);
-  } catch (e) {
-    return NextResponse.json({ error: 'Serverfel', details: e?.toString() }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: 'Serverfel' }, { status: 500 });
   }
 } 
