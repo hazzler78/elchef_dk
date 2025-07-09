@@ -34,6 +34,17 @@ export default function GrokChat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
 
+  // Responsiv bottom-position för chatbubblan
+  const [chatBottom, setChatBottom] = useState(24);
+  useEffect(() => {
+    function updateBottom() {
+      setChatBottom(window.innerWidth <= 600 ? 96 : 24);
+    }
+    updateBottom();
+    window.addEventListener('resize', updateBottom);
+    return () => window.removeEventListener('resize', updateBottom);
+  }, []);
+
   // Scrolla till toppen när chatten öppnas, annars ingen automatisk scroll
   useEffect(() => {
     if (open && !prevOpenRef.current && chatContainerRef.current) {
@@ -80,7 +91,7 @@ export default function GrokChat() {
         onClick={() => setOpen((o) => !o)}
         style={{
           position: 'fixed',
-          bottom: 24,
+          bottom: chatBottom,
           right: 24,
           zIndex: 1000,
           background: 'var(--primary, #2563eb)',
