@@ -234,7 +234,7 @@ export default function Media() {
           <SubTitle>Sommaren är perfekt för att säkra ett bra elavtal</SubTitle>
           <CustomList>
             <CustomListItem><GreenCheck /> Många vill låsa in låga sommarpriser inför hösten.</CustomListItem>
-            <CustomListItem><GreenCheck /> Hos oss elchef.se får du <b>rörligt pris utan påslag</b> – bara marknadspriset.</CustomListItem>
+            <CustomListItem><GreenCheck /> Hos oss elchef.se får du rörligt pris utan påslag – bara marknadspriset.</CustomListItem>
             <CustomListItem><GreenCheck /> Vi visar även fasta elavtal för dig som vill slippa prischocker.</CustomListItem>
           </CustomList>
           <InfoBox>
@@ -260,7 +260,7 @@ export default function Media() {
         <Article>
           <ArticleTitle>Han vill ha billigare el åt folket</ArticleTitle>
           <p>
-            Många är trötta på krångliga elavtal, dolda avgifter och dyra mellanhänder. I den här artikeln i Hallandsposten berättar elchef.se:s grundare om sin idé: att <b>göra elmarknaden mer rättvis och ge billigare el åt alla</b>.
+            Många är trötta på krångliga elavtal, dolda avgifter och dyra mellanhänder. I den här artikeln i Hallandsposten berättar Mathias Nilsson om sin idé: att <b>göra elmarknaden mer rättvis och ge billigare el åt alla</b>.
           </p>
           <VideoBox>
             <HallandspostenLink
@@ -275,7 +275,7 @@ export default function Media() {
           <SubTitle>Elchef.se vill göra skillnad:</SubTitle>
           <CustomList>
             <CustomListItem><GreenCheck /> <b>Inga dolda påslag eller avgifter</b> – du ser det riktiga priset.</CustomListItem>
-            <CustomListItem><GreenCheck /> <b>Full valfrihet</b> – välj mellan rörligt eller fast pris på ett ställe.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Full valfrihet</b> – välj mellan rörligt el eller fast pris på ett ställe.</CustomListItem>
             <CustomListItem><GreenCheck /> <b>Kostnadsfritt att byta</b> – vi sköter allt åt dig.</CustomListItem>
             <CustomListItem><GreenCheck /> <b>Transparens och enkelhet</b> – så att alla kan fatta bra beslut.</CustomListItem>
           </CustomList>
