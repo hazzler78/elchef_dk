@@ -87,7 +87,35 @@ const ImageWrapper = styled.div`
   }
 `;
 
+const VideoWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  max-width: 600px;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+`;
+
 export default function Hero() {
+  const handleVideoClick = (event: React.MouseEvent<HTMLVideoElement>) => {
+    const video = event.currentTarget;
+    video.muted = !video.muted; // Växla mellan muted och unmuted
+    if (!video.muted) {
+      video.play();
+    }
+  };
+
   return (
     <HeroSection>
       <div className="container">
@@ -106,16 +134,21 @@ export default function Hero() {
               </CTAButton>
             </ButtonRow>
           </TextContent>
-          <ImageWrapper>
-            <Image
-              src="/frog-hero.png"
-              alt="Elchef Grodan"
-              width={240}
-              height={240}
-              priority
-              style={{ objectFit: 'contain' }}
-            />
-          </ImageWrapper>
+          <VideoWrapper>
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+              poster="/frog-hero.png"
+              onClick={handleVideoClick}
+              style={{ cursor: 'pointer' }}
+              title="Klicka för att växla ljud av/på"
+            >
+              <source src="/Grodan presentation.mp4" type="video/mp4" />
+              Din webbläsare stöder inte video-elementet.
+            </video>
+          </VideoWrapper>
         </HeroContent>
       </div>
     </HeroSection>
