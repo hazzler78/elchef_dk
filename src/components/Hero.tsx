@@ -1,7 +1,6 @@
 "use client";
 
 import styled from 'styled-components';
-import Image from 'next/image';
 import React from 'react';
 
 const HeroSection = styled.section`
@@ -71,19 +70,6 @@ const CTAButton = styled.a`
     background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-  }
-`;
-
-const ImageWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  height: 300px;
-
-  @media (min-width: 768px) {
-    height: 400px;
   }
 `;
 
