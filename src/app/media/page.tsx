@@ -212,14 +212,16 @@ export default function Media() {
             <p>
               I det här klippet från <b>Tidslinjen Podcast</b> får du en lättförståelig genomgång:
             </p>
-            <YouTubeButton 
-              href="https://www.youtube.com/watch?v=upV45wGq1xM" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <YouTubeIcon />
-              Se klippet på YouTube
-            </YouTubeButton>
+            <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)'}}>
+              <iframe
+                src="https://www.youtube.com/embed/upV45wGq1xM"
+                title="Tidslinjen Podcast - Elpris"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}
+              ></iframe>
+            </div>
           </VideoBox>
           <SubTitle>Kort – så styr vädret elpriset:</SubTitle>
           <CustomList>
