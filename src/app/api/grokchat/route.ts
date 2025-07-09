@@ -72,14 +72,24 @@ export async function POST(req: NextRequest) {
     }
     const data = await xaiRes.json();
 
-    // Logga konversationen (senaste användarens fråga och Grodans svar)
+    // Logga konversationen (hela konversationen, inte bara senaste meddelandet)
     try {
-      const userMsg = messages[messages.length - 1]?.content;
-      const aiMsg = data.choices?.[0]?.message?.content;
+      const sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+      const userAgent = req.headers.get('user-agent') || 'unknown';
+      
       const logObj = {
         timestamp: new Date().toISOString(),
-        user: userMsg,
-        assistant: aiMsg,
+        sessionId: sessionId,
+        userAgent: userAgent,
+        messageCount: messages.length,
+        conversation: messages.map((msg, index) => ({
+          messageNumber: index + 1,
+          role: msg.role,
+          content: msg.content,
+          timestamp: new Date().toISOString()
+        })),
+        aiResponse: data.choices?.[0]?.message?.content,
+        totalTokens: data.usage?.total_tokens || 0,
       };
       const logLine = JSON.stringify(logObj) + '\n';
       const logPath = join(process.cwd(), 'grokchat.log');
