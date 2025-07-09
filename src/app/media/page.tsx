@@ -25,13 +25,6 @@ const GreenCheck = () => (
   </svg>
 );
 
-const YouTubeIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{marginRight: 10, flexShrink: 0, verticalAlign: 'middle'}}>
-    <rect width="24" height="24" rx="6" fill="#FF0000"/>
-    <polygon points="10,8 16,12 10,16" fill="#fff" />
-  </svg>
-);
-
 const NewspaperIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{marginRight: 10, flexShrink: 0, verticalAlign: 'middle'}}>
     <rect x="3" y="5" width="18" height="14" rx="3" fill="var(--primary)"/>
@@ -152,27 +145,6 @@ const CTAButton = styled.a`
     background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-  }
-`;
-
-const YouTubeButton = styled.a`
-  background: #ff0000;
-  color: white;
-  font-size: 1rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  
-  &:hover {
-    background: #cc0000;
-    transform: translateY(-1px);
   }
 `;
 
