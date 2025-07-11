@@ -133,9 +133,11 @@ export default function ChatContactForm({ onClose }: ChatContactFormProps) {
         }, 2000);
       } else {
         setSubmitStatus('error');
+        console.error('Form submission error:', result.error);
       }
     } catch (error) {
       setSubmitStatus('error');
+      console.error('Network error:', error);
     } finally {
       setIsSubmitting(false);
     }
