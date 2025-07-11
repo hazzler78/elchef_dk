@@ -49,7 +49,7 @@ Konversationsregler:
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages } = body;
+    const { messages, sessionId } = body;
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Meddelanden saknas eller fel format' }, { status: 400 });
     }
@@ -83,12 +83,13 @@ export async function POST(req: NextRequest) {
     // Spara chatlogg till Supabase om konfigurerat
     if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
       try {
-        const sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+        // Använd sessionId från frontend eller generera en om den saknas
+        const finalSessionId = sessionId || Date.now().toString(36) + Math.random().toString(36).substr(2);
         const userAgent = req.headers.get('user-agent') || 'unknown';
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
         await supabase.from('chatlog').insert([
           {
-            session_id: sessionId,
+            session_id: finalSessionId,
             user_agent: userAgent,
             messages: messages,
             ai_response: data.choices?.[0]?.message?.content,

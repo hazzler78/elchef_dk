@@ -24,15 +24,28 @@ function GrodanIcon() {
   return <span style={{ fontSize: 22, marginRight: 6 }}>🐸</span>;
 }
 
+// Generera en unik session ID för denna konversation
+function generateSessionId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
 export default function GrokChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [sessionId, setSessionId] = useState<string>('');
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
+
+  // Generera session ID när komponenten mountas
+  useEffect(() => {
+    if (!sessionId) {
+      setSessionId(generateSessionId());
+    }
+  }, [sessionId]);
 
   // Responsiv bottom-position för chatbubblan
   const [chatBottom, setChatBottom] = useState(24);
@@ -66,7 +79,10 @@ export default function GrokChat() {
       const res = await fetch('/api/grokchat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ 
+          messages: newMessages,
+          sessionId: sessionId // Skicka med session ID
+        }),
       });
       if (!res.ok) {
         const err = await res.json();
@@ -82,6 +98,13 @@ export default function GrokChat() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Funktion för att rensa chatten och starta ny session
+  const clearChat = () => {
+    setMessages(initialMessages);
+    setInput('');
+    setSessionId(generateSessionId()); // Generera ny session ID
   };
 
   return (
@@ -131,7 +154,7 @@ export default function GrokChat() {
             <span><GrodanIcon /> Grodan – AI-chat</span>
             <div style={{ display: 'flex', gap: 8 }}>
               <button
-                onClick={() => { setMessages(initialMessages); setInput(''); }}
+                onClick={clearChat}
                 style={{ background: 'rgba(255,255,255,0.13)', border: 'none', color: 'white', fontSize: 16, cursor: 'pointer', borderRadius: 6, padding: '2px 10px', marginRight: 2 }}
                 title="Rensa chatten"
                 aria-label="Rensa chatten"
