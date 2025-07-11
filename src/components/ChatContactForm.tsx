@@ -89,9 +89,10 @@ const Message = styled.div<{ $type: 'success' | 'error' }>`
 
 interface ChatContactFormProps {
   onClose: () => void;
+  onSubmitted?: () => void;
 }
 
-export default function ChatContactForm({ onClose }: ChatContactFormProps) {
+export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFormProps) {
   const [formData, setFormData] = useState({
     email: '',
     phone: '',
@@ -127,6 +128,10 @@ export default function ChatContactForm({ onClose }: ChatContactFormProps) {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ email: '', phone: '', subscribeNewsletter: true });
+        // Notify parent that form was submitted
+        if (onSubmitted) {
+          onSubmitted();
+        }
         // Close form after 2 seconds
         setTimeout(() => {
           onClose();

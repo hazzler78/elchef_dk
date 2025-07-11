@@ -38,6 +38,7 @@ export default function GrokChat() {
   const [error, setError] = useState('');
   const [sessionId, setSessionId] = useState<string>('');
   const [showContactForm, setShowContactForm] = useState(false);
+  const [contactFormSubmitted, setContactFormSubmitted] = useState(false);
   
   // Debug: Log when showContactForm changes
   useEffect(() => {
@@ -107,6 +108,14 @@ export default function GrokChat() {
         setShowContactForm(true);
       }
       
+      // Check if contact form has been submitted
+      if (aiMsg.includes('[CONTACT_FORM_SUBMITTED]')) {
+        console.log('Contact form submitted trigger detected!');
+        aiMsg = aiMsg.replace('[CONTACT_FORM_SUBMITTED]', '');
+        setContactFormSubmitted(true);
+        setShowContactForm(false);
+      }
+      
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
     } catch {
       setError('Kunde inte kontakta AI:n.');
@@ -121,6 +130,7 @@ export default function GrokChat() {
     setInput('');
     setSessionId(generateSessionId()); // Generera ny session ID
     setShowContactForm(false);
+    setContactFormSubmitted(false);
   };
 
   return (
@@ -235,7 +245,18 @@ export default function GrokChat() {
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
                     Grodan
                   </div>
-                  <ChatContactForm onClose={() => setShowContactForm(false)} />
+                  <ChatContactForm 
+                    onClose={() => setShowContactForm(false)} 
+                    onSubmitted={() => {
+                      // Add a message indicating the form was submitted
+                      const newMessages = [...messages, { 
+                        role: 'assistant', 
+                        content: 'Tack för din kontakt! Vi återkommer så snart som möjligt. Ha en fin dag!' 
+                      }];
+                      setMessages(newMessages);
+                      setContactFormSubmitted(true);
+                    }}
+                  />
                 </div>
               </div>
             )}
@@ -248,19 +269,20 @@ export default function GrokChat() {
               type="text"
               value={input}
               onChange={event => setInput(event.target.value)}
-              placeholder="Skriv din fråga…"
-              style={{ flex: 1, border: '1px solid #cbd5e1', borderRadius: 12, padding: '0.8rem 1rem', fontSize: 16, outline: 'none', background: 'white', marginRight: 8 }}
-              disabled={loading}
+              placeholder={contactFormSubmitted ? "Tack för din kontakt!" : "Skriv din fråga…"}
+              style={{ flex: 1, border: '1px solid #cbd5e1', borderRadius: 12, padding: '0.8rem 1rem', fontSize: 16, outline: 'none', background: contactFormSubmitted ? '#f3f4f6' : 'white', marginRight: 8 }}
+              disabled={loading || contactFormSubmitted}
               maxLength={500}
               autoFocus
             />
-            <button type="submit" disabled={loading || !input.trim()} style={{ background: 'var(--primary, #2563eb)', color: 'white', border: 'none', padding: '0 22px', fontSize: 18, cursor: 'pointer', borderRadius: 12, fontWeight: 700, height: 44 }}>
+            <button type="submit" disabled={loading || !input.trim() || contactFormSubmitted} style={{ background: 'var(--primary, #2563eb)', color: 'white', border: 'none', padding: '0 22px', fontSize: 18, cursor: 'pointer', borderRadius: 12, fontWeight: 700, height: 44 }}>
               ➤
             </button>
             <button 
               type="button" 
               onClick={() => setShowContactForm(true)}
-              style={{ background: 'var(--secondary, #10b981)', color: 'white', border: 'none', padding: '0 12px', fontSize: 16, cursor: 'pointer', borderRadius: 12, fontWeight: 600, height: 44, marginLeft: 8 }}
+              disabled={contactFormSubmitted}
+              style={{ background: contactFormSubmitted ? '#94a3b8' : 'var(--secondary, #10b981)', color: 'white', border: 'none', padding: '0 12px', fontSize: 16, cursor: 'pointer', borderRadius: 12, fontWeight: 600, height: 44, marginLeft: 8 }}
               title="Kontakta oss"
             >
               📞
