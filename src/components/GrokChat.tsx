@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import ChatContactForm from './ChatContactForm';
 
 function renderMarkdown(text: string) {
   // Enkel markdown: fetstil, punktlistor, radbrytning
@@ -36,6 +37,7 @@ export default function GrokChat() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sessionId, setSessionId] = useState<string>('');
+  const [showContactForm, setShowContactForm] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
@@ -91,7 +93,14 @@ export default function GrokChat() {
         return;
       }
       const data = await res.json();
-      const aiMsg = data.choices?.[0]?.message?.content || 'Jag kunde tyvärr inte svara just nu.';
+      let aiMsg = data.choices?.[0]?.message?.content || 'Jag kunde tyvärr inte svara just nu.';
+      
+      // Check if AI wants to show contact form
+      if (aiMsg.includes('[SHOW_CONTACT_FORM]')) {
+        aiMsg = aiMsg.replace('[SHOW_CONTACT_FORM]', '');
+        setShowContactForm(true);
+      }
+      
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
     } catch {
       setError('Kunde inte kontakta AI:n.');
@@ -105,6 +114,7 @@ export default function GrokChat() {
     setMessages(initialMessages);
     setInput('');
     setSessionId(generateSessionId()); // Generera ny session ID
+    setShowContactForm(false);
   };
 
   return (
@@ -197,6 +207,32 @@ export default function GrokChat() {
                 </div>
               </div>
             ))}
+            {showContactForm && (
+              <div style={{
+                marginBottom: 18,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+                <GrodanIcon />
+                <div style={{
+                  background: '#e0f2fe',
+                  color: '#17416b',
+                  borderRadius: '16px 16px 16px 4px',
+                  padding: '12px 16px',
+                  maxWidth: 300,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  boxShadow: '0 2px 8px rgba(37,99,235,0.08)',
+                  marginLeft: 8,
+                }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
+                    Grodan
+                  </div>
+                  <ChatContactForm onClose={() => setShowContactForm(false)} />
+                </div>
+              </div>
+            )}
             {loading && <div style={{ color: '#888', fontSize: 15, marginLeft: 8 }}>Grodan tänker…</div>}
             {error && <div style={{ color: 'red', fontSize: 15, marginLeft: 8 }}>{error}</div>}
             <div ref={chatEndRef} />
@@ -214,6 +250,14 @@ export default function GrokChat() {
             />
             <button type="submit" disabled={loading || !input.trim()} style={{ background: 'var(--primary, #2563eb)', color: 'white', border: 'none', padding: '0 22px', fontSize: 18, cursor: 'pointer', borderRadius: 12, fontWeight: 700, height: 44 }}>
               ➤
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setShowContactForm(true)}
+              style={{ background: 'var(--secondary, #10b981)', color: 'white', border: 'none', padding: '0 12px', fontSize: 16, cursor: 'pointer', borderRadius: 12, fontWeight: 600, height: 44, marginLeft: 8 }}
+              title="Kontakta oss"
+            >
+              📞
             </button>
           </form>
         </div>
