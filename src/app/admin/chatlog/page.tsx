@@ -40,6 +40,9 @@ export default function AdminChatlog() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [viewMode, setViewMode] = useState<"raw" | "grouped">("grouped");
+  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+  const [selectedSessions, setSelectedSessions] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -47,41 +50,178 @@ export default function AdminChatlog() {
     }
   }, []);
 
+  const fetchLogs = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("chatlog")
+      .select("id, created_at, session_id, user_agent, messages, ai_response, total_tokens")
+      .order("created_at", { ascending: false });
+    if (!error && data) {
+      const logsData = data as ChatLogType[];
+      setLogs(logsData);
+      
+      // Gruppera efter session_id
+      const groups: { [key: string]: ChatLogType[] } = {};
+      logsData.forEach(log => {
+        if (!groups[log.session_id]) {
+          groups[log.session_id] = [];
+        }
+        groups[log.session_id].push(log);
+      });
+      
+      const sessionGroupsData: SessionGroup[] = Object.entries(groups).map(([session_id, logs]) => ({
+        session_id,
+        logs: logs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()),
+        total_messages: logs.reduce((sum, log) => sum + (log.messages?.length || 0), 0),
+        first_message: logs[0]?.created_at || "",
+        last_message: logs[logs.length - 1]?.created_at || "",
+      }));
+      
+      setSessionGroups(sessionGroupsData);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (!authed) return;
-    async function fetchLogs() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("chatlog")
-        .select("id, created_at, session_id, user_agent, messages, ai_response, total_tokens")
-        .order("created_at", { ascending: false });
-      if (!error && data) {
-        const logsData = data as ChatLogType[];
-        setLogs(logsData);
-        
-        // Gruppera efter session_id
-        const groups: { [key: string]: ChatLogType[] } = {};
-        logsData.forEach(log => {
-          if (!groups[log.session_id]) {
-            groups[log.session_id] = [];
-          }
-          groups[log.session_id].push(log);
-        });
-        
-        const sessionGroupsData: SessionGroup[] = Object.entries(groups).map(([session_id, logs]) => ({
-          session_id,
-          logs: logs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()),
-          total_messages: logs.reduce((sum, log) => sum + (log.messages?.length || 0), 0),
-          first_message: logs[0]?.created_at || "",
-          last_message: logs[logs.length - 1]?.created_at || "",
-        }));
-        
-        setSessionGroups(sessionGroupsData);
-      }
-      setLoading(false);
-    }
     fetchLogs();
   }, [authed]);
+
+  const deleteLog = async (id: number) => {
+    if (!confirm("Är du säker på att du vill radera denna logg?")) return;
+    
+    setDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("chatlog")
+        .delete()
+        .eq("id", id);
+      
+      if (error) {
+        setError("Kunde inte radera logg: " + error.message);
+      } else {
+        await fetchLogs(); // Uppdatera listan
+        setSelectedItems(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+      }
+    } catch {
+      setError("Ett fel uppstod vid radering");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const deleteSession = async (sessionId: string) => {
+    if (!confirm("Är du säker på att du vill radera hela denna session?")) return;
+    
+    setDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("chatlog")
+        .delete()
+        .eq("session_id", sessionId);
+      
+      if (error) {
+        setError("Kunde inte radera session: " + error.message);
+      } else {
+        await fetchLogs(); // Uppdatera listan
+        setSelectedSessions(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(sessionId);
+          return newSet;
+        });
+      }
+    } catch {
+      setError("Ett fel uppstod vid radering");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const deleteSelected = async () => {
+    if (selectedItems.size === 0 && selectedSessions.size === 0) return;
+    
+    const message = viewMode === "grouped" 
+      ? `Är du säker på att du vill radera ${selectedSessions.size} sessioner?`
+      : `Är du säker på att du vill radera ${selectedItems.size} loggar?`;
+    
+    if (!confirm(message)) return;
+    
+    setDeleting(true);
+    try {
+      if (viewMode === "grouped" && selectedSessions.size > 0) {
+        // Radera alla loggar för valda sessioner
+        const { error } = await supabase
+          .from("chatlog")
+          .delete()
+          .in("session_id", Array.from(selectedSessions));
+        
+        if (error) {
+          setError("Kunde inte radera sessioner: " + error.message);
+        } else {
+          await fetchLogs();
+          setSelectedSessions(new Set());
+        }
+      } else if (viewMode === "raw" && selectedItems.size > 0) {
+        // Radera valda loggar
+        const { error } = await supabase
+          .from("chatlog")
+          .delete()
+          .in("id", Array.from(selectedItems));
+        
+        if (error) {
+          setError("Kunde inte radera loggar: " + error.message);
+        } else {
+          await fetchLogs();
+          setSelectedItems(new Set());
+        }
+      }
+    } catch {
+      setError("Ett fel uppstod vid radering");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const toggleSelectItem = (id: number) => {
+    setSelectedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectSession = (sessionId: string) => {
+    setSelectedSessions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sessionId)) {
+        newSet.delete(sessionId);
+      } else {
+        newSet.add(sessionId);
+      }
+      return newSet;
+    });
+  };
+
+  const selectAll = () => {
+    if (viewMode === "grouped") {
+      setSelectedSessions(new Set(sessionGroups.map(g => g.session_id)));
+    } else {
+      setSelectedItems(new Set(logs.map(l => l.id)));
+    }
+  };
+
+  const selectNone = () => {
+    setSelectedItems(new Set());
+    setSelectedSessions(new Set());
+  };
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -120,7 +260,7 @@ export default function AdminChatlog() {
     <div style={{ maxWidth: 1200, margin: "2rem auto", padding: 24 }}>
       <h1>AI Chatlogg (Admin)</h1>
       
-      <div style={{ marginBottom: 20, display: "flex", gap: 10, alignItems: "center" }}>
+      <div style={{ marginBottom: 20, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
         <button 
           onClick={() => setViewMode("grouped")}
           style={{ 
@@ -150,7 +290,73 @@ export default function AdminChatlog() {
         <span style={{ fontSize: 14, color: "#666" }}>
           {viewMode === "grouped" ? `${sessionGroups.length} sessioner` : `${logs.length} meddelanden`}
         </span>
+        
+        {/* Bulk actions */}
+        {(selectedItems.size > 0 || selectedSessions.size > 0) && (
+          <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
+            <button
+              onClick={deleteSelected}
+              disabled={deleting}
+              style={{
+                padding: "6px 12px",
+                background: "#dc2626",
+                color: "white",
+                border: "none",
+                borderRadius: 4,
+                cursor: deleting ? "not-allowed" : "pointer",
+                fontSize: 12
+              }}
+            >
+              {deleting ? "Raderar..." : `Radera valda (${viewMode === "grouped" ? selectedSessions.size : selectedItems.size})`}
+            </button>
+            <button
+              onClick={selectNone}
+              style={{
+                padding: "6px 12px",
+                background: "#6b7280",
+                color: "white",
+                border: "none",
+                borderRadius: 4,
+                cursor: "pointer",
+                fontSize: 12
+              }}
+            >
+              Avmarkera alla
+            </button>
+          </div>
+        )}
+        
+        {/* Select all */}
+        {!loading && logs.length > 0 && (
+          <button
+            onClick={selectAll}
+            style={{
+              padding: "6px 12px",
+              background: "#059669",
+              color: "white",
+              border: "none",
+              borderRadius: 4,
+              cursor: "pointer",
+              fontSize: 12
+            }}
+          >
+            Markera alla
+          </button>
+        )}
       </div>
+
+      {error && (
+        <div style={{ 
+          padding: "12px", 
+          background: "#fef2f2", 
+          border: "1px solid #fecaca", 
+          borderRadius: 6, 
+          color: "#dc2626", 
+          marginBottom: 16 
+        }}>
+          {error}
+        </div>
+      )}
 
       {loading && <p>Laddar loggar...</p>}
       {!loading && logs.length === 0 && <p>Inga loggar hittades.</p>}
@@ -159,30 +365,63 @@ export default function AdminChatlog() {
         <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 24 }}>
           <thead>
             <tr style={{ background: "#f3f4f6" }}>
+              <th style={{ padding: 8, border: "1px solid #e5e7eb", width: 30 }}>
+                <input
+                  type="checkbox"
+                  checked={selectedItems.size === logs.length && logs.length > 0}
+                  onChange={selectAll}
+                  style={{ cursor: "pointer" }}
+                />
+              </th>
               <th style={{ padding: 8, border: "1px solid #e5e7eb" }}>Datum</th>
               <th style={{ padding: 8, border: "1px solid #e5e7eb" }}>Session</th>
               <th style={{ padding: 8, border: "1px solid #e5e7eb" }}>Antal meddelanden</th>
               <th style={{ padding: 8, border: "1px solid #e5e7eb" }}>User Agent</th>
-              <th style={{ padding: 8, border: "1px solid #e5e7eb" }}>Visa</th>
+              <th style={{ padding: 8, border: "1px solid #e5e7eb" }}>Åtgärder</th>
             </tr>
           </thead>
           <tbody>
-            {logs.map((log, i) => (
+            {logs.map((log) => (
               <>
                 <tr key={log.id}>
+                  <td style={{ padding: 8, border: "1px solid #e5e7eb" }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.has(log.id)}
+                      onChange={() => toggleSelectItem(log.id)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb" }}>{new Date(log.created_at).toLocaleString()}</td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb", fontSize: 12 }}>{log.session_id}</td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb" }}>{log.messages?.length || 0}</td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb", fontSize: 12 }}>{log.user_agent}</td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb" }}>
-                    <button onClick={() => setExpanded(expanded === log.session_id ? null : log.session_id)} style={{ fontSize: 14 }}>
-                      {expanded === log.session_id ? "Dölj" : "Visa"}
-                    </button>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button onClick={() => setExpanded(expanded === log.session_id ? null : log.session_id)} style={{ fontSize: 14 }}>
+                        {expanded === log.session_id ? "Dölj" : "Visa"}
+                      </button>
+                      <button 
+                        onClick={() => deleteLog(log.id)}
+                        disabled={deleting}
+                        style={{ 
+                          fontSize: 14, 
+                          background: "#dc2626", 
+                          color: "white", 
+                          border: "none", 
+                          borderRadius: 4,
+                          padding: "2px 6px",
+                          cursor: deleting ? "not-allowed" : "pointer"
+                        }}
+                      >
+                        🗑
+                      </button>
+                    </div>
                   </td>
                 </tr>
                 {expanded === log.session_id && (
                   <tr>
-                    <td colSpan={5} style={{ background: "#f9fafb", padding: 16, border: "1px solid #e5e7eb" }}>
+                    <td colSpan={6} style={{ background: "#f9fafb", padding: 16, border: "1px solid #e5e7eb" }}>
                       <b>Konversation:</b>
                       <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                         {log.messages?.map((msg, idx) => (
@@ -204,12 +443,12 @@ export default function AdminChatlog() {
 
       {!loading && sessionGroups.length > 0 && viewMode === "grouped" && (
         <div style={{ marginTop: 24 }}>
-          {sessionGroups.map((group, i) => (
+          {sessionGroups.map((group) => (
             <div key={group.session_id} style={{ 
               border: "1px solid #e5e7eb", 
               borderRadius: 8, 
               marginBottom: 16, 
-              background: "white" 
+              background: selectedSessions.has(group.session_id) ? "#f0f9ff" : "white" 
             }}>
               <div style={{ 
                 padding: "12px 16px", 
@@ -219,19 +458,44 @@ export default function AdminChatlog() {
                 justifyContent: "space-between",
                 alignItems: "center"
               }}>
-                <div>
-                  <strong>Session: {group.session_id}</strong>
-                  <div style={{ fontSize: 12, color: "#666", marginTop: 4 }}>
-                    {group.logs.length} meddelanden • {group.total_messages} totalt • 
-                    {new Date(group.first_message).toLocaleString()} - {new Date(group.last_message).toLocaleString()}
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedSessions.has(group.session_id)}
+                    onChange={() => toggleSelectSession(group.session_id)}
+                    style={{ cursor: "pointer" }}
+                  />
+                  <div>
+                    <strong>Session: {group.session_id}</strong>
+                    <div style={{ fontSize: 12, color: "#666", marginTop: 4 }}>
+                      {group.logs.length} meddelanden • {group.total_messages} totalt • 
+                      {new Date(group.first_message).toLocaleString()} - {new Date(group.last_message).toLocaleString()}
+                    </div>
                   </div>
                 </div>
-                <button 
-                  onClick={() => setExpanded(expanded === group.session_id ? null : group.session_id)}
-                  style={{ fontSize: 14, padding: "4px 8px", background: "#2563eb", color: "white", border: "none", borderRadius: 4 }}
-                >
-                  {expanded === group.session_id ? "Dölj" : "Visa"}
-                </button>
+                <div style={{ display: "flex", gap: 4 }}>
+                  <button 
+                    onClick={() => setExpanded(expanded === group.session_id ? null : group.session_id)}
+                    style={{ fontSize: 14, padding: "4px 8px", background: "#2563eb", color: "white", border: "none", borderRadius: 4 }}
+                  >
+                    {expanded === group.session_id ? "Dölj" : "Visa"}
+                  </button>
+                  <button 
+                    onClick={() => deleteSession(group.session_id)}
+                    disabled={deleting}
+                    style={{ 
+                      fontSize: 14, 
+                      padding: "4px 8px", 
+                      background: "#dc2626", 
+                      color: "white", 
+                      border: "none", 
+                      borderRadius: 4,
+                      cursor: deleting ? "not-allowed" : "pointer"
+                    }}
+                  >
+                    🗑
+                  </button>
+                </div>
               </div>
               
               {expanded === group.session_id && (
