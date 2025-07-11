@@ -38,6 +38,11 @@ export default function GrokChat() {
   const [error, setError] = useState('');
   const [sessionId, setSessionId] = useState<string>('');
   const [showContactForm, setShowContactForm] = useState(false);
+  
+  // Debug: Log when showContactForm changes
+  useEffect(() => {
+    console.log('showContactForm state:', showContactForm);
+  }, [showContactForm]);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
@@ -97,6 +102,7 @@ export default function GrokChat() {
       
       // Check if AI wants to show contact form
       if (aiMsg.includes('[SHOW_CONTACT_FORM]')) {
+        console.log('Contact form trigger detected!');
         aiMsg = aiMsg.replace('[SHOW_CONTACT_FORM]', '');
         setShowContactForm(true);
       }
