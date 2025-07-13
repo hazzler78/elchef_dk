@@ -283,6 +283,88 @@ export default function Media() {
             </CTAButton>
           </div>
         </Article>
+
+        <Article>
+          <ArticleTitle>Veckans nyheter från elmarknaden</ArticleTitle>
+          <p>
+            Här samlar vi de senaste nyheterna och uppdateringarna från elmarknaden som påverkar dig som konsument. Vi håller dig uppdaterad med de viktigaste händelserna som kan påverka ditt elavtal och energianvändning.
+          </p>
+          
+          <SubTitle>Senaste utvecklingar:</SubTitle>
+          <CustomList>
+            <CustomListItem><GreenDot /> <b>Nya elavtal lanseras</b> – flera leverantörer har justerat sina priser för att konkurrera bättre.</CustomListItem>
+            <CustomListItem><GreenDot /> <b>Vindkraftsexpansion</b> – nya vindkraftsparker planeras vilket kan pressa priserna ytterligare.</CustomListItem>
+            <CustomListItem><BlueDot /> <b>Regleringsändringar</b> – nya EU-direktiv påverkar hur elpriserna ska presenteras för konsumenter.</CustomListItem>
+            <CustomListItem><RedDot /> <b>Väderprognoser</b> – kommande veckor förväntas ha blandat väder vilket kan påverka prisvolatiliteten.</CustomListItem>
+          </CustomList>
+          
+          <SubTitle>🚨 Varning: Dolda avgifter och orimliga bindningstider</SubTitle>
+          <p>
+            Vi har upptäckt några riktigt dåliga exempel på hur vissa leverantörer försöker lura kunder:
+          </p>
+          <CustomList>
+            <CustomListItem><RedDot /> <b>Öresundskraft's "flyttkram"</b> – 252 kronor bara för att du flyttar in! Vi tackar för skämtet men säger nej tack.</CustomListItem>
+            <CustomListItem><RedDot /> <b>Lingon's 60-månaders bindning</b> – längre än de flesta förhållanden håller! Tur att vi hann rycka in – annars hade det blivit 35 000 kronor i el-sorg.</CustomListItem>
+          </CustomList>
+          
+          <Quote>
+            "Nu har vi fått fullmakt och laddar pilbågen – pengarna ska tillbaka!"
+          </Quote>
+          
+          <SubTitle>💚 Elchef till undsättning</SubTitle>
+          <CustomList>
+            <CustomListItem><GreenCheck /> <b>Inga flyttkramar eller dolda avgifter</b> – bara marknadens bästa priser.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Inga orimliga bindningstider</b> – du är fri att byta när du vill.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Personlig hjälp</b> – lämna ditt telefonnummer så ringer vi upp och hjälper till.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Elens Robin Hood</b> – vi tar kontakt och hjälper med alla frågor och manuell registrering.</CustomListItem>
+          </CustomList>
+          
+          <Quote>
+            "Det är viktigt att hålla sig uppdaterad med marknadsutvecklingen för att fatta informerade beslut om ditt elavtal."
+          </Quote>
+          
+          <SubTitle>Vad betyder detta för dig?</SubTitle>
+          <CustomList>
+            <CustomListItem><GreenCheck /> <b>Bättre konkurrens</b> – fler alternativ och potentiellt lägre priser.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Mer transparens</b> – tydligare information om vad du faktiskt betalar för.</CustomListItem>
+            <CustomListItem><GreenCheck /> <b>Flexibilitet</b> – möjlighet att byta till bättre avtal när marknaden förändras.</CustomListItem>
+          </CustomList>
+          
+          <InfoBox>
+            <h4>Vill du vara först med nyheterna?</h4>
+            <p>Prenumerera på vårt nyhetsbrev för att få de senaste uppdateringarna direkt i din inkorg.</p>
+            <CustomList>
+              <CustomListItem><BlueDot /> Veckovis sammanfattning av marknadsutvecklingen.</CustomListItem>
+              <CustomListItem><BlueDot /> Tips om när det är bästa tiden att byta avtal.</CustomListItem>
+              <CustomListItem><BlueDot /> Exklusiva erbjudanden för prenumeranter.</CustomListItem>
+            </CustomList>
+          </InfoBox>
+          
+          <SubTitle>Kommande händelser att hålla koll på:</SubTitle>
+          <CustomList>
+            <CustomListItem><GreenDot /> <b>Nästa vecka:</b> Ny rapport om energibesparingstips för vintermånaderna.</CustomListItem>
+            <CustomListItem><GreenDot /> <b>Om två veckor:</b> Lansering av ny prisjämförelsetjänst med realtidsdata.</CustomListItem>
+            <CustomListItem><BlueDot /> <b>Månadens slut:</b> Kvartalsrapport från energimyndigheten om marknadsutvecklingen.</CustomListItem>
+          </CustomList>
+          
+          <InfoBox>
+            <h4>☀️ Njut av solen – och tipsa gärna vänner och familj!</h4>
+            <p>
+              Tipsa gärna vänner och familj om Elchef, så de slipper månadsavgifter och dyra påslag på elräkningen. 
+              Elräkningen ska vara som sommaren: ljus, lätt – och inte ruinera dig.
+            </p>
+          </InfoBox>
+          
+          <div style={{ textAlign: 'center' }}>
+            <CTAButton 
+              href="https://elchef.se" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              Upptäck dina alternativ på elchef.se <ArrowIcon />
+            </CTAButton>
+          </div>
+        </Article>
       </Container>
     </Section>
   );
