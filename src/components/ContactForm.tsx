@@ -138,8 +138,26 @@ export default function ContactForm() {
     }));
   };
 
+  const validatePhoneNumber = (phone: string): boolean => {
+    // Validera svenska telefonnummer (mobil och fast)
+    const phoneRegex = /^(07[0-9]|08[0-9]|09[0-9]|01[0-9])[-\s]?[0-9]{3}[-\s]?[0-9]{2}[-\s]?[0-9]{2}$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validera telefonnummer
+    if (!formData.phone.trim()) {
+      setSubmitStatus('error');
+      return;
+    }
+    
+    if (!validatePhoneNumber(formData.phone)) {
+      setSubmitStatus('error');
+      return;
+    }
+    
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -174,7 +192,7 @@ export default function ContactForm() {
       <Container>
         <Title>Kontakta oss</Title>
         <Subtitle>
-          Vill du bli uppringd eller föredrar du e-post? Fyll i formuläret nedan så återkommer vi så snart som möjligt.
+          Vi behöver ditt telefonnummer för att kunna ringa dig med personlig hjälp. Fyll i formuläret nedan så återkommer vi så snart som möjligt.
         </Subtitle>
 
         {submitStatus === 'success' && (
@@ -185,7 +203,7 @@ export default function ContactForm() {
 
         {submitStatus === 'error' && (
           <ErrorMessage>
-            Ett fel uppstod. Försök igen eller kontakta oss direkt.
+            Vänligen kontrollera att du har angett ett giltigt svenskt telefonnummer (t.ex. 070-123 45 67).
           </ErrorMessage>
         )}
 
@@ -204,7 +222,7 @@ export default function ContactForm() {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="phone">Telefonnummer</Label>
+            <Label htmlFor="phone">Telefonnummer *</Label>
             <Input
               type="tel"
               id="phone"
@@ -212,6 +230,9 @@ export default function ContactForm() {
               value={formData.phone}
               onChange={handleInputChange}
               placeholder="070-123 45 67"
+              required
+              pattern="^(07[0-9]|08[0-9]|09[0-9]|01[0-9])[-\s]?[0-9]{3}[-\s]?[0-9]{2}[-\s]?[0-9]{2}$"
+              title="Ange ett giltigt svenskt mobilnummer eller fast nummer (t.ex. 070-123 45 67)"
             />
           </FormGroup>
 
