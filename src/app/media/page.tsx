@@ -303,12 +303,12 @@ export default function Media() {
             Vi har upptäckt några riktigt dåliga exempel på hur vissa leverantörer försöker lura kunder:
           </p>
           <CustomList>
-            <CustomListItem><RedDot /> <b>Öresundskraft's "flyttkram"</b> – 252 kronor bara för att du flyttar in! Vi tackar för skämtet men säger nej tack.</CustomListItem>
-            <CustomListItem><RedDot /> <b>Lingon's 60-månaders bindning</b> – längre än de flesta förhållanden håller! Tur att vi hann rycka in – annars hade det blivit 35 000 kronor i el-sorg.</CustomListItem>
+            <CustomListItem><RedDot /> <b>Öresundskraft&apos;s &quot;flyttkram&quot;</b> – 252 kronor bara för att du flyttar in! Vi tackar för skämtet men säger nej tack.</CustomListItem>
+            <CustomListItem><RedDot /> <b>Lingon&apos;s 60-månaders bindning</b> – längre än de flesta förhållanden håller! Tur att vi hann rycka in – annars hade det blivit 35 000 kronor i el-sorg.</CustomListItem>
           </CustomList>
           
           <Quote>
-            "Nu har vi fått fullmakt och laddar pilbågen – pengarna ska tillbaka!"
+            &quot;Nu har vi fått fullmakt och laddar pilbågen – pengarna ska tillbaka!&quot;
           </Quote>
           
           <SubTitle>💚 Elchef till undsättning</SubTitle>
@@ -320,7 +320,7 @@ export default function Media() {
           </CustomList>
           
           <Quote>
-            "Det är viktigt att hålla sig uppdaterad med marknadsutvecklingen för att fatta informerade beslut om ditt elavtal."
+            &quot;Det är viktigt att hålla sig uppdaterad med marknadsutvecklingen för att fatta informerade beslut om ditt elavtal.&quot;
           </Quote>
           
           <SubTitle>Vad betyder detta för dig?</SubTitle>
