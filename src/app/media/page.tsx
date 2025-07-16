@@ -176,6 +176,33 @@ export default function Media() {
         </p>
         
         <Article>
+          <ArticleTitle>Cheap Energy ny huvudsponsor till Svenska innebandylandslaget</ArticleTitle>
+          <p>
+            Vi är stolta att meddela att Cheap Energy nu är <b>huvudsponsor till Svenska innebandylandslaget</b>! Detta nya tvåårsavtal innebär ett fördjupat samarbete som gynnar både bredd och elit inom svensk innebandy.
+          </p>
+          <InfoBox>
+            <h4>Partnerskap för hela sporten</h4>
+            <p>
+              Cheap Energy och Svensk Innebandy har tecknat ett avtal som ska stärka ekonomin hos klubbarna i hela landet. Föreningar kan nu sälja elavtal där hela överskottet går till föreningarna – ett initiativ som gynnar både sporten och samhället.
+            </p>
+          </InfoBox>
+          <Quote>
+            "Det handlar inte bara om att vara en sponsor utan en aktiv partner. Vi ser fram emot ett långsiktigt samarbete som stärker svensk innebandy på alla nivåer."<br/>
+            <span style={{fontWeight: 400, fontSize: '1rem'}}>– Rebecca Körkkö, försäljnings- och marknadsföringschef på Cheap Energy</span>
+          </Quote>
+          <div style={{margin: '1.5rem 0'}}>
+            <HallandspostenLink
+              href="https://www.innebandy.se/nyheter/cheap-energy-och-svensk-innebandy-fordjupar-sitt-samarbete"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <NewspaperIcon />
+              Läs officiell nyhet på innebandy.se
+            </HallandspostenLink>
+          </div>
+        </Article>
+
+        <Article>
           <ArticleTitle>Så påverkar vädret elpriset – förklarat på ett enkelt sätt</ArticleTitle>
           <p>
             Elpriset svänger hela tiden – och vädret är en av de viktigaste faktorerna. På sommaren är priserna ofta lägre, men variationerna styrs ändå av regn, vind och temperatur.
