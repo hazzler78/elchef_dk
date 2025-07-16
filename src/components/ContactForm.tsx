@@ -190,20 +190,20 @@ export default function ContactForm() {
   return (
     <ContactSection>
       <Container>
-        <Title>Kontakta oss</Title>
+        <Title>Kontakta oss för personlig hjälp</Title>
         <Subtitle>
-          Vi behöver ditt telefonnummer för att kunna ringa dig med personlig hjälp. Fyll i formuläret nedan så återkommer vi så snart som möjligt.
+          Fyll i dina uppgifter så ringer vi upp dig och hjälper dig att hitta rätt elavtal – enkelt och gratis!
         </Subtitle>
 
         {submitStatus === 'success' && (
           <SuccessMessage>
-            Tack för din kontakt! Vi återkommer så snart som möjligt.
+            Tack! Vi har tagit emot dina uppgifter och ringer upp dig så snart vi kan för personlig rådgivning om elavtal. Du får även ett bekräftelsemail med viktig information.
           </SuccessMessage>
         )}
 
         {submitStatus === 'error' && (
           <ErrorMessage>
-            Vänligen kontrollera att du har angett ett giltigt svenskt telefonnummer (t.ex. 070-123 45 67).
+            Kontrollera att du har angett en giltig e-postadress och ett svenskt telefonnummer (t.ex. 070-123 45 67). Båda fälten är obligatoriska.
           </ErrorMessage>
         )}
 
@@ -245,7 +245,7 @@ export default function ContactForm() {
               onChange={handleInputChange}
             />
             <CheckboxLabel htmlFor="subscribeNewsletter">
-              Jag vill prenumerera på nyhetsbrev med tips om elavtal och energibesparing
+              Jag vill också få nyhetsbrev med tips om smarta elavtal och energibesparing
             </CheckboxLabel>
           </CheckboxGroup>
 
