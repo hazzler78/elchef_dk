@@ -187,8 +187,8 @@ export default function Media() {
             </p>
           </InfoBox>
           <Quote>
-            "Det handlar inte bara om att vara en sponsor utan en aktiv partner. Vi ser fram emot ett långsiktigt samarbete som stärker svensk innebandy på alla nivåer."<br/>
-            <span style={{fontWeight: 400, fontSize: '1rem'}}>– Rebecca Körkkö, försäljnings- och marknadsföringschef på Cheap Energy</span>
+            &quot;Det handlar inte bara om att vara en sponsor utan en aktiv partner. Vi ser fram emot ett långsiktigt samarbete som stärker svensk innebandy på alla nivåer.&quot;<br/>
+            <span style={{fontWeight: 400, fontSize: '1rem'}}>&ndash; Rebecca Körkkö, försäljnings- och marknadsföringschef på Cheap Energy</span>
           </Quote>
           <div style={{margin: '1.5rem 0'}}>
             <HallandspostenLink
