@@ -235,9 +235,9 @@ export default function Media() {
         </Article>
 
         <Article>
-          <ArticleTitle>Han vill ha billigare el åt folket</ArticleTitle>
+          <ArticleTitle>Elens Robin Hood vill ha billigare el åt folket</ArticleTitle>
           <p>
-            Många är trötta på krångliga elavtal, dolda avgifter och dyra mellanhänder. I den här artikeln i Hallandsposten berättar Mathias Nilsson om sin idé: att <b>göra elmarknaden mer rättvis och ge billigare el åt alla</b>.
+            Många är trötta på krångliga elavtal, dolda avgifter och dyra mellanhänder. I den här artikeln i Hallandsposten berättar Mathias Nilsson om sin plan: att <b>göra elmarknaden mer rättvis och ge billigare el åt alla</b>.
           </p>
           <VideoBox>
             <HallandspostenLink
