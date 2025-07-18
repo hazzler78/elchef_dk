@@ -143,15 +143,18 @@ export default function GrokChat() {
           bottom: chatBottom,
           right: 24,
           zIndex: 1000,
-          background: 'var(--primary, #2563eb)',
+          background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))',
           color: 'white',
-          border: 'none',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
           borderRadius: '50%',
           width: 56,
           height: 56,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          boxShadow: 'var(--glass-shadow-light)',
           fontSize: 28,
           cursor: 'pointer',
+          backdropFilter: 'var(--glass-blur)',
+          WebkitBackdropFilter: 'var(--glass-blur)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
         aria-label={open ? 'Stäng chat' : 'Öppna chat'}
       >
@@ -167,32 +170,81 @@ export default function GrokChat() {
             width: 360,
             maxWidth: '98vw',
             height: 480,
-            background: 'white',
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: 18,
-            boxShadow: '0 6px 32px rgba(0,0,0,0.22)',
+            boxShadow: 'var(--glass-shadow-heavy)',
             zIndex: 1001,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
           }}
         >
-          <div style={{ background: 'var(--primary, #2563eb)', color: 'white', padding: '1rem', fontWeight: 700, fontSize: 19, letterSpacing: 0.2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ 
+            background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))', 
+            color: 'white', 
+            padding: '1rem', 
+            fontWeight: 700, 
+            fontSize: 19, 
+            letterSpacing: 0.2, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
+          }}>
             <span><GrodanIcon /> Grodan – AI-chat</span>
             <div style={{ display: 'flex', gap: 8 }}>
               <button
                 onClick={clearChat}
-                style={{ background: 'rgba(255,255,255,0.13)', border: 'none', color: 'white', fontSize: 16, cursor: 'pointer', borderRadius: 6, padding: '2px 10px', marginRight: 2 }}
+                style={{ 
+                  background: 'rgba(255,255,255,0.13)', 
+                  border: '1px solid rgba(255, 255, 255, 0.2)', 
+                  color: 'white', 
+                  fontSize: 16, 
+                  cursor: 'pointer', 
+                  borderRadius: 6, 
+                  padding: '2px 10px', 
+                  marginRight: 2,
+                  backdropFilter: 'var(--glass-blur)',
+                  WebkitBackdropFilter: 'var(--glass-blur)',
+                  transition: 'all 0.2s ease'
+                }}
                 title="Rensa chatten"
                 aria-label="Rensa chatten"
               >
                 🗑
               </button>
-              <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: 22, cursor: 'pointer' }} aria-label="Stäng">×</button>
+              <button 
+                onClick={() => setOpen(false)} 
+                style={{ 
+                  background: 'rgba(255,255,255,0.13)', 
+                  border: '1px solid rgba(255, 255, 255, 0.2)', 
+                  color: 'white', 
+                  fontSize: 22, 
+                  cursor: 'pointer',
+                  borderRadius: 6,
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backdropFilter: 'var(--glass-blur)',
+                  WebkitBackdropFilter: 'var(--glass-blur)',
+                  transition: 'all 0.2s ease'
+                }} 
+                aria-label="Stäng"
+              >
+                ×
+              </button>
             </div>
           </div>
           <div
             ref={chatContainerRef}
-            style={{ flex: 1, padding: '1rem', overflowY: 'auto', background: '#f8fafc' }}
+            style={{ flex: 1, padding: '1rem', overflowY: 'auto', background: 'rgba(248, 250, 252, 0.8)' }}
           >
             {messages.map((msg, i) => (
               <div key={i} style={{
@@ -203,18 +255,21 @@ export default function GrokChat() {
               }}>
                 {msg.role === 'assistant' && <GrodanIcon />}
                 <div style={{
-                  background: msg.role === 'user' ? 'var(--primary, #2563eb)' : '#e0f2fe',
+                  background: msg.role === 'user' ? 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))' : 'rgba(255, 255, 255, 0.9)',
                   color: msg.role === 'user' ? 'white' : '#17416b',
                   borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                   padding: '12px 16px',
                   maxWidth: 260,
                   fontSize: 16,
                   fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(37,99,235,0.08)',
+                  boxShadow: 'var(--glass-shadow-light)',
                   wordBreak: 'break-word',
                   lineHeight: 1.7,
                   marginLeft: msg.role === 'user' ? 0 : 8,
                   marginRight: msg.role === 'user' ? 8 : 0,
+                  backdropFilter: 'var(--glass-blur)',
+                  WebkitBackdropFilter: 'var(--glass-blur)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
                     {msg.role === 'user' ? 'Du' : 'Grodan'}
@@ -223,6 +278,34 @@ export default function GrokChat() {
                 </div>
               </div>
             ))}
+            {loading && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                marginBottom: 18,
+              }}>
+                <GrodanIcon />
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  color: '#17416b',
+                  borderRadius: '16px 16px 16px 4px',
+                  padding: '12px 16px',
+                  maxWidth: 260,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  boxShadow: 'var(--glass-shadow-light)',
+                  marginLeft: 8,
+                  backdropFilter: 'var(--glass-blur)',
+                  WebkitBackdropFilter: 'var(--glass-blur)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
+                    Grodan
+                  </div>
+                  <div>Skriver...</div>
+                </div>
+              </div>
+            )}
             {showContactForm && (
               <div style={{
                 marginBottom: 18,
@@ -260,29 +343,77 @@ export default function GrokChat() {
                 </div>
               </div>
             )}
-            {loading && <div style={{ color: '#888', fontSize: 15, marginLeft: 8 }}>Grodan tänker…</div>}
             {error && <div style={{ color: 'red', fontSize: 15, marginLeft: 8 }}>{error}</div>}
             <div ref={chatEndRef} />
           </div>
-          <form onSubmit={sendMessage} style={{ display: 'flex', borderTop: '1px solid #e5e7eb', background: 'white', padding: '0.5rem' }}>
+          <form onSubmit={sendMessage} style={{ 
+            display: 'flex', 
+            borderTop: '1px solid rgba(255, 255, 255, 0.2)', 
+            background: 'rgba(255, 255, 255, 0.95)', 
+            padding: '0.5rem',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+          }}>
             <input
               type="text"
               value={input}
               onChange={event => setInput(event.target.value)}
               placeholder={contactFormSubmitted ? "Tack för din kontakt!" : "Skriv din fråga…"}
-              style={{ flex: 1, border: '1px solid #cbd5e1', borderRadius: 12, padding: '0.8rem 1rem', fontSize: 16, outline: 'none', background: contactFormSubmitted ? '#f3f4f6' : 'white', marginRight: 8 }}
+              style={{ 
+                flex: 1, 
+                border: '1px solid rgba(203, 213, 225, 0.5)', 
+                borderRadius: 12, 
+                padding: '0.8rem 1rem', 
+                fontSize: 16, 
+                outline: 'none', 
+                background: contactFormSubmitted ? 'rgba(243, 244, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)', 
+                marginRight: 8,
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
+              }}
               disabled={loading || contactFormSubmitted}
               maxLength={500}
               autoFocus
             />
-            <button type="submit" disabled={loading || !input.trim() || contactFormSubmitted} style={{ background: 'var(--primary, #2563eb)', color: 'white', border: 'none', padding: '0 22px', fontSize: 18, cursor: 'pointer', borderRadius: 12, fontWeight: 700, height: 44 }}>
+            <button 
+              type="submit" 
+              disabled={loading || !input.trim() || contactFormSubmitted} 
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))', 
+                color: 'white', 
+                border: '1px solid rgba(255, 255, 255, 0.2)', 
+                padding: '0 22px', 
+                fontSize: 18, 
+                cursor: 'pointer', 
+                borderRadius: 12, 
+                fontWeight: 700, 
+                height: 44,
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            >
               ➤
             </button>
             <button 
               type="button" 
               onClick={() => setShowContactForm(true)}
               disabled={contactFormSubmitted}
-              style={{ background: contactFormSubmitted ? '#94a3b8' : 'var(--secondary, #10b981)', color: 'white', border: 'none', padding: '0 12px', fontSize: 16, cursor: 'pointer', borderRadius: 12, fontWeight: 600, height: 44, marginLeft: 8 }}
+              style={{ 
+                background: contactFormSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(22, 147, 255, 0.2))', 
+                color: 'white', 
+                border: '1px solid rgba(255, 255, 255, 0.2)', 
+                padding: '0 12px', 
+                fontSize: 16, 
+                cursor: 'pointer', 
+                borderRadius: 12, 
+                fontWeight: 600, 
+                height: 44, 
+                marginLeft: 8,
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
               title="Kontakta oss"
             >
               📞

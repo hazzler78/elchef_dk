@@ -6,9 +6,11 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
 
 interface ContactFormData {
+  name?: string;
   email: string;
   phone?: string;
   subscribeNewsletter: boolean;
+  message?: string;
 }
 
 async function sendTelegramNotification(data: ContactFormData) {
@@ -20,9 +22,9 @@ async function sendTelegramNotification(data: ContactFormData) {
   const message = `
 🔔 *Ny kontaktförfrågan*
 
-📧 *E-post:* ${data.email}
-${data.phone ? `📞 *Telefon:* ${data.phone}` : ''}
-📰 *Nyhetsbrev:* ${data.subscribeNewsletter ? 'Ja' : 'Nej'}
+${data.name ? `🙍‍♂️ *Namn:* ${data.name}\n` : ''}📧 *E-post:* ${data.email}
+${data.phone ? `📞 *Telefon:* ${data.phone}\n` : ''}📰 *Nyhetsbrev:* ${data.subscribeNewsletter ? 'Ja' : 'Nej'}
+${data.message ? `\n📝 *Meddelande:* ${data.message}` : ''}
 
 ⏰ *Tidpunkt:* ${new Date().toLocaleString('sv-SE')}
 🌐 *Källa:* Elchef.se kontaktformulär

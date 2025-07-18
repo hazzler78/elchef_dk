@@ -3,31 +3,42 @@ import styled from "styled-components";
 
 const Banner = styled.div`
   width: 100%;
-  background: linear-gradient(90deg, #fbbf24 0%, #f59e42 100%);
-  color: #1f2937;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
   text-align: center;
   padding: 1.2rem 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: var(--glass-shadow-light);
   z-index: 2000;
   position: relative;
 `;
 
 const Highlight = styled.span`
-  color: #2563eb;
-  background: #fffbe6;
+  color: #FFD700;
+  background: rgba(255, 215, 0, 0.2);
   padding: 0.1em 0.4em;
   border-radius: 0.4em;
   margin: 0 0.2em;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 215, 0, 0.3);
 `;
 
 const StyledLink = styled.a`
-  color: #2563eb;
+  color: #FFD700;
   margin: 0 0.2em;
   text-decoration: underline;
   font-weight: 700;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: #FFED4E;
+  }
 `;
 
 export default function CampaignBanner() {

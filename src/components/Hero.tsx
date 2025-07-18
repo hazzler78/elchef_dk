@@ -2,10 +2,11 @@
 
 import styled from 'styled-components';
 import React from 'react';
+import GlassButton from './GlassButton';
 
 const HeroSection = styled.section`
   padding: var(--section-spacing) 0;
-  background: linear-gradient(to bottom, var(--gray-50), white);
+  background: transparent;
   overflow: hidden;
   position: relative;
 `;
@@ -32,7 +33,8 @@ const TextContent = styled.div`
   h1 {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
-    color: var(--gray-700);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     
     @media (min-width: 768px) {
       font-size: 3.5rem;
@@ -41,8 +43,9 @@ const TextContent = styled.div`
   
   p {
     font-size: 1.25rem;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 2rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -51,26 +54,6 @@ const ButtonRow = styled.div`
   gap: 1rem;
   margin-top: 1.5rem;
   flex-wrap: wrap;
-`;
-
-const CTAButton = styled.a`
-  background: var(--primary);
-  color: white;
-  font-size: 1.25rem;
-  padding: 1rem 2rem;
-  border-radius: var(--radius-md);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 600;
-  box-shadow: var(--shadow-md);
-  text-decoration: none;
-  display: inline-block;
-  &:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
 `;
 
 const VideoWrapper = styled.div`
@@ -82,8 +65,12 @@ const VideoWrapper = styled.div`
   aspect-ratio: 16/9;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--glass-shadow-heavy);
   max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
   video {
     width: 100%;
@@ -112,12 +99,20 @@ export default function Hero() {
               Med Elchef får du exklusiva rabatter på elavtal. Vi hjälper dig spara pengar på din elräkning - helt kostnadsfritt!
             </p>
             <ButtonRow>
-              <CTAButton href="https://www.svekraft.com/elchef-rorligt/" target="_blank" rel="noopener noreferrer">
+              <GlassButton 
+                variant="primary" 
+                size="lg"
+                onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
+              >
                 Rörligt avtal
-              </CTAButton>
-              <CTAButton href="https://www.svealandselbolag.se/elchef-fastpris/" target="_blank" rel="noopener noreferrer">
+              </GlassButton>
+              <GlassButton 
+                variant="secondary" 
+                size="lg"
+                onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
+              >
                 Fastpris
-              </CTAButton>
+              </GlassButton>
             </ButtonRow>
           </TextContent>
           <VideoWrapper>

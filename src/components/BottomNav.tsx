@@ -10,12 +10,15 @@ const Nav = styled.nav`
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 0.5rem 0;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow-light);
   z-index: 1000;
 `;
 
@@ -28,8 +31,14 @@ const NavItem = styled(Link)`
   font-size: 0.75rem;
   padding: 0.5rem;
   position: relative;
+  transition: color 0.3s ease;
+  
   &.active {
-    color: #3b82f6;
+    color: var(--primary);
+  }
+  
+  &:hover {
+    color: var(--primary);
   }
 `;
 
@@ -38,8 +47,9 @@ const ActiveIndicator = styled.div`
   bottom: -0.25rem;
   width: 4px;
   height: 4px;
-  background: #3b82f6;
+  background: var(--primary);
   border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 201, 107, 0.5);
 `;
 
 function BottomNavContent() {
@@ -68,13 +78,13 @@ function BottomNavContent() {
 }
 
 export default function BottomNav() {
-  const [isMounted, setIsMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    setMounted(true);
   }, []);
 
-  if (!isMounted) {
+  if (!mounted) {
     return null;
   }
 

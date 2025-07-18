@@ -41,6 +41,13 @@ const NewsletterForm = styled.form`
   gap: 1.5rem;
   max-width: 500px;
   margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--glass-shadow-light);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
 `;
 
 const InputGroup = styled.div`
@@ -55,41 +62,50 @@ const InputGroup = styled.div`
 const EmailInput = styled.input`
   flex: 1;
   padding: 1rem;
-  border: none;
+  border: 1.5px solid rgba(255,255,255,0.3);
   border-radius: var(--radius-md);
   font-size: 1rem;
-  background: white;
+  background: rgba(255,255,255,0.9);
   color: var(--gray-700);
-  
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-  }
-  
+  transition: all 0.2s;
+  box-shadow: none;
   &::placeholder {
     color: var(--gray-600);
+    opacity: 1;
+  }
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    color: var(--gray-900);
   }
 `;
 
 const SubmitButton = styled.button`
   padding: 1rem 2rem;
-  background: var(--secondary);
+  background: linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5));
   color: white;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-full);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--glass-shadow-light);
   white-space: nowrap;
-  
   &:hover {
-    background: #059669;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7));
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--glass-shadow-medium);
   }
-  
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
   &:disabled {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--gray-300);
     cursor: not-allowed;
     transform: none;
   }
@@ -111,7 +127,8 @@ const Checkbox = styled.input`
 
 const CheckboxLabel = styled.label`
   font-size: 0.9rem;
-  opacity: 0.9;
+  color: var(--gray-700);
+  opacity: 1;
   line-height: 1.4;
   cursor: pointer;
   text-align: left;
