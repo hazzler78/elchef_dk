@@ -121,7 +121,6 @@ export default function Hero() {
               muted 
               loop 
               playsInline
-              poster="/frog-hero.png"
               onClick={handleVideoClick}
               style={{ cursor: 'pointer' }}
               title="Klicka för att växla ljud av/på"
