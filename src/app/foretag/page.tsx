@@ -1,6 +1,7 @@
 "use client";
 
 import styled from 'styled-components';
+import GlassButton from '@/components/GlassButton';
 
 const Section = styled.section`
   padding: 4rem 0;
@@ -9,7 +10,7 @@ const Section = styled.section`
 const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.8);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid rgba(255,255,255,0.3);
@@ -52,9 +53,9 @@ export default function Foretag() {
         <Lead>
           Ett företagsavtal för el ger din verksamhet möjlighet att anpassa energilösningarna efter behov och förbrukning. Med rätt avtal kan ni uppnå förutsägbara kostnader, ökad flexibilitet och trygghet mot marknadens svängningar, så att ni kan fokusera på det som är viktigast – att driva verksamheten effektivt.
         </Lead>
-        <CTAButton href="https://energi2.se/elchef/" target="_blank" rel="noopener noreferrer">
+        <GlassButton variant="primary" size="lg" onClick={() => window.open('https://energi2.se/elchef/', '_blank')}>
           Läs mer & teckna företagsavtal
-        </CTAButton>
+        </GlassButton>
       </Container>
     </Section>
   );
