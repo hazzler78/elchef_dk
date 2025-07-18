@@ -172,6 +172,43 @@ const Benefit = styled.div`
   }
 `;
 
+// SVG Ikoner i glassmorphism-stil
+const RocketIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,201,107,0.15))' }}>
+    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(22,147,255,0.18)" />
+    <path d="M16 4c3.5 0 7 3.5 7 7 0 4.5-4.5 10-7 13.5C13.5 21 9 15.5 9 11c0-3.5 3.5-7 7-7z" fill="url(#rocket-gradient)" stroke="rgba(0,201,107,0.7)" strokeWidth="1.5" />
+    <circle cx="16" cy="11" r="2.5" fill="#fff" stroke="rgba(22,147,255,0.7)" strokeWidth="1.2" />
+    <defs>
+      <linearGradient id="rocket-gradient" x1="9" y1="4" x2="23" y2="24" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00C96B" />
+        <stop offset="1" stopColor="#1693FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+const ChartIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(22,147,255,0.15))' }}>
+    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,201,107,0.13)" />
+    <rect x="10" y="14" width="3" height="7" rx="1.5" fill="#00C96B" />
+    <rect x="15" y="10" width="3" height="11" rx="1.5" fill="#1693FF" />
+    <rect x="20" y="17" width="3" height="4" rx="1.5" fill="#10b981" />
+  </svg>
+);
+const PiggyIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,201,107,0.12))' }}>
+    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,201,107,0.13)" />
+    <ellipse cx="16" cy="16" rx="8" ry="6" fill="url(#piggy-gradient)" stroke="#00C96B" strokeWidth="1.2" />
+    <circle cx="13" cy="15" r="1" fill="#fff" />
+    <rect x="19" y="19" width="2.5" height="4" rx="1.2" fill="#1693FF" />
+    <defs>
+      <linearGradient id="piggy-gradient" x1="8" y1="10" x2="24" y2="22" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00C96B" />
+        <stop offset="1" stopColor="#1693FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 export default function NewsletterHero() {
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
@@ -263,15 +300,18 @@ export default function NewsletterHero() {
 
         <Benefits>
           <Benefit>
-            <h3>🚀 Exklusiva erbjudanden</h3>
+            <RocketIcon />
+            <h3>Exklusiva erbjudanden</h3>
             <p>Få först tillgång till de bästa elpriserna</p>
           </Benefit>
           <Benefit>
-            <h3>📊 Elprisuppdateringar</h3>
+            <ChartIcon />
+            <h3>Elprisuppdateringar</h3>
             <p>Håll dig uppdaterad om marknadens utveckling</p>
           </Benefit>
           <Benefit>
-            <h3>💰 Sparatips</h3>
+            <PiggyIcon />
+            <h3>Sparatips</h3>
             <p>Få tips för att minska din elräkning</p>
           </Benefit>
         </Benefits>
