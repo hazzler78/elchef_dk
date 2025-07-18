@@ -29,21 +29,6 @@ const Lead = styled.p`
   color: #374151;
   margin-bottom: 2rem;
 `;
-const CTAButton = styled.a`
-  display: inline-block;
-  margin-top: 2rem;
-  padding: 1rem 2.5rem;
-  background: #2563eb;
-  color: white;
-  border-radius: 0.5rem;
-  font-size: 1.15rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s;
-  &:hover {
-    background: #1741a6;
-  }
-`;
 
 export default function Foretag() {
   return (
