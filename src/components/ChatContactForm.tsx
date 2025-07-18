@@ -4,75 +4,99 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 const ContactFormContainer = styled.div`
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 18px;
+  padding: 1.5rem 1.2rem;
   margin: 8px 0;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--glass-shadow-light);
 `;
 
 const Title = styled.h3`
   margin: 0 0 12px 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #17416b;
+  letter-spacing: 0.01em;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1rem;
 `;
 
 const Input = styled.input`
-  padding: 8px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  
+  padding: 0.85rem 1rem;
+  border: 1.5px solid rgba(203, 213, 225, 0.5);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.9);
+  color: #17416b;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+  &::placeholder {
+    color: #64748b;
+    opacity: 1;
+  }
   &:focus {
-    border-color: #2563eb;
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.08);
+    color: #17416b;
   }
 `;
 
 const CheckboxGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 10px;
+  margin-top: 2px;
 `;
 
 const Checkbox = styled.input`
-  width: 16px;
-  height: 16px;
-  accent-color: #2563eb;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--primary);
 `;
 
 const CheckboxLabel = styled.label`
-  font-size: 13px;
-  color: #475569;
+  font-size: 0.95rem;
+  color: #17416b;
   cursor: pointer;
 `;
 
 const SubmitButton = styled.button`
-  background: #2563eb;
+  background: linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5));
   color: white;
+  padding: 0.9rem 1.7rem;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--glass-shadow-light);
 
   &:hover {
-    background: #1d4ed8;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--glass-shadow-medium);
+    background: linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7));
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
   }
 
   &:disabled {
     background: #94a3b8;
     cursor: not-allowed;
+    transform: none;
   }
 `;
 
