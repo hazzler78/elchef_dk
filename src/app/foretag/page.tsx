@@ -4,14 +4,17 @@ import styled from 'styled-components';
 
 const Section = styled.section`
   padding: 4rem 0;
-  background: #f8fafc;
+  background: transparent;
 `;
 const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255,255,255,0.3);
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  box-shadow: var(--glass-shadow-light);
   padding: 3rem 2rem;
   text-align: center;
 `;

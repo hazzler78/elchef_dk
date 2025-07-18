@@ -4,14 +4,17 @@ import styled from 'styled-components';
 
 const Section = styled.section`
   padding: 4rem 0;
-  background: #f8fafc;
+  background: transparent;
 `;
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255,255,255,0.3);
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  box-shadow: var(--glass-shadow-light);
   padding: 3rem 2rem;
 `;
 const Title = styled.h1`
@@ -52,7 +55,7 @@ export default function Integritetspolicy() {
 
         <SectionTitle>PERSONUPPGIFTER</SectionTitle>
         <Paragraph>
-          Denna policy förklarar hur Normann Salg, organisationsnummer 927 985 780 (nedan kallat &quot;Företaget&quot;), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker eller använder våra tjänster.
+          Denna policy förklarar hur Normann Salg, organisationsnummer 927 985 780 (nedan kallat &quot;Företaget&quot;), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker elchef.se eller använder våra tjänster.
         </Paragraph>
         <Paragraph>
           <b>Personuppgifter</b> är information som kan kopplas till en identifierbar person. Att behandla personuppgifter innebär alla typer av hantering, som insamling, strukturering, lagring och radering.

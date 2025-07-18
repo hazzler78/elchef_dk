@@ -42,15 +42,18 @@ const ArrowIcon = () => (
 
 const Section = styled.section`
   padding: var(--section-spacing) 0;
-  background: var(--gray-50);
+  background: transparent;
 `;
 
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255,255,255,0.3);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--glass-shadow-light);
   padding: 3rem 2rem;
 `;
 

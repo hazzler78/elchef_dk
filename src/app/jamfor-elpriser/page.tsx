@@ -240,11 +240,12 @@ export default function JamforElpriser() {
       
       {error && <div style={{ color: 'red', marginTop: 12 }}>{error}</div>}
       
-      {(parsed) && (
-        <form style={{ marginTop: 32, background: '#f8fafc', padding: 16, borderRadius: 8 }}>
+      {/* Glassmorphism for form section */}
+      {(
+        <form style={{ marginTop: 32, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 8, boxShadow: '0 8px 32px rgba(0,0,0,0.1)', padding: 16 }}>
           <h3>Verifiera fakturadata</h3>
           {!parsed && (
-            <div style={{ background: '#fef3c7', padding: 12, borderRadius: 6, marginBottom: 16 }}>
+            <div style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid #fde68a', padding: 12, borderRadius: 6, marginBottom: 16, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
               <p style={{ margin: 0, color: '#92400e' }}>
                 ⚠️ Vi kunde inte automatiskt extrahera alla värden från fakturan. 
                 Vänligen fyll i värdena manuellt baserat på den extraherade texten ovan.
@@ -352,19 +353,19 @@ export default function JamforElpriser() {
         </form>
       )}
       
+      {/* Glassmorphism for savings box */}
       {savings && (
-        <div style={{ marginTop: 32, background: '#f0fdf4', padding: 24, borderRadius: 8, border: '2px solid #10b981' }}>
+        <div style={{ marginTop: 32, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 8, boxShadow: '0 8px 32px rgba(0,0,0,0.1)', padding: 24 }}>
           <h2 style={{ color: '#065f46', marginBottom: '1rem' }}>💚 Dina potentiella besparingar</h2>
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: '2rem' }}>
-            <div style={{ background: 'white', padding: 16, borderRadius: 8 }}>
+            <div style={{ background: 'rgba(255,255,255,0.95)', padding: 16, borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.07)', marginBottom: 16, border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
               <h4 style={{ color: '#dc2626', marginBottom: '0.5rem' }}>Nuvarande kostnad</h4>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#dc2626' }}>
                 {savings.currentTotal.toFixed(2)} kr
               </div>
             </div>
-            
-            <div style={{ background: 'white', padding: 16, borderRadius: 8 }}>
+            <div style={{ background: 'rgba(255,255,255,0.95)', padding: 16, borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.07)', marginBottom: 16, border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
               <h4 style={{ color: '#10b981', marginBottom: '0.5rem' }}>Optimal kostnad</h4>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>
                 {savings.optimalTotal.toFixed(2)} kr
@@ -372,7 +373,7 @@ export default function JamforElpriser() {
             </div>
           </div>
           
-          <div style={{ background: 'white', padding: 20, borderRadius: 8, marginBottom: '2rem' }}>
+          <div style={{ background: 'rgba(255,255,255,0.95)', padding: 20, borderRadius: 8, marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
             <h3 style={{ color: '#10b981', marginBottom: '1rem' }}>
               🎉 Du kan spara {savings.potentialSavings.toFixed(2)} kr ({savings.savingsPercentage.toFixed(1)}%)
             </h3>
@@ -408,7 +409,7 @@ export default function JamforElpriser() {
               </ul>
             </div>
             
-            <div>
+            <div style={{ background: 'rgba(255,255,255,0.95)', padding: 16, borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.07)', marginBottom: 16, border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
               <h4>Våra rekommendationer:</h4>
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {savings.recommendations.map((rec, index) => (
