@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
+import GlassButton from '@/components/GlassButton';
 
 const Section = styled.section`
   padding: 4rem 0;
@@ -10,7 +11,7 @@ const Section = styled.section`
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.8);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid rgba(255,255,255,0.3);
@@ -73,7 +74,14 @@ export default function OmOss() {
           Vill du slippa onödigt dyra elavtal? Börja jämföra och byt direkt via Elchef – det tar bara några minuter.
         </p>
         <CTA>
-          <Link href="/">👉 Se ditt pris nu</Link>
+          <GlassButton 
+            variant="primary" 
+            size="lg" 
+            onClick={() => window.open('/', '_self')}
+            background={'linear-gradient(135deg, rgba(0,201,107,0.95), rgba(22,147,255,0.95))'}
+          >
+            👉 Se ditt pris nu
+          </GlassButton>
         </CTA>
       </Container>
     </Section>
