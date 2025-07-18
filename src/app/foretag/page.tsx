@@ -38,7 +38,12 @@ export default function Foretag() {
         <Lead>
           Ett företagsavtal för el ger din verksamhet möjlighet att anpassa energilösningarna efter behov och förbrukning. Med rätt avtal kan ni uppnå förutsägbara kostnader, ökad flexibilitet och trygghet mot marknadens svängningar, så att ni kan fokusera på det som är viktigast – att driva verksamheten effektivt.
         </Lead>
-        <GlassButton variant="primary" size="lg" onClick={() => window.open('https://energi2.se/elchef/', '_blank')}>
+        <GlassButton 
+          variant="primary" 
+          size="lg" 
+          onClick={() => window.open('https://energi2.se/elchef/', '_blank')}
+          background={'linear-gradient(135deg, rgba(0,201,107,0.95), rgba(22,147,255,0.95))'}
+        >
           Läs mer & teckna företagsavtal
         </GlassButton>
       </Container>

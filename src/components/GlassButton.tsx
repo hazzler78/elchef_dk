@@ -7,6 +7,7 @@ interface GlassButtonProps {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+  background?: string;
 }
 
 export default function GlassButton({ 
@@ -15,7 +16,8 @@ export default function GlassButton({
   size = 'md',
   className = '',
   onClick,
-  disabled = false
+  disabled = false,
+  background
 }: GlassButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -94,6 +96,7 @@ export default function GlassButton({
         overflow: 'hidden',
         opacity: disabled ? 0.6 : 1,
         transform: disabled ? 'none' : undefined,
+        ...(background ? { background } : {}),
       }}
     >
       <span style={{ position: 'relative', zIndex: 1 }}>
