@@ -1,7 +1,6 @@
 "use client";
 
 import styled from 'styled-components';
-import Link from 'next/link';
 import GlassButton from '@/components/GlassButton';
 
 const Section = styled.section`
