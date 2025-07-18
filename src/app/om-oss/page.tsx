@@ -79,7 +79,7 @@ export default function OmOss() {
             onClick={() => window.open('/', '_self')}
             background={'linear-gradient(135deg, rgba(0,201,107,0.95), rgba(22,147,255,0.95))'}
           >
-            👉 Se ditt pris nu
+            Se ditt pris nu
           </GlassButton>
         </CTA>
       </Container>
