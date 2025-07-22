@@ -206,6 +206,9 @@ export default function JamforElpriser() {
 
   return (
     <main className="container" style={{ maxWidth: 800, margin: '0 auto', padding: '2rem 0' }}>
+      <div style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid #fde68a', color: '#92400e', borderRadius: 8, padding: '16px 20px', marginBottom: 24, textAlign: 'center', fontWeight: 600 }}>
+        Den här sidan är under uppbyggnad. Kom tillbaka snart för att jämföra elpriser!
+      </div>
       <h1>Jämför elpriser</h1>
       <p>Ladda upp din elräkning (bild eller PDF) och se hur mycket du kan spara!</p>
       
