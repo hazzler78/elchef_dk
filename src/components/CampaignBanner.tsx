@@ -44,10 +44,10 @@ const StyledLink = styled.a`
 export default function CampaignBanner() {
   return (
     <Banner>
-      🎉 Vi skänker bort el för <Highlight>1 miljon kronor!</Highlight>
-      Alla som registrerar sig för
+      🎉 Skynda! Vi har snart delat ut hela <Highlight>1 miljon kronor</Highlight> i elrabatter!<br />
+      Registrera dig för
       <StyledLink href="https://www.svekraft.com/elchef-rorligt/" target="_blank" rel="noopener noreferrer">Rörligt avtal</StyledLink>
-      får <Highlight>500 kr rabatt</Highlight> med koden <Highlight>Elchef500</Highlight>!
+      och få <Highlight>500 kr rabatt</Highlight> med koden <Highlight>Elchef500</Highlight> – innan rabatten tar slut!
     </Banner>
   );
 } 
