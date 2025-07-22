@@ -10,8 +10,8 @@ import GrokChat from '@/components/GrokChat';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Elchef - Hitta och byt till marknadens bästa elavtal",
-  description: "Jämför elpriser och byt till ett bättre elavtal enkelt och kostnadsfritt med Elchef. Vi hjälper dig hitta det bästa elavtalet för just dina behov.",
+  title: "Elchef - Byt till bättre elavtal",
+  description: "Jämför elpriser och byt till ett bättre elavtal enkelt och kostnadsfritt med Elchef. Vi hjälper dig hitta ett elavtal som passar dina behov.",
   keywords: "elavtal, elpriser, byta elavtal, jämför elpriser, elbolag, elhandelsbolag",
 };
 
@@ -43,6 +43,17 @@ export default function RootLayout({
             ]
           }
         `}</script>
+        {/* Open Graph metadata */}
+        <meta property="og:title" content="Elchef - Byt till bättre elavtal" />
+        <meta property="og:description" content="Jämför elpriser och byt till ett bättre elavtal enkelt och kostnadsfritt med Elchef. Vi hjälper dig hitta ett elavtal som passar dina behov." />
+        <meta property="og:image" content="https://elchef.se/logo.png" />
+        <meta property="og:url" content="https://elchef.se" />
+        <meta property="og:type" content="website" />
+        {/* Twitter Card metadata */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Elchef - Byt till bättre elavtal" />
+        <meta name="twitter:description" content="Jämför elpriser och byt till ett bättre elavtal enkelt och kostnadsfritt med Elchef. Vi hjälper dig hitta ett elavtal som passar dina behov." />
+        <meta name="twitter:image" content="https://elchef.se/logo.png" />
       </head>
       <body className={inter.className}>
         <StyledComponentsRegistry>
