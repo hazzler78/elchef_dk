@@ -6,12 +6,8 @@ import { FaChevronDown } from 'react-icons/fa';
 
 const FAQSection = styled.section`
   padding: 4rem 1rem;
-  background: linear-gradient(135deg, rgba(0,201,107,0.2), rgba(22,147,255,0.2)), rgba(255,255,255,0.95);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: transparent;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: var(--glass-shadow-light);
 `;
 
 const Container = styled.div`
