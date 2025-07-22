@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const NewsletterHeroSection = styled.section`
   padding: 4rem 1rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
   color: white;
 `;
 
