@@ -23,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script type="application/ld+json" suppressHydrationWarning>{`
           {
             "@context": "https://schema.org",
