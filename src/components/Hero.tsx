@@ -80,6 +80,21 @@ const VideoWrapper = styled.div`
   }
 `;
 
+const USPList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 2rem 0;
+  color: #fff;
+  font-size: 1.1rem;
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+`;
+
 export default function Hero() {
   const handleVideoClick = (event: React.MouseEvent<HTMLVideoElement>) => {
     const video = event.currentTarget;
@@ -96,6 +111,11 @@ export default function Hero() {
           <TextContent>
             <h1>Elchef gör det enkelt att välja rätt elavtal</h1>
             <p>Snabbt, gratis och utan krångel.</p>
+            <USPList>
+              <li>✔️ Vi lyfter bara fram elavtal som är värda att överväga.</li>
+              <li>✔️ Gratis byte – din gamla avtal sägs upp automatiskt.</li>
+              <li>✔️ Full valfrihet – välj mellan rörligt elpris eller fastpris med avtalad period.</li>
+            </USPList>
             <ButtonRow>
               <GlassButton 
                 variant="primary" 
