@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, ElementType } from 'react';
 
 interface GlassButtonProps {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ interface GlassButtonProps {
   background?: string;
   disableScrollEffect?: boolean;
   disableHoverEffect?: boolean;
+  as?: ElementType;
 }
 
 export default function GlassButton({ 
@@ -22,6 +23,7 @@ export default function GlassButton({
   background,
   disableScrollEffect = false,
   disableHoverEffect = false,
+  as = 'button',
 }: GlassButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -81,11 +83,13 @@ export default function GlassButton({
   const variantStyles = getVariantStyles();
   const sizeStyles = getSizeStyles();
 
+  const Element: ElementType = as;
+
   return (
-    <button
-      ref={buttonRef}
+    <Element
+      ref={as === 'button' ? buttonRef : undefined}
       onClick={onClick}
-      disabled={disabled}
+      disabled={as === 'button' ? disabled : undefined}
       className={`glass-button ${className}`}
       style={{
         ...variantStyles,
@@ -131,6 +135,6 @@ export default function GlassButton({
         }
         ` : ''}
       `}</style>
-    </button>
+    </Element>
   );
 } 

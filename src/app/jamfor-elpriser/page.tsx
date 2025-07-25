@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
 import Footer from '@/components/Footer';
@@ -9,6 +9,7 @@ export default function JamforElpriser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [gptResult, setGptResult] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -40,6 +41,13 @@ export default function JamforElpriser() {
     }
   }
 
+  function handleUploadNew() {
+    setFile(null);
+    setGptResult(null);
+    setError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
   return (
     <>
       <main className="container" style={{ maxWidth: 800, margin: '0 auto', padding: '2rem 0' }}>
@@ -47,12 +55,37 @@ export default function JamforElpriser() {
         <p style={{ fontSize: 18, color: '#374151', marginBottom: 32 }}>
           Ladda upp en bild på din elräkning och få en smart, tydlig analys direkt!
         </p>
-        <div style={{ marginBottom: '2rem' }}>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          <button onClick={handleGptOcr} disabled={!file || loading} style={{ marginLeft: 12, padding: '8px 20px', fontSize: 16, borderRadius: 6, background: '#10b981', color: 'white', border: 'none', cursor: 'pointer' }}>
-            {loading ? 'Analyserar...' : 'Analysera faktura'}
-          </button>
-        </div>
+        {!gptResult && (
+          <div style={{ marginBottom: '2rem', display: 'flex', gap: 16, alignItems: 'center' }}>
+            <label htmlFor="file-upload">
+              <GlassButton as="span" variant="primary" size="md" background="rgba(16,185,129,0.85)" disableScrollEffect disableHoverEffect>
+                Välj fakturabild
+              </GlassButton>
+            </label>
+            <input
+              id="file-upload"
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
+            <span style={{ color: '#374151', fontSize: 15, minWidth: 120 }}>
+              {file ? file.name : 'Ingen fil vald'}
+            </span>
+            <GlassButton
+              onClick={handleGptOcr}
+              disabled={!file || loading}
+              variant="primary"
+              size="md"
+              background="rgba(16,185,129,0.85)"
+              disableScrollEffect
+              disableHoverEffect
+            >
+              {loading ? 'Analyserar...' : 'Analysera faktura'}
+            </GlassButton>
+          </div>
+        )}
         {error && <div style={{ color: 'red', marginTop: 12 }}>{error}</div>}
         {gptResult && (
           <div style={{ marginTop: 32, background: '#f3f4f6', borderRadius: 8, padding: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
@@ -72,10 +105,7 @@ export default function JamforElpriser() {
             <div style={{ fontSize: 14, color: '#6b7280', margin: '18px 0 0 0', textAlign: 'center' }}>
               Observera: AI-analysen kan innehålla fel. Kontrollera alltid mot din faktura innan du fattar beslut.
             </div>
-            <div style={{ marginTop: 32, textAlign: 'center' }}>
-              <div style={{ fontSize: 17, marginBottom: 16, color: '#374151' }}>
-                Vill du sänka din elkostnad direkt? Byt elavtal enkelt via Elchef!
-              </div>
+            <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
               <a
                 href="https://elchef.se/byt-elavtal"
                 target="_blank"
@@ -86,6 +116,9 @@ export default function JamforElpriser() {
                   Byt elavtal nu
                 </GlassButton>
               </a>
+              <GlassButton variant="secondary" size="md" background="rgba(22,147,255,0.85)" disableScrollEffect disableHoverEffect onClick={handleUploadNew}>
+                Ladda upp ny faktura
+              </GlassButton>
             </div>
           </div>
         )}
