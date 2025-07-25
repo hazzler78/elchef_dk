@@ -94,10 +94,8 @@ export default function Hero() {
       <div className="container">
         <HeroContent>
           <TextContent>
-            <h1>Spara pengar på ditt elavtal</h1>
-            <p>
-              Med Elchef får du exklusiva rabatter på elavtal. Vi hjälper dig spara pengar på din elräkning - helt kostnadsfritt!
-            </p>
+            <h1>Elchef gör det enkelt att välja rätt elavtal</h1>
+            <p>Snabbt, gratis och utan krångel.</p>
             <ButtonRow>
               <GlassButton 
                 variant="primary" 

@@ -1,7 +1,7 @@
 "use client";
 
 import styled from 'styled-components';
-import GlassButton from '@/components/GlassButton';
+import GoHomeButton from './GoHomeButton';
 
 const Section = styled.section`
   padding: 4rem 0;
@@ -51,36 +51,34 @@ export default function OmOss() {
   return (
     <Section>
       <Container>
-        <Title>Om oss</Title>
+        <Title>Elchef.se – Om oss</Title>
         <Lead>
-          <b>Elchef.se gör det enkelt att välja rätt elavtal – snabbt, gratis och utan krångel.</b>
+          <b>Vilka är vi – och varför finns Elchef.se?</b>
         </Lead>
         <p>
-          Vi är en oberoende jämförelsetjänst som hjälper svenska hushåll att <b>sänka elkostnaden</b> och få bättre koll på elmarknaden. Oavsett om du bor i lägenhet eller villa, hyr eller äger, så kan du med några klick hitta det bästa elavtalet för just dig.
+          Elmarknaden i Sverige är ett enda stort kaos. Över 100 elbolag, en djungel av elavtal och prismodeller, och mängder av påslag, fasta avgifter och extratjänster smyger sig in på fakturan. Många har ingen aning om vad de faktiskt betalar för – och det vet elbolagen. Det är just där de tjänar sina pengar.
+        </p>
+        <p>
+          Vi skapade Elchef.se för att vi var trötta på att se människor betala för mycket – utan att ens veta om det. Vi har sett hur svårt det är att hitta ett bra elavtal bland alla erbjudanden, påslag och finstilt.
+        </p>
+        <p>
+          Vi som står bakom Elchef.se har själva jobbat i branschen i över 30 år. Vi har sett hur det fungerar bakom kulisserna – och hur svårt det är för vanliga människor att veta vad som är ett bra avtal, och vad som bara ser bra ut på ytan.
         </p>
         <List>
-          <li><b>Marknadens tydligaste översikt</b> över elavtal – helt utan reklam eller dolda intressen.</li>
-          <li><b>Gratis byte av elavtal</b> – vi tar hand om allt, inklusive uppsägning hos ditt gamla bolag.</li>
-          <li><b>Avtalsfrihet utan bindningstid</b> – du kan byta igen när du vill.</li>
+          <li>Vi är <b>inte</b> ett elbolag.</li>
+          <li>Du får aldrig en elräkning från oss.</li>
+          <li>Vi jobbar helt oberoende och samarbetar med flera elleverantörer för att lyfta fram kampanjer och rabatter som faktiskt gör skillnad – inklusive unika erbjudanden som bara gäller via Elchef.se.</li>
+          <li>Samtidigt letar vi aktivt efter nya elbolag som vill erbjuda schyssta och prisvärda avtal, utan dolda avgifter eller onödiga tillägg.</li>
         </List>
         <p>
-          Vi tycker inte att el ska kännas krångligt. Därför förklarar vi allt på <b>enkelt och begripligt språk</b> – från rörligt pris till elområden och miljöpåverkan. Tänk på oss som din <b>smarta kompis på elmarknaden</b>, som alltid vill att du ska få det bästa.
+          Vårt mål är att ge dig kontrollen tillbaka. Du ska slippa lägga timmar på att leta själv. Vi visar bara fram avtal som är värda att överväga – med tydliga villkor och priser du faktiskt förstår.
         </p>
         <Quote>
-          Vårt mål är att alla hushåll i Sverige ska känna sig trygga, välinformerade och aldrig betala mer än nödvändigt för sin el.
+          Du behöver inte förstå hela elmarknaden – det är vårt jobb.<br />
+          Du behöver bara fatta ett beslut: att bli Elchef i ditt eget hem.
         </Quote>
-        <p>
-          Vill du slippa onödigt dyra elavtal? Börja jämföra och byt direkt via Elchef – det tar bara några minuter.
-        </p>
         <CTA>
-          <GlassButton 
-            variant="primary" 
-            size="lg" 
-            onClick={() => window.open('/', '_self')}
-            background={'linear-gradient(135deg, rgba(0,201,107,0.95), rgba(22,147,255,0.95))'}
-          >
-            Se ditt pris nu
-          </GlassButton>
+          <GoHomeButton />
         </CTA>
       </Container>
     </Section>
