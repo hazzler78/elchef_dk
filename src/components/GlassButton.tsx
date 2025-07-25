@@ -8,6 +8,8 @@ interface GlassButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   background?: string;
+  disableScrollEffect?: boolean;
+  disableHoverEffect?: boolean;
 }
 
 export default function GlassButton({ 
@@ -17,11 +19,14 @@ export default function GlassButton({
   className = '',
   onClick,
   disabled = false,
-  background
+  background,
+  disableScrollEffect = false,
+  disableHoverEffect = false,
 }: GlassButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (disableScrollEffect) return;
     const handleScroll = () => {
       const offset = window.scrollY;
       if (buttonRef.current && !disabled) {
@@ -31,7 +36,7 @@ export default function GlassButton({
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [disabled]);
+  }, [disabled, disableScrollEffect]);
 
   const getVariantStyles = () => {
     switch (variant) {
@@ -103,15 +108,14 @@ export default function GlassButton({
         {children}
       </span>
       <style jsx>{`
+        ${!disableHoverEffect ? `
         .glass-button:hover:not(:disabled) {
           transform: translateY(-2px) scale(1.02) !important;
           box-shadow: var(--glass-shadow-medium) !important;
         }
-        
         .glass-button:active:not(:disabled) {
           transform: translateY(0) scale(0.98) !important;
         }
-        
         .glass-button::before {
           content: '';
           position: absolute;
@@ -122,10 +126,10 @@ export default function GlassButton({
           background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
           transition: left 0.5s;
         }
-        
         .glass-button:hover::before {
           left: 100%;
         }
+        ` : ''}
       `}</style>
     </button>
   );
