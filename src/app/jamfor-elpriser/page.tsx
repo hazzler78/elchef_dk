@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
-import Footer from '@/components/Footer';
+import Link from 'next/link';
 
 export default function JamforElpriser() {
   const [file, setFile] = useState<File | null>(null);
@@ -55,24 +55,42 @@ export default function JamforElpriser() {
         <p style={{ fontSize: 18, color: '#374151', marginBottom: 32 }}>
           Ladda upp en bild på din elräkning och få en smart, tydlig analys direkt!
         </p>
-        {!gptResult && (
-          <div style={{ marginBottom: '2rem', display: 'flex', gap: 16, alignItems: 'center' }}>
-            <label htmlFor="file-upload">
-              <GlassButton as="span" variant="primary" size="md" background="rgba(16,185,129,0.85)" disableScrollEffect disableHoverEffect>
-                Välj fakturabild
-              </GlassButton>
-            </label>
-            <input
-              id="file-upload"
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              style={{ display: 'none' }}
-            />
-            <span style={{ color: '#374151', fontSize: 15, minWidth: 120 }}>
-              {file ? file.name : 'Ingen fil vald'}
-            </span>
+        {!loading && !gptResult && (
+          <div style={{ 
+            marginBottom: '2rem', 
+            display: 'flex', 
+            flexDirection: 'column',
+            gap: 16, 
+            alignItems: 'stretch'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column',
+              gap: 12,
+              alignItems: 'stretch'
+            }}>
+              <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
+                <GlassButton as="span" variant="primary" size="md" background="rgba(16,185,129,0.85)" disableScrollEffect disableHoverEffect>
+                  Välj fakturabild
+                </GlassButton>
+              </label>
+              <input
+                id="file-upload"
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <div style={{ 
+                color: '#374151', 
+                fontSize: 15, 
+                textAlign: 'center',
+                padding: '8px 0'
+              }}>
+                {file ? file.name : 'Ingen fil vald'}
+              </div>
+            </div>
             <GlassButton
               onClick={handleGptOcr}
               disabled={!file || loading}
@@ -82,11 +100,37 @@ export default function JamforElpriser() {
               disableScrollEffect
               disableHoverEffect
             >
-              {loading ? 'Analyserar...' : 'Analysera faktura'}
+              Analysera faktura
             </GlassButton>
           </div>
         )}
         {error && <div style={{ color: 'red', marginTop: 12 }}>{error}</div>}
+                 {loading && (
+           <div style={{ 
+             marginTop: 32, 
+             background: '#f3f4f6', 
+             borderRadius: 8, 
+             padding: 32, 
+             boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+             textAlign: 'center'
+           }}>
+             <div style={{ 
+               width: 60, 
+               height: 60, 
+               border: '4px solid #e5e7eb', 
+               borderTop: '4px solid #10b981', 
+               borderRadius: '50%', 
+               animation: 'spin 1s linear infinite',
+               margin: '0 auto 16px auto'
+             }}></div>
+             <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, color: '#10b981' }}>
+               Analyserar din faktura...
+             </h3>
+             <p style={{ fontSize: 16, color: '#6b7280', margin: 0 }}>
+               AI:n läser av alla kostnader och identifierar dolda avgifter
+             </p>
+           </div>
+         )}
         {gptResult && (
           <div style={{ marginTop: 32, background: '#f3f4f6', borderRadius: 8, padding: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
             <h3 style={{ fontSize: 22, fontWeight: 600, marginBottom: 16 }}>Elbespararens analys</h3>
@@ -106,16 +150,11 @@ export default function JamforElpriser() {
               Observera: AI-analysen kan innehålla fel. Kontrollera alltid mot din faktura innan du fattar beslut.
             </div>
             <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-              <a
-                href="https://elchef.se/byt-elavtal"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}
-              >
+              <Link href="/" style={{ textDecoration: 'none' }}>
                 <GlassButton variant="primary" size="lg" background="rgba(16,185,129,0.85)" disableScrollEffect={true} disableHoverEffect={true}>
                   Byt elavtal nu
                 </GlassButton>
-              </a>
+              </Link>
               <GlassButton variant="secondary" size="md" background="rgba(22,147,255,0.85)" disableScrollEffect disableHoverEffect onClick={handleUploadNew}>
                 Ladda upp ny faktura
               </GlassButton>
@@ -123,7 +162,6 @@ export default function JamforElpriser() {
           </div>
         )}
       </main>
-      <Footer />
     </>
   );
 } 

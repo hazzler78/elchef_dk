@@ -246,6 +246,12 @@ p {
   box-shadow: var(--glass-shadow-medium);
 }
 
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Remove dark mode for now */
 @media (prefers-color-scheme: dark) {
   :root {

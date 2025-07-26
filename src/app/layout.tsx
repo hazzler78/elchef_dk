@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav';
 import { Analytics } from "@vercel/analytics/next";
 import CampaignBanner from '@/components/CampaignBanner';
 import GrokChat from '@/components/GrokChat';
+import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -63,6 +64,7 @@ export default function RootLayout({
           <div id="app">
             {children}
             <BottomNav />
+            <Footer />
           </div>
         </StyledComponentsRegistry>
         <GrokChat />
