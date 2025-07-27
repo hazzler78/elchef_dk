@@ -28,9 +28,9 @@ export async function POST(req: NextRequest) {
 Elbespararen jämför mot ett referenspris som baseras på det elprisområde som står angivet på varje specifik faktura, eftersom detta kan variera. Den använder aktuella medelpriser för respektive elområde för år 2025 enligt statistik. För att räkna ut totalpriset inklusive moms används formeln: medelspotpris + 25% (moms). På samma sätt beräknas extra kostnader med +25% moms för att visa totalpriset inklusive moms på de onödiga utgifterna. Momsfältet på fakturan ignoreras alltså i beräkningen, för att korrekt dela upp kostnaderna.
 
 För att göra analysen lätt att förstå, presenteras slutsatsen så här:
-- Detta är summan du har i strøm: xxx kr
-- Detta är summan du har i ekstraavgifter: xxx kr
-- Ved å bytte til en avtale uten ekstraavgifter ville du med denne fakturaen spart: xxx kr
+- Detta är summan du har i el: xxx kr
+- Detta är summan du har i extraavgifter: xxx kr
+- Vid byte till ett avtal utan extraavgifter skulle du med denna fakturan sparat: xxx kr
 
 Elbespararen visar också uppskattad besparing på årsbasis genom att multiplicera månadens möjliga besparing med 12. Om analysen visar att användaren kan spara pengar genom att byta elavtal, rekommenderas att göra det via tjänsten Elchef.se.
 
