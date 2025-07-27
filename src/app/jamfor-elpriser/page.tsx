@@ -2,7 +2,6 @@
 import { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
-import Link from 'next/link';
 
 export default function JamforElpriser() {
   const [file, setFile] = useState<File | null>(null);
