@@ -67,7 +67,7 @@ Juni: Elområde 1=3,0, Elområde 2=5,0, Elområde 3=22,8, Elområde 4=40,7`;
           {
             role: 'user',
             content: [
-              { type: 'text', text: 'Analysera denna elräkning enligt instruktionerna.' },
+              { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna.' },
               { type: 'image_url', image_url: { url: base64Image } }
             ]
           }

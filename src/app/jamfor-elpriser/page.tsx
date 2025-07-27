@@ -150,11 +150,28 @@ export default function JamforElpriser() {
               Observera: AI-analysen kan innehålla fel. Kontrollera alltid mot din faktura innan du fattar beslut.
             </div>
             <div style={{ marginTop: 32, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-              <Link href="/" style={{ textDecoration: 'none' }}>
-                <GlassButton variant="primary" size="lg" background="rgba(16,185,129,0.85)" disableScrollEffect={true} disableHoverEffect={true}>
-                  Byt elavtal nu
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <GlassButton 
+                  variant="primary" 
+                  size="lg" 
+                  background="rgba(16,185,129,0.85)" 
+                  disableScrollEffect={true} 
+                  disableHoverEffect={true}
+                  onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
+                >
+                  Rörligt avtal
                 </GlassButton>
-              </Link>
+                <GlassButton 
+                  variant="secondary" 
+                  size="lg" 
+                  background="rgba(22,147,255,0.85)" 
+                  disableScrollEffect={true} 
+                  disableHoverEffect={true}
+                  onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
+                >
+                  Fastpris
+                </GlassButton>
+              </div>
               <GlassButton variant="secondary" size="md" background="rgba(22,147,255,0.85)" disableScrollEffect disableHoverEffect onClick={handleUploadNew}>
                 Ladda upp ny faktura
               </GlassButton>
