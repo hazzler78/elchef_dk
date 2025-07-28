@@ -51,7 +51,7 @@ export default function Integritetspolicy() {
     <Section>
       <Container>
         <Title>Personuppgifter och cookies</Title>
-        <Updated>Senast uppdaterad: September 2024</Updated>
+        <Updated>Senast uppdaterad: Juli 2025</Updated>
 
         <SectionTitle>PERSONUPPGIFTER</SectionTitle>
         <Paragraph>
@@ -64,7 +64,7 @@ export default function Integritetspolicy() {
           <b>Personuppgiftsansvarig</b><br />
           Namn: VKNG LTD<br />
           Org.nr: HE477501<br />
-          E-post: <Mail href="mailto:normann.salg@gmail.com">normann.salg@gmail.com</Mail>
+          E-post: <Mail href="mailto:info@elchef.se">info@elchef.se</Mail>
         </Paragraph>
 
         <SectionTitle>1. Insamling vid användning av tjänsten</SectionTitle>

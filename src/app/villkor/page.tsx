@@ -47,7 +47,7 @@ export default function Villkor() {
     <Section>
       <Container>
         <Title>Användarvillkor för elchef.se</Title>
-        <Updated>Senast uppdaterad: Oktober 2024</Updated>
+        <Updated>Senast uppdaterad: Juli 2025</Updated>
 
         <SectionTitle>1. Elchef.se och våra tjänster</SectionTitle>
         <Paragraph>
