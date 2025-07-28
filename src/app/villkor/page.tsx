@@ -51,7 +51,7 @@ export default function Villkor() {
 
         <SectionTitle>1. Elchef.se och våra tjänster</SectionTitle>
         <Paragraph>
-          Normann Salg (benämnt som &quot;Elchef.se&quot;, &quot;vi&quot; eller &quot;oss&quot;) tillhandahåller en plattform för att förmedla elavtal via elchef.se. Syftet med tjänsten är att göra det enklare för konsumenter att hitta ett fördelaktigt elavtal genom att presentera ett urval av förhandlade erbjudanden.
+          VKNG LTD (benämnt som &quot;Elchef.se&quot;, &quot;vi&quot; eller &quot;oss&quot;) tillhandahåller en plattform för att förmedla elavtal via elchef.se. Syftet med tjänsten är att göra det enklare för konsumenter att hitta ett fördelaktigt elavtal genom att presentera ett urval av förhandlade erbjudanden.
         </Paragraph>
 
         <SectionTitle>2. Användarvillkor</SectionTitle>

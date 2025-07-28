@@ -55,15 +55,15 @@ export default function Integritetspolicy() {
 
         <SectionTitle>PERSONUPPGIFTER</SectionTitle>
         <Paragraph>
-          Denna policy förklarar hur Normann Salg, organisationsnummer 927 985 780 (nedan kallat &quot;Företaget&quot;), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker elchef.se eller använder våra tjänster.
+          Denna policy förklarar hur VKNG LTD, organisationsnummer HE477501 (nedan kallat &quot;Företaget&quot;), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker elchef.se eller använder våra tjänster.
         </Paragraph>
         <Paragraph>
           <b>Personuppgifter</b> är information som kan kopplas till en identifierbar person. Att behandla personuppgifter innebär alla typer av hantering, som insamling, strukturering, lagring och radering.
         </Paragraph>
         <Paragraph>
           <b>Personuppgiftsansvarig</b><br />
-          Namn: Normann Salg<br />
-          Org.nr: 927 985 780<br />
+          Namn: VKNG LTD<br />
+          Org.nr: HE477501<br />
           E-post: <Mail href="mailto:normann.salg@gmail.com">normann.salg@gmail.com</Mail>
         </Paragraph>
 
