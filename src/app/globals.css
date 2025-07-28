@@ -252,6 +252,92 @@ p {
   100% { transform: rotate(360deg); }
 }
 
+/* Elbespararen analys animationer */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes highlightPulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(16,185,129,0.5);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.analysis-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.analysis-highlight {
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+.analysis-slide-in {
+  animation: slideInFromRight 0.5s ease-out;
+}
+
+/* Förbättrade stilar för analyssektioner */
+.analysis-section {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.analysis-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.analysis-summary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 8px 25px rgba(16,185,129,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.analysis-summary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+
 /* Remove dark mode for now */
 @media (prefers-color-scheme: dark) {
   :root {
