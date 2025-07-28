@@ -42,15 +42,16 @@ Svara ALLTID på svenska, även om du inte kan analysera fakturan.
 💸 **Påslag & marginaler**
 - Rörligt påslag, rörliga kostnader, rörlig avgift
 - Fast påslag, fast avgift, fast kostnad
+- Prispåslag, fasta och rörliga påslag
 - Marginal, vinstpåslag, energipåslag
 - Elpåslag, elkostnad, elavgift
 
 📆 **Periodiska avgifter**
 - Månadsavgift, årsavgift, basavgift
 - Grundavgift, fast avgift, administrationsavgift
+- Administrationsavgift, adminavgift
 
 🧾 **Administrativa avgifter**
-- Administrationsavgift, adminavgift
 - Fakturaavgift, faktureringsavgift
 - Kundavgift, kundserviceavgift
 
@@ -60,17 +61,18 @@ Svara ALLTID på svenska, även om du inte kan analysera fakturan.
 - Indexavgift, referensavgift
 
 🌱 **Miljö, certifikat och garanti**
-- Elcertifikat, miljöavgift
+- Elcertifikat, elcertifikatavgift, miljöavgift
 - Grön elavgift, garantiavgift
 - Ursprungsgarantiavgift
 
 📦 **Övriga tillägg och paket**
-- Trygghetspaket, serviceavgift
-- Tilläggsavgift, leverantörsavgift
-- Extraavgift, extrakostnad
+- Trygghetspaket, miljöpaket, tilläggspaket
+- Serviceavgift, tilläggsavgift
+- Leverantörsavgift, extraavgift, extrakostnad
 
 🔍 **Avgifter med misstänkt språk**
-- Dold avgift, gömda avgifter
+- Dold avgift, dolda avgifter, gömda avgifter
+- Bakade avgifter, ospecificerade påslag
 - Tysta avgifter, mikroavgifter
 - Små avgifter, överflödig avgift
 - Onödig avgift, skrymmande avgift
