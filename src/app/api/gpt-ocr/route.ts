@@ -38,46 +38,43 @@ Svara ALLTID på svenska, även om du inte kan analysera fakturan.
 **VIKTIGT: Visa ENDAST slutresultaten, INTE matematiska formler eller uträkningar.**
 
 **IDENTIFIERA DETTA SOM EXTRA AVGIFTER:**
-- Rörliga kostnader, rörligt påslag, rörlig avgift
+
+💸 **Påslag & marginaler**
+- Rörligt påslag, rörliga kostnader, rörlig avgift
 - Fast påslag, fast avgift, fast kostnad
-- Månadsavgift, årsavgift, administrationsavgift
-- Handelsavgift, handelskostnad, handelspåslag
-- Leverantörsavgift, leverantörspåslag, leverantörskostnad
-- Energihandelsavgift, energihandelskostnad
-- Elhandelsavgift, elhandelskostnad
-- Påslag, extra kostnad, tilläggskostnad
-- Serviceavgift, servicekostnad, kundserviceavgift
-- Administrationskostnad, adminavgift, adminkostnad
-- Fakturaavgift, faktureringsavgift, faktureringskostnad
-- Kundavgift, kundkostnad, kundservice
-- Certifikatavgift, miljöavgift, grön elavgift
-- Garantiavgift, garantikostnad, garantipåslag
-- Riskavgift, riskkostnad, riskpåslag
-- Marginal, marginalkostnad, marginalavgift
-- Vinstmarginal, vinstpåslag, vinstkostnad
-- Marknadsavgift, marknadskostnad, marknadspåslag
-- Nettoavgift, nettokostnad, nettoservice
-- Bruttoavgift, bruttoavgift, bruttoavgift
-- Energipåslag, energikostnad, energiavgift
+- Marginal, vinstpåslag, energipåslag
 - Elpåslag, elkostnad, elavgift
-- Spotpris, spotkostnad, spotavgift
-- Indexavgift, indexkostnad, indexpåslag
-- Referensavgift, referenskostnad, referenspåslag
-- Basavgift, baskostnad, baspåslag
-- Standardavgift, standardkostnad, standardpåslag
-- Grundavgift, grundkostnad, grundpåslag
-- Tilläggsavgift, tilläggskostnad, tilläggspåslag
-- Extraavgift, extrakostnad, extrapåslag
-- Dold avgift, dold kostnad, dold påslag
-- Skrymmande avgift, skrymmande kostnad
-- Onödig avgift, onödig kostnad, onödig påslag
-- Överflödig avgift, överflödig kostnad
-- Gömda avgifter, gömda kostnader
-- Dolda avgifter, dolda kostnader
-- Tysta avgifter, tysta kostnader
-- Små avgifter, små kostnader, små påslag
-- Mikroavgifter, mikrokostnader, mikropåslag
-- Nästan osynliga avgifter, nästan osynliga kostnader
+
+📆 **Periodiska avgifter**
+- Månadsavgift, årsavgift, basavgift
+- Grundavgift, fast avgift, administrationsavgift
+
+🧾 **Administrativa avgifter**
+- Administrationsavgift, adminavgift
+- Fakturaavgift, faktureringsavgift
+- Kundavgift, kundserviceavgift
+
+📈 **Handelsrelaterade avgifter**
+- Elhandelsavgift, energihandelsavgift
+- Handelsavgift, spotpris, spotkostnad
+- Indexavgift, referensavgift
+
+🌱 **Miljö, certifikat och garanti**
+- Elcertifikat, miljöavgift
+- Grön elavgift, garantiavgift
+- Ursprungsgarantiavgift
+
+📦 **Övriga tillägg och paket**
+- Trygghetspaket, serviceavgift
+- Tilläggsavgift, leverantörsavgift
+- Extraavgift, extrakostnad
+
+🔍 **Avgifter med misstänkt språk**
+- Dold avgift, gömda avgifter
+- Tysta avgifter, mikroavgifter
+- Små avgifter, överflödig avgift
+- Onödig avgift, skrymmande avgift
+- Nästan osynliga avgifter
 
 **VIKTIGT: Alla ovanstående avgifter ska räknas som extra kostnader utöver medelspotpriset.**
 
