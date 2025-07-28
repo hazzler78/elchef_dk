@@ -147,7 +147,7 @@ export default function JamforElpriser() {
     if (!text) return '';
     
     const lines = text.split('\n');
-    const startIndex = lines.findIndex(line => line.includes('🎯 Slutsats'));
+    const startIndex = lines.findIndex(line => line.includes('Slutsats'));
     
     if (startIndex === -1) {
       // Om ingen slutsats hittas, visa allt
@@ -162,7 +162,7 @@ export default function JamforElpriser() {
     if (!text) return '';
     
     const lines = text.split('\n');
-    const startIndex = lines.findIndex(line => line.includes('🎯 Slutsats'));
+    const startIndex = lines.findIndex(line => line.includes('Slutsats'));
     
     if (startIndex === -1) {
       // Om ingen slutsats hittas, returnera tomt
@@ -175,7 +175,7 @@ export default function JamforElpriser() {
   // Funktion för att kontrollera om texten innehåller en slutsats
   function hasSummarySection(text: string) {
     if (!text) return false;
-    return text.includes('🎯 Slutsats');
+    return text.includes('Slutsats');
   }
 
   // Funktion för att validera beräkningar
