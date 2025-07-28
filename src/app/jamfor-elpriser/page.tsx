@@ -372,7 +372,7 @@ export default function JamforElpriser() {
               <ReactMarkdown
                 components={{
                   h3: (props) => <h3 style={{
-                    color: 'var(--primary)', 
+                    color: 'black', 
                     fontSize: '1.25rem', 
                     marginTop: '1.5rem', 
                     marginBottom: '0.75rem', 
@@ -381,7 +381,7 @@ export default function JamforElpriser() {
                     textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                   }} {...props} />,
                   h4: (props) => <h4 style={{
-                    color: 'var(--secondary)', 
+                    color: 'black', 
                     fontSize: '1.1rem', 
                     marginTop: '1.25rem', 
                     marginBottom: '0.5rem', 
@@ -443,7 +443,7 @@ export default function JamforElpriser() {
                         <div className="analysis-summary analysis-highlight" style={{
                           fontWeight: 600,
                           fontSize: '1rem',
-                          color: 'white',
+                          color: 'black',
                           textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                         }} {...props} />
                       );
@@ -495,7 +495,7 @@ export default function JamforElpriser() {
                 <ReactMarkdown
                   components={{
                     h3: (props) => <h3 style={{
-                      color: 'var(--primary)', 
+                      color: 'black', 
                       fontSize: '1.1rem', 
                       marginTop: '1.25rem', 
                       marginBottom: '0.5rem', 
@@ -503,7 +503,7 @@ export default function JamforElpriser() {
                       textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                     }} {...props} />,
                     h4: (props) => <h4 style={{
-                      color: 'var(--secondary)', 
+                      color: 'black', 
                       fontSize: '1rem', 
                       marginTop: '1rem', 
                       marginBottom: '0.375rem', 
