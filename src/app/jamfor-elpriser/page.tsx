@@ -199,7 +199,7 @@ export default function JamforElpriser() {
               }}>
                 <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
                   <GlassButton as="span" variant="primary" size="lg" background="rgba(0,201,107,0.85)" disableScrollEffect disableHoverEffect>
-                    📁 Välj fakturabild
+                    Välj fakturabild
                   </GlassButton>
                 </label>
                 <input
@@ -230,9 +230,9 @@ export default function JamforElpriser() {
                 background="rgba(22,147,255,0.85)"
                 disableScrollEffect
                 disableHoverEffect
-              >
-                🔍 Analysera faktura
-              </GlassButton>
+                              >
+                  Analysera faktura
+                </GlassButton>
             </div>
           )}
         </div>
@@ -305,16 +305,16 @@ export default function JamforElpriser() {
             padding: '2rem', 
             boxShadow: 'var(--glass-shadow-medium)' 
           }}>
-            <h3 style={{ 
-              fontSize: '1.75rem', 
-              fontWeight: 600, 
-              marginBottom: '1.5rem', 
-              color: 'white',
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              textAlign: 'center'
-            }}>
-              ⚡ Elbespararens analys
-            </h3>
+                          <h3 style={{ 
+                fontSize: '1.75rem', 
+                fontWeight: 600, 
+                marginBottom: '1.5rem', 
+                color: 'white',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                textAlign: 'center'
+              }}>
+                Elbespararens analys
+              </h3>
             
             {/* Visa varningar om beräkningar verkar felaktiga */}
             {(() => {
@@ -341,7 +341,7 @@ export default function JamforElpriser() {
                       gap: '0.5rem',
                       textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                     }}>
-                      ⚠️ Varning - Kontrollera beräkningarna
+                      Varning - Kontrollera beräkningarna
                     </h4>
                     <ul style={{ 
                       color: 'rgba(255, 255, 255, 0.9)', 
@@ -467,7 +467,7 @@ export default function JamforElpriser() {
                   disableHoverEffect
                   onClick={() => setShowFullAnalysis(!showFullAnalysis)}
                 >
-                  {showFullAnalysis ? '🔽 Dölj detaljerad uträkning' : '📊 Visa hela uträkningen'}
+                  {showFullAnalysis ? 'Dölj detaljerad uträkning' : 'Visa hela uträkningen'}
                 </GlassButton>
               </div>
             )}
@@ -490,7 +490,7 @@ export default function JamforElpriser() {
                   marginBottom: '1rem',
                   textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
-                  📋 Detaljerad uträkning
+                  Detaljerad uträkning
                 </h4>
                 <ReactMarkdown
                   components={{
@@ -563,7 +563,7 @@ export default function JamforElpriser() {
                 gap: '0.5rem',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
-                💡 Viktig information
+                Viktig information
               </h4>
               <p style={{ 
                 color: 'rgba(255, 255, 255, 0.9)', 
@@ -592,7 +592,7 @@ export default function JamforElpriser() {
                 marginBottom: '0.5rem',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
-                🚀 Redo att spara pengar?
+                Redo att spara pengar?
               </h4>
               <div style={{ 
                 display: 'flex', 
@@ -608,7 +608,7 @@ export default function JamforElpriser() {
                   disableHoverEffect={true}
                   onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
                 >
-                  💚 Rörligt avtal
+                  Rörligt avtal
                 </GlassButton>
                 <GlassButton 
                   variant="secondary" 
@@ -618,7 +618,7 @@ export default function JamforElpriser() {
                   disableHoverEffect={true}
                   onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
                 >
-                  🔒 Fastpris
+                  Fastpris
                 </GlassButton>
               </div>
               <GlassButton 
@@ -629,7 +629,7 @@ export default function JamforElpriser() {
                 disableHoverEffect 
                 onClick={handleUploadNew}
               >
-                📄 Ladda upp ny faktura
+                Ladda upp ny faktura
               </GlassButton>
             </div>
           </div>
