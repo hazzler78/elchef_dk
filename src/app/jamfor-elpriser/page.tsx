@@ -153,90 +153,168 @@ export default function JamforElpriser() {
 
   return (
     <>
-      <main className="container" style={{ maxWidth: 800, margin: '0 auto', padding: '2rem 0' }}>
-        <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Jämför din elräkning med AI</h1>
-        <p style={{ fontSize: 18, color: '#374151', marginBottom: 32 }}>
-          Ladda upp en bild på din elräkning och få en smart, tydlig analys direkt!
-        </p>
-        {!loading && !gptResult && (
-          <div style={{ 
-            marginBottom: '2rem', 
-            display: 'flex', 
-            flexDirection: 'column',
-            gap: 16, 
-            alignItems: 'stretch'
+      <main className="container" style={{ maxWidth: 800, margin: '0 auto', padding: 'var(--section-spacing) 0' }}>
+        <div style={{ 
+          background: 'var(--glass-bg)', 
+          backdropFilter: 'var(--glass-blur)', 
+          WebkitBackdropFilter: 'var(--glass-blur)',
+          border: '1px solid var(--glass-border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '3rem 2rem',
+          boxShadow: 'var(--glass-shadow-medium)',
+          marginBottom: '2rem'
+        }}>
+          <h1 style={{ 
+            fontSize: '2.5rem', 
+            fontWeight: 700, 
+            marginBottom: '1rem',
+            color: 'white',
+            textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            textAlign: 'center'
           }}>
+            Jämför din elräkning med AI
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            color: 'rgba(255, 255, 255, 0.9)', 
+            marginBottom: '2rem',
+            textAlign: 'center',
+            textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+          }}>
+            Ladda upp en bild på din elräkning och få en smart, tydlig analys direkt!
+          </p>
+          
+          {!loading && !gptResult && (
             <div style={{ 
               display: 'flex', 
               flexDirection: 'column',
-              gap: 12,
+              gap: '1.5rem', 
               alignItems: 'stretch'
             }}>
-              <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
-                <GlassButton as="span" variant="primary" size="md" background="rgba(16,185,129,0.85)" disableScrollEffect disableHoverEffect>
-                  Välj fakturabild
-                </GlassButton>
-              </label>
-              <input
-                id="file-upload"
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-              />
               <div style={{ 
-                color: '#374151', 
-                fontSize: 15, 
-                textAlign: 'center',
-                padding: '8px 0'
+                display: 'flex', 
+                flexDirection: 'column',
+                gap: '1rem',
+                alignItems: 'stretch'
               }}>
-                {file ? file.name : 'Ingen fil vald'}
+                <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
+                  <GlassButton as="span" variant="primary" size="lg" background="rgba(0,201,107,0.85)" disableScrollEffect disableHoverEffect>
+                    📁 Välj fakturabild
+                  </GlassButton>
+                </label>
+                <input
+                  id="file-upload"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                />
+                <div style={{ 
+                  color: 'rgba(255, 255, 255, 0.8)', 
+                  fontSize: '1rem', 
+                  textAlign: 'center',
+                  padding: '0.5rem 0',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                }}>
+                  {file ? file.name : 'Ingen fil vald'}
+                </div>
               </div>
+              <GlassButton
+                onClick={handleGptOcr}
+                disabled={!file || loading}
+                variant="primary"
+                size="lg"
+                background="rgba(22,147,255,0.85)"
+                disableScrollEffect
+                disableHoverEffect
+              >
+                🔍 Analysera faktura
+              </GlassButton>
             </div>
-            <GlassButton
-              onClick={handleGptOcr}
-              disabled={!file || loading}
-              variant="primary"
-              size="md"
-              background="rgba(16,185,129,0.85)"
-              disableScrollEffect
-              disableHoverEffect
-            >
-              Analysera faktura
-            </GlassButton>
+          )}
+        </div>
+
+        {error && (
+          <div style={{ 
+            color: '#ef4444', 
+            marginTop: '1rem',
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: 'var(--radius-md)',
+            padding: '1rem',
+            textAlign: 'center',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)'
+          }}>
+            {error}
           </div>
         )}
-        {error && <div style={{ color: 'red', marginTop: 12 }}>{error}</div>}
-                 {loading && (
-           <div style={{ 
-             marginTop: 32, 
-             background: '#f3f4f6', 
-             borderRadius: 8, 
-             padding: 32, 
-             boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-             textAlign: 'center'
-           }}>
-             <div style={{ 
-               width: 60, 
-               height: 60, 
-               border: '4px solid #e5e7eb', 
-               borderTop: '4px solid #10b981', 
-               borderRadius: '50%', 
-               animation: 'spin 1s linear infinite',
-               margin: '0 auto 16px auto'
-             }}></div>
-             <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, color: '#10b981' }}>
-               Analyserar din faktura...
-             </h3>
-             <p style={{ fontSize: 16, color: '#6b7280', margin: 0 }}>
-               AI:n läser av alla kostnader och identifierar dolda avgifter
-             </p>
-           </div>
-         )}
+
+        {loading && (
+          <div style={{ 
+            marginTop: '2rem', 
+            background: 'var(--glass-bg)', 
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: 'var(--radius-lg)', 
+            padding: '3rem 2rem', 
+            boxShadow: 'var(--glass-shadow-medium)',
+            textAlign: 'center'
+          }}>
+            <div style={{ 
+              width: 60, 
+              height: 60, 
+              border: '4px solid rgba(255, 255, 255, 0.3)', 
+              borderTop: '4px solid var(--primary)', 
+              borderRadius: '50%', 
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 1.5rem auto'
+            }}></div>
+            <h3 style={{ 
+              fontSize: '1.5rem', 
+              fontWeight: 600, 
+              marginBottom: '0.5rem', 
+              color: 'white',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+            }}>
+              Analyserar din faktura...
+            </h3>
+            <p style={{ 
+              fontSize: '1.1rem', 
+              color: 'rgba(255, 255, 255, 0.8)', 
+              margin: 0,
+              textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+            }}>
+              AI:n läser av alla kostnader och identifierar dolda avgifter
+            </p>
+          </div>
+        )}
+
         {gptResult && (
-          <div className="analysis-fade-in" style={{ marginTop: 32, background: '#f3f4f6', borderRadius: 8, padding: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-            <h3 style={{ fontSize: 22, fontWeight: 600, marginBottom: 16, color: '#10b981' }}>⚡ Elbespararens analys</h3>
+          <div className="analysis-fade-in" style={{ 
+            marginTop: '2rem', 
+            background: 'var(--glass-bg)', 
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: 'var(--radius-lg)', 
+            padding: '2rem', 
+            boxShadow: 'var(--glass-shadow-medium)' 
+          }}>
+            <h3 style={{ 
+              fontSize: '1.75rem', 
+              fontWeight: 600, 
+              marginBottom: '1.5rem', 
+              color: 'white',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              textAlign: 'center'
+            }}>
+              ⚡ Elbespararens analys
+            </h3>
             
             {/* Visa varningar om beräkningar verkar felaktiga */}
             {(() => {
@@ -244,30 +322,34 @@ export default function JamforElpriser() {
               if (!validation.isValid) {
                 return (
                   <div style={{ 
-                    marginBottom: 16, 
-                    background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)', 
-                    borderRadius: 8, 
-                    padding: 16, 
-                    border: '2px solid #ef4444',
-                    boxShadow: '0 4px 12px rgba(239,68,68,0.2)'
+                    marginBottom: '1.5rem', 
+                    background: 'rgba(239, 68, 68, 0.1)', 
+                    borderRadius: 'var(--radius-md)', 
+                    padding: '1.5rem', 
+                    border: '2px solid rgba(239, 68, 68, 0.3)',
+                    boxShadow: '0 4px 12px rgba(239,68,68,0.2)',
+                    backdropFilter: 'var(--glass-blur)',
+                    WebkitBackdropFilter: 'var(--glass-blur)'
                   }}>
                     <h4 style={{ 
-                      color: '#991b1b', 
-                      fontSize: 16, 
+                      color: 'white', 
+                      fontSize: '1.1rem', 
                       fontWeight: 600, 
-                      marginBottom: 8,
+                      marginBottom: '0.5rem',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 8
+                      gap: '0.5rem',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                     }}>
                       ⚠️ Varning - Kontrollera beräkningarna
                     </h4>
                     <ul style={{ 
-                      color: '#991b1b', 
+                      color: 'rgba(255, 255, 255, 0.9)', 
                       margin: 0, 
-                      fontSize: 14, 
+                      fontSize: '0.9rem', 
                       lineHeight: 1.5,
-                      paddingLeft: 20
+                      paddingLeft: '1.5rem',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
                     }}>
                       {validation.warnings.map((warning, index) => (
                         <li key={index}>{warning}</li>
@@ -280,54 +362,107 @@ export default function JamforElpriser() {
             })()}
             
             {/* Visa endast sammanfattningen först */}
-            <ReactMarkdown
-              components={{
-                h3: (props) => <h3 style={{color: '#10b981', fontSize: 20, marginTop: 24, marginBottom: 12, borderBottom: '2px solid #10b981', paddingBottom: 8}} {...props} />,
-                h4: (props) => <h4 style={{color: '#2563eb', fontSize: 17, marginTop: 20, marginBottom: 8, fontWeight: 600}} {...props} />,
-                li: (props) => <li style={{marginBottom: 6, lineHeight: 1.5}} {...props} />,
-                strong: (props) => <strong style={{color: '#111827', fontWeight: 600}} {...props} />,
-                code: (props) => <code style={{background: '#e5e7eb', borderRadius: 4, padding: '2px 6px', fontFamily: 'monospace', color: '#dc2626'}} {...props} />,
-                p: (props) => <p style={{marginBottom: 12, lineHeight: 1.6}} {...props} />,
-                ul: (props) => <ul style={{marginBottom: 16, paddingLeft: 20}} {...props} />,
-                ol: (props) => <ol style={{marginBottom: 16, paddingLeft: 20}} {...props} />,
-                blockquote: (props) => (
-                  <blockquote style={{
-                    borderLeft: '4px solid #10b981',
-                    paddingLeft: 16,
-                    margin: '16px 0',
-                    background: 'rgba(16,185,129,0.05)',
-                    padding: '12px 16px',
-                    borderRadius: '0 8px 8px 0',
-                    fontStyle: 'italic'
-                  }} {...props} />
-                ),
-                // Custom styling för viktiga siffror och slutsatser
-                div: (props) => {
-                  const content = props.children?.toString() || '';
-                  if (content.includes('Detta är summan du har i el:') || 
-                      content.includes('Detta är summan du har i extraavgifter:') ||
-                      content.includes('Vid byte till ett avtal utan extraavgifter skulle du')) {
-                    return (
-                      <div className="analysis-summary analysis-highlight" style={{
-                        fontWeight: 600,
-                        fontSize: 16
-                      }} {...props} />
-                    );
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: 'var(--radius-md)',
+              padding: '1.5rem',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              marginBottom: '1.5rem'
+            }}>
+              <ReactMarkdown
+                components={{
+                  h3: (props) => <h3 style={{
+                    color: 'var(--primary)', 
+                    fontSize: '1.25rem', 
+                    marginTop: '1.5rem', 
+                    marginBottom: '0.75rem', 
+                    borderBottom: '2px solid var(--primary)', 
+                    paddingBottom: '0.5rem',
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }} {...props} />,
+                  h4: (props) => <h4 style={{
+                    color: 'var(--secondary)', 
+                    fontSize: '1.1rem', 
+                    marginTop: '1.25rem', 
+                    marginBottom: '0.5rem', 
+                    fontWeight: 600,
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }} {...props} />,
+                  li: (props) => <li style={{
+                    marginBottom: '0.5rem', 
+                    lineHeight: 1.5,
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                  }} {...props} />,
+                  strong: (props) => <strong style={{
+                    color: 'white', 
+                    fontWeight: 600,
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }} {...props} />,
+                  code: (props) => <code style={{
+                    background: 'rgba(255, 255, 255, 0.1)', 
+                    borderRadius: 'var(--radius-sm)', 
+                    padding: '0.125rem 0.375rem', 
+                    fontFamily: 'monospace', 
+                    color: '#ef4444',
+                    border: '1px solid rgba(255, 255, 255, 0.2)'
+                  }} {...props} />,
+                  p: (props) => <p style={{
+                    marginBottom: '0.75rem', 
+                    lineHeight: 1.6,
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                  }} {...props} />,
+                  ul: (props) => <ul style={{
+                    marginBottom: '1rem', 
+                    paddingLeft: '1.5rem'
+                  }} {...props} />,
+                  ol: (props) => <ol style={{
+                    marginBottom: '1rem', 
+                    paddingLeft: '1.5rem'
+                  }} {...props} />,
+                  blockquote: (props) => (
+                    <blockquote style={{
+                      borderLeft: '4px solid var(--primary)',
+                      paddingLeft: '1rem',
+                      margin: '1rem 0',
+                      background: 'rgba(0, 201, 107, 0.1)',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '0 var(--radius-md) var(--radius-md) 0',
+                      fontStyle: 'italic',
+                      border: '1px solid rgba(0, 201, 107, 0.2)'
+                    }} {...props} />
+                  ),
+                  // Custom styling för viktiga siffror och slutsatser
+                  div: (props) => {
+                    const content = props.children?.toString() || '';
+                    if (content.includes('Detta är summan du har i el:') || 
+                        content.includes('Detta är summan du har i extraavgifter:') ||
+                        content.includes('Vid byte till ett avtal utan extraavgifter skulle du')) {
+                      return (
+                        <div className="analysis-summary analysis-highlight" style={{
+                          fontWeight: 600,
+                          fontSize: '1rem',
+                          color: 'white',
+                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                        }} {...props} />
+                      );
+                    }
+                    return <div {...props} />;
                   }
-                  return <div {...props} />;
-                }
-              }}
-            >
-              {hasSummarySection(gptResult) ? getSummarySection(gptResult) : gptResult}
-            </ReactMarkdown>
+                }}
+              >
+                {hasSummarySection(gptResult) ? getSummarySection(gptResult) : gptResult}
+              </ReactMarkdown>
+            </div>
 
             {/* Visa knapp för att expandera endast om det finns en slutsats */}
             {hasSummarySection(gptResult) && (
-              <div style={{ marginTop: 20, textAlign: 'center' }}>
+              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <GlassButton
                   variant="secondary"
                   size="md"
-                  background="rgba(107,114,128,0.85)"
+                  background="rgba(255, 255, 255, 0.2)"
                   disableScrollEffect
                   disableHoverEffect
                   onClick={() => setShowFullAnalysis(!showFullAnalysis)}
@@ -340,24 +475,66 @@ export default function JamforElpriser() {
             {/* Visa detaljerad uträkning om expanderad */}
             {showFullAnalysis && hasSummarySection(gptResult) && (
               <div className="analysis-slide-in" style={{ 
-                marginTop: 20, 
-                padding: 20, 
-                background: 'rgba(255,255,255,0.8)', 
-                borderRadius: 8, 
-                border: '1px solid rgba(0,0,0,0.1)' 
+                marginTop: '1.5rem', 
+                padding: '1.5rem', 
+                background: 'rgba(255, 255, 255, 0.05)', 
+                borderRadius: 'var(--radius-md)', 
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)'
               }}>
-                <h4 style={{ color: '#374151', fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
+                <h4 style={{ 
+                  color: 'white', 
+                  fontSize: '1.1rem', 
+                  fontWeight: 600, 
+                  marginBottom: '1rem',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                }}>
                   📋 Detaljerad uträkning
                 </h4>
                 <ReactMarkdown
                   components={{
-                    h3: (props) => <h3 style={{color: '#10b981', fontSize: 18, marginTop: 20, marginBottom: 8, fontWeight: 600}} {...props} />,
-                    h4: (props) => <h4 style={{color: '#2563eb', fontSize: 16, marginTop: 16, marginBottom: 6, fontWeight: 600}} {...props} />,
-                    li: (props) => <li style={{marginBottom: 4, lineHeight: 1.4}} {...props} />,
-                    strong: (props) => <strong style={{color: '#111827', fontWeight: 600}} {...props} />,
-                    p: (props) => <p style={{marginBottom: 8, lineHeight: 1.5}} {...props} />,
-                    ul: (props) => <ul style={{marginBottom: 12, paddingLeft: 16}} {...props} />,
-                    ol: (props) => <ol style={{marginBottom: 12, paddingLeft: 16}} {...props} />
+                    h3: (props) => <h3 style={{
+                      color: 'var(--primary)', 
+                      fontSize: '1.1rem', 
+                      marginTop: '1.25rem', 
+                      marginBottom: '0.5rem', 
+                      fontWeight: 600,
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    }} {...props} />,
+                    h4: (props) => <h4 style={{
+                      color: 'var(--secondary)', 
+                      fontSize: '1rem', 
+                      marginTop: '1rem', 
+                      marginBottom: '0.375rem', 
+                      fontWeight: 600,
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    }} {...props} />,
+                    li: (props) => <li style={{
+                      marginBottom: '0.25rem', 
+                      lineHeight: 1.4,
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                    }} {...props} />,
+                    strong: (props) => <strong style={{
+                      color: 'white', 
+                      fontWeight: 600,
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    }} {...props} />,
+                    p: (props) => <p style={{
+                      marginBottom: '0.5rem', 
+                      lineHeight: 1.5,
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                    }} {...props} />,
+                    ul: (props) => <ul style={{
+                      marginBottom: '0.75rem', 
+                      paddingLeft: '1rem'
+                    }} {...props} />,
+                    ol: (props) => <ol style={{
+                      marginBottom: '0.75rem', 
+                      paddingLeft: '1rem'
+                    }} {...props} />
                   }}
                 >
                   {getDetailedSection(gptResult)}
@@ -367,44 +544,66 @@ export default function JamforElpriser() {
             
             {/* Highlighted summary section */}
             <div className="analysis-slide-in" style={{ 
-              marginTop: 24, 
-              background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', 
-              borderRadius: 8, 
-              padding: 20, 
-              border: '2px solid #f59e0b',
-              boxShadow: '0 4px 12px rgba(245,158,11,0.2)'
+              marginTop: '1.5rem', 
+              background: 'rgba(245, 158, 11, 0.1)', 
+              borderRadius: 'var(--radius-md)', 
+              padding: '1.5rem', 
+              border: '2px solid rgba(245, 158, 11, 0.3)',
+              boxShadow: '0 4px 12px rgba(245,158,11,0.2)',
+              backdropFilter: 'var(--glass-blur)',
+              WebkitBackdropFilter: 'var(--glass-blur)'
             }}>
               <h4 style={{ 
-                color: '#92400e', 
-                fontSize: 18, 
+                color: 'white', 
+                fontSize: '1.1rem', 
                 fontWeight: 600, 
-                marginBottom: 12,
+                marginBottom: '0.75rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 8
+                gap: '0.5rem',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
                 💡 Viktig information
               </h4>
               <p style={{ 
-                color: '#92400e', 
+                color: 'rgba(255, 255, 255, 0.9)', 
                 margin: 0, 
-                fontSize: 14, 
-                lineHeight: 1.5 
+                fontSize: '0.9rem', 
+                lineHeight: 1.5,
+                textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
               }}>
                 AI-analysen kan innehålla fel. Kontrollera alltid mot din faktura innan du fattar beslut. 
                 För mer exakt analys, kontakta oss via kontaktformuläret.
               </p>
             </div>
 
-            <div className="analysis-fade-in" style={{ marginTop: 32, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-              <h4 style={{ color: '#374151', fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
+            <div className="analysis-fade-in" style={{ 
+              marginTop: '2rem', 
+              textAlign: 'center', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              gap: '1rem' 
+            }}>
+              <h4 style={{ 
+                color: 'white', 
+                fontSize: '1.25rem', 
+                fontWeight: 600, 
+                marginBottom: '0.5rem',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
                 🚀 Redo att spara pengar?
               </h4>
-              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <div style={{ 
+                display: 'flex', 
+                gap: '1rem', 
+                flexWrap: 'wrap', 
+                justifyContent: 'center' 
+              }}>
                 <GlassButton 
                   variant="primary" 
                   size="lg" 
-                  background="rgba(16,185,129,0.85)" 
+                  background="rgba(0,201,107,0.85)" 
                   disableScrollEffect={true} 
                   disableHoverEffect={true}
                   onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
@@ -425,7 +624,7 @@ export default function JamforElpriser() {
               <GlassButton 
                 variant="secondary" 
                 size="md" 
-                background="rgba(22,147,255,0.85)" 
+                background="rgba(255, 255, 255, 0.2)" 
                 disableScrollEffect 
                 disableHoverEffect 
                 onClick={handleUploadNew}
