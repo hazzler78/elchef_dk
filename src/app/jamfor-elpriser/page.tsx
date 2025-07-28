@@ -3,6 +3,64 @@ import { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
 
+// SVG Ikoner i glassmorphism-stil
+const AnalysisIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,201,107,0.15))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(22,147,255,0.18)" />
+    <path d="M12 3c2.5 0 5 2.5 5 5 0 3-3 7-5 10C10 15 7 11 7 8c0-2.5 2.5-5 5-5z" fill="url(#analysis-gradient)" stroke="rgba(0,201,107,0.7)" strokeWidth="1.2" />
+    <circle cx="12" cy="8" r="2" fill="#fff" stroke="rgba(22,147,255,0.7)" strokeWidth="1" />
+    <defs>
+      <linearGradient id="analysis-gradient" x1="7" y1="3" x2="17" y2="18" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00C96B" />
+        <stop offset="1" stopColor="#1693FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const SavingsIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,201,107,0.12))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,201,107,0.13)" />
+    <ellipse cx="12" cy="12" rx="6" ry="4.5" fill="url(#savings-gradient)" stroke="#00C96B" strokeWidth="1" />
+    <circle cx="10" cy="11" r="0.8" fill="#fff" />
+    <rect x="14" y="14" width="2" height="3" rx="1" fill="#1693FF" />
+    <defs>
+      <linearGradient id="savings-gradient" x1="6" y1="7.5" x2="18" y2="16.5" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00C96B" />
+        <stop offset="1" stopColor="#1693FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const ConclusionIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(22,147,255,0.15))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,201,107,0.13)" />
+    <circle cx="12" cy="12" r="6" fill="url(#conclusion-gradient)" stroke="#1693FF" strokeWidth="1.2" />
+    <path d="M9 12l2 2 4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <defs>
+      <linearGradient id="conclusion-gradient" x1="6" y1="6" x2="18" y2="18" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00C96B" />
+        <stop offset="1" stopColor="#1693FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const RecommendationIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,201,107,0.15))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(22,147,255,0.18)" />
+    <path d="M12 3c-1.5 0-3 1.5-3 3v6c0 1.5 1.5 3 3 3s3-1.5 3-3V6c0-1.5-1.5-3-3-3z" fill="url(#recommendation-gradient)" stroke="rgba(0,201,107,0.7)" strokeWidth="1.2" />
+    <circle cx="12" cy="8" r="1.5" fill="#fff" stroke="rgba(22,147,255,0.7)" strokeWidth="1" />
+    <defs>
+      <linearGradient id="recommendation-gradient" x1="9" y1="3" x2="15" y2="15" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00C96B" />
+        <stop offset="1" stopColor="#1693FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 export default function JamforElpriser() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -311,8 +369,13 @@ export default function JamforElpriser() {
                 marginBottom: '1.5rem', 
                 color: 'white',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                textAlign: 'center'
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.75rem'
               }}>
+                <AnalysisIcon />
                 Elbespararens analys
               </h3>
             
@@ -371,23 +434,69 @@ export default function JamforElpriser() {
             }}>
               <ReactMarkdown
                 components={{
-                  h3: (props) => <h3 style={{
-                    color: 'black', 
-                    fontSize: '1.25rem', 
-                    marginTop: '1.5rem', 
-                    marginBottom: '0.75rem', 
-                    borderBottom: '2px solid var(--primary)', 
-                    paddingBottom: '0.5rem',
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                  }} {...props} />,
-                  h4: (props) => <h4 style={{
-                    color: 'black', 
-                    fontSize: '1.1rem', 
-                    marginTop: '1.25rem', 
-                    marginBottom: '0.5rem', 
-                    fontWeight: 600,
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                  }} {...props} />,
+                  h3: (props) => {
+                    const content = props.children?.toString() || '';
+                    let Icon = null;
+                    
+                    if (content.includes('Analys av din elräkning')) {
+                      Icon = AnalysisIcon;
+                    } else if (content.includes('Totala kostnader')) {
+                      Icon = SavingsIcon;
+                    } else if (content.includes('Analys av onödiga kostnader')) {
+                      Icon = SavingsIcon;
+                    } else if (content.includes('Möjlig besparing')) {
+                      Icon = SavingsIcon;
+                    } else if (content.includes('Slutsats')) {
+                      Icon = ConclusionIcon;
+                    } else if (content.includes('Rekommendation')) {
+                      Icon = RecommendationIcon;
+                    }
+                    
+                    return (
+                      <h3 style={{
+                        color: 'black', 
+                        fontSize: '1.25rem', 
+                        marginTop: '1.5rem', 
+                        marginBottom: '0.75rem', 
+                        borderBottom: '2px solid var(--primary)', 
+                        paddingBottom: '0.5rem',
+                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}>
+                        {Icon && <Icon />}
+                        {props.children}
+                      </h3>
+                    );
+                  },
+                  h4: (props) => {
+                    const content = props.children?.toString() || '';
+                    let Icon = null;
+                    
+                    if (content.includes('Elförbrukning och kostnader')) {
+                      Icon = AnalysisIcon;
+                    } else if (content.includes('Viktig information')) {
+                      Icon = RecommendationIcon;
+                    }
+                    
+                    return (
+                      <h4 style={{
+                        color: 'black', 
+                        fontSize: '1.1rem', 
+                        marginTop: '1.25rem', 
+                        marginBottom: '0.5rem', 
+                        fontWeight: 600,
+                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}>
+                        {Icon && <Icon />}
+                        {props.children}
+                      </h4>
+                    );
+                  },
                   li: (props) => <li style={{
                     marginBottom: '0.5rem', 
                     lineHeight: 1.5,
@@ -488,28 +597,78 @@ export default function JamforElpriser() {
                   fontSize: '1.1rem', 
                   fontWeight: 600, 
                   marginBottom: '1rem',
-                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
                 }}>
+                  <AnalysisIcon />
                   Detaljerad uträkning
                 </h4>
                 <ReactMarkdown
                   components={{
-                    h3: (props) => <h3 style={{
-                      color: 'black', 
-                      fontSize: '1.1rem', 
-                      marginTop: '1.25rem', 
-                      marginBottom: '0.5rem', 
-                      fontWeight: 600,
-                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                    }} {...props} />,
-                    h4: (props) => <h4 style={{
-                      color: 'black', 
-                      fontSize: '1rem', 
-                      marginTop: '1rem', 
-                      marginBottom: '0.375rem', 
-                      fontWeight: 600,
-                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                    }} {...props} />,
+                    h3: (props) => {
+                      const content = props.children?.toString() || '';
+                      let Icon = null;
+                      
+                      if (content.includes('Analys av din elräkning')) {
+                        Icon = AnalysisIcon;
+                      } else if (content.includes('Totala kostnader')) {
+                        Icon = SavingsIcon;
+                      } else if (content.includes('Analys av onödiga kostnader')) {
+                        Icon = SavingsIcon;
+                      } else if (content.includes('Möjlig besparing')) {
+                        Icon = SavingsIcon;
+                      } else if (content.includes('Slutsats')) {
+                        Icon = ConclusionIcon;
+                      } else if (content.includes('Rekommendation')) {
+                        Icon = RecommendationIcon;
+                      }
+                      
+                      return (
+                        <h3 style={{
+                          color: 'black', 
+                          fontSize: '1.1rem', 
+                          marginTop: '1.25rem', 
+                          marginBottom: '0.5rem', 
+                          fontWeight: 600,
+                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          {Icon && <Icon />}
+                          {props.children}
+                        </h3>
+                      );
+                    },
+                    h4: (props) => {
+                      const content = props.children?.toString() || '';
+                      let Icon = null;
+                      
+                      if (content.includes('Elförbrukning och kostnader')) {
+                        Icon = AnalysisIcon;
+                      } else if (content.includes('Viktig information')) {
+                        Icon = RecommendationIcon;
+                      }
+                      
+                      return (
+                        <h4 style={{
+                          color: 'black', 
+                          fontSize: '1rem', 
+                          marginTop: '1rem', 
+                          marginBottom: '0.375rem', 
+                          fontWeight: 600,
+                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          {Icon && <Icon />}
+                          {props.children}
+                        </h4>
+                      );
+                    },
                     li: (props) => <li style={{
                       marginBottom: '0.25rem', 
                       lineHeight: 1.4,
