@@ -126,9 +126,6 @@ export default function JamforElpriser() {
     
     const warnings = [];
     
-    // Kontrollera om det finns uppenbara matematiska fel
-    const lines = text.split('\n');
-    
     // Hitta siffror och kontrollera rimlighet
     const numbers = text.match(/\d+[,.]?\d*/g) || [];
     const largeNumbers = numbers.filter(n => parseFloat(n.replace(',', '.')) > 10000);
