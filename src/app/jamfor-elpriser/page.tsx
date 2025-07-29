@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
+import ContactForm from '@/components/ContactForm';
 
 // SVG Ikoner i glassmorphism-stil
 const AnalysisIcon = () => (
@@ -731,9 +732,21 @@ export default function JamforElpriser() {
                 lineHeight: 1.5,
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
               }}>
-                AI-analysen kan innehålla fel. Kontrollera alltid mot din faktura innan du fattar beslut. 
-                För mer exakt analys, kontakta oss via kontaktformuläret.
+                AI:n visar ett estimat baserat på din faktura. För mer exakt analys och personlig hjälp, kontakta oss så hjälper vi dig hitta det bästa elavtalet för din situation.
               </p>
+            </div>
+
+            {/* Contact form section */}
+            <div className="analysis-slide-in" style={{ 
+              marginTop: '2rem',
+              background: 'rgba(255, 255, 255, 0.05)', 
+              borderRadius: 'var(--radius-lg)', 
+              padding: '2rem', 
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'var(--glass-blur)',
+              WebkitBackdropFilter: 'var(--glass-blur)'
+            }}>
+              <ContactForm />
             </div>
 
             <div className="analysis-fade-in" style={{ 

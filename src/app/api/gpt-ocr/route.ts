@@ -119,7 +119,7 @@ Analysera fakturan och presentera resultatet i följande format:
 För att minska dina kostnader kan du överväga att byta till ett avtal utan extra avgifter. Du kan använda tjänster som Elchef.se för att hitta bättre alternativ.
 
 ### Viktig information
-AI-analysen kan innehålla fel. Kontrollera alltid mot din faktura innan du fattar beslut. För mer exakt analys, kontakta oss via kontaktformuläret.
+AI:n visar ett estimat baserat på din faktura. För mer exakt analys och personlig hjälp, kontakta oss så hjälper vi dig hitta det bästa elavtalet för din situation.
 
 Använd dessa referenspriser 2025 (öre/kWh):
 Januari: Elområde 1=23,8, Elområde 2=24,3, Elområde 3=63,4, Elområde 4=76,1
