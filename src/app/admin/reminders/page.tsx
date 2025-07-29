@@ -17,6 +17,16 @@ export default function AdminReminders() {
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newReminder, setNewReminder] = useState({
+    customer_name: "",
+    email: "",
+    phone: "",
+    contract_type: "12_months" as "12_months" | "24_months" | "36_months" | "variable",
+    contract_start_date: "",
+    notes: ""
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -153,6 +163,78 @@ export default function AdminReminders() {
     }
   };
 
+  const calculateReminderDate = (contractStartDate: string, contractType: string): string => {
+    const startDate = new Date(contractStartDate);
+    let expiryDate: Date;
+    
+    switch (contractType) {
+      case '12_months':
+        expiryDate = new Date(startDate.getTime() + 12 * 30 * 24 * 60 * 60 * 1000);
+        break;
+      case '24_months':
+        expiryDate = new Date(startDate.getTime() + 24 * 30 * 24 * 60 * 60 * 1000);
+        break;
+      case '36_months':
+        expiryDate = new Date(startDate.getTime() + 36 * 30 * 24 * 60 * 60 * 1000);
+        break;
+      default:
+        throw new Error('Invalid contract type');
+    }
+    
+    // Subtract 11 months (30 days * 11)
+    const reminderDate = new Date(expiryDate.getTime() - 11 * 30 * 24 * 60 * 60 * 1000);
+    return reminderDate.toISOString().split('T')[0];
+  };
+
+  const handleCreateReminder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newReminder.customer_name || !newReminder.email || !newReminder.contract_start_date) {
+      setError("Fyll i alla obligatoriska fält");
+      return;
+    }
+
+    setCreating(true);
+    try {
+      const reminderDate = calculateReminderDate(newReminder.contract_start_date, newReminder.contract_type);
+      
+      const reminderData = {
+        customer_name: newReminder.customer_name,
+        email: newReminder.email,
+        phone: newReminder.phone || null,
+        contract_type: newReminder.contract_type,
+        contract_start_date: newReminder.contract_start_date,
+        reminder_date: reminderDate,
+        is_sent: false,
+        notes: newReminder.notes || null
+      };
+
+      const { error } = await supabase
+        .from("customer_reminders")
+        .insert([reminderData]);
+
+      if (error) {
+        setError("Kunde inte skapa påminnelse: " + error.message);
+      } else {
+        await fetchReminders();
+        setNewReminder({
+          customer_name: "",
+          email: "",
+          phone: "",
+          contract_type: "12_months",
+          contract_start_date: "",
+          notes: ""
+        });
+        setShowCreateForm(false);
+        setError("");
+      }
+    } catch (err) {
+      setError("Ett fel uppstod vid skapande av påminnelse");
+    } finally {
+      setCreating(false);
+    }
+  };
+
   if (!authed) {
     return (
       <div style={{ padding: '2rem', maxWidth: '400px', margin: '0 auto' }}>
@@ -178,20 +260,157 @@ export default function AdminReminders() {
     <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1>Kundpåminnelser</h1>
-        <button
-          onClick={() => {
-            sessionStorage.removeItem("admin_authed");
-            setAuthed(false);
-          }}
-          style={{ padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px' }}
-        >
-          Logga ut
-        </button>
+        <div>
+          <button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            style={{ 
+              marginRight: '1rem', 
+              padding: '0.5rem 1rem', 
+              background: '#10b981', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {showCreateForm ? 'Avbryt' : '➕ Skapa ny påminnelse'}
+          </button>
+          <button
+            onClick={() => {
+              sessionStorage.removeItem("admin_authed");
+              setAuthed(false);
+            }}
+            style={{ padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px' }}
+          >
+            Logga ut
+          </button>
+        </div>
       </div>
 
       {error && (
         <div style={{ padding: '1rem', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '4px', marginBottom: '1rem' }}>
           {error}
+        </div>
+      )}
+
+      {showCreateForm && (
+        <div style={{ 
+          padding: '1.5rem', 
+          background: '#f8fafc', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px', 
+          marginBottom: '2rem' 
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Skapa ny påminnelse</h3>
+          <form onSubmit={handleCreateReminder}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Kundnamn *
+                </label>
+                <input
+                  type="text"
+                  value={newReminder.customer_name}
+                  onChange={(e) => setNewReminder(prev => ({ ...prev, customer_name: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  E-post *
+                </label>
+                <input
+                  type="email"
+                  value={newReminder.email}
+                  onChange={(e) => setNewReminder(prev => ({ ...prev, email: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Telefon
+                </label>
+                <input
+                  type="tel"
+                  value={newReminder.phone}
+                  onChange={(e) => setNewReminder(prev => ({ ...prev, phone: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Avtalstyp *
+                </label>
+                <select
+                  value={newReminder.contract_type}
+                  onChange={(e) => setNewReminder(prev => ({ ...prev, contract_type: e.target.value as any }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                >
+                  <option value="12_months">12 månader</option>
+                  <option value="24_months">24 månader</option>
+                  <option value="36_months">36 månader</option>
+                  <option value="variable">Rörligt</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Avtal startar *
+                </label>
+                <input
+                  type="date"
+                  value={newReminder.contract_start_date}
+                  onChange={(e) => setNewReminder(prev => ({ ...prev, contract_start_date: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                />
+              </div>
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                Anteckningar
+              </label>
+              <textarea
+                value={newReminder.notes}
+                onChange={(e) => setNewReminder(prev => ({ ...prev, notes: e.target.value }))}
+                style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px', minHeight: '80px' }}
+                placeholder="Valfria anteckningar..."
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button
+                type="submit"
+                disabled={creating}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  background: '#10b981', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: '4px',
+                  cursor: creating ? 'not-allowed' : 'pointer',
+                  opacity: creating ? 0.6 : 1
+                }}
+              >
+                {creating ? 'Skapar...' : 'Skapa påminnelse'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowCreateForm(false)}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  background: '#6b7280', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Avbryt
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
