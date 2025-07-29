@@ -56,6 +56,14 @@ CREATE INDEX idx_pending_created_at ON pending_reminders(created_at);
 -- Aktivera Row Level Security (valfritt)
 ALTER TABLE customer_reminders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pending_reminders ENABLE ROW LEVEL SECURITY;
+
+-- Skapa RLS-policies för customer_reminders
+CREATE POLICY "Allow all operations for customer_reminders" ON customer_reminders
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Skapa RLS-policies för pending_reminders  
+CREATE POLICY "Allow all operations for pending_reminders" ON pending_reminders
+  FOR ALL USING (true) WITH CHECK (true);
 ```
 
 ## Miljövariabler
@@ -233,7 +241,20 @@ Påminnelse kommer skickas 11 månader före avtalsutgång.
    - Kontrollera att tabellerna är skapade korrekt
    - Verifiera RLS-policyer
 
-4. **API-fel**
+4. **RLS (Row Level Security) fel**
+   - Om du får "new row violates row-level security policy" fel:
+   - Kör följande SQL i Supabase SQL Editor:
+   ```sql
+   -- Skapa RLS-policies för customer_reminders
+   CREATE POLICY "Allow all operations for customer_reminders" ON customer_reminders
+     FOR ALL USING (true) WITH CHECK (true);
+
+   -- Skapa RLS-policies för pending_reminders  
+   CREATE POLICY "Allow all operations for pending_reminders" ON pending_reminders
+     FOR ALL USING (true) WITH CHECK (true);
+   ```
+
+5. **API-fel**
    - Kontrollera att alla miljövariabler är satta
    - Verifiera att UPDATE_SECRET_KEY matchar
 
