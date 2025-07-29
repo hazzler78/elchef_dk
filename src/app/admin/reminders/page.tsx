@@ -228,7 +228,7 @@ export default function AdminReminders() {
         setShowCreateForm(false);
         setError("");
       }
-    } catch (err) {
+    } catch {
       setError("Ett fel uppstod vid skapande av påminnelse");
     } finally {
       setCreating(false);
@@ -345,7 +345,7 @@ export default function AdminReminders() {
                 </label>
                 <select
                   value={newReminder.contract_type}
-                  onChange={(e) => setNewReminder(prev => ({ ...prev, contract_type: e.target.value as any }))}
+                  onChange={(e) => setNewReminder(prev => ({ ...prev, contract_type: e.target.value as "12_months" | "24_months" | "36_months" | "variable" }))}
                   style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
                   required
                 >
