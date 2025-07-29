@@ -59,11 +59,14 @@ Svara ALLTID på svenska, även om du inte kan analysera fakturan.
 - Elhandelsavgift, energihandelsavgift
 - Handelsavgift, spotpris, spotkostnad
 - Indexavgift, referensavgift
+- Förvaltat portfölj utfall
 
 **Miljö, certifikat och garanti**
 - Elcertifikat, elcertifikatavgift, miljöavgift
 - Grön elavgift, garantiavgift
 - Ursprungsgarantiavgift
+- Bra miljöval, bra miljöval (licens Elklart AB)
+- Trygg
 
 **Övriga tillägg och paket**
 - Trygghetspaket, miljöpaket, tilläggspaket
