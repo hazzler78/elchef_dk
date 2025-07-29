@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ContactSection = styled.section`
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 4rem 0;
-  color: #333;
+  color: white;
 `;
 
 const Container = styled.div`
@@ -20,22 +20,25 @@ const Title = styled.h2`
   text-align: center;
   margin-bottom: 1rem;
   font-weight: 700;
-  color: #333;
+  color: white;
 `;
 
 const Subtitle = styled.p`
   text-align: center;
   font-size: 1.2rem;
   margin-bottom: 3rem;
-  color: #666;
+  opacity: 0.9;
+  color: white;
 `;
 
 const Form = styled.form`
-  background: white;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 `;
 
 const FormGroup = styled.div`
@@ -47,32 +50,32 @@ const Label = styled.label`
   margin-bottom: 0.5rem;
   font-weight: 600;
   font-size: 1rem;
-  color: #374151;
+  color: white;
 `;
 
 const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: white;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
   color: #333;
   font-size: 1rem;
   transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #00C96B;
-    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
   }
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: white;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
   color: #333;
   font-size: 1rem;
   resize: vertical;
@@ -81,8 +84,8 @@ const Textarea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #00C96B;
-    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
   }
 `;
 
@@ -99,7 +102,7 @@ const Checkbox = styled.input`
 
 const CheckboxLabel = styled.label`
   font-size: 1rem;
-  color: #374151;
+  color: white;
   cursor: pointer;
 `;
 
@@ -109,7 +112,7 @@ const SubmitButton = styled.button`
   background: linear-gradient(135deg, #00C96B, #00A855);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -127,23 +130,27 @@ const SubmitButton = styled.button`
 `;
 
 const SuccessMessage = styled.div`
-  background: #10b981;
+  background: rgba(16, 185, 129, 0.9);
   color: white;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-top: 1rem;
   text-align: center;
   font-weight: 600;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 `;
 
 const ErrorMessage = styled.div`
-  background: #ef4444;
+  background: rgba(239, 68, 68, 0.9);
   color: white;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-top: 1rem;
   text-align: center;
   font-weight: 600;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 `;
 
 export default function ContactForm() {
