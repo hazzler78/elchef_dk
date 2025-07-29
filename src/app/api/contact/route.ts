@@ -1,22 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ContactFormData } from '@/lib/types';
+import { createClient } from '@supabase/supabase-js';
 
 const MAILERLITE_API_KEY = process.env.MAILERLITE_API_KEY;
 const MAILERLITE_GROUP_ID = process.env.MAILERLITE_GROUP_ID;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-interface ContactFormData {
-  name?: string;
-  email: string;
-  phone?: string;
-  subscribeNewsletter: boolean;
-  message?: string;
-}
+const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
 async function sendTelegramNotification(data: ContactFormData) {
   if (!TELEGRAM_BOT_TOKEN || TELEGRAM_CHAT_IDS.length === 0) {
     console.warn('Telegram credentials not configured');
     return;
+  }
+
+  // Store pending reminder in database
+  const pendingReminderData = {
+    customer_name: data.name || 'Okänd',
+    email: data.email,
+    phone: data.phone || null,
+    message: data.message || null,
+    created_at: new Date().toISOString()
+  };
+
+  const { error: pendingError } = await supabase
+    .from('pending_reminders')
+    .insert([pendingReminderData])
+    .select()
+    .single();
+
+  if (pendingError) {
+    console.error('Error creating pending reminder:', pendingError);
   }
 
   const message = `
@@ -28,6 +45,9 @@ ${data.message ? `\n📝 *Meddelande:* ${data.message}` : ''}
 
 ⏰ *Tidpunkt:* ${new Date().toLocaleString('sv-SE')}
 🌐 *Källa:* Elchef.se kontaktformulär
+
+💡 *Svara med avtalstyp och startdatum för att skapa påminnelse:*
+*Format:* "12m 2025-02-15" eller "24m 2025-02-15" eller "36m 2025-02-15"
 `;
 
   // Send to all configured chat IDs

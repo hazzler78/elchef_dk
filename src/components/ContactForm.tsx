@@ -1,128 +1,146 @@
 "use client";
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ContactSection = styled.section`
-  padding: var(--section-spacing) 0;
-  background: transparent;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 4rem 0;
+  color: white;
 `;
 
 const Container = styled.div`
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 var(--container-padding);
+  padding: 0 2rem;
 `;
 
 const Title = styled.h2`
+  font-size: 2.5rem;
   text-align: center;
   margin-bottom: 1rem;
-  color: white;
-  font-size: 2rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
 `;
 
 const Subtitle = styled.p`
   text-align: center;
+  font-size: 1.2rem;
   margin-bottom: 3rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  opacity: 0.9;
 `;
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: var(--glass-shadow-light);
-  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
   padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 `;
 
 const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  color: var(--gray-700);
-  font-size: 0.9rem;
+  font-size: 1rem;
 `;
 
 const Input = styled.input`
+  width: 100%;
   padding: 0.75rem;
-  border: 2px solid var(--gray-200);
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  transition: border-color 0.2s;
+  border: none;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
   }
+`;
 
-  &::placeholder {
-    color: var(--gray-400);
+const Textarea = styled.textarea`
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 100px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
   }
 `;
 
 const CheckboxGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 `;
 
 const Checkbox = styled.input`
-  width: 1.2rem;
-  height: 1.2rem;
-  accent-color: var(--primary);
+  margin-right: 0.75rem;
+  transform: scale(1.2);
 `;
 
 const CheckboxLabel = styled.label`
-  font-size: 0.9rem;
-  color: var(--gray-600);
+  font-size: 1rem;
   cursor: pointer;
 `;
 
 const SubmitButton = styled.button`
-  background: linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5));
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
   color: white;
-  padding: 1rem 2rem;
   border: none;
-  border-radius: var(--radius-full);
+  border-radius: 10px;
+  font-size: 1.1rem;
   font-weight: 600;
-  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: var(--glass-shadow-light);
+  transition: all 0.3s ease;
 
-  &:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: var(--glass-shadow-medium);
-    background: linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7));
-  }
-
-  &:active {
-    transform: translateY(0) scale(0.98);
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 
   &:disabled {
-    background: var(--gray-300);
+    opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
   }
+`;
+
+const SuccessMessage = styled.div`
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+`;
+
+const ErrorMessage = styled.div`
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
 `;
 
 export default function ContactForm() {
@@ -153,12 +171,21 @@ export default function ContactForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          subscribeNewsletter: formData.newsletter
+        }),
       });
 
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ name: '', email: '', phone: '', message: '', newsletter: false });
+        setFormData({ 
+          name: '', 
+          email: '', 
+          phone: '', 
+          message: '', 
+          newsletter: false
+        });
       } else {
         setSubmitStatus('error');
       }
@@ -226,14 +253,13 @@ export default function ContactForm() {
 
           <FormGroup>
             <Label htmlFor="message">Meddelande</Label>
-            <Input
-              as="textarea"
+            <Textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              style={{ resize: 'vertical' }}
+              placeholder="Berätta mer om vad du behöver hjälp med..."
             />
           </FormGroup>
 
@@ -246,38 +272,26 @@ export default function ContactForm() {
               onChange={handleChange}
             />
             <CheckboxLabel htmlFor="newsletter">
-              Jag vill prenumerera på nyhetsbrev
+              Jag vill prenumerera på nyhetsbrev med tips om elavtal och energibesparing
             </CheckboxLabel>
           </CheckboxGroup>
-
-          {submitStatus === 'success' && (
-            <div style={{ 
-              padding: '1rem', 
-              background: 'rgba(16, 185, 129, 0.1)', 
-              border: '1px solid rgba(16, 185, 129, 0.3)', 
-              borderRadius: 'var(--radius-md)',
-              color: '#166534'
-            }}>
-              Tack för ditt meddelande! Vi återkommer snart.
-            </div>
-          )}
-
-          {submitStatus === 'error' && (
-            <div style={{ 
-              padding: '1rem', 
-              background: 'rgba(239, 68, 68, 0.1)', 
-              border: '1px solid rgba(239, 68, 68, 0.3)', 
-              borderRadius: 'var(--radius-md)',
-              color: '#dc2626'
-            }}>
-              Ett fel uppstod. Försök igen senare.
-            </div>
-          )}
 
           <SubmitButton type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Skickar...' : 'Skicka meddelande'}
           </SubmitButton>
         </Form>
+
+        {submitStatus === 'success' && (
+          <SuccessMessage>
+            ✅ Tack för ditt meddelande! Vi återkommer så snart som möjligt.
+          </SuccessMessage>
+        )}
+
+        {submitStatus === 'error' && (
+          <ErrorMessage>
+            ❌ Ett fel uppstod. Kontrollera att du har fyllt i alla obligatoriska fält och försök igen.
+          </ErrorMessage>
+        )}
       </Container>
     </ContactSection>
   );

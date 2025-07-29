@@ -23,6 +23,31 @@ export interface CheapEnergyPrices {
 
 export type ElectricityArea = 'se1' | 'se2' | 'se3' | 'se4';
 
+// New types for customer reminder system
+export interface CustomerReminder {
+  id?: number;
+  customer_name: string;
+  email: string;
+  phone?: string;
+  contract_type: '12_months' | '24_months' | '36_months' | 'variable';
+  contract_start_date: string; // ISO date string
+  reminder_date: string; // ISO date string (11 months before expiry)
+  is_sent: boolean;
+  created_at?: string;
+  updated_at?: string;
+  notes?: string;
+}
+
+export interface ContactFormData {
+  name?: string;
+  email: string;
+  phone?: string;
+  subscribeNewsletter: boolean;
+  message?: string;
+  contractType?: '12_months' | '24_months' | '36_months' | 'variable';
+  contractStartDate?: string;
+}
+
 // Mapping av postnummer till elområden
 export const getElectricityArea = (postalCode: string): ElectricityArea => {
   const prefix = postalCode.substring(0, 2);
