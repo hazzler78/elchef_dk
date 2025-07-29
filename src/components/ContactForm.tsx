@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ContactSection = styled.section`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8f9fa;
   padding: 4rem 0;
-  color: white;
+  color: #333;
 `;
 
 const Container = styled.div`
@@ -20,21 +20,22 @@ const Title = styled.h2`
   text-align: center;
   margin-bottom: 1rem;
   font-weight: 700;
+  color: #333;
 `;
 
 const Subtitle = styled.p`
   text-align: center;
   font-size: 1.2rem;
   margin-bottom: 3rem;
-  opacity: 0.9;
+  color: #666;
 `;
 
 const Form = styled.form`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
+  background: white;
+  border-radius: 12px;
   padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
 `;
 
 const FormGroup = styled.div`
@@ -46,31 +47,32 @@ const Label = styled.label`
   margin-bottom: 0.5rem;
   font-weight: 600;
   font-size: 1rem;
+  color: #374151;
 `;
 
 const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
-  border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
   color: #333;
   font-size: 1rem;
   transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    border-color: #00C96B;
+    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
   }
 `;
 
 const Textarea = styled.textarea`
   width: 100%;
   padding: 0.75rem;
-  border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
   color: #333;
   font-size: 1rem;
   resize: vertical;
@@ -79,8 +81,8 @@ const Textarea = styled.textarea`
 
   &:focus {
     outline: none;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    border-color: #00C96B;
+    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
   }
 `;
 
@@ -97,16 +99,17 @@ const Checkbox = styled.input`
 
 const CheckboxLabel = styled.label`
   font-size: 1rem;
+  color: #374151;
   cursor: pointer;
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: linear-gradient(135deg, #00C96B, #00A855);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -114,7 +117,7 @@ const SubmitButton = styled.button`
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 201, 107, 0.3);
   }
 
   &:disabled {
@@ -124,20 +127,20 @@ const SubmitButton = styled.button`
 `;
 
 const SuccessMessage = styled.div`
-  background: rgba(76, 175, 80, 0.9);
+  background: #10b981;
   color: white;
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: 8px;
   margin-top: 1rem;
   text-align: center;
   font-weight: 600;
 `;
 
 const ErrorMessage = styled.div`
-  background: rgba(244, 67, 54, 0.9);
+  background: #ef4444;
   color: white;
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: 8px;
   margin-top: 1rem;
   text-align: center;
   font-weight: 600;
