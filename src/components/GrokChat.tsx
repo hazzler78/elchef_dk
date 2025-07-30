@@ -114,7 +114,7 @@ export default function GrokChat() {
   const [contactFormSubmitted, setContactFormSubmitted] = useState(false);
   const [showContractChoice, setShowContractChoice] = useState(false);
   const [contractChoiceSubmitted, setContractChoiceSubmitted] = useState(false);
-  const [contractType, setContractType] = useState<'rorligt' | 'fastpris'>('rorligt'); // Ny state för att spara avtalsval
+
   
   // Debug: Log when showContactForm changes
   useEffect(() => {
@@ -233,8 +233,7 @@ export default function GrokChat() {
     setShowContractChoice(false);
     setContractChoiceSubmitted(true);
     
-    // Spara avtalsvalet för att använda rätt affiliate-länk
-    setContractType(contractType);
+
     
     // Lägg till användarens val i chatten
     const choiceMessage = contractType === 'rorligt' 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 
 interface ContractChoiceProps {
   onSelect: (contractType: 'rorligt' | 'fastpris') => void;
@@ -61,7 +62,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img src="/globe.svg" alt="Globe" style={{ width: 16, height: 16 }} />
+              <Image src="/globe.svg" alt="Globe" width={16} height={16} />
               Rörligt avtal
             </div>
             <div style={{ fontSize: 12, opacity: 0.8 }}>
@@ -95,7 +96,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img src="/window.svg" alt="Window" style={{ width: 16, height: 16 }} />
+              <Image src="/window.svg" alt="Window" width={16} height={16} />
               Fastpris
             </div>
             <div style={{ fontSize: 12, opacity: 0.8 }}>
