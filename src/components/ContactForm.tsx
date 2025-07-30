@@ -64,7 +64,14 @@ const Input = styled.input`
   background: rgba(255, 255, 255, 0.9);
   color: var(--foreground);
   font-size: 1rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   transition: all var(--transition-normal) ease;
+
+  &::placeholder {
+    color: #64748b;
+    opacity: 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
 
   &:focus {
     outline: none;
@@ -82,9 +89,16 @@ const Textarea = styled.textarea`
   background: rgba(255, 255, 255, 0.9);
   color: var(--foreground);
   font-size: 1rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   resize: vertical;
   min-height: 100px;
   transition: all var(--transition-normal) ease;
+
+  &::placeholder {
+    color: #64748b;
+    opacity: 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
 
   &:focus {
     outline: none;

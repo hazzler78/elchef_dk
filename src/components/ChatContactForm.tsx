@@ -33,6 +33,7 @@ const Input = styled.input`
   border: 1.5px solid rgba(203, 213, 225, 0.5);
   border-radius: 12px;
   font-size: 1rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: rgba(255,255,255,0.9);
   color: #17416b;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -40,6 +41,7 @@ const Input = styled.input`
   &::placeholder {
     color: #64748b;
     opacity: 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
   &:focus {
     outline: none;

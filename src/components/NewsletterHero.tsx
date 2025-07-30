@@ -65,19 +65,21 @@ const EmailInput = styled.input`
   border: 1.5px solid rgba(255,255,255,0.3);
   border-radius: var(--radius-md);
   font-size: 1rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: rgba(255,255,255,0.9);
-  color: var(--gray-700);
+  color: var(--foreground);
   transition: all 0.2s;
   box-shadow: none;
   &::placeholder {
     color: var(--gray-600);
     opacity: 1;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
   &:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
-    color: var(--gray-900);
+    color: var(--foreground);
   }
 `;
 
