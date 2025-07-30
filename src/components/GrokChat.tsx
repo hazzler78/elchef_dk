@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ChatContactForm from './ChatContactForm';
+import ContractChoice from './ContractChoice';
 
 function renderMarkdown(text: string) {
   if (!text) return '';
@@ -111,6 +112,8 @@ export default function GrokChat() {
   const [sessionId, setSessionId] = useState<string>('');
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactFormSubmitted, setContactFormSubmitted] = useState(false);
+  const [showContractChoice, setShowContractChoice] = useState(false);
+  const [contractChoiceSubmitted, setContractChoiceSubmitted] = useState(false);
   
   // Debug: Log when showContactForm changes
   useEffect(() => {
@@ -188,6 +191,29 @@ export default function GrokChat() {
         setShowContactForm(false);
       }
       
+      // Check if AI wants to show contract choice
+      if (aiMsg.includes('[SHOW_CONTRACT_CHOICE]')) {
+        console.log('Contract choice trigger detected!');
+        aiMsg = aiMsg.replace('[SHOW_CONTRACT_CHOICE]', '');
+        setShowContractChoice(true);
+      }
+      
+      // Check if contract choice has been submitted
+      if (aiMsg.includes('[CONTRACT_CHOICE_SUBMITTED]')) {
+        console.log('Contract choice submitted trigger detected!');
+        aiMsg = aiMsg.replace('[CONTRACT_CHOICE_SUBMITTED]', '');
+        setContractChoiceSubmitted(true);
+        setShowContractChoice(false);
+      }
+      
+      // Check if AI wants to show registration link
+      if (aiMsg.includes('[SHOW_REGISTRATION_LINK]')) {
+        console.log('Registration link trigger detected!');
+        aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
+        // Här kan vi lägga till en knapp eller länk för registrering
+        aiMsg += '\n\n**🎯 Redo att spara pengar?**\nKlicka här för att registrera dig: [elchef.se](https://elchef.se)';
+      }
+      
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
     } catch {
       setError('Kunde inte kontakta AI:n.');
@@ -203,6 +229,63 @@ export default function GrokChat() {
     setSessionId(generateSessionId()); // Generera ny session ID
     setShowContactForm(false);
     setContactFormSubmitted(false);
+    setShowContractChoice(false);
+    setContractChoiceSubmitted(false);
+  };
+
+  // Funktion för att hantera avtalsval
+  const handleContractChoice = async (contractType: 'rorligt' | 'fastpris') => {
+    const contractName = contractType === 'rorligt' ? 'rörligt avtal' : 'fastpris';
+    const contractMessage = `Jag väljer ${contractName}!`;
+    
+    // Lägg till användarens val i konversationen
+    const newMessages = [...messages, { role: 'user', content: contractMessage }];
+    setMessages(newMessages);
+    setShowContractChoice(false);
+    
+    // Skicka till AI för att få nästa steg
+    setLoading(true);
+    try {
+      const res = await fetch('/api/grokchat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          messages: newMessages,
+          sessionId: sessionId,
+          contractChoice: contractType // Skicka med valt avtal
+        }),
+      });
+      
+      if (!res.ok) {
+        const err = await res.json();
+        setError(err.error || 'Något gick fel.');
+        setLoading(false);
+        return;
+      }
+      
+      const data = await res.json();
+      let aiMsg = data.choices?.[0]?.message?.content || 'Tack för ditt val!';
+      
+      // Hantera eventuella triggers
+      if (aiMsg.includes('[SHOW_REGISTRATION_LINK]')) {
+        aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
+        // Här kan vi lägga till logik för att visa registreringslänk
+      }
+      
+      setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
+      setContractChoiceSubmitted(true);
+    } catch {
+      setError('Kunde inte kontakta AI:n.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Funktion för att stänga avtalsval
+  const closeContractChoice = () => {
+    setShowContractChoice(false);
+    const newMessages = [...messages, { role: 'user', content: 'Nej tack, jag tänker mig för' }];
+    setMessages(newMessages);
   };
 
   return (
@@ -415,6 +498,12 @@ export default function GrokChat() {
                 </div>
               </div>
             )}
+            {showContractChoice && (
+              <ContractChoice 
+                onSelect={handleContractChoice}
+                onClose={closeContractChoice}
+              />
+            )}
             {error && <div style={{ color: 'red', fontSize: 15, marginLeft: 8 }}>{error}</div>}
             <div ref={chatEndRef} />
           </div>
@@ -430,7 +519,7 @@ export default function GrokChat() {
               type="text"
               value={input}
               onChange={event => setInput(event.target.value)}
-              placeholder={contactFormSubmitted ? "Tack för din kontakt!" : "Skriv din fråga…"}
+              placeholder={contactFormSubmitted ? "Tack för din kontakt!" : contractChoiceSubmitted ? "Tack för ditt val!" : "Skriv din fråga…"}
               style={{ 
                 flex: 1, 
                 border: '1px solid rgba(203, 213, 225, 0.5)', 
@@ -438,18 +527,18 @@ export default function GrokChat() {
                 padding: '0.8rem 1rem', 
                 fontSize: 16, 
                 outline: 'none', 
-                background: contactFormSubmitted ? 'rgba(243, 244, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)', 
+                background: contactFormSubmitted || contractChoiceSubmitted ? 'rgba(243, 244, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)', 
                 marginRight: 8,
                 backdropFilter: 'var(--glass-blur)',
                 WebkitBackdropFilter: 'var(--glass-blur)',
               }}
-              disabled={loading || contactFormSubmitted}
+              disabled={loading || contactFormSubmitted || contractChoiceSubmitted}
               maxLength={500}
               autoFocus
             />
             <button 
               type="submit" 
-              disabled={loading || !input.trim() || contactFormSubmitted} 
+              disabled={loading || !input.trim() || contactFormSubmitted || contractChoiceSubmitted} 
               style={{ 
                 background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))', 
                 color: 'white', 
@@ -470,9 +559,9 @@ export default function GrokChat() {
             <button 
               type="button" 
               onClick={() => setShowContactForm(true)}
-              disabled={contactFormSubmitted}
+              disabled={contactFormSubmitted || contractChoiceSubmitted}
               style={{ 
-                background: contactFormSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(22, 147, 255, 0.2))', 
+                background: contactFormSubmitted || contractChoiceSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(22, 147, 255, 0.2))', 
                 color: 'white', 
                 border: '1px solid rgba(255, 255, 255, 0.2)', 
                 padding: '0 12px', 

@@ -57,6 +57,22 @@ Kontaktformulär:
 • Efter kontaktformulär är skickat, avsluta konversationen vänligt utan fler frågor eller förslag
 • Om användaren frågar efter kontaktformuläret igen efter att det redan visats, säg bara: "Kontaktformuläret är redan tillgängligt ovan. Fyll i dina uppgifter så återkommer vi så snart som möjligt!"
 
+Avtalsval och köpsignaler:
+• När användaren uttrycker tydligt intresse för att byta avtal (säger "Ja", "Absolut", "Gärna", "Låt oss göra det", etc.), visa avtalsval
+• Förklara kort skillnaden mellan rörligt och fastpris:
+  - **Rörligt avtal**: Priset följer marknaden, kan variera men oftast billigare långsiktigt
+  - **Fastpris**: Låst pris i 1-3 år, trygghet men kan vara dyrare
+• Inkludera [SHOW_CONTRACT_CHOICE] i ditt svar när du visar avtalsval
+• Efter att användaren valt avtal, förklara nästa steg och inkludera [SHOW_REGISTRATION_LINK] med relevant länk
+• Om användaren är osäker, föreslå rörligt avtal som standardval (oftast fördelaktigt)
+
+Registreringslänkar:
+• När användaren har valt avtal, inkludera [SHOW_REGISTRATION_LINK] i ditt svar
+• Förklara att registreringen tar bara 2-3 minuter
+• Nämn att avtalet börjar gälla om 14 dagar
+• Betona att det är helt kostnadsfritt och utan bindningstider
+• Ge användaren länken till elchef.se för att slutföra registreringen
+
 Konversationsregler:
 • Var hjälpsam och förtroendeingivande
 • Bygg förtroende genom nytta och enkelhet
@@ -68,18 +84,29 @@ Konversationsregler:
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages, sessionId } = body;
+    const { messages, sessionId, contractChoice } = body;
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Meddelanden saknas eller fel format' }, { status: 400 });
     }
     if (!XAI_API_KEY) {
       return NextResponse.json({ error: 'XAI_API_KEY saknas i miljövariabler' }, { status: 500 });
     }
+    
     // Lägg till system-prompt först
     const fullMessages = [
       { role: 'system', content: SYSTEM_PROMPT },
       ...messages,
     ];
+    
+    // Om användaren har valt avtal, lägg till kontext
+    if (contractChoice) {
+      const contractContext = contractChoice === 'rorligt' 
+        ? 'Användaren har valt rörligt avtal. Förklara nästa steg för registrering och inkludera [SHOW_REGISTRATION_LINK] i ditt svar.'
+        : 'Användaren har valt fastpris. Förklara nästa steg för registrering och inkludera [SHOW_REGISTRATION_LINK] i ditt svar.';
+      
+      fullMessages.push({ role: 'system', content: contractContext });
+    }
+    
     const xaiRes = await fetch(XAI_API_URL, {
       method: 'POST',
       headers: {
