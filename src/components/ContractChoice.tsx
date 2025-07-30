@@ -39,7 +39,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             onClick={() => onSelect('rorligt')}
             style={{
               background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))',
-              color: 'white',
+              color: '#1e293b',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               padding: '12px 16px',
               borderRadius: 12,
@@ -61,7 +61,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 4 }}>⚡ Rörligt avtal</div>
-            <div style={{ fontSize: 12, opacity: 0.9 }}>
+            <div style={{ fontSize: 12, opacity: 0.8 }}>
               Följer marknadspriset • Oftast billigast långsiktigt • Inga bindningstider
             </div>
           </button>
@@ -70,7 +70,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             onClick={() => onSelect('fastpris')}
             style={{
               background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(22, 147, 255, 0.2))',
-              color: 'white',
+              color: '#1e293b',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               padding: '12px 16px',
               borderRadius: 12,
@@ -92,7 +92,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 4 }}>🔒 Fastpris</div>
-            <div style={{ fontSize: 12, opacity: 0.9 }}>
+            <div style={{ fontSize: 12, opacity: 0.8 }}>
               Låst pris 1-3 år • Trygghet • Förutsägbara kostnader
             </div>
           </button>
