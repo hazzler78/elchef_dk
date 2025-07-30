@@ -63,19 +63,11 @@ Avtalsval och köpsignaler:
   - **Rörligt avtal**: Priset följer marknaden, kan variera men oftast billigare långsiktigt
   - **Fastpris**: Låst pris i 1-3 år, trygghet men kan vara dyrare
 • Inkludera [SHOW_CONTRACT_CHOICE] i ditt svar när du visar avtalsval
-• Efter att användaren valt avtal, förklara nästa steg och inkludera [SHOW_REGISTRATION_LINK] med relevant länk
+• Efter att användaren valt avtal, bekräfta valet och förklara att de kommer skickas till registrering
 • Om användaren är osäker, föreslå rörligt avtal som standardval (oftast fördelaktigt)
-
-Registreringslänkar:
-• När användaren har valt avtal, inkludera [SHOW_REGISTRATION_LINK] i ditt svar
-• Förklara att registreringen tar bara 2-3 minuter
-• Nämn att avtalet börjar gälla om 14 dagar
-• Betona att det är helt kostnadsfritt och utan bindningstider
-• Använd affiliate-länken för direkt registrering (rörligt: svekraft.com/elchef-rorligt/, fastpris: svekraft.com/elchef-fastpris/)
 
 Viktiga triggers - ANVÄND ALLTID:
 • [SHOW_CONTRACT_CHOICE] - Visa när användaren säger "Ja" till att byta avtal
-• [SHOW_REGISTRATION_LINK] - Visa ALLTID efter att användaren valt avtal (rörligt eller fastpris)
 • [SHOW_CONTACT_FORM] - Visa när användaren vill ha personlig hjälp
 
 Konversationsregler:
@@ -106,8 +98,8 @@ export async function POST(req: NextRequest) {
     // Om användaren har valt avtal, lägg till kontext
     if (contractChoice) {
       const contractContext = contractChoice === 'rorligt' 
-        ? 'VIKTIGT: Användaren har valt rörligt avtal. Du MÅSTE inkludera [SHOW_REGISTRATION_LINK] i ditt svar. Förklara att registreringen tar 2-3 minuter, att avtalet börjar gälla om 14 dagar, och att det är helt kostnadsfritt. Ge länken till affiliate-registrering.'
-        : 'VIKTIGT: Användaren har valt fastpris. Du MÅSTE inkludera [SHOW_REGISTRATION_LINK] i ditt svar. Förklara att registreringen tar 2-3 minuter, att avtalet börjar gälla om 14 dagar, och att det är helt kostnadsfritt. Ge länken till affiliate-registrering.';
+        ? 'VIKTIGT: Användaren har valt rörligt avtal. Bekräfta valet och förklara att de kommer skickas till registrering. Var positiv och förtroendeingivande.'
+        : 'VIKTIGT: Användaren har valt fastpris. Bekräfta valet och förklara att de kommer skickas till registrering. Var positiv och förtroendeingivande.';
       
       fullMessages.push({ role: 'system', content: contractContext });
     }

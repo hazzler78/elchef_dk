@@ -114,6 +114,7 @@ export default function GrokChat() {
   const [contactFormSubmitted, setContactFormSubmitted] = useState(false);
   const [showContractChoice, setShowContractChoice] = useState(false);
   const [contractChoiceSubmitted, setContractChoiceSubmitted] = useState(false);
+  const [contractType, setContractType] = useState<'rorligt' | 'fastpris'>('rorligt'); // Ny state för att spara avtalsval
   
   // Debug: Log when showContactForm changes
   useEffect(() => {
@@ -206,13 +207,7 @@ export default function GrokChat() {
         setShowContractChoice(false);
       }
       
-      // Check if AI wants to show registration link
-      if (aiMsg.includes('[SHOW_REGISTRATION_LINK]')) {
-        console.log('Registration link trigger detected!');
-        aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
-        // Lägg till en tydlig registreringslänk direkt till affiliate
-        aiMsg += '\n\n**🎯 Redo att spara pengar på din elräkning?**\n\nKlicka här för att registrera dig: **[Registrera dig nu](https://www.svekraft.com/elchef-rorligt/)**\n\n*Registreringen tar bara 2-3 minuter och är helt kostnadsfri!*';
-      }
+
       
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
     } catch {
@@ -235,67 +230,50 @@ export default function GrokChat() {
 
   // Funktion för att hantera avtalsval
   const handleContractChoice = async (contractType: 'rorligt' | 'fastpris') => {
-    const contractName = contractType === 'rorligt' ? 'rörligt avtal' : 'fastpris';
-    const contractMessage = `Jag väljer ${contractName}!`;
-    
-    console.log('Contract choice made:', contractType);
-    
-    // Lägg till användarens val i konversationen
-    const newMessages = [...messages, { role: 'user', content: contractMessage }];
-    setMessages(newMessages);
     setShowContractChoice(false);
+    setContractChoiceSubmitted(true);
     
-    // Skicka till AI för att få nästa steg
-    setLoading(true);
-    try {
-      const requestBody = { 
-        messages: newMessages,
-        sessionId: sessionId,
-        contractChoice: contractType // Skicka med valt avtal
-      };
+    // Spara avtalsvalet för att använda rätt affiliate-länk
+    setContractType(contractType);
+    
+    // Lägg till användarens val i chatten
+    const choiceMessage = contractType === 'rorligt' 
+      ? 'Jag väljer rörligt avtal'
+      : 'Jag väljer fastpris';
+    
+    setMessages(prev => [...prev, { role: 'user', content: choiceMessage }]);
+    
+    // Skicka meddelande till AI för bekräftelse
+    const response = await fetch('/api/grokchat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [...messages, { role: 'user', content: choiceMessage }],
+        sessionId,
+        contractChoice: contractType,
+      }),
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      const aiMessage = data.choices?.[0]?.message?.content || '';
       
-      console.log('Sending request to API:', requestBody);
+      setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
       
-      const res = await fetch('/api/grokchat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      });
-      
-      if (!res.ok) {
-        const err = await res.json();
-        setError(err.error || 'Något gick fel.');
-        setLoading(false);
-        return;
-      }
-      
-      const data = await res.json();
-      let aiMsg = data.choices?.[0]?.message?.content || 'Tack för ditt val!';
-      
-      console.log('AI response:', aiMsg);
-      
-      // Hantera eventuella triggers
-      if (aiMsg.includes('[SHOW_REGISTRATION_LINK]')) {
-        console.log('Registration link found in response!');
-        aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
-        
-        // Använd olika affiliate-länkar beroende på avtalsval
+      // Direkt omdirigering till affiliate-länk efter kort fördröjning
+      setTimeout(() => {
         const affiliateLink = contractType === 'rorligt' 
           ? 'https://www.svekraft.com/elchef-rorligt/'
-          : 'https://www.svekraft.com/elchef-fastpris/'; // Anta att det finns en fastpris-länk också
+          : 'https://www.svekraft.com/elchef-fastpris/';
         
-        // Lägg till en tydlig registreringslänk direkt till affiliate
-        aiMsg += `\n\n**🎯 Redo att spara pengar på din elräkning?**\n\nKlicka här för att registrera dig: **[Registrera dig nu](${affiliateLink})**\n\n*Registreringen tar bara 2-3 minuter och är helt kostnadsfri!*`;
-      } else {
-        console.log('No registration link found in response');
-      }
-      
-      setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
-      setContractChoiceSubmitted(true);
-    } catch {
-      setError('Kunde inte kontakta AI:n.');
-    } finally {
-      setLoading(false);
+        // Lägg till en notifiering i chatten
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: '**🎯 Perfekt val!** Du skickas nu till registrering...' 
+        }]);
+        
+        window.open(affiliateLink, '_blank');
+      }, 2000); // 2 sekunders fördröjning så användaren hinner se AI-svaret
     }
   };
 
