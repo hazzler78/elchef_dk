@@ -4,12 +4,84 @@ import React, { useState, useRef, useEffect } from 'react';
 import ChatContactForm from './ChatContactForm';
 
 function renderMarkdown(text: string) {
-  // Enkel markdown: fetstil, punktlistor, radbrytning
+  if (!text) return '';
+  
   let html = text
-    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-    .replace(/\n?\s*- (.*?)(?=\n|$)/g, '<li>$1</li>')
-    .replace(/\n/g, '<br/>');
-  if (html.includes('<li>')) html = '<ul>' + html + '</ul>';
+    // Escape HTML to prevent XSS
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+  
+  // Headers (h1-h6)
+  html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+  html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+  html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+  
+  // Bold and italic (handle nested cases)
+  html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>'); // ***bold italic***
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // **bold**
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>'); // *italic*
+  
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code style="background: rgba(0,0,0,0.1); padding: 2px 4px; border-radius: 3px; font-family: monospace;">$1</code>');
+  
+  // Code blocks (```code```)
+  html = html.replace(/```([\s\S]*?)```/g, '<pre style="background: rgba(0,0,0,0.05); padding: 12px; border-radius: 6px; overflow-x: auto; margin: 8px 0;"><code style="font-family: monospace; white-space: pre;">$1</code></pre>');
+  
+  // Links [text](url)
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">$1</a>');
+  
+  // Blockquotes
+  html = html.replace(/^> (.*$)/gim, '<blockquote style="border-left: 4px solid #e5e7eb; padding-left: 16px; margin: 8px 0; color: #6b7280;">$1</blockquote>');
+  
+  // Numbered lists
+  html = html.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
+  
+  // Bullet lists (improved regex)
+  html = html.replace(/^[\s]*[-*+] (.*$)/gim, '<li>$1</li>');
+  
+  // Wrap lists in ul/ol tags
+  const lines = html.split('\n');
+  let inList = false;
+  let listType = '';
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const isListItem = /^<li>/.test(line);
+    const isNumberedListItem = /^\d+\./.test(line);
+    
+    if (isListItem && !inList) {
+      inList = true;
+      listType = isNumberedListItem ? 'ol' : 'ul';
+      lines[i] = `<${listType} style="margin: 8px 0; padding-left: 20px;">${line}`;
+    } else if (!isListItem && inList) {
+      inList = false;
+      lines[i-1] = lines[i-1] + `</${listType}>`;
+    }
+  }
+  
+  // Close any open list
+  if (inList) {
+    lines[lines.length - 1] = lines[lines.length - 1] + `</${listType}>`;
+  }
+  
+  html = lines.join('\n');
+  
+  // Line breaks (handle multiple consecutive breaks)
+  html = html.replace(/\n\n/g, '</p><p>');
+  html = html.replace(/\n/g, '<br/>');
+  
+  // Wrap in paragraphs if not already wrapped
+  if (!html.startsWith('<h') && !html.startsWith('<p') && !html.startsWith('<ul') && !html.startsWith('<ol') && !html.startsWith('<blockquote') && !html.startsWith('<pre')) {
+    html = `<p style="margin: 0; line-height: 1.6;">${html}</p>`;
+  }
+  
+  // Clean up empty paragraphs
+  html = html.replace(/<p[^>]*>\s*<\/p>/g, '');
+  html = html.replace(/<p[^>]*>\s*<br\/>\s*<\/p>/g, '');
+  
   return html;
 }
 
