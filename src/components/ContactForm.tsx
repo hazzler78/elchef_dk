@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ContactSection = styled.section`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 4rem 0;
+  background: transparent;
+  padding: var(--section-spacing) 0;
   color: white;
 `;
 
 const Container = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--container-padding);
 `;
 
 const Title = styled.h2`
@@ -21,6 +21,7 @@ const Title = styled.h2`
   margin-bottom: 1rem;
   font-weight: 700;
   color: white;
+  text-shadow: var(--text-shadow);
 `;
 
 const Subtitle = styled.p`
@@ -29,16 +30,17 @@ const Subtitle = styled.p`
   margin-bottom: 3rem;
   opacity: 0.9;
   color: white;
+  text-shadow: var(--text-shadow);
 `;
 
 const Form = styled.form`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-lg);
   padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-light);
 `;
 
 const FormGroup = styled.div`
@@ -51,22 +53,24 @@ const Label = styled.label`
   font-weight: 600;
   font-size: 1rem;
   color: white;
+  text-shadow: var(--text-shadow);
 `;
 
 const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.9);
-  color: #333;
+  color: var(--foreground);
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal) ease;
 
   &:focus {
     outline: none;
     background: white;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    transform: translateY(-1px);
   }
 `;
 
@@ -74,18 +78,19 @@ const Textarea = styled.textarea`
   width: 100%;
   padding: 0.75rem;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.9);
-  color: #333;
+  color: var(--foreground);
   font-size: 1rem;
   resize: vertical;
   min-height: 100px;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal) ease;
 
   &:focus {
     outline: none;
     background: white;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    transform: translateY(-1px);
   }
 `;
 
@@ -104,23 +109,24 @@ const CheckboxLabel = styled.label`
   font-size: 1rem;
   color: white;
   cursor: pointer;
+  text-shadow: var(--text-shadow);
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #00C96B, #00A855);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal) ease;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 201, 107, 0.3);
+    box-shadow: var(--glass-shadow-medium);
   }
 
   &:disabled {
@@ -133,24 +139,24 @@ const SuccessMessage = styled.div`
   background: rgba(16, 185, 129, 0.9);
   color: white;
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   margin-top: 1rem;
   text-align: center;
   font-weight: 600;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
 `;
 
 const ErrorMessage = styled.div`
   background: rgba(239, 68, 68, 0.9);
   color: white;
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   margin-top: 1rem;
   text-align: center;
   font-weight: 600;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
 `;
 
 export default function ContactForm() {
