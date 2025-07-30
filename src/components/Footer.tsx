@@ -153,7 +153,7 @@ export default function Footer() {
         </FooterGrid>
 
         <BottomBar>
-          <p>© 2025 Elchef AB. Alla rättigheter förbehållna.</p>
+          <p>© 2025 Elchef.se. Alla rättigheter förbehållna.</p>
         </BottomBar>
       </div>
     </FooterWrapper>
