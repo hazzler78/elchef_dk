@@ -210,8 +210,8 @@ export default function GrokChat() {
       if (aiMsg.includes('[SHOW_REGISTRATION_LINK]')) {
         console.log('Registration link trigger detected!');
         aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
-        // Här kan vi lägga till en knapp eller länk för registrering
-        aiMsg += '\n\n**🎯 Redo att spara pengar?**\nKlicka här för att registrera dig: [elchef.se](https://elchef.se)';
+        // Lägg till en tydlig registreringslänk
+        aiMsg += '\n\n**🎯 Redo att spara pengar på din elräkning?**\n\nKlicka här för att registrera dig: **[elchef.se](https://elchef.se)**\n\n*Registreringen tar bara 2-3 minuter och är helt kostnadsfri!*';
       }
       
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
@@ -238,6 +238,8 @@ export default function GrokChat() {
     const contractName = contractType === 'rorligt' ? 'rörligt avtal' : 'fastpris';
     const contractMessage = `Jag väljer ${contractName}!`;
     
+    console.log('Contract choice made:', contractType);
+    
     // Lägg till användarens val i konversationen
     const newMessages = [...messages, { role: 'user', content: contractMessage }];
     setMessages(newMessages);
@@ -246,14 +248,18 @@ export default function GrokChat() {
     // Skicka till AI för att få nästa steg
     setLoading(true);
     try {
+      const requestBody = { 
+        messages: newMessages,
+        sessionId: sessionId,
+        contractChoice: contractType // Skicka med valt avtal
+      };
+      
+      console.log('Sending request to API:', requestBody);
+      
       const res = await fetch('/api/grokchat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          messages: newMessages,
-          sessionId: sessionId,
-          contractChoice: contractType // Skicka med valt avtal
-        }),
+        body: JSON.stringify(requestBody),
       });
       
       if (!res.ok) {
@@ -266,10 +272,16 @@ export default function GrokChat() {
       const data = await res.json();
       let aiMsg = data.choices?.[0]?.message?.content || 'Tack för ditt val!';
       
+      console.log('AI response:', aiMsg);
+      
       // Hantera eventuella triggers
       if (aiMsg.includes('[SHOW_REGISTRATION_LINK]')) {
+        console.log('Registration link found in response!');
         aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
-        // Här kan vi lägga till logik för att visa registreringslänk
+        // Lägg till en tydlig registreringslänk
+        aiMsg += '\n\n**🎯 Redo att spara pengar på din elräkning?**\n\nKlicka här för att registrera dig: **[elchef.se](https://elchef.se)**\n\n*Registreringen tar bara 2-3 minuter och är helt kostnadsfri!*';
+      } else {
+        console.log('No registration link found in response');
       }
       
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
