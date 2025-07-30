@@ -186,6 +186,47 @@ export default function AdminChatlog() {
     }
   };
 
+  const cleanupDuplicateData = async () => {
+    if (!confirm("Detta kommer att rensa bort duplicerad konversationsdata från befintliga loggar. Endast det aktuella meddelandeutbytet kommer att behållas för varje logg. Är du säker?")) return;
+    
+    setDeleting(true);
+    try {
+      // Hämta alla loggar
+      const { data: allLogs, error: fetchError } = await supabase
+        .from("chatlog")
+        .select("*");
+      
+      if (fetchError) {
+        setError("Kunde inte hämta loggar: " + fetchError.message);
+        return;
+      }
+      
+      // Uppdatera varje logg för att bara innehålla det aktuella utbytet
+      for (const log of allLogs || []) {
+        if (log.messages && Array.isArray(log.messages) && log.messages.length > 2) {
+          // Om det finns mer än 2 meddelanden (user + assistant), behåll bara de sista två
+          const currentExchange = log.messages.slice(-2);
+          
+          const { error: updateError } = await supabase
+            .from("chatlog")
+            .update({ messages: currentExchange })
+            .eq("id", log.id);
+          
+          if (updateError) {
+            console.error("Fel vid uppdatering av logg", log.id, updateError);
+          }
+        }
+      }
+      
+      await fetchLogs(); // Uppdatera listan
+      setError(""); // Rensa eventuella fel
+    } catch (err) {
+      setError("Ett fel uppstod vid rensning: " + (err as Error).message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const toggleSelectItem = (id: number) => {
     setSelectedItems(prev => {
       const newSet = new Set(prev);
@@ -291,6 +332,24 @@ export default function AdminChatlog() {
           {viewMode === "grouped" ? `${sessionGroups.length} sessioner` : `${logs.length} meddelanden`}
         </span>
         
+        {/* Cleanup button */}
+        <button
+          onClick={cleanupDuplicateData}
+          disabled={deleting}
+          style={{
+            padding: "8px 16px",
+            background: "#f59e0b",
+            color: "white",
+            border: "none",
+            borderRadius: 6,
+            cursor: deleting ? "not-allowed" : "pointer",
+            fontSize: 14
+          }}
+          title="Rensa duplicerad konversationsdata från befintliga loggar"
+        >
+          {deleting ? "Rensar..." : "🧹 Rensa duplicerad data"}
+        </button>
+        
         {/* Bulk actions */}
         {(selectedItems.size > 0 || selectedSessions.size > 0) && (
           <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
@@ -308,6 +367,21 @@ export default function AdminChatlog() {
               }}
             >
               {deleting ? "Raderar..." : `Radera valda (${viewMode === "grouped" ? selectedSessions.size : selectedItems.size})`}
+            </button>
+            <button
+              onClick={cleanupDuplicateData}
+              disabled={deleting}
+              style={{
+                padding: "6px 12px",
+                background: "#f59e0b",
+                color: "white",
+                border: "none",
+                borderRadius: 4,
+                cursor: deleting ? "not-allowed" : "pointer",
+                fontSize: 12
+              }}
+            >
+              {deleting ? "Rensar..." : "Rensa duplicerad data"}
             </button>
             <button
               onClick={selectNone}
@@ -500,30 +574,80 @@ export default function AdminChatlog() {
               
               {expanded === group.session_id && (
                 <div style={{ padding: 16 }}>
-                  {group.logs.map((log, logIndex) => (
-                    <div key={log.id} style={{ 
-                      marginBottom: 16, 
-                      padding: 12, 
-                      background: "#f9fafb", 
-                      borderRadius: 6,
-                      border: "1px solid #e5e7eb"
-                    }}>
-                      <div style={{ fontSize: 12, color: "#666", marginBottom: 8 }}>
-                        Meddelande {logIndex + 1} • {new Date(log.created_at).toLocaleString()} • Tokens: {log.total_tokens}
-                      </div>
-                      <div>
-                        <b>Konversation:</b>
-                        <ul style={{ margin: "8px 0", padding: 0, listStyle: "none" }}>
-                          {log.messages?.map((msg, idx) => (
-                            <li key={idx} style={{ margin: "4px 0" }}>
-                              <span style={{ fontWeight: 600 }}>{msg.role === "user" ? "Du" : "Grodan"}:</span> {msg.content}
-                            </li>
-                          ))}
-                        </ul>
-                        <b>AI-svar:</b> {log.ai_response}
-                      </div>
+                  {/* Visa hela konversationen som en sammanhängande dialog */}
+                  <div style={{ 
+                    background: "#f8fafc", 
+                    padding: 16, 
+                    borderRadius: 8,
+                    border: "1px solid #e2e8f0",
+                    marginBottom: 16
+                  }}>
+                    <h4 style={{ margin: "0 0 12px 0", color: "#374151" }}>Hela konversationen:</h4>
+                    <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+                      {group.logs.flatMap((log, logIndex) => 
+                        log.messages?.map((msg, msgIndex) => (
+                          <div key={`${logIndex}-${msgIndex}`} style={{ 
+                            marginBottom: 8,
+                            padding: "8px 12px",
+                            background: msg.role === "user" ? "#dbeafe" : "#f0f9ff",
+                            borderRadius: 8,
+                            borderLeft: `4px solid ${msg.role === "user" ? "#3b82f6" : "#0ea5e9"}`
+                          }}>
+                            <div style={{ 
+                              fontWeight: 600, 
+                              fontSize: 12, 
+                              color: "#374151",
+                              marginBottom: 4 
+                            }}>
+                              {msg.role === "user" ? "Användare" : "Grodan"} 
+                              <span style={{ 
+                                fontSize: 11, 
+                                color: "#6b7280", 
+                                marginLeft: 8,
+                                fontWeight: "normal"
+                              }}>
+                                (meddelande {logIndex + 1})
+                              </span>
+                            </div>
+                            <div style={{ fontSize: 14, lineHeight: 1.5 }}>
+                              {msg.content}
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
-                  ))}
+                  </div>
+                  
+                  {/* Visa individuella loggar för debugging */}
+                  <details style={{ marginTop: 16 }}>
+                    <summary style={{ cursor: "pointer", fontWeight: 600, color: "#374151" }}>
+                      Visa individuella loggar (debug)
+                    </summary>
+                    {group.logs.map((log, logIndex) => (
+                      <div key={log.id} style={{ 
+                        marginBottom: 16, 
+                        padding: 12, 
+                        background: "#f9fafb", 
+                        borderRadius: 6,
+                        border: "1px solid #e5e7eb"
+                      }}>
+                        <div style={{ fontSize: 12, color: "#666", marginBottom: 8 }}>
+                          Logg {logIndex + 1} • {new Date(log.created_at).toLocaleString()} • Tokens: {log.total_tokens}
+                        </div>
+                        <div>
+                          <b>Meddelanden i denna logg:</b>
+                          <ul style={{ margin: "8px 0", padding: 0, listStyle: "none" }}>
+                            {log.messages?.map((msg, idx) => (
+                              <li key={idx} style={{ margin: "4px 0" }}>
+                                <span style={{ fontWeight: 600 }}>{msg.role === "user" ? "Användare" : "Grodan"}:</span> {msg.content}
+                              </li>
+                            ))}
+                          </ul>
+                          <b>AI-svar:</b> {log.ai_response}
+                        </div>
+                      </div>
+                    ))}
+                  </details>
                 </div>
               )}
             </div>

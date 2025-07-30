@@ -95,11 +95,21 @@ export async function POST(req: NextRequest) {
         const finalSessionId = sessionId || Date.now().toString(36) + Math.random().toString(36).substr(2);
         const userAgent = req.headers.get('user-agent') || 'unknown';
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+        
+        // Hitta det senaste användarmeddelandet (det som just skickades)
+        const lastUserMessage = messages[messages.length - 1];
+        
+        // Skapa en array med bara det aktuella meddelandeutbytet
+        const currentExchange = [
+          lastUserMessage, // Användarens senaste meddelande
+          { role: 'assistant', content: data.choices?.[0]?.message?.content || '' } // AI-svaret
+        ];
+        
         await supabase.from('chatlog').insert([
           {
             session_id: finalSessionId,
             user_agent: userAgent,
-            messages: messages,
+            messages: currentExchange, // Spara bara det aktuella utbytet, inte hela konversationen
             ai_response: data.choices?.[0]?.message?.content,
             total_tokens: data.usage?.total_tokens || 0,
           }
