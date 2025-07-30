@@ -71,7 +71,7 @@ Registreringslänkar:
 • Förklara att registreringen tar bara 2-3 minuter
 • Nämn att avtalet börjar gälla om 14 dagar
 • Betona att det är helt kostnadsfritt och utan bindningstider
-• Ge användaren länken till elchef.se för att slutföra registreringen
+• Ge användaren länken till elchef.se/byt-avtal för att slutföra registreringen
 
 Viktiga triggers - ANVÄND ALLTID:
 • [SHOW_CONTRACT_CHOICE] - Visa när användaren säger "Ja" till att byta avtal
@@ -106,8 +106,8 @@ export async function POST(req: NextRequest) {
     // Om användaren har valt avtal, lägg till kontext
     if (contractChoice) {
       const contractContext = contractChoice === 'rorligt' 
-        ? 'VIKTIGT: Användaren har valt rörligt avtal. Du MÅSTE inkludera [SHOW_REGISTRATION_LINK] i ditt svar. Förklara att registreringen tar 2-3 minuter, att avtalet börjar gälla om 14 dagar, och att det är helt kostnadsfritt. Ge länken till elchef.se.'
-        : 'VIKTIGT: Användaren har valt fastpris. Du MÅSTE inkludera [SHOW_REGISTRATION_LINK] i ditt svar. Förklara att registreringen tar 2-3 minuter, att avtalet börjar gälla om 14 dagar, och att det är helt kostnadsfritt. Ge länken till elchef.se.';
+        ? 'VIKTIGT: Användaren har valt rörligt avtal. Du MÅSTE inkludera [SHOW_REGISTRATION_LINK] i ditt svar. Förklara att registreringen tar 2-3 minuter, att avtalet börjar gälla om 14 dagar, och att det är helt kostnadsfritt. Ge länken till elchef.se/byt-avtal.'
+        : 'VIKTIGT: Användaren har valt fastpris. Du MÅSTE inkludera [SHOW_REGISTRATION_LINK] i ditt svar. Förklara att registreringen tar 2-3 minuter, att avtalet börjar gälla om 14 dagar, och att det är helt kostnadsfritt. Ge länken till elchef.se/byt-avtal.';
       
       fullMessages.push({ role: 'system', content: contractContext });
     }

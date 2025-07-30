@@ -211,7 +211,7 @@ export default function GrokChat() {
         console.log('Registration link trigger detected!');
         aiMsg = aiMsg.replace('[SHOW_REGISTRATION_LINK]', '');
         // Lägg till en tydlig registreringslänk
-        aiMsg += '\n\n**🎯 Redo att spara pengar på din elräkning?**\n\nKlicka här för att registrera dig: **[elchef.se](https://elchef.se)**\n\n*Registreringen tar bara 2-3 minuter och är helt kostnadsfri!*';
+        aiMsg += '\n\n**🎯 Redo att spara pengar på din elräkning?**\n\nKlicka här för att registrera dig: **[elchef.se/byt-avtal](https://elchef.se/byt-avtal)**\n\n*Registreringen tar bara 2-3 minuter och är helt kostnadsfri!*';
       }
       
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
