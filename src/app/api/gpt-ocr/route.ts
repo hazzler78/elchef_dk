@@ -90,6 +90,7 @@ GPT:n ska använda ett vänligt, hjälpsamt och neutralt tonläge, och uttrycka 
 - kWh
 - Öre/kWh
 - Kr/kWh
+- Fast avgift
 
 **VIKTIGT: Inkludera ALLA kostnader från första listan i summeringen av onödiga kostnader. Exkludera kostnader från andra listan.**
 
