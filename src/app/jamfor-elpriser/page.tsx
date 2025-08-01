@@ -108,7 +108,7 @@ export default function JamforElpriser() {
       if (data.gptAnswer.includes("I'm sorry") || data.gptAnswer.includes("can't assist") || 
           data.gptAnswer.includes("Tyvärr") || data.gptAnswer.includes("kan inte") ||
           data.gptAnswer.includes("Jag kan inte") || data.gptAnswer.includes("kan inte hjälpa")) {
-        throw new Error('AI:n kunde inte analysera fakturan. Kontrollera att bilden är tydlig och innehåller en elräkning.');
+        throw new Error('AI:n kunde inte analysera fakturan. Kontrollera att bilden är tydlig och innehåller en elräkning. Prova att ladda upp bilden igen - det fungerar ofta på andra försöket!');
       }
       
       // Rensa bort matematiska formler från svaret
@@ -129,7 +129,7 @@ export default function JamforElpriser() {
       setGptResult(cleanedResult);
     } catch (error) {
       console.error('Error analyzing invoice:', error);
-      setError(`Kunde inte analysera fakturan: ${error instanceof Error ? error.message : 'Okänt fel'}`);
+      setError(`Kunde inte analysera fakturan: ${error instanceof Error ? error.message : 'Okänt fel'}. Prova att ladda upp bilden igen - det fungerar ofta på andra försöket!`);
     } finally {
       setLoading(false);
     }
@@ -213,7 +213,7 @@ export default function JamforElpriser() {
   return (
     <>
       <main className="container" style={{ maxWidth: 800, margin: '0 auto', padding: 'var(--section-spacing) 0' }}>
-        <div style={{ 
+          <div style={{ 
           background: 'var(--glass-bg)', 
           backdropFilter: 'var(--glass-blur)', 
           WebkitBackdropFilter: 'var(--glass-blur)',
@@ -236,7 +236,7 @@ export default function JamforElpriser() {
           <p style={{ 
             fontSize: '1.25rem', 
             color: 'rgba(255, 255, 255, 0.9)', 
-            marginBottom: '2rem',
+            marginBottom: '2rem', 
             textAlign: 'center',
             textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
           }}>
@@ -254,46 +254,46 @@ export default function JamforElpriser() {
                 display: 'flex', 
                 flexDirection: 'column',
                 gap: '1rem',
-                alignItems: 'stretch'
-              }}>
-                <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
+              alignItems: 'stretch'
+            }}>
+              <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
                   <GlassButton as="span" variant="primary" size="lg" background="rgba(0,201,107,0.85)" disableScrollEffect disableHoverEffect>
-                    Välj fakturabild
-                  </GlassButton>
-                </label>
-                <input
-                  id="file-upload"
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  style={{ display: 'none' }}
-                />
-                <div style={{ 
+                  Välj fakturabild
+                </GlassButton>
+              </label>
+              <input
+                id="file-upload"
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <div style={{ 
                   color: 'rgba(255, 255, 255, 0.8)', 
                   fontSize: '1rem', 
-                  textAlign: 'center',
+                textAlign: 'center',
                   padding: '0.5rem 0',
                   background: 'rgba(255, 255, 255, 0.1)',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid rgba(255, 255, 255, 0.2)'
-                }}>
-                  {file ? file.name : 'Ingen fil vald'}
-                </div>
+              }}>
+                {file ? file.name : 'Ingen fil vald'}
               </div>
-              <GlassButton
-                onClick={handleGptOcr}
-                disabled={!file || loading}
-                variant="primary"
+            </div>
+            <GlassButton
+              onClick={handleGptOcr}
+              disabled={!file || loading}
+              variant="primary"
                 size="lg"
                 background="rgba(22,147,255,0.85)"
-                disableScrollEffect
-                disableHoverEffect
-                              >
-                  Analysera faktura
-                </GlassButton>
-            </div>
-          )}
+              disableScrollEffect
+              disableHoverEffect
+            >
+              Analysera faktura
+            </GlassButton>
+          </div>
+        )}
         </div>
 
         {error && (
@@ -312,8 +312,8 @@ export default function JamforElpriser() {
           </div>
         )}
 
-        {loading && (
-          <div style={{ 
+                 {loading && (
+           <div style={{ 
             marginTop: '2rem', 
             background: 'var(--glass-bg)', 
             backdropFilter: 'var(--glass-blur)',
@@ -322,17 +322,17 @@ export default function JamforElpriser() {
             borderRadius: 'var(--radius-lg)', 
             padding: '3rem 2rem', 
             boxShadow: 'var(--glass-shadow-medium)',
-            textAlign: 'center'
-          }}>
-            <div style={{ 
-              width: 60, 
-              height: 60, 
+             textAlign: 'center'
+           }}>
+             <div style={{ 
+               width: 60, 
+               height: 60, 
               border: '4px solid rgba(255, 255, 255, 0.3)', 
               borderTop: '4px solid var(--primary)', 
-              borderRadius: '50%', 
-              animation: 'spin 1s linear infinite',
+               borderRadius: '50%', 
+               animation: 'spin 1s linear infinite',
               margin: '0 auto 1.5rem auto'
-            }}></div>
+             }}></div>
             <h3 style={{ 
               fontSize: '1.5rem', 
               fontWeight: 600, 
@@ -340,18 +340,18 @@ export default function JamforElpriser() {
               color: 'white',
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
-              Analyserar din faktura...
-            </h3>
+               Analyserar din faktura...
+             </h3>
             <p style={{ 
               fontSize: '1.1rem', 
               color: 'rgba(255, 255, 255, 0.8)', 
               margin: 0,
               textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
             }}>
-              AI:n läser av alla kostnader och identifierar dolda avgifter
-            </p>
-          </div>
-        )}
+               AI:n läser av alla kostnader och identifierar dolda avgifter
+             </p>
+           </div>
+         )}
 
         {gptResult && (
           <div className="analysis-fade-in" style={{ 
@@ -606,8 +606,8 @@ export default function JamforElpriser() {
                   <AnalysisIcon />
                   Detaljerad uträkning
                 </h4>
-                <ReactMarkdown
-                  components={{
+            <ReactMarkdown
+              components={{
                     h3: (props) => {
                       const content = props.children?.toString() || '';
                       let Icon = null;
@@ -698,7 +698,7 @@ export default function JamforElpriser() {
                   }}
                 >
                   {getDetailedSection(gptResult)}
-                </ReactMarkdown>
+            </ReactMarkdown>
               </div>
             )}
             
@@ -739,24 +739,9 @@ export default function JamforElpriser() {
 
             {/* Contact form section */}
             <div className="analysis-slide-in" style={{ 
-              marginTop: '3rem',
-              background: 'rgba(255, 255, 255, 0.05)', 
-              borderRadius: 'var(--radius-lg)', 
-              padding: '3rem', 
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'var(--glass-blur)',
-              WebkitBackdropFilter: 'var(--glass-blur)',
-              maxWidth: '100%',
-              width: '100%'
+              marginTop: '3rem'
             }}>
-              <div style={{
-                maxWidth: '100%',
-                width: '100%',
-                '--container-padding': '0px',
-                '--section-spacing': '0px'
-              } as React.CSSProperties}>
-                <ContactForm />
-              </div>
+              <ContactForm />
             </div>
 
             <div className="analysis-fade-in" style={{ 
