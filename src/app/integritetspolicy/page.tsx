@@ -55,7 +55,7 @@ export default function Integritetspolicy() {
 
         <SectionTitle>1. Vårt ansvar för din personuppgifter</SectionTitle>
         <Paragraph>
-          VKNG LTD (benämnt som "Elchef.se", "vi" eller "oss") är personuppgiftsansvarig för behandlingen av dina personuppgifter när du använder vår webbplats elchef.se. Denna integritetspolicy förklarar hur vi samlar in, använder och skyddar din personliga information.
+          VKNG LTD (benämnt som &quot;Elchef.se&quot;, &quot;vi&quot; eller &quot;oss&quot;) är personuppgiftsansvarig för behandlingen av dina personuppgifter när du använder vår webbplats elchef.se. Denna integritetspolicy förklarar hur vi samlar in, använder och skyddar din personliga information.
         </Paragraph>
 
         <SectionTitle>2. Vilka personuppgifter vi samlar in</SectionTitle>

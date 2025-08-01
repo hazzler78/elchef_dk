@@ -1,5 +1,6 @@
 "use client";
 import styled from "styled-components";
+import Image from "next/image";
 
 const Banner = styled.div`
   width: 100%;
@@ -44,7 +45,7 @@ const StyledLink = styled.a`
 export default function CampaignBanner() {
   return (
     <Banner>
-      <img src="/favicon.svg" alt="Elchef" style={{ width: '20px', height: '20px', marginRight: '8px', verticalAlign: 'middle' }} />
+      <Image src="/favicon.svg" alt="Elchef" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
       Begränsat erbjudande! Få <Highlight>200 kr rabatt</Highlight> på ditt elavtal!<br />
       Registrera dig för
       <StyledLink href="https://www.svekraft.com/elchef-rorligt/" target="_blank" rel="noopener noreferrer">Rörligt avtal</StyledLink>
