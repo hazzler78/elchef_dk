@@ -46,6 +46,10 @@ export default function Villkor() {
   return (
     <Section>
       <Container>
+        {/* TikTok Site Verification */}
+        <div style={{ display: 'none' }}>
+          tiktok-developers-site-verification=CruszEUDL52ioMKCZMNQNhNdTLciHI1L
+        </div>
         <Title>Användarvillkor för elchef.se</Title>
         <Updated>Senast uppdaterad: Juli 2025</Updated>
 
