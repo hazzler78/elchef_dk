@@ -57,7 +57,7 @@ export default function RootLayout({
         <meta name="twitter:description" content="Elchef.se hjälper dig att snabbt, gratis och utan krångel hitta och byta till det elavtal som passar dig bäst. Vi visar bara elavtal som är värda att överväga och sköter hela bytet åt dig." />
         <meta name="twitter:image" content="https://elchef.se/og-image.png" />
         <meta name="facebook-domain-verification" content="in9xjxefhkl6pbe4g33zjwrsnkliin" />
-        <meta name="tiktok-developers-site-verification" content="CruszEUDL52ioMKCZMNQNhNdTLciHI1L" />
+        <meta name="tiktok-developers-site-verification" content="i7h859t0QF0G6Dua8q4h9qJUXwuPQoof" />
       </head>
       <body className={inter.className}>
         <StyledComponentsRegistry>

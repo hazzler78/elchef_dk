@@ -1,7 +1,7 @@
 export default function TikTokVerification() {
   return (
     <div>
-      tiktok-developers-site-verification=CruszEUDL52ioMKCZMNQNhNdTLciHI1L
+      tiktok-developers-site-verification=i7h859t0QF0G6Dua8q4h9qJUXwuPQoof
     </div>
   );
 } 
