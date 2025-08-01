@@ -704,14 +704,15 @@ export default function JamforElpriser() {
             
             {/* Highlighted summary section */}
             <div className="analysis-slide-in" style={{ 
-              marginTop: '1.5rem', 
+              marginTop: '2rem', 
               background: 'rgba(245, 158, 11, 0.1)', 
               borderRadius: 'var(--radius-md)', 
               padding: '1.5rem', 
               border: '2px solid rgba(245, 158, 11, 0.3)',
               boxShadow: '0 4px 12px rgba(245,158,11,0.2)',
               backdropFilter: 'var(--glass-blur)',
-              WebkitBackdropFilter: 'var(--glass-blur)'
+              WebkitBackdropFilter: 'var(--glass-blur)',
+              marginBottom: '2rem'
             }}>
               <h4 style={{ 
                 color: 'white', 
@@ -738,15 +739,24 @@ export default function JamforElpriser() {
 
             {/* Contact form section */}
             <div className="analysis-slide-in" style={{ 
-              marginTop: '2rem',
+              marginTop: '3rem',
               background: 'rgba(255, 255, 255, 0.05)', 
               borderRadius: 'var(--radius-lg)', 
-              padding: '2rem', 
+              padding: '3rem', 
               border: '1px solid rgba(255, 255, 255, 0.1)',
               backdropFilter: 'var(--glass-blur)',
-              WebkitBackdropFilter: 'var(--glass-blur)'
+              WebkitBackdropFilter: 'var(--glass-blur)',
+              maxWidth: '100%',
+              width: '100%'
             }}>
-              <ContactForm />
+              <div style={{
+                maxWidth: '100%',
+                width: '100%',
+                '--container-padding': '0px',
+                '--section-spacing': '0px'
+              } as React.CSSProperties}>
+                <ContactForm />
+              </div>
             </div>
 
             <div className="analysis-fade-in" style={{ 
