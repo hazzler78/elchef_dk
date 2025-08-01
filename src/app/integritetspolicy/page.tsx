@@ -41,73 +41,56 @@ const Mail = styled.a`
   color: #2563eb;
   text-decoration: underline;
 `;
-const ExtLink = styled.a`
-  color: #2563eb;
-  text-decoration: underline;
-`;
 
 export default function Integritetspolicy() {
   return (
     <Section>
       <Container>
-        <Title>Personuppgifter och cookies</Title>
+        {/* TikTok Site Verification */}
+        <div style={{ fontSize: '1px', color: 'transparent', position: 'absolute', left: '-9999px' }}>
+          tiktok-developers-site-verification=i7h859t0QF0G6Dua8q4h9qJUXwuPQoof
+        </div>
+        <Title>Integritetspolicy för elchef.se</Title>
         <Updated>Senast uppdaterad: Juli 2025</Updated>
 
-        <SectionTitle>PERSONUPPGIFTER</SectionTitle>
+        <SectionTitle>1. Vårt ansvar för din personuppgifter</SectionTitle>
         <Paragraph>
-          Denna policy förklarar hur VKNG LTD, organisationsnummer HE477501 (nedan kallat &quot;Företaget&quot;), hanterar dina personuppgifter och vilka rättigheter du har vid användning av vår webbplats elchef.se. Policyn gäller dig som besöker elchef.se eller använder våra tjänster.
-        </Paragraph>
-        <Paragraph>
-          <b>Personuppgifter</b> är information som kan kopplas till en identifierbar person. Att behandla personuppgifter innebär alla typer av hantering, som insamling, strukturering, lagring och radering.
-        </Paragraph>
-        <Paragraph>
-          <b>Personuppgiftsansvarig</b><br />
-          Namn: VKNG LTD<br />
-          Org.nr: HE477501<br />
-          E-post: <Mail href="mailto:info@elchef.se">info@elchef.se</Mail>
+          VKNG LTD (benämnt som "Elchef.se", "vi" eller "oss") är personuppgiftsansvarig för behandlingen av dina personuppgifter när du använder vår webbplats elchef.se. Denna integritetspolicy förklarar hur vi samlar in, använder och skyddar din personliga information.
         </Paragraph>
 
-        <SectionTitle>1. Insamling vid användning av tjänsten</SectionTitle>
+        <SectionTitle>2. Vilka personuppgifter vi samlar in</SectionTitle>
         <Paragraph>
-          När du använder elchef.se för att jämföra elavtal kan vi samla in uppgifter som postnummer och elförbrukning, kopplade till din IP-adress. Detta sker med stöd av en intresseavvägning enligt GDPR artikel 6.1(f), då vi behöver dessa uppgifter för att kunna erbjuda vår tjänst.
+          Vi samlar in information som du ger oss direkt, såsom namn, e-postadress, telefonnummer och adress när du använder våra tjänster. Vi samlar också in teknisk information om hur du använder webbplatsen, inklusive IP-adress, webbläsartyp och besöksdata.
         </Paragraph>
 
-        <SectionTitle>2. Kontakter och supportärenden</SectionTitle>
+        <SectionTitle>3. Hur vi använder dina personuppgifter</SectionTitle>
         <Paragraph>
-          Om du kontaktar oss via e-post eller formulär kan vi behandla information som namn, telefonnummer, e-post och annat du lämnar. Även detta grundas på intresseavvägning enligt GDPR artikel 6.1(f) – vi behöver dessa uppgifter för att kunna svara på din förfrågan.
+          Vi använder dina personuppgifter för att tillhandahålla våra tjänster, förbättra användarupplevelsen, kommunicera med dig och följa lagkrav. Vi delar inte dina personuppgifter med tredje part utan ditt samtycke, förutom när det krävs för att leverera våra tjänster.
         </Paragraph>
 
-        <SectionTitle>3. Samarbete med externa parter</SectionTitle>
+        <SectionTitle>4. Dina rättigheter</SectionTitle>
         <Paragraph>
-          För att uppfylla våra avtal med kunder, leverantörer och samarbetspartners behandlar vi nödvändig kontaktinformation. Detta sker med stöd av avtal (GDPR artikel 6.1(b)) eller berättigat intresse (artikel 6.1(f)).
+          Du har rätt att få information om vilka personuppgifter vi har om dig, begära rättelse av felaktig information, begära radering av dina uppgifter och invända mot vår behandling. Du kan också begära att få dina uppgifter överförda till en annan leverantör.
         </Paragraph>
 
-        <SectionTitle>4. Nyhetsbrev och marknadsföring</SectionTitle>
+        <SectionTitle>5. Cookies och spårning</SectionTitle>
         <Paragraph>
-          Genom att registrera din e-post godkänner du att vi får skicka nyhetsbrev och erbjudanden. Vi kan även skicka marknadsföring till befintliga kunder. Behandlingen sker med stöd av samtycke (artikel 6.1(a)) eller berättigat intresse (artikel 6.1(f)). Du kan när som helst återkalla samtycket genom att kontakta oss.
+          Vi använder cookies och liknande tekniker för att förbättra webbplatsens funktionalitet och analysera användningsmönster. Du kan hantera dina cookie-inställningar i din webbläsare.
         </Paragraph>
 
-        <SectionTitle>5. Delning av personuppgifter</SectionTitle>
+        <SectionTitle>6. Säkerhet</SectionTitle>
         <Paragraph>
-          Vi delar endast dina uppgifter med tredje part om det behövs för att uppfylla syftet, t.ex. när du begär elavtalsofferter från våra samarbetspartners. Våra underleverantörer får inte använda dina uppgifter för egna syften och är bundna av personuppgiftsbiträdesavtal. All behandling sker inom EU/EES.
+          Vi implementerar lämpliga tekniska och organisatoriska säkerhetsåtgärder för att skydda dina personuppgifter mot obehörig åtkomst, förlust eller förstörelse.
         </Paragraph>
 
-        <SectionTitle>6. Dina rättigheter</SectionTitle>
+        <SectionTitle>7. Kontakt</SectionTitle>
         <Paragraph>
-          Du har rätt att begära tillgång till, rättelse eller radering av dina personuppgifter. Du kan även begära begränsning, invända mot behandling eller få ut dina uppgifter (dataportabilitet). Mer information finns på <ExtLink href="http://www.imy.se" target="_blank" rel="noopener noreferrer">www.imy.se</ExtLink> (Integritetsskyddsmyndigheten).
-        </Paragraph>
-        <Paragraph>
-          För att utöva dina rättigheter, kontakta oss via e-post. Vi kan komma att begära identitetsverifiering innan vi lämnar ut uppgifter.
+          Vid frågor om denna integritetspolicy eller vår behandling av personuppgifter, kontakta oss via e-post: <Mail href="mailto:info@elchef.se">info@elchef.se</Mail>
         </Paragraph>
 
-        <SectionTitle>7. Lagringstid</SectionTitle>
+        <SectionTitle>8. Ändringar av denna policy</SectionTitle>
         <Paragraph>
-          Vi sparar dina uppgifter så länge det är nödvändigt för ändamålet de samlades in för, om vi inte enligt lag måste spara dem längre.
-        </Paragraph>
-
-        <SectionTitle>8. Klagomål</SectionTitle>
-        <Paragraph>
-          Om du anser att vi behandlar dina personuppgifter i strid med gällande regler har du rätt att klaga till Integritetsskyddsmyndigheten (IMY). Besök <ExtLink href="http://www.imy.se" target="_blank" rel="noopener noreferrer">www.imy.se</ExtLink> för mer information.
+          Vi kan uppdatera denna integritetspolicy vid behov. Alla ändringar meddelas på webbplatsen och träder i kraft när de publiceras.
         </Paragraph>
       </Container>
     </Section>
