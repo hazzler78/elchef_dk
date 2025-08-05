@@ -120,7 +120,7 @@ export default function Hero() {
               <GlassButton 
                 variant="primary" 
                 size="lg"
-                onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
+                onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
               >
                 Rörligt avtal
               </GlassButton>
