@@ -51,9 +51,14 @@ const TextContent = styled.div`
 
 const ButtonRow = styled.div`
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 1.5rem;
+  margin-top: 2rem;
   flex-wrap: wrap;
+  justify-content: center;
+  
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
 `;
 
 const VideoWrapper = styled.div`

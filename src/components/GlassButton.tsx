@@ -44,13 +44,13 @@ export default function GlassButton({
     switch (variant) {
       case 'primary':
         return {
-          background: 'linear-gradient(135deg, rgba(0,201,107,0.2), rgba(22,147,255,0.2))',
+          background: 'linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5))',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           color: 'white',
         };
       case 'secondary':
         return {
-          background: 'linear-gradient(135deg, rgba(22,147,255,0.2), rgba(0,201,107,0.2))',
+          background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5))',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           color: 'white',
         };
@@ -62,10 +62,23 @@ export default function GlassButton({
         };
       default:
         return {
-          background: 'linear-gradient(135deg, rgba(0,201,107,0.2), rgba(22,147,255,0.2))',
+          background: 'linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5))',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           color: 'white',
         };
+    }
+  };
+
+  const getHoverBackground = () => {
+    switch (variant) {
+      case 'primary':
+        return 'linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7))';
+      case 'secondary':
+        return 'linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7))';
+      case 'outline':
+        return 'rgba(255, 255, 255, 0.2)';
+      default:
+        return 'linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7))';
     }
   };
 
@@ -82,8 +95,41 @@ export default function GlassButton({
 
   const variantStyles = getVariantStyles();
   const sizeStyles = getSizeStyles();
+  const hoverBackground = getHoverBackground();
 
   const Element: ElementType = as;
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+    if (!disableHoverEffect && !disabled) {
+      const target = e.currentTarget;
+      target.style.background = hoverBackground;
+      target.style.transform = 'translateY(-2px) scale(1.02)';
+      target.style.boxShadow = 'var(--glass-shadow-medium)';
+    }
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    if (!disableHoverEffect && !disabled) {
+      const target = e.currentTarget;
+      target.style.background = variantStyles.background;
+      target.style.transform = 'translateY(0) scale(1)';
+      target.style.boxShadow = 'var(--glass-shadow-light)';
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
+    if (!disableHoverEffect && !disabled) {
+      const target = e.currentTarget;
+      target.style.transform = 'translateY(0) scale(0.98)';
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLElement>) => {
+    if (!disableHoverEffect && !disabled) {
+      const target = e.currentTarget;
+      target.style.transform = 'translateY(-2px) scale(1.02)';
+    }
+  };
 
   return (
     <Element
@@ -91,6 +137,10 @@ export default function GlassButton({
       onClick={onClick}
       disabled={as === 'button' ? disabled : undefined}
       className={`glass-button ${className}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       style={{
         ...variantStyles,
         ...sizeStyles,
@@ -105,36 +155,13 @@ export default function GlassButton({
         overflow: 'hidden',
         opacity: disabled ? 0.6 : 1,
         transform: disabled ? 'none' : undefined,
+        whiteSpace: 'nowrap',
         ...(background ? { background } : {}),
       }}
     >
       <span style={{ position: 'relative', zIndex: 1 }}>
         {children}
       </span>
-      <style jsx>{`
-        ${!disableHoverEffect ? `
-        .glass-button:hover:not(:disabled) {
-          transform: translateY(-2px) scale(1.02) !important;
-          box-shadow: var(--glass-shadow-medium) !important;
-        }
-        .glass-button:active:not(:disabled) {
-          transform: translateY(0) scale(0.98) !important;
-        }
-        .glass-button::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-          transition: left 0.5s;
-        }
-        .glass-button:hover::before {
-          left: 100%;
-        }
-        ` : ''}
-      `}</style>
     </Element>
   );
 } 

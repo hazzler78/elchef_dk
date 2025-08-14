@@ -204,7 +204,7 @@ p {
 }
 
 .button-primary {
-  background: linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2));
+  background: linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5));
   color: white;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -215,7 +215,7 @@ p {
 .button-primary:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: var(--glass-shadow-medium);
-  background: linear-gradient(135deg, rgba(0, 201, 107, 0.3), rgba(22, 147, 255, 0.3));
+  background: linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7));
 }
 
 .button-primary:active {

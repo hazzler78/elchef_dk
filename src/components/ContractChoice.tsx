@@ -39,8 +39,8 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
           <button
             onClick={() => onSelect('rorligt')}
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))',
-              color: '#1e293b',
+              background: 'linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5))',
+              color: 'white',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               padding: '12px 16px',
               borderRadius: 12,
@@ -50,15 +50,18 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
               textAlign: 'left',
               backdropFilter: 'var(--glass-blur)',
               WebkitBackdropFilter: 'var(--glass-blur)',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: 'var(--glass-shadow-light)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 201, 107, 0.3)';
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = 'var(--glass-shadow-medium)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7))';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = 'var(--glass-shadow-light)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5))';
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -73,8 +76,8 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
           <button
             onClick={() => onSelect('fastpris')}
             style={{
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(22, 147, 255, 0.2))',
-              color: '#1e293b',
+              background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5))',
+              color: 'white',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               padding: '12px 16px',
               borderRadius: 12,
@@ -84,15 +87,18 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
               textAlign: 'left',
               backdropFilter: 'var(--glass-blur)',
               WebkitBackdropFilter: 'var(--glass-blur)',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: 'var(--glass-shadow-light)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+              e.currentTarget.style.boxShadow = 'var(--glass-shadow-medium)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7))';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = 'var(--glass-shadow-light)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5))';
             }}
           >
             <div style={{ fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
