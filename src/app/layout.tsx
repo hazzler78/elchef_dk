@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <head>
+        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="adbd0838-8684-44d4-951e-f4eddcb600cc" data-blockingmode="auto" type="text/javascript"></script>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script type="application/ld+json" suppressHydrationWarning>{`
           {
