@@ -71,6 +71,7 @@ export default function JamforElpriser() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [logId, setLogId] = useState<number | null>(null);
   const sessionIdRef = useRef<string>('');
+  const [consentToStore, setConsentToStore] = useState(false);
 
   useEffect(() => {
     try {
@@ -103,6 +104,7 @@ export default function JamforElpriser() {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('consent', String(consentToStore));
       const res = await fetch('/api/gpt-ocr', {
         method: 'POST',
         body: formData,
@@ -311,6 +313,17 @@ export default function JamforElpriser() {
               }}>
                 {file ? file.name : 'Ingen fil vald'}
               </div>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', color: 'rgba(255, 255, 255, 0.9)' }}>
+                <input
+                  type="checkbox"
+                  checked={consentToStore}
+                  onChange={(e) => setConsentToStore(e.target.checked)}
+                  style={{ marginTop: 2 }}
+                />
+                <span style={{ lineHeight: 1.4 }}>
+                  Jag godkänner att min fakturabild lagras säkert för att förbättra AI‑analysen. Jag kan begära radering när som helst. Läs mer i vår <a href="/integritetspolicy" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>integritetspolicy</a>.
+                </span>
+              </label>
             </div>
             <GlassButton
               onClick={handleGptOcr}

@@ -8,6 +8,8 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file');
+    const consentRaw = formData.get('consent');
+    const consent = typeof consentRaw === 'string' ? consentRaw === 'true' : false;
     if (!file || !(file instanceof File)) {
       return NextResponse.json({ error: 'No file uploaded or file is not a valid image.' }, { status: 400 });
     }
@@ -128,6 +130,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
               model: 'gpt-4o',
               system_prompt_version: '2025-01-vision-v1',
               gpt_answer: gptAnswer,
+              consent: consent,
             }
           ])
           .select('id')
@@ -135,6 +138,28 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
 
         if (!error && insertData) {
           logId = insertData.id as number;
+          // Om samtycke: ladda upp filen till privat bucket och spara referensen
+          if (consent) {
+            try {
+              const bucketName = 'invoice-ocr';
+              const storageKey = `${logId}/${imageSha256}.${mimeType === 'image/png' ? 'png' : 'jpg'}`;
+              const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, buffer, {
+                contentType: mimeType,
+                upsert: false,
+              });
+              if (!uploadRes.error) {
+                await supabase.from('invoice_ocr_files').insert([
+                  {
+                    invoice_ocr_id: logId,
+                    storage_key: storageKey,
+                    image_sha256: imageSha256,
+                  }
+                ]);
+              }
+            } catch (e) {
+              console.error('Failed to upload invoice image to storage:', e);
+            }
+          }
         }
       }
     } catch (e) {
