@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const mimeType = file.type;
-    const fileSize = (file as any).size ?? buffer.length;
+    const fileSize = (file as File).size ?? buffer.length;
     
     if (!['image/png', 'image/jpeg', 'image/jpg'].includes(mimeType)) {
       return NextResponse.json({ error: 'Endast PNG och JPG stöds just nu.' }, { status: 400 });
