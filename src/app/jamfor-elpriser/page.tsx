@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
 import ContactForm from '@/components/ContactForm';
@@ -69,6 +69,21 @@ export default function JamforElpriser() {
   const [gptResult, setGptResult] = useState<string | null>(null);
   const [showFullAnalysis, setShowFullAnalysis] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [logId, setLogId] = useState<number | null>(null);
+  const sessionIdRef = useRef<string>('');
+
+  useEffect(() => {
+    try {
+      const existing = typeof window !== 'undefined' ? localStorage.getItem('invoiceSessionId') : null;
+      if (existing) {
+        sessionIdRef.current = existing;
+      } else {
+        const generated = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+        sessionIdRef.current = generated;
+        if (typeof window !== 'undefined') localStorage.setItem('invoiceSessionId', generated);
+      }
+    } catch {}
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -91,6 +106,9 @@ export default function JamforElpriser() {
       const res = await fetch('/api/gpt-ocr', {
         method: 'POST',
         body: formData,
+        headers: {
+          'x-session-id': sessionIdRef.current || '',
+        },
       });
       
       if (!res.ok) {
@@ -103,6 +121,7 @@ export default function JamforElpriser() {
       if (!data.gptAnswer) {
         throw new Error('Inget svar från AI:n');
       }
+      setLogId(typeof data.logId === 'number' ? data.logId : null);
       
       // Kontrollera om AI:n returnerade ett felmeddelande
       if (data.gptAnswer.includes("I'm sorry") || data.gptAnswer.includes("can't assist") || 
@@ -133,6 +152,18 @@ export default function JamforElpriser() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function sendFeedback(isCorrect: boolean, notes?: string) {
+    try {
+      if (!logId) return;
+      await fetch('/api/invoice-ocr/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logId, isCorrect, correctionNotes: notes || '' })
+      });
+      alert(isCorrect ? 'Tack! Vi har registrerat att analysen stämde.' : 'Tack! Din feedback är registrerad.');
+    } catch {}
   }
 
   function handleUploadNew() {
@@ -735,6 +766,33 @@ export default function JamforElpriser() {
               }}>
                 AI:n visar ett estimat baserat på din faktura. För mer exakt analys och personlig hjälp, kontakta oss så hjälper vi dig hitta det bästa elavtalet för din situation.
               </p>
+              {logId && (
+                <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <GlassButton 
+                    variant="primary" 
+                    size="md"
+                    background="rgba(0,201,107,0.85)"
+                    disableScrollEffect
+                    disableHoverEffect
+                    onClick={() => sendFeedback(true)}
+                  >
+                    Analysen stämmer
+                  </GlassButton>
+                  <GlassButton 
+                    variant="secondary" 
+                    size="md"
+                    background="rgba(239,68,68,0.7)"
+                    disableScrollEffect
+                    disableHoverEffect
+                    onClick={() => {
+                      const notes = window.prompt('Vad stämmer inte? Beskriv gärna kort.');
+                      if (notes !== null) sendFeedback(false, notes || undefined);
+                    }}
+                  >
+                    Analysen stämmer inte
+                  </GlassButton>
+                </div>
+              )}
             </div>
 
             {/* Contact form section */}
