@@ -321,7 +321,7 @@ export default function JamforElpriser() {
                   style={{ marginTop: 2 }}
                 />
                 <span style={{ lineHeight: 1.4 }}>
-                  Jag godkänner att min fakturabild lagras säkert för att förbättra AI‑analysen. Jag kan begära radering när som helst. Läs mer i vår <a href="/integritetspolicy" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>integritetspolicy</a>.
+                  Jag godkänner att min fakturabild lagras säkert för att förbättra AI‑analysen. Jag kan begära radering när som helst. Läs mer i vår <a href="/integritetspolicy" target="_blank" rel="noreferrer" style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 600 }}>integritetspolicy</a>.
                 </span>
               </label>
             </div>
