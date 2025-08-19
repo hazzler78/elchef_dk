@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PendingReminder } from '@/lib/types';
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -134,7 +135,7 @@ export async function POST(request: NextRequest) {
     // Determine target pending reminder using #ID in message or reply metadata
     // 1) Prefer explicit pattern in the operator's message: e.g., "12m #123"
     const inlineIdMatch = text.match(/#(\d+)/);
-    let targetPending: any | null = null;
+    let targetPending: PendingReminder | null = null;
     if (inlineIdMatch) {
       const id = parseInt(inlineIdMatch[1]);
       const { data, error } = await supabase
@@ -145,7 +146,7 @@ export async function POST(request: NextRequest) {
       if (error) {
         console.error('Error fetching pending by inline ID:', error);
       }
-      targetPending = data && data.length > 0 ? data[0] : null;
+      targetPending = (data && data.length > 0 ? (data[0] as PendingReminder) : null);
     }
 
     if (!targetPending && message.reply_to_message) {
@@ -162,7 +163,7 @@ export async function POST(request: NextRequest) {
         if (error) {
           console.error('Error fetching pending by reply ID:', error);
         }
-        targetPending = data && data.length > 0 ? data[0] : null;
+        targetPending = (data && data.length > 0 ? (data[0] as PendingReminder) : null);
       } else {
         // 3) Fallback by email in the replied text
         const emailMatch = repliedText.match(/E-post:\s*([^\s]+)/i);
@@ -177,7 +178,7 @@ export async function POST(request: NextRequest) {
           if (error) {
             console.error('Error fetching pending by email:', error);
           }
-          targetPending = data && data.length > 0 ? data[0] : null;
+          targetPending = (data && data.length > 0 ? (data[0] as PendingReminder) : null);
         }
       }
     }

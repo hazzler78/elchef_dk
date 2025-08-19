@@ -38,6 +38,15 @@ export interface CustomerReminder {
   notes?: string;
 }
 
+export interface PendingReminder {
+  id: number;
+  customer_name: string;
+  email: string;
+  phone?: string | null;
+  message?: string | null;
+  created_at?: string;
+}
+
 export interface ContactFormData {
   name?: string;
   email: string;
