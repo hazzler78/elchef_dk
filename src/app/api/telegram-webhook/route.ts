@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
       // Try to extract pending ID from the replied message (line that starts with ID: <number>)
       const repliedText: string = message.reply_to_message.text || '';
       const idMatch = repliedText.match(/\bID:\s*(\d+)\b/i);
-      let pendingId: number | null = idMatch ? parseInt(idMatch[1]) : null;
+      const pendingId: number | null = idMatch ? parseInt(idMatch[1]) : null;
 
       let pendingReminders;
       let fetchError;
