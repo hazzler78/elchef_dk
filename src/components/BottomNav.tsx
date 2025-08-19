@@ -61,6 +61,10 @@ function BottomNavContent() {
         Hem
         {pathname === '/' && <ActiveIndicator />}
       </NavItem>
+      <NavItem href="/jamfor-elpriser" className={pathname === '/jamfor-elpriser' ? 'active' : ''}>
+        Jämför
+        {pathname === '/jamfor-elpriser' && <ActiveIndicator />}
+      </NavItem>
       <NavItem href="/media" className={pathname === '/media' ? 'active' : ''}>
         Media
         {pathname === '/media' && <ActiveIndicator />}
