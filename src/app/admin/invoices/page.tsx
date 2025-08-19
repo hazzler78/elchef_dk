@@ -23,6 +23,7 @@ type InvoiceLog = {
   correction_notes: string | null;
   corrected_total_extra: number | null;
   corrected_savings: number | null;
+  consent?: boolean | null;
 };
 
 export default function AdminInvoices() {
@@ -32,6 +33,7 @@ export default function AdminInvoices() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState<number | null>(null);
+  // no-op state removed to satisfy eslint
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -140,6 +142,7 @@ export default function AdminInvoices() {
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Korrekt?</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Anteckning</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Åtgärder</th>
+              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Bild</th>
             </tr>
           </thead>
           <tbody>
@@ -167,6 +170,31 @@ export default function AdminInvoices() {
                       <button onClick={() => editNotes(log.id)} style={{ padding: '4px 8px' }}>Anteckning</button>
                       <button onClick={() => setExpanded(expanded === log.id ? null : log.id)} style={{ padding: '4px 8px' }}>{expanded === log.id ? 'Dölj' : 'Visa'}</button>
                     </div>
+                  </td>
+                  <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                    {log.consent ? (
+                      <button
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(`/api/invoice-ocr/file-url?invoiceId=${log.id}`);
+                            const data = await res.json();
+                            if (data?.url) {
+                              window.open(data.url, '_blank');
+                            } else {
+                              alert('Ingen bild hittades eller kunde inte skapa länk.');
+                            }
+                          } catch {
+                            alert('Kunde inte hämta bildlänk.');
+                          }
+                        }}
+                        style={{ padding: '4px 8px' }}
+                        title="Öppna förhandsvisning i nytt fönster"
+                      >
+                        Visa bild
+                      </button>
+                    ) : (
+                      <span style={{ color: '#6b7280', fontSize: 12 }}>Inget samtycke</span>
+                    )}
                   </td>
                 </tr>
                 {expanded === log.id && (
