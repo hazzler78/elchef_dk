@@ -1,7 +1,6 @@
 "use client";
 
 import styled from 'styled-components';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const Section = styled.section`
@@ -193,7 +192,7 @@ export default function AffiliatePage() {
       if (!res.ok) throw new Error('Request failed');
       setCompanyStatus('success');
       setCompanyForm({
-        companyName: '', orgNumber: '', contactName: '', email: '', phone: '', website: '', partnershipType: '', estVolume: '', notes: ''
+        companyName: '', orgNumber: '', contactName: '', email: '', phone: '', website: '', notes: ''
       });
     } catch {
       setCompanyStatus('error');

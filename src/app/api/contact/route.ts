@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
       } else {
         await sendTelegramNotification(data);
       }
-    } catch (e) {
+    } catch {
       // Fallback to existing notifier on failure
       await sendTelegramNotification(data);
     }
