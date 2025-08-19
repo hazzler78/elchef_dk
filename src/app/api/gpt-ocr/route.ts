@@ -52,6 +52,7 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - Rörliga kostnader, Rörlig kostnad, Rörliga avgifter, Rörlig avgift
 - Fast påslag, Fasta påslag, Fast avgift, Fasta avgifter, Påslag
 - Fast påslag spot, Fast påslag elcertifikat
+- Årsavgift, Årsavg., Årskostnad (endast om under Elhandel/leverantörsavgift; exkludera om under Elnät/Elöverföring)
 - Förvaltat Portfölj Utfall, Förvaltat portfölj utfall
 - Bra miljöval, Bra miljöval (Licens Elklart AB)
 - Trygg, Trygghetspaket
