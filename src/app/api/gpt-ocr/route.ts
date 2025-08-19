@@ -142,6 +142,25 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
           if (consent) {
             try {
               const bucketName = 'invoice-ocr';
+              // Ensure the storage bucket exists (create if missing)
+              try {
+                const { data: existingBucket, error: getBucketError } = await supabase.storage.getBucket(bucketName);
+                if (getBucketError || !existingBucket) {
+                  await supabase.storage.createBucket(bucketName, {
+                    public: false,
+                    fileSizeLimit: 20 * 1024 * 1024, // 20 MB
+                    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+                  });
+                }
+              } catch {
+                try {
+                  await supabase.storage.createBucket(bucketName, {
+                    public: false,
+                    fileSizeLimit: 20 * 1024 * 1024,
+                    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+                  });
+                } catch {}
+              }
               const storageKey = `${logId}/${imageSha256}.${mimeType === 'image/png' ? 'png' : 'jpg'}`;
               const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, buffer, {
                 contentType: mimeType,
