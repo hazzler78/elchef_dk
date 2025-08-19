@@ -26,14 +26,15 @@ async function sendTelegramNotification(data: ContactFormData) {
     created_at: new Date().toISOString()
   };
 
-  const { error: pendingError } = await supabase
+  const { data: pending, error: pendingError } = await supabase
     .from('pending_reminders')
     .insert([pendingReminderData])
     .select()
     .single();
 
-  if (pendingError) {
+  if (pendingError || !pending) {
     console.error('Error creating pending reminder:', pendingError);
+    return;
   }
 
   const message = `
@@ -46,8 +47,11 @@ ${data.message ? `\n📝 *Meddelande:* ${data.message}` : ''}
 ⏰ *Tidpunkt:* ${new Date().toLocaleString('sv-SE')}
 🌐 *Källa:* Elchef.se kontaktformulär
 
-💡 *Svara med avtalstyp och startdatum för att skapa påminnelse:*
-*Format:* "12m 2025-02-15" eller "24m 2025-02-15" eller "36m 2025-02-15"
+🆔 *ID:* ${pending.id}
+
+💡 *Svara med avtalstyp för att skapa påminnelse:*
+*Exempel:* "12m" eller "24m" eller "36m" (vi ringer kunden om 11 månader)
+_Du kan även ange startdatum om du vill:_ "12m 2025-02-15"
 `;
 
   // Send to all configured chat IDs
@@ -132,27 +136,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Skicka Telegram-notifiering
-    // Extend telegram message with affiliate/campaign info
-    try {
-      const withMeta = { ...data } as ContactFormData & { ref?: string; campaignCode?: string };
-      const msgExtra = `\n\n🏷️ Ref: ${withMeta.ref || '-'}\n🎟️ Kampanjkod: ${withMeta.campaignCode || '-'}`;
-      if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_IDS.length > 0) {
-        const baseMsg = `\n🔔 *Ny kontaktförfrågan*\n\n${withMeta.name ? `🙍‍♂️ *Namn:* ${withMeta.name}\n` : ''}📧 *E-post:* ${withMeta.email}\n${withMeta.phone ? `📞 *Telefon:* ${withMeta.phone}\n` : ''}📰 *Nyhetsbrev:* ${withMeta.subscribeNewsletter ? 'Ja' : 'Nej'}${withMeta.message ? `\n\n📝 *Meddelande:* ${withMeta.message}` : ''}\n\n⏰ *Tidpunkt:* ${new Date().toLocaleString('sv-SE')}\n🌐 *Källa:* Elchef.se kontaktformulär` + msgExtra;
-        await Promise.all(TELEGRAM_CHAT_IDS.map(async (chatId) => {
-          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text: baseMsg, parse_mode: 'Markdown' }),
-          });
-        }));
-      } else {
-        await sendTelegramNotification(data);
-      }
-    } catch {
-      // Fallback to existing notifier on failure
-      await sendTelegramNotification(data);
-    }
+    // Skapa pending-reminder och skicka Telegram-notifiering (med ID)
+    await sendTelegramNotification(data);
 
     // Optional: store contact with ref if available
     try {

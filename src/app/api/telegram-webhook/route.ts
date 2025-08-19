@@ -81,13 +81,23 @@ async function sendTelegramMessage(chatId: string, text: string) {
 }
 
 // Parse contract response from team
-function parseContractResponse(text: string): { contractType: string; startDate: string } | null {
-  // Expected format: "12m 2025-02-15" or "24m 2025-02-15" or "36m 2025-02-15"
-  const match = text.match(/^(\d{1,2})m\s+(\d{4}-\d{2}-\d{2})$/);
-  if (!match) return null;
+function parseContractResponse(text: string): { contractType: string; startDate?: string } | null {
+  const trimmed = text.trim();
+  // Accept formats: "12m" or "12m YYYY-MM-DD"
+  const simpleMatch = trimmed.match(/^(\d{1,2})m$/i);
+  const fullMatch = trimmed.match(/^(\d{1,2})m\s+(\d{4}-\d{2}-\d{2})$/i);
 
-  const months = parseInt(match[1]);
-  const startDate = match[2];
+  let months: number | null = null;
+  let startDate: string | undefined;
+
+  if (fullMatch) {
+    months = parseInt(fullMatch[1]);
+    startDate = fullMatch[2];
+  } else if (simpleMatch) {
+    months = parseInt(simpleMatch[1]);
+  }
+
+  if (!months) return null;
 
   let contractType: string;
   switch (months) {
@@ -123,12 +133,31 @@ export async function POST(request: NextRequest) {
 
     // Check if this is a reply to a contact notification
     if (message.reply_to_message) {
-      // Get the most recent pending reminder for this chat
-      const { data: pendingReminders, error: fetchError } = await supabase
-        .from('pending_reminders')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(1);
+      // Try to extract pending ID from the replied message (line that starts with ID: <number>)
+      const repliedText: string = message.reply_to_message.text || '';
+      const idMatch = repliedText.match(/\bID:\s*(\d+)\b/i);
+      let pendingId: number | null = idMatch ? parseInt(idMatch[1]) : null;
+
+      let pendingReminders;
+      let fetchError;
+      if (pendingId) {
+        const { data, error } = await supabase
+          .from('pending_reminders')
+          .select('*')
+          .eq('id', pendingId)
+          .limit(1);
+        pendingReminders = data;
+        fetchError = error;
+      } else {
+        // Fallback: most recent pending if no ID found
+        const { data, error } = await supabase
+          .from('pending_reminders')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(1);
+        pendingReminders = data;
+        fetchError = error;
+      }
 
       if (fetchError || !pendingReminders || pendingReminders.length === 0) {
         await sendTelegramMessage(chatId, '❌ Ingen väntande kontaktförfrågan hittades.');
@@ -137,13 +166,18 @@ export async function POST(request: NextRequest) {
 
       const pendingReminder = pendingReminders[0];
       
-      // Parse the contract response
+      // Parse the contract response (accepts '12m' or '12m YYYY-MM-DD')
       const contractInfo = parseContractResponse(text);
       
       if (contractInfo) {
         try {
+          // Determine contract start date: if provided use it, otherwise use today
+          const contractStart = contractInfo.startDate || new Date().toISOString().split('T')[0];
           // Calculate reminder date
-          const reminderDate = calculateReminderDate(contractInfo.startDate, contractInfo.contractType);
+          // If only "Xm" provided (no start date), remind in 11 months from today
+          const reminderDate = contractInfo.startDate
+            ? calculateReminderDate(contractStart, contractInfo.contractType)
+            : formatLocalYYYYMMDD(addMonthsKeepingEnd(new Date(), 11));
           
           // Create reminder in database
           const reminderData = {
@@ -151,7 +185,7 @@ export async function POST(request: NextRequest) {
             email: pendingReminder.email,
             phone: pendingReminder.phone,
             contract_type: contractInfo.contractType,
-            contract_start_date: contractInfo.startDate,
+            contract_start_date: contractStart,
             reminder_date: reminderDate,
             is_sent: false,
             notes: `Skapad via Telegram svar: ${text}`
@@ -174,7 +208,7 @@ export async function POST(request: NextRequest) {
               .eq('id', pendingReminder.id);
 
             // Calculate expiry date for confirmation message
-            const startDate = new Date(contractInfo.startDate);
+            const startDate = new Date(contractStart);
             const expiryDate = new Date(startDate);
             switch (contractInfo.contractType) {
               case '12_months':
