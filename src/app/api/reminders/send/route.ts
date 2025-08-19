@@ -99,7 +99,12 @@ export async function POST(request: NextRequest) {
 
     console.log('🔍 Checking for due reminders...');
     
-    const today = new Date().toISOString().split('T')[0];
+    // Compute today's date in local time to match stored DATE values
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const today = `${y}-${m}-${d}`;
     
     // Get all due reminders
     const { data: dueReminders, error } = await supabase

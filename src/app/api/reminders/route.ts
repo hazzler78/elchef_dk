@@ -11,28 +11,45 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
+// Helper functions for precise date handling
+function addMonthsKeepingEnd(date: Date, monthsToAdd: number): Date {
+  const result = new Date(date);
+  const originalDay = result.getDate();
+  result.setMonth(result.getMonth() + monthsToAdd);
+  if (result.getDate() < originalDay) {
+    result.setDate(0);
+  }
+  return result;
+}
+
+function formatLocalYYYYMMDD(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 // Helper function to calculate reminder date (11 months before contract expiry)
 function calculateReminderDate(contractStartDate: string, contractType: string): string {
   const startDate = new Date(contractStartDate);
-  let expiryDate: Date;
-  
+  let totalMonths: number;
+
   switch (contractType) {
     case '12_months':
-      expiryDate = new Date(startDate.getTime() + 12 * 30 * 24 * 60 * 60 * 1000);
+      totalMonths = 12;
       break;
     case '24_months':
-      expiryDate = new Date(startDate.getTime() + 24 * 30 * 24 * 60 * 60 * 1000);
+      totalMonths = 24;
       break;
     case '36_months':
-      expiryDate = new Date(startDate.getTime() + 36 * 30 * 24 * 60 * 60 * 1000);
+      totalMonths = 36;
       break;
     default:
       throw new Error('Invalid contract type');
   }
-  
-  // Subtract 11 months (30 days * 11)
-  const reminderDate = new Date(expiryDate.getTime() - 11 * 30 * 24 * 60 * 60 * 1000);
-  return reminderDate.toISOString().split('T')[0];
+
+  const reminderDate = addMonthsKeepingEnd(startDate, totalMonths - 11);
+  return formatLocalYYYYMMDD(reminderDate);
 }
 
 // POST: Create a new reminder
@@ -93,7 +110,9 @@ export async function POST(request: NextRequest) {
 // GET: Get reminders that are due today
 export async function GET() {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    // Compute today's date in local time to match stored DATE values
+    const now = new Date();
+    const today = formatLocalYYYYMMDD(now);
     
     const { data: dueReminders, error } = await supabase
       .from('customer_reminders')
