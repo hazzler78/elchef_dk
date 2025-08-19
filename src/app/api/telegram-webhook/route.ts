@@ -204,9 +204,16 @@ Påminnelse kommer skickas 11 månader före avtalsutgång.
 }
 
 // GET: Set webhook (call this once to configure Telegram)
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const webhookUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'}/api/telegram-webhook`;
+    // Prefer the actual request origin (works across custom domains and environments)
+    const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+    const forwardedHost = request.headers.get('x-forwarded-host');
+    const requestOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : request.nextUrl.origin;
+
+    // Optional override: /api/telegram-webhook?origin=https://www.example.com
+    const originOverride = request.nextUrl.searchParams.get('origin');
+    const webhookUrl = `${originOverride || requestOrigin}/api/telegram-webhook`;
     
     const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook`, {
       method: 'POST',
@@ -215,7 +222,8 @@ export async function GET() {
       },
       body: JSON.stringify({
         url: webhookUrl,
-        allowed_updates: ['message']
+        allowed_updates: ['message'],
+        drop_pending_updates: true
       }),
     });
 
