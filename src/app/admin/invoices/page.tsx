@@ -58,22 +58,42 @@ export default function AdminInvoices() {
   }, [authed]);
 
   async function setCorrect(id: number, isCorrect: boolean) {
-    const { error } = await supabase
-      .from('invoice_ocr')
-      .update({ is_correct: isCorrect })
-      .eq('id', id);
-    if (error) setError(error.message); else fetchLogs();
+    try {
+      const res = await fetch('/api/invoice-ocr/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logId: id, isCorrect })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError(err?.error || 'Kunde inte spara status');
+      } else {
+        await fetchLogs();
+      }
+    } catch {
+      setError('Kunde inte spara status');
+    }
   }
 
   async function editNotes(id: number) {
     const current = logs.find(l => l.id === id)?.correction_notes || '';
     const input = window.prompt('Korrigeringsanteckning:', current || '');
     if (input === null) return;
-    const { error } = await supabase
-      .from('invoice_ocr')
-      .update({ correction_notes: input })
-      .eq('id', id);
-    if (error) setError(error.message); else fetchLogs();
+    try {
+      const res = await fetch('/api/invoice-ocr/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logId: id, correctionNotes: input })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError(err?.error || 'Kunde inte spara anteckning');
+      } else {
+        await fetchLogs();
+      }
+    } catch {
+      setError('Kunde inte spara anteckning');
+    }
   }
 
   function handleLogin(e: React.FormEvent) {
