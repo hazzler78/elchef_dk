@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const MAILERLITE_API_KEY = process.env.MAILERLITE_API_KEY;
 const MAILERLITE_GROUP_ID = process.env.MAILERLITE_GROUP_ID;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, ref, campaignCode }: { email: string; ref?: string; campaignCode?: string } = await request.json();
 
     // Validera e-postadress
     if (!email || !email.includes('@')) {
@@ -67,6 +69,16 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
+
+    // Telegram notification (optional)
+    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_IDS.length > 0) {
+      const msg = `\n📰 *Ny nyhetsbrevsanmälan*\n\n📧 E-post: ${email}\n🏷️ Ref: ${ref || '-'}\n🎟️ Kampanjkod: ${campaignCode || '-'}\n⏰ ${new Date().toLocaleString('sv-SE')}`;
+      await Promise.all(TELEGRAM_CHAT_IDS.map(chatId => fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: 'Markdown' }),
+      })));
+    }
     
     return NextResponse.json(
       { 

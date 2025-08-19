@@ -217,6 +217,15 @@ export default function NewsletterHero() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [ref, setRef] = useState<string | null>(null);
+  const [campaignCode, setCampaignCode] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const refMatch = document.cookie.match(/(?:^|; )elchef_affiliate=([^;]+)/);
+    const campMatch = document.cookie.match(/(?:^|; )elchef_campaign=([^;]+)/);
+    if (refMatch) setRef(decodeURIComponent(refMatch[1]));
+    if (campMatch) setCampaignCode(decodeURIComponent(campMatch[1]));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -241,7 +250,7 @@ export default function NewsletterHero() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ref, campaignCode }),
       });
       
       if (response.ok) {
