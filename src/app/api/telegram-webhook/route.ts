@@ -131,40 +131,63 @@ export async function POST(request: NextRequest) {
     const chatId = message.chat.id.toString();
     const text = message.text.trim();
 
-    // Check if this is a reply to a contact notification
-    if (message.reply_to_message) {
-      // Try to extract pending ID from the replied message (line that starts with ID: <number>)
+    // Determine target pending reminder using #ID in message or reply metadata
+    // 1) Prefer explicit pattern in the operator's message: e.g., "12m #123"
+    const inlineIdMatch = text.match(/#(\d+)/);
+    let targetPending: any | null = null;
+    if (inlineIdMatch) {
+      const id = parseInt(inlineIdMatch[1]);
+      const { data, error } = await supabase
+        .from('pending_reminders')
+        .select('*')
+        .eq('id', id)
+        .limit(1);
+      if (error) {
+        console.error('Error fetching pending by inline ID:', error);
+      }
+      targetPending = data && data.length > 0 ? data[0] : null;
+    }
+
+    if (!targetPending && message.reply_to_message) {
+      // 2) If replying: extract ID from the replied message
       const repliedText: string = message.reply_to_message.text || '';
-      const idMatch = repliedText.match(/\bID:\s*(\d+)\b/i);
-      const pendingId: number | null = idMatch ? parseInt(idMatch[1]) : null;
-
-      let pendingReminders;
-      let fetchError;
-      if (pendingId) {
+      const replyIdMatch = repliedText.match(/\bID:\s*(\d+)\b/i);
+      if (replyIdMatch) {
+        const replyId = parseInt(replyIdMatch[1]);
         const { data, error } = await supabase
           .from('pending_reminders')
           .select('*')
-          .eq('id', pendingId)
+          .eq('id', replyId)
           .limit(1);
-        pendingReminders = data;
-        fetchError = error;
+        if (error) {
+          console.error('Error fetching pending by reply ID:', error);
+        }
+        targetPending = data && data.length > 0 ? data[0] : null;
       } else {
-        // Fallback: most recent pending if no ID found
-        const { data, error } = await supabase
-          .from('pending_reminders')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(1);
-        pendingReminders = data;
-        fetchError = error;
+        // 3) Fallback by email in the replied text
+        const emailMatch = repliedText.match(/E-post:\s*([^\s]+)/i);
+        if (emailMatch) {
+          const email = emailMatch[1];
+          const { data, error } = await supabase
+            .from('pending_reminders')
+            .select('*')
+            .eq('email', email)
+            .order('created_at', { ascending: false })
+            .limit(1);
+          if (error) {
+            console.error('Error fetching pending by email:', error);
+          }
+          targetPending = data && data.length > 0 ? data[0] : null;
+        }
       }
+    }
 
-      if (fetchError || !pendingReminders || pendingReminders.length === 0) {
-        await sendTelegramMessage(chatId, '❌ Ingen väntande kontaktförfrågan hittades.');
-        return NextResponse.json({ success: true });
-      }
+    if (!targetPending) {
+      await sendTelegramMessage(chatId, '❌ Kunde inte identifiera kunden. Svara på kontaktmeddelandet eller skriv t.ex. "12m #123" (använd ID från kortet).');
+      return NextResponse.json({ success: true });
+    }
 
-      const pendingReminder = pendingReminders[0];
+      const pendingReminder = targetPending;
       
       // Parse the contract response (accepts '12m' or '12m YYYY-MM-DD')
       const contractInfo = parseContractResponse(text);
@@ -242,11 +265,8 @@ Påminnelse kommer skickas 11 månader före avtalsutgång.
           await sendTelegramMessage(chatId, '❌ Ett fel uppstod. Kontrollera formatet och försök igen.');
         }
       } else {
-        await sendTelegramMessage(chatId, 
-          '❌ Felaktigt format. Använd formatet: "12m 2025-02-15" eller "24m 2025-02-15" eller "36m 2025-02-15"'
-        );
+        await sendTelegramMessage(chatId, '❌ Felaktigt format. Skriv t.ex. "12m" eller "12m 2025-02-15". Du kan även ange ID: "12m #123".');
       }
-    }
 
     return NextResponse.json({ success: true });
 
