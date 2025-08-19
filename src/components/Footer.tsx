@@ -138,6 +138,7 @@ export default function Footer() {
               <li><Link href="/vanliga-fragor">Vanliga frågor</Link></li>
               <li><Link href="/kontakt">Kontakt</Link></li>
               <li><Link href="/media">Media</Link></li>
+              <li><Link href="/partner">Partner</Link></li>
             </ul>
           </FooterColumn>
 

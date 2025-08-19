@@ -63,6 +63,28 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <StyledComponentsRegistry>
+          {/* Tracks and stores affiliate code from query params in a cookie */}
+          <Script id="affiliate-tracker" strategy="afterInteractive">
+            {`
+              (function(){
+                try {
+                  var params = new URLSearchParams(window.location.search);
+                  var ref = params.get('ref') || params.get('utm_source');
+                  var campaign = params.get('code') || params.get('kampanj') || params.get('utm_campaign');
+                  if (ref) {
+                    var expires = new Date();
+                    expires.setDate(expires.getDate() + 30);
+                    document.cookie = 'elchef_affiliate=' + encodeURIComponent(ref) + '; path=/; expires=' + expires.toUTCString() + '; SameSite=Lax';
+                  }
+                  if (campaign) {
+                    var expires2 = new Date();
+                    expires2.setDate(expires2.getDate() + 30);
+                    document.cookie = 'elchef_campaign=' + encodeURIComponent(campaign) + '; path=/; expires=' + expires2.toUTCString() + '; SameSite=Lax';
+                  }
+                } catch (e) { /* noop */ }
+              })();
+            `}
+          </Script>
           <CampaignBanner />
           <div id="app">
             {children}

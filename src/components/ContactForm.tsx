@@ -207,6 +207,15 @@ export default function ContactForm() {
     message: '',
     newsletter: false
   });
+  const [ref, setRef] = useState<string | null>(null);
+  const [campaignCode, setCampaignCode] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const refMatch = document.cookie.match(/(?:^|; )elchef_affiliate=([^;]+)/);
+    const campMatch = document.cookie.match(/(?:^|; )elchef_campaign=([^;]+)/);
+    if (refMatch) setRef(decodeURIComponent(refMatch[1]));
+    if (campMatch) setCampaignCode(decodeURIComponent(campMatch[1]));
+  }, []);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -229,7 +238,9 @@ export default function ContactForm() {
         },
         body: JSON.stringify({
           ...formData,
-          subscribeNewsletter: formData.newsletter
+          subscribeNewsletter: formData.newsletter,
+          ref,
+          campaignCode
         }),
       });
 

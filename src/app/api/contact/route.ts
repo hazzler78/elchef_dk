@@ -122,7 +122,7 @@ async function addToMailerlite(email: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const data: ContactFormData = await request.json();
+    const data: ContactFormData & { ref?: string; campaignCode?: string } = await request.json();
 
     // Validera e-postadress
     if (!data.email || !data.email.includes('@')) {
@@ -133,7 +133,44 @@ export async function POST(request: NextRequest) {
     }
 
     // Skicka Telegram-notifiering
-    await sendTelegramNotification(data);
+    // Extend telegram message with affiliate/campaign info
+    try {
+      const withMeta = { ...data } as ContactFormData & { ref?: string; campaignCode?: string };
+      const msgExtra = `\n\n🏷️ Ref: ${withMeta.ref || '-'}\n🎟️ Kampanjkod: ${withMeta.campaignCode || '-'}`;
+      if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_IDS.length > 0) {
+        const baseMsg = `\n🔔 *Ny kontaktförfrågan*\n\n${withMeta.name ? `🙍‍♂️ *Namn:* ${withMeta.name}\n` : ''}📧 *E-post:* ${withMeta.email}\n${withMeta.phone ? `📞 *Telefon:* ${withMeta.phone}\n` : ''}📰 *Nyhetsbrev:* ${withMeta.subscribeNewsletter ? 'Ja' : 'Nej'}${withMeta.message ? `\n\n📝 *Meddelande:* ${withMeta.message}` : ''}\n\n⏰ *Tidpunkt:* ${new Date().toLocaleString('sv-SE')}\n🌐 *Källa:* Elchef.se kontaktformulär` + msgExtra;
+        await Promise.all(TELEGRAM_CHAT_IDS.map(async (chatId) => {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, text: baseMsg, parse_mode: 'Markdown' }),
+          });
+        }));
+      } else {
+        await sendTelegramNotification(data);
+      }
+    } catch (e) {
+      // Fallback to existing notifier on failure
+      await sendTelegramNotification(data);
+    }
+
+    // Optional: store contact with ref if available
+    try {
+      if (supabase) {
+        await supabase.from('contacts').insert([{
+          name: data.name || null,
+          email: data.email,
+          phone: data.phone || null,
+          message: data.message || null,
+          ref: data.ref || null,
+          campaign_code: data.campaignCode || null,
+          subscribe_newsletter: !!data.subscribeNewsletter,
+          created_at: new Date().toISOString(),
+        }]);
+      }
+    } catch (e) {
+      console.warn('Failed to store contact with ref (optional):', e);
+    }
 
     // Lägg till i Mailerlite om användaren vill prenumerera
     let newsletterSuccess = true;

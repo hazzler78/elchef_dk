@@ -124,6 +124,15 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
     phone: '',
     subscribeNewsletter: true
   });
+  const [ref, setRef] = useState<string | null>(null);
+  const [campaignCode, setCampaignCode] = useState<string | null>(null);
+
+  useState(() => {
+    const refMatch = document.cookie.match(/(?:^|; )elchef_affiliate=([^;]+)/);
+    const campMatch = document.cookie.match(/(?:^|; )elchef_campaign=([^;]+)/);
+    if (refMatch) setRef(decodeURIComponent(refMatch[1]));
+    if (campMatch) setCampaignCode(decodeURIComponent(campMatch[1]));
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -146,7 +155,7 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ref, campaignCode }),
       });
 
       const result = await response.json();
