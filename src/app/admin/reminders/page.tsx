@@ -463,6 +463,7 @@ export default function AdminReminders() {
                 <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb', textAlign: 'left' }}>Startdatum</th>
                 <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb', textAlign: 'left' }}>Påminnelse</th>
                 <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb', textAlign: 'left' }}>Status</th>
+                <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb', textAlign: 'left' }}>Anteckningar</th>
                 <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb', textAlign: 'left' }}>Åtgärder</th>
               </tr>
             </thead>
@@ -484,6 +485,9 @@ export default function AdminReminders() {
                   <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>{formatDate(reminder.reminder_date)}</td>
                   <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>
                     {getStatusBadge(reminder.is_sent, reminder.reminder_date)}
+                  </td>
+                  <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb', maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={reminder.notes || ''}>
+                    {reminder.notes || '—'}
                   </td>
                   <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>
                     <button
