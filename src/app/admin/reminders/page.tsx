@@ -19,7 +19,17 @@ export default function AdminReminders() {
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [updating, setUpdating] = useState(false);
   const [newReminder, setNewReminder] = useState({
+    customer_name: "",
+    email: "",
+    phone: "",
+    contract_type: "12_months" as "12_months" | "24_months" | "36_months" | "variable",
+    contract_start_date: "",
+    notes: ""
+  });
+  const [editForm, setEditForm] = useState({
     customer_name: "",
     email: "",
     phone: "",
@@ -89,6 +99,52 @@ export default function AdminReminders() {
       setError("Ett fel uppstod vid radering");
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const startEditing = (reminder: CustomerReminder) => {
+    setEditingId(reminder.id!);
+    setEditForm({
+      customer_name: reminder.customer_name,
+      email: reminder.email,
+      phone: reminder.phone || "",
+      contract_type: reminder.contract_type as "12_months" | "24_months" | "36_months" | "variable",
+      contract_start_date: reminder.contract_start_date,
+      notes: reminder.notes || ""
+    });
+    setError("");
+  };
+
+  const handleUpdateReminder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingId) return;
+    setUpdating(true);
+    try {
+      const newReminderDate = calculateReminderDate(editForm.contract_start_date, editForm.contract_type);
+      const { error } = await supabase
+        .from("customer_reminders")
+        .update({
+          customer_name: editForm.customer_name,
+          email: editForm.email,
+          phone: editForm.phone || null,
+          contract_type: editForm.contract_type,
+          contract_start_date: editForm.contract_start_date,
+          reminder_date: newReminderDate,
+          notes: editForm.notes || null,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", editingId);
+      if (error) {
+        setError("Kunde inte uppdatera påminnelse: " + error.message);
+      } else {
+        await fetchReminders();
+        setEditingId(null);
+        setError("");
+      }
+    } catch {
+      setError("Ett fel uppstod vid uppdatering");
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -420,6 +476,127 @@ export default function AdminReminders() {
         </div>
       )}
 
+      {editingId && (
+        <div style={{ 
+          padding: '1.5rem', 
+          background: '#fff7ed', 
+          border: '1px solid #fdba74', 
+          borderRadius: '8px', 
+          marginBottom: '2rem' 
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Redigera påminnelse</h3>
+          <form onSubmit={handleUpdateReminder}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Kundnamn *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.customer_name}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, customer_name: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  E-post *
+                </label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Telefon
+                </label>
+                <input
+                  type="tel"
+                  value={editForm.phone}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, phone: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Avtalstyp *
+                </label>
+                <select
+                  value={editForm.contract_type}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, contract_type: e.target.value as "12_months" | "24_months" | "36_months" | "variable" }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                >
+                  <option value="12_months">12 månader</option>
+                  <option value="24_months">24 månader</option>
+                  <option value="36_months">36 månader</option>
+                  <option value="variable">Rörligt</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  Avtal startar *
+                </label>
+                <input
+                  type="date"
+                  value={editForm.contract_start_date}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, contract_start_date: e.target.value }))}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                  required
+                />
+              </div>
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                Anteckningar
+              </label>
+              <textarea
+                value={editForm.notes}
+                onChange={(e) => setEditForm(prev => ({ ...prev, notes: e.target.value }))}
+                style={{ width: '100%', padding: '0.5rem', border: '1px solid #d1d5db', borderRadius: '4px', minHeight: '80px' }}
+                placeholder="Valfria anteckningar..."
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button
+                type="submit"
+                disabled={updating}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  background: '#2563eb', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: '4px',
+                  cursor: updating ? 'not-allowed' : 'pointer',
+                  opacity: updating ? 0.6 : 1
+                }}
+              >
+                {updating ? 'Sparar...' : 'Spara ändringar'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditingId(null)}
+                style={{ 
+                  padding: '0.5rem 1rem', 
+                  background: '#6b7280', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Avbryt
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       <div style={{ marginBottom: '1rem' }}>
         <button
           onClick={fetchReminders}
@@ -490,13 +667,21 @@ export default function AdminReminders() {
                     {reminder.notes || '—'}
                   </td>
                   <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>
-                    <button
-                      onClick={() => deleteReminder(reminder.id!)}
-                      disabled={deleting}
-                      style={{ padding: '0.25rem 0.5rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.875rem' }}
-                    >
-                      Radera
-                    </button>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      <button
+                        onClick={() => startEditing(reminder)}
+                        style={{ padding: '0.25rem 0.5rem', background: '#f59e0b', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.875rem' }}
+                      >
+                        Redigera
+                      </button>
+                      <button
+                        onClick={() => deleteReminder(reminder.id!)}
+                        disabled={deleting}
+                        style={{ padding: '0.25rem 0.5rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.875rem' }}
+                      >
+                        Radera
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
