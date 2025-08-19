@@ -50,8 +50,8 @@ ${data.message ? `\n📝 *Meddelande:* ${data.message}` : ''}
 🆔 *ID:* ${pending.id}
 
 💡 *Svara på detta meddelande* eller skriv t.ex. "12m #${pending.id}" för att koppla rätt kund.
-*Exempel:* "12m" eller "24m" eller "36m" (vi ringer kunden om 11 månader)
-_Du kan även ange startdatum om du vill:_ "12m 2025-02-15" eller "12m 2025-02-15 #${pending.id}"
+*Exempel:* "12m" eller "12m cheap" eller "12m fastavtal" (vi ringer kunden om 11 månader)
+_Du kan även ange startdatum:_ "12m 2025-02-15 cheap" eller "12m 2025-02-15 #${pending.id} fastavtal"
 `;
 
   // Send to all configured chat IDs

@@ -82,23 +82,21 @@ async function sendTelegramMessage(chatId: string, text: string) {
 }
 
 // Parse contract response from team
-function parseContractResponse(text: string): { contractType: string; startDate?: string } | null {
+function parseContractResponse(text: string): { contractType: string; startDate?: string; note?: string } | null {
   const trimmed = text.trim();
-  // Accept formats: "12m" or "12m YYYY-MM-DD"
-  const simpleMatch = trimmed.match(/^(\d{1,2})m$/i);
-  const fullMatch = trimmed.match(/^(\d{1,2})m\s+(\d{4}-\d{2}-\d{2})$/i);
+  // Accept formats:
+  //  - "12m"
+  //  - "12m <YYYY-MM-DD>"
+  //  - "12m <note>"
+  //  - "12m <YYYY-MM-DD> <note>"
+  const regex = /^(\d{1,2})m(?:\s+(\d{4}-\d{2}-\d{2}))?(?:\s+(.+))?$/i;
+  const match = trimmed.match(regex);
 
-  let months: number | null = null;
-  let startDate: string | undefined;
+  if (!match) return null;
 
-  if (fullMatch) {
-    months = parseInt(fullMatch[1]);
-    startDate = fullMatch[2];
-  } else if (simpleMatch) {
-    months = parseInt(simpleMatch[1]);
-  }
-
-  if (!months) return null;
+  const months = parseInt(match[1]);
+  const startDate = match[2];
+  const noteRaw = match[3];
 
   let contractType: string;
   switch (months) {
@@ -115,7 +113,8 @@ function parseContractResponse(text: string): { contractType: string; startDate?
       return null;
   }
 
-  return { contractType, startDate };
+  const note = noteRaw ? noteRaw.trim() : undefined;
+  return { contractType, startDate, note };
 }
 
 // POST: Handle Telegram webhook
@@ -212,7 +211,7 @@ export async function POST(request: NextRequest) {
             contract_start_date: contractStart,
             reminder_date: reminderDate,
             is_sent: false,
-            notes: `Skapad via Telegram svar: ${text}`
+            notes: `Skapad via Telegram svar: ${text}${contractInfo.note ? ` | Notering: ${contractInfo.note}` : ''}`
           };
 
           const { error } = await supabase
