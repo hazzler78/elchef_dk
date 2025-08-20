@@ -41,6 +41,8 @@ export async function POST(req: NextRequest) {
 - Läs av exakt belopp från "Totalt" eller motsvarande kolumn
 - Blanda inte ihop olika avgifter med varandra
 - Var särskilt uppmärksam på att inte blanda "Årsavgift" med "Elöverföring"
+- **DUBBELKOLLA ALLA POSTER**: Gå igenom fakturan rad för rad och leta efter ALLA avgifter som matchar listan nedan
+- **VIKTIGT**: Om du hittar en avgift som matchar listan, inkludera den OAVSETT var den står på fakturan
 
 **SYFTE:**
 Analysera fakturan, leta efter poster som avviker från normala eller nödvändiga avgifter, och förklara dessa poster i ett enkelt och begripligt språk. Ge tips på hur användaren kan undvika dessa kostnader i framtiden eller byta till ett mer förmånligt elavtal.
@@ -52,7 +54,7 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - Rörliga kostnader, Rörlig kostnad, Rörliga avgifter, Rörlig avgift
 - Fast påslag, Fasta påslag, Fast avgift, Fasta avgifter, Påslag
 - Fast påslag spot, Fast påslag elcertifikat
-- Årsavgift, Årsavg., Årskostnad (endast om under Elhandel/leverantörsavgift; exkludera om under Elnät/Elöverföring)
+- Årsavgift, Årsavg., Årskostnad, Elavtal årsavgift, Årsavgift elavtal (endast om under Elhandel/leverantörsavgift; exkludera om under Elnät/Elöverföring)
 - Förvaltat Portfölj Utfall, Förvaltat portfölj utfall
 - Bra miljöval, Bra miljöval (Licens Elklart AB)
 - Trygg, Trygghetspaket
@@ -69,6 +71,11 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - Förbrukning, kWh, Öre/kWh, Kr/kWh
 
 **VIKTIGT: Inkludera ALLA kostnader från första listan i summeringen av onödiga kostnader. Exkludera kostnader från andra listan.**
+
+**SUMMERING:**
+1. Lista ALLA hittade onödiga kostnader med belopp
+2. Summera ALLA belopp till en total besparing
+3. Visa den totala besparingen tydligt i slutet
 
 Svara på svenska och var hjälpsam och pedagogisk.`;
 
