@@ -363,9 +363,11 @@ export default function Media() {
               <h4>Vill du vara först med nyheterna?</h4>
               <p>Prenumerera på vårt nyhetsbrev för att få de senaste uppdateringarna direkt i din inkorg.</p>
               <CustomList>
-                <CustomListItem><BlueDot /> Veckovis sammanfattning av marknadsutvecklingen.</CustomListItem>
-                <CustomListItem><BlueDot /> Tips om när det är bästa tiden att byta avtal.</CustomListItem>
-                <CustomListItem><BlueDot /> Exklusiva erbjudanden för prenumeranter.</CustomListItem>
+                <CustomListItem><BlueDot /> Vi meddelar dig när ditt avtal går ut</CustomListItem>
+                <CustomListItem><BlueDot /> Vi meddelar dig när en ny kampanj är tillgänglig</CustomListItem>
+                <CustomListItem><BlueDot /> Vi meddelar dig när det är dags att byta för att undvika dyrare el</CustomListItem>
+                <CustomListItem><BlueDot /> Veckovis sammanfattning av marknadsutvecklingen</CustomListItem>
+                <CustomListItem><BlueDot /> Exklusiva erbjudanden för prenumeranter</CustomListItem>
               </CustomList>
             </InfoBox>
             

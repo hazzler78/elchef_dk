@@ -152,6 +152,50 @@ const SuccessMessage = styled.div`
   border: 1px solid rgba(16, 185, 129, 0.3);
 `;
 
+const NewsletterBenefits = styled.div`
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: left;
+`;
+
+const BenefitsTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+`;
+
+const BenefitsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+const BenefitItem = styled.li`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  
+  &:before {
+    content: "✓";
+    color: var(--secondary);
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+`;
+
 const Benefits = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -308,6 +352,21 @@ export default function NewsletterHero() {
           {error && <ErrorMessage>{error}</ErrorMessage>}
           {success && <SuccessMessage>{success}</SuccessMessage>}
         </NewsletterForm>
+
+        <NewsletterBenefits>
+          <BenefitsTitle>Nyhetsbrev med extra värde – vi meddelar dig när:</BenefitsTitle>
+          <BenefitsList>
+            <BenefitItem>
+              Ditt avtal går ut
+            </BenefitItem>
+            <BenefitItem>
+              En ny kampanj är tillgänglig
+            </BenefitItem>
+            <BenefitItem>
+              Det är dags att byta för att undvika dyrare el
+            </BenefitItem>
+          </BenefitsList>
+        </NewsletterBenefits>
 
         <Benefits>
           <Benefit>
