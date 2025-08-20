@@ -227,36 +227,65 @@ Påminnelse kommer skickas 11 månader före avtalsutgång.
 ### Vanliga problem:
 
 1. **Inga påminnelser skickas**
-   - Kontrollera att cron job körs
-   - Verifiera att TELEGRAM_BOT_TOKEN är korrekt
-   - Kontrollera att chat IDs är korrekta
+   - Kontrollera att `UPDATE_SECRET_KEY` är korrekt satt
+   - Verifiera att `TELEGRAM_BOT_TOKEN` är giltig
+   - Kontrollera att `TELEGRAM_CHAT_IDS` innehåller rätt chat-ID:n
+   - Testa manuellt med admin-panelen
 
-2. **Telegram webhook fungerar inte**
-   - Kontrollera att webhook är satt korrekt
-   - Verifiera att bot har rätt behörigheter
-   - Kontrollera att URL är tillgänglig från internet
+2. **Försenade påminnelser**
+   - Använd "Markera försenade som skickade" i admin-panelen
+   - Kontrollera att cron job körs regelbundet
+   - Verifiera att API:et fungerar med manuell test
 
-3. **Databasfel**
-   - Verifiera Supabase-anslutning
-   - Kontrollera att tabellerna är skapade korrekt
-   - Verifiera RLS-policyer
+3. **Telegram-meddelanden kommer inte fram**
+   - Verifiera att bot-token är korrekt
+   - Kontrollera att chat-ID:n är rätt
+   - Testa bot-meddelanden manuellt
 
-4. **RLS (Row Level Security) fel**
-   - Om du får "new row violates row-level security policy" fel:
-   - Kör följande SQL i Supabase SQL Editor:
-   ```sql
-   -- Skapa RLS-policies för customer_reminders
-   CREATE POLICY "Allow all operations for customer_reminders" ON customer_reminders
-     FOR ALL USING (true) WITH CHECK (true);
+### Snabbdiagnostik:
 
-   -- Skapa RLS-policies för pending_reminders  
-   CREATE POLICY "Allow all operations for pending_reminders" ON pending_reminders
-     FOR ALL USING (true) WITH CHECK (true);
-   ```
+1. **Gå till admin-panelen** (`/admin/reminders`)
+2. **Kontrollera systemstatus** - alla indikatorer ska vara gröna
+3. **Testa påminnelsesystemet** - klicka på "Testa påminnelsesystem"
+4. **Hantera försenade påminnelser** - markera som skickade om de redan hanterats
 
-5. **API-fel**
-   - Kontrollera att alla miljövariabler är satta
-   - Verifiera att UPDATE_SECRET_KEY matchar
+### Miljövariabler som behövs:
+
+```env
+# Telegram-konfiguration
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHAT_IDS=123456789,987654321
+
+# Cron job autentisering
+UPDATE_SECRET_KEY=your_secret_key_for_cron_jobs
+
+# Supabase-konfiguration
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+### Testa manuellt:
+
+```bash
+# Testa reminder API
+curl -X POST https://din-domain.se/api/reminders/send \
+  -H "Authorization: Bearer DIN_UPDATE_SECRET_KEY" \
+  -H "Content-Type: application/json"
+```
+
+### Loggar att kontrollera:
+
+- Vercel Function Logs (i Vercel Dashboard)
+- Supabase Logs (i Supabase Dashboard)
+- Telegram Bot Logs (via BotFather)
+
+### Nästa steg om problemet kvarstår:
+
+1. Kontrollera att alla miljövariabler är korrekt satta
+2. Verifiera att cron job körs (kolla Vercel logs)
+3. Testa Telegram-boten manuellt
+4. Kontrollera Supabase-anslutningen
+5. Använd admin-panelens diagnostikverktyg
 
 ## Säkerhet
 

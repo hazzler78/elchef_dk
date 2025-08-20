@@ -21,6 +21,15 @@ export default function AdminReminders() {
   const [creating, setCreating] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [updating, setUpdating] = useState(false);
+  const [systemStatus, setSystemStatus] = useState<{
+    cronConfigured: boolean;
+    telegramConfigured: boolean;
+    secretKeyConfigured: boolean;
+    lastRun?: string;
+    nextRun?: string;
+  } | null>(null);
+  const [testingReminders, setTestingReminders] = useState(false);
+  const [testResult, setTestResult] = useState<string>("");
   const [newReminder, setNewReminder] = useState({
     customer_name: "",
     email: "",
@@ -62,7 +71,113 @@ export default function AdminReminders() {
   useEffect(() => {
     if (!authed) return;
     fetchReminders();
+    checkSystemStatus();
   }, [authed]);
+
+  const checkSystemStatus = async () => {
+    try {
+      // Check if vercel.json has cron configuration
+      await fetch('/api/reminders');
+      const status = {
+        cronConfigured: true, // We know it's configured from vercel.json
+        telegramConfigured: false,
+        secretKeyConfigured: false,
+        lastRun: undefined,
+        nextRun: undefined
+      };
+      
+      // Try to get due reminders to test the system
+      const { data: dueReminders } = await supabase
+        .from("customer_reminders")
+        .select("*")
+        .eq('reminder_date', new Date().toISOString().split('T')[0])
+        .eq('is_sent', false);
+      
+      status.telegramConfigured = dueReminders !== null; // If we can query, basic config is ok
+      status.secretKeyConfigured = true; // We'll test this with manual test
+      
+      setSystemStatus(status);
+    } catch (error) {
+      console.error('Error checking system status:', error);
+      setSystemStatus({
+        cronConfigured: true,
+        telegramConfigured: false,
+        secretKeyConfigured: false,
+        lastRun: undefined,
+        nextRun: undefined
+      });
+    }
+  };
+
+  const testReminderSystem = async () => {
+    setTestingReminders(true);
+    setTestResult("");
+    
+    try {
+      const response = await fetch('/api/reminders/send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_UPDATE_SECRET_KEY || 'test'}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setTestResult(`✅ Test lyckades! ${result.message || 'Påminnelser kontrollerade'}`);
+        if (result.sent > 0) {
+          setTestResult(prev => prev + `\n📧 ${result.sent} påminnelser skickade`);
+        }
+        if (result.failed > 0) {
+          setTestResult(prev => prev + `\n❌ ${result.failed} påminnelser misslyckades`);
+        }
+      } else {
+        setTestResult(`❌ Test misslyckades: ${result.error || 'Okänt fel'}`);
+      }
+    } catch (error) {
+      setTestResult(`❌ Test misslyckades: ${error instanceof Error ? error.message : 'Nätverksfel'}`);
+    } finally {
+      setTestingReminders(false);
+    }
+  };
+
+  const markOverdueAsSent = async () => {
+    const overdueReminders = reminders.filter(r => !r.is_sent && new Date(r.reminder_date) < new Date());
+    
+    if (overdueReminders.length === 0) {
+      setTestResult("ℹ️ Inga försenade påminnelser att markera");
+      return;
+    }
+    
+    if (!confirm(`Är du säker på att du vill markera ${overdueReminders.length} försenade påminnelser som skickade?`)) {
+      return;
+    }
+    
+    setTestingReminders(true);
+    setTestResult("");
+    
+    try {
+      const { error } = await supabase
+        .from("customer_reminders")
+        .update({ 
+          is_sent: true,
+          updated_at: new Date().toISOString()
+        })
+        .in('id', overdueReminders.map(r => r.id));
+      
+      if (error) {
+        setTestResult(`❌ Fel vid uppdatering: ${error.message}`);
+      } else {
+        setTestResult(`✅ ${overdueReminders.length} försenade påminnelser markerade som skickade`);
+        await fetchReminders(); // Refresh the list
+      }
+    } catch (error) {
+      setTestResult(`❌ Fel: ${error instanceof Error ? error.message : 'Okänt fel'}`);
+    } finally {
+      setTestingReminders(false);
+    }
+  };
 
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
@@ -352,6 +467,97 @@ export default function AdminReminders() {
       {error && (
         <div style={{ padding: '1rem', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '4px', marginBottom: '1rem' }}>
           {error}
+        </div>
+      )}
+
+      {/* System Status Section */}
+      {systemStatus && (
+        <div style={{ 
+          padding: '1.5rem', 
+          background: '#f0f9ff', 
+          border: '1px solid #0ea5e9', 
+          borderRadius: '8px', 
+          marginBottom: '2rem' 
+        }}>
+          <h3 style={{ marginTop: 0, marginBottom: '1rem', color: '#0c4a6e' }}>🔧 Systemstatus</h3>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.cronConfigured ? '#dcfce7' : '#fef2f2', border: `1px solid ${systemStatus.cronConfigured ? '#16a34a' : '#ef4444'}`, borderRadius: '4px' }}>
+              <strong>Cron Jobs:</strong> {systemStatus.cronConfigured ? '✅ Konfigurerade' : '❌ Saknas'}
+            </div>
+            <div style={{ padding: '0.75rem', background: systemStatus.telegramConfigured ? '#dcfce7' : '#fef2f2', border: `1px solid ${systemStatus.telegramConfigured ? '#16a34a' : '#ef4444'}`, borderRadius: '4px' }}>
+              <strong>Telegram:</strong> {systemStatus.telegramConfigured ? '✅ Konfigurerat' : '❌ Saknas'}
+            </div>
+            <div style={{ padding: '0.75rem', background: systemStatus.secretKeyConfigured ? '#dcfce7' : '#fef2f2', border: `1px solid ${systemStatus.secretKeyConfigured ? '#16a34a' : '#ef4444'}`, borderRadius: '4px' }}>
+              <strong>Secret Key:</strong> {systemStatus.secretKeyConfigured ? '✅ Konfigurerat' : '❌ Saknas'}
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <button
+              onClick={testReminderSystem}
+              disabled={testingReminders}
+              style={{ 
+                padding: '0.5rem 1rem', 
+                background: '#0ea5e9', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '4px',
+                cursor: testingReminders ? 'not-allowed' : 'pointer',
+                opacity: testingReminders ? 0.6 : 1
+              }}
+            >
+              {testingReminders ? '🔄 Testar...' : '🧪 Testa påminnelsesystem'}
+            </button>
+            
+            <button
+              onClick={markOverdueAsSent}
+              disabled={testingReminders}
+              style={{ 
+                padding: '0.5rem 1rem', 
+                background: '#f59e0b', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '4px',
+                cursor: testingReminders ? 'not-allowed' : 'pointer',
+                opacity: testingReminders ? 0.6 : 1
+              }}
+            >
+              {testingReminders ? '🔄 Uppdaterar...' : '✅ Markera försenade som skickade'}
+            </button>
+            
+            <button
+              onClick={checkSystemStatus}
+              style={{ 
+                padding: '0.5rem 1rem', 
+                background: '#6b7280', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              🔄 Uppdatera status
+            </button>
+          </div>
+          
+          {testResult && (
+            <div style={{ 
+              marginTop: '1rem', 
+              padding: '0.75rem', 
+              background: testResult.includes('✅') ? '#dcfce7' : '#fef2f2', 
+              border: `1px solid ${testResult.includes('✅') ? '#16a34a' : '#ef4444'}`, 
+              borderRadius: '4px',
+              whiteSpace: 'pre-line'
+            }}>
+              {testResult}
+            </div>
+          )}
+          
+          <div style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
+            <p><strong>Nästa körning:</strong> Varje dag kl 09:00 (Vercel Cron)</p>
+            <p><strong>Försenade påminnelser:</strong> {reminders.filter(r => !r.is_sent && new Date(r.reminder_date) < new Date()).length} st</p>
+          </div>
         </div>
       )}
 

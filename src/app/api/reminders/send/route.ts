@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
     // Verify the request is authorized (optional - you can add authentication here)
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.UPDATE_SECRET_KEY}`) {
+      console.log('❌ Unauthorized request to reminders/send');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -106,11 +107,11 @@ export async function POST(request: NextRequest) {
     const d = String(now.getDate()).padStart(2, '0');
     const today = `${y}-${m}-${d}`;
     
-    // Get all due reminders
+    // Get all due reminders (including overdue ones)
     const { data: dueReminders, error } = await supabase
       .from('customer_reminders')
       .select('*')
-      .eq('reminder_date', today)
+      .lte('reminder_date', today) // Less than or equal to today (includes overdue)
       .eq('is_sent', false);
 
     if (error) {
@@ -130,10 +131,17 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.log(`📧 Found ${dueReminders.length} due reminders`);
+    // Separate overdue from today's reminders
+    const overdueReminders = dueReminders.filter(r => r.reminder_date < today);
+    const todayReminders = dueReminders.filter(r => r.reminder_date === today);
+
+    console.log(`📧 Found ${dueReminders.length} due reminders (${todayReminders.length} today, ${overdueReminders.length} overdue)`);
 
     // Send notifications for each reminder
     const results = [];
+    let sentCount = 0;
+    let failedCount = 0;
+
     for (const reminder of dueReminders) {
       const sent = await sendTelegramReminder(reminder);
       
@@ -150,25 +158,30 @@ export async function POST(request: NextRequest) {
         results.push({
           id: reminder.id,
           customer: reminder.customer_name,
-          status: 'sent'
+          status: 'sent',
+          overdue: reminder.reminder_date < today
         });
+        sentCount++;
       } else {
         results.push({
           id: reminder.id,
           customer: reminder.customer_name,
-          status: 'failed'
+          status: 'failed',
+          overdue: reminder.reminder_date < today
         });
+        failedCount++;
       }
     }
 
-    const successCount = results.filter(r => r.status === 'sent').length;
-    console.log(`✅ Sent ${successCount}/${dueReminders.length} reminders successfully`);
+    console.log(`✅ Sent ${sentCount}/${dueReminders.length} reminders successfully`);
 
     return NextResponse.json({
       success: true,
       message: `Processed ${dueReminders.length} reminders`,
-      sent: successCount,
-      failed: dueReminders.length - successCount,
+      sent: sentCount,
+      failed: failedCount,
+      today: todayReminders.length,
+      overdue: overdueReminders.length,
       results
     });
 
