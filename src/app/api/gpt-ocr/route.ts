@@ -43,11 +43,18 @@ export async function POST(req: NextRequest) {
 - Var särskilt uppmärksam på att inte blanda "Årsavgift" med "Elöverföring"
 - **DUBBELKOLLA ALLA POSTER**: Gå igenom fakturan rad för rad och leta efter ALLA avgifter som matchar listan nedan
 - **VIKTIGT**: Om du hittar en avgift som matchar listan, inkludera den OAVSETT var den står på fakturan
+- **EXTRA VIKTIGT**: Leta särskilt efter ord som innehåller "år", "månad", "fast", "rörlig", "påslag" - även om de står i samma rad som andra ord
 
 **SYFTE:**
 Analysera fakturan, leta efter poster som avviker från normala eller nödvändiga avgifter, och förklara dessa poster i ett enkelt och begripligt språk. Ge tips på hur användaren kan undvika dessa kostnader i framtiden eller byta till ett mer förmånligt elavtal.
 
 **VIKTIGT: Efter att du har identifierat alla extra avgifter, summera ALLA belopp och visa den totala besparingen som kunden kan göra genom att byta till ett avtal utan dessa extra kostnader.**
+
+**SÄRSKILT VIKTIGT - LETA EFTER:**
+- Alla avgifter som innehåller "år" eller "månad" (t.ex. "årsavgift", "månadsavgift")
+- Alla "fasta" eller "rörliga" kostnader
+- Alla "påslag" av något slag
+- Gå igenom VARJE rad på fakturan och kontrollera om den innehåller någon av dessa avgifter
 
 **ORDLISTA - ALLA DETTA RÄKNAS SOM ONÖDIGA KOSTNADER:**
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
