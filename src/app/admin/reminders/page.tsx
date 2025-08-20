@@ -117,7 +117,7 @@ export default function AdminReminders() {
       const response = await fetch('/api/reminders/send', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_UPDATE_SECRET_KEY || 'test'}`,
+          'Authorization': `Bearer ${process.env.UPDATE_SECRET_KEY || 'test'}`,
           'Content-Type': 'application/json'
         }
       });
