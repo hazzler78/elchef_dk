@@ -37,18 +37,18 @@ async function sendTelegramReminder(reminder: CustomerReminder) {
       expiryDate.setMonth(expiryDate.getMonth() + 12);
   }
 
-  const message = `
+    const message = `
 🔔 *Kundpåminnelse - Avtal går ut snart*
 
 👤 *Kund:* ${reminder.customer_name}
 📧 *E-post:* ${reminder.email}
 ${reminder.phone ? `📞 *Telefon:* ${reminder.phone}\n` : ''}
 📋 *Avtalstyp:* ${reminder.contract_type === '12_months' ? '12 månader' : 
-                  reminder.contract_type === '24_months' ? '24 månader' : 
-                  reminder.contract_type === '36_months' ? '36 månader' : 'Rörligt'}
+                reminder.contract_type === '24_months' ? '24 månader' : 
+                reminder.contract_type === '36_months' ? '36 månader' : 'Rörligt'}
 📅 *Avtal startade:* ${contractStartDate.toLocaleDateString('sv-SE')}
 ⏰ *Avtal går ut:* ${expiryDate.toLocaleDateString('sv-SE')}
-
+${reminder.notes ? `📝 *Anteckningar:* ${reminder.notes}\n` : ''}
 💡 *Åtgärd krävs:* Ring kunden för att förlänga avtalet innan det går över till dyrare tillsvidareavtal.
 
 🌐 *Källa:* Elchef.se påminnelsesystem
