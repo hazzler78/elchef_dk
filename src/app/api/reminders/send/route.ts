@@ -93,7 +93,16 @@ export async function POST(request: NextRequest) {
   try {
     // Verify the request is authorized (optional - you can add authentication here)
     const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.UPDATE_SECRET_KEY}`) {
+    const expectedKey = process.env.UPDATE_SECRET_KEY;
+    
+    console.log('🔐 Auth check:', {
+      hasAuthHeader: !!authHeader,
+      hasExpectedKey: !!expectedKey,
+      authHeader: authHeader?.substring(0, 20) + '...',
+      expectedKey: expectedKey?.substring(0, 20) + '...'
+    });
+    
+    if (authHeader !== `Bearer ${expectedKey}`) {
       console.log('❌ Unauthorized request to reminders/send');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

@@ -114,10 +114,11 @@ export default function AdminReminders() {
     setTestResult("");
     
     try {
+      // Use a hardcoded test key for now since client-side env vars are limited
       const response = await fetch('/api/reminders/send', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.UPDATE_SECRET_KEY || 'test'}`,
+          'Authorization': 'Bearer elchef_reminder_secret_2025_xyz123',
           'Content-Type': 'application/json'
         }
       });
