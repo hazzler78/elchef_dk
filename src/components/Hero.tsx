@@ -121,18 +121,33 @@ export default function Hero() {
               <li>✔️ Gratis byte – din gamla avtal sägs upp automatiskt.</li>
               <li>✔️ Full valfrihet – välj mellan rörligt elpris eller fastpris med avtalad period.</li>
             </USPList>
-            <ButtonRow>
-                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
-                                   <GlassButton 
-                    variant="primary" 
-                    size="lg"
-                    background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
-                    onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
-                    aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
-                    disableHoverEffect={true}
-                  >
-                    Rörligt avtal
-                  </GlassButton>
+                         <ButtonRow>
+               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
+                 <div style={{
+                   transition: 'all 0.3s ease',
+                   transform: 'translateY(0)',
+                   cursor: 'pointer'
+                 }}
+                 onMouseEnter={(e) => {
+                   e.currentTarget.style.transform = 'translateY(-4px)';
+                   e.currentTarget.style.filter = 'brightness(1.1)';
+                 }}
+                 onMouseLeave={(e) => {
+                   e.currentTarget.style.transform = 'translateY(0)';
+                   e.currentTarget.style.filter = 'brightness(1)';
+                 }}
+                 onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
+                 >
+                   <GlassButton 
+                     variant="primary" 
+                     size="lg"
+                     background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
+                     aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                     disableHoverEffect={true}
+                   >
+                     Rörligt avtal
+                   </GlassButton>
+                 </div>
                  <div style={{ 
                    fontSize: '0.9rem', 
                    color: 'rgba(255, 255, 255, 0.95)', 
@@ -147,17 +162,32 @@ export default function Hero() {
                    0 kr i avgifter första året – utan bindningstid
                  </div>
                </div>
-               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
-                                   <GlassButton 
-                    variant="secondary" 
-                    size="lg"
-                    background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
-                    onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
-                    aria-label="Fastpris - Fastpris med prisgaranti"
-                    disableHoverEffect={true}
+                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
+                  <div style={{
+                    transition: 'all 0.3s ease',
+                    transform: 'translateY(0)',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.filter = 'brightness(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.filter = 'brightness(1)';
+                  }}
+                  onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
                   >
-                    Fastpris
-                  </GlassButton>
+                    <GlassButton 
+                      variant="secondary" 
+                      size="lg"
+                      background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
+                      aria-label="Fastpris - Fastpris med prisgaranti"
+                      disableHoverEffect={true}
+                    >
+                      Fastpris
+                    </GlassButton>
+                  </div>
                  <div style={{ 
                    fontSize: '0.9rem', 
                    color: 'rgba(255, 255, 255, 0.95)', 
