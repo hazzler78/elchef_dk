@@ -835,7 +835,7 @@ export default function JamforElpriser() {
                   <GlassButton 
                     variant="primary" 
                     size="lg" 
-                    background="rgba(0,201,107,0.85)" 
+                    background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
                     onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
@@ -843,7 +843,17 @@ export default function JamforElpriser() {
                   >
                     Rörligt avtal
                   </GlassButton>
-                  <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', background: 'rgba(0,201,107,0.15)', border: '1px solid rgba(0,201,107,0.35)', padding: '0.35rem 0.6rem', borderRadius: 9999, textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '0.9rem', 
+                    color: 'rgba(255, 255, 255, 0.95)', 
+                    background: 'rgba(34,197,94,0.2)', 
+                    border: '1px solid rgba(34,197,94,0.4)', 
+                    padding: '0.35rem 0.6rem', 
+                    borderRadius: 9999, 
+                    textAlign: 'center',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 16px rgba(34,197,94,0.15)'
+                  }}>
                     0 kr i avgifter första året – utan bindningstid
                   </div>
                 </div>
@@ -851,7 +861,7 @@ export default function JamforElpriser() {
                   <GlassButton 
                     variant="secondary" 
                     size="lg" 
-                    background="rgba(22,147,255,0.85)" 
+                    background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
                     onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
@@ -859,7 +869,17 @@ export default function JamforElpriser() {
                   >
                     Fastpris
                   </GlassButton>
-                  <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', background: 'rgba(22,147,255,0.15)', border: '1px solid rgba(22,147,255,0.35)', padding: '0.35rem 0.6rem', borderRadius: 9999, textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '0.9rem', 
+                    color: 'rgba(255, 255, 255, 0.95)', 
+                    background: 'rgba(59,130,246,0.2)', 
+                    border: '1px solid rgba(59,130,246,0.4)', 
+                    padding: '0.35rem 0.6rem', 
+                    borderRadius: 9999, 
+                    textAlign: 'center',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 16px rgba(59,130,246,0.15)'
+                  }}>
                     Fastpris med prisgaranti
                   </div>
                 </div>

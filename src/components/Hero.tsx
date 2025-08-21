@@ -122,32 +122,54 @@ export default function Hero() {
               <li>✔️ Full valfrihet – välj mellan rörligt elpris eller fastpris med avtalad period.</li>
             </USPList>
             <ButtonRow>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
-                <GlassButton 
-                  variant="primary" 
-                  size="lg"
-                  onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
-                  aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
-                >
-                  Rörligt avtal
-                </GlassButton>
-                <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', background: 'rgba(0,201,107,0.15)', border: '1px solid rgba(0,201,107,0.35)', padding: '0.35rem 0.6rem', borderRadius: 9999, textAlign: 'center' }}>
-                  0 kr i avgifter första året – utan bindningstid
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
-                <GlassButton 
-                  variant="secondary" 
-                  size="lg"
-                  onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
-                  aria-label="Fastpris - Fastpris med prisgaranti"
-                >
-                  Fastpris
-                </GlassButton>
-                <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', background: 'rgba(22,147,255,0.15)', border: '1px solid rgba(22,147,255,0.35)', padding: '0.35rem 0.6rem', borderRadius: 9999, textAlign: 'center' }}>
-                  Fastpris med prisgaranti
-                </div>
-              </div>
+                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
+                 <GlassButton 
+                   variant="primary" 
+                   size="lg"
+                   background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
+                   onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
+                   aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                 >
+                   Rörligt avtal
+                 </GlassButton>
+                 <div style={{ 
+                   fontSize: '0.9rem', 
+                   color: 'rgba(255, 255, 255, 0.95)', 
+                   background: 'rgba(34,197,94,0.2)', 
+                   border: '1px solid rgba(34,197,94,0.4)', 
+                   padding: '0.35rem 0.6rem', 
+                   borderRadius: 9999, 
+                   textAlign: 'center',
+                   backdropFilter: 'blur(10px)',
+                   boxShadow: '0 4px 16px rgba(34,197,94,0.15)'
+                 }}>
+                   0 kr i avgifter första året – utan bindningstid
+                 </div>
+               </div>
+               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
+                 <GlassButton 
+                   variant="secondary" 
+                   size="lg"
+                   background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
+                   onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
+                   aria-label="Fastpris - Fastpris med prisgaranti"
+                 >
+                   Fastpris
+                 </GlassButton>
+                 <div style={{ 
+                   fontSize: '0.9rem', 
+                   color: 'rgba(255, 255, 255, 0.95)', 
+                   background: 'rgba(59,130,246,0.2)', 
+                   border: '1px solid rgba(59,130,246,0.4)', 
+                   padding: '0.35rem 0.6rem', 
+                   borderRadius: 9999, 
+                   textAlign: 'center',
+                   backdropFilter: 'blur(10px)',
+                   boxShadow: '0 4px 16px rgba(59,130,246,0.15)'
+                 }}>
+                   Fastpris med prisgaranti
+                 </div>
+               </div>
             </ButtonRow>
           </TextContent>
           <VideoWrapper>
