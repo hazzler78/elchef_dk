@@ -808,13 +808,6 @@ export default function JamforElpriser() {
               )}
             </div>
 
-            {/* Contact form section */}
-            <div className="analysis-slide-in" style={{ 
-              marginTop: '3rem'
-            }}>
-              <ContactForm />
-            </div>
-
             <div className="analysis-fade-in" style={{ 
               marginTop: '2rem', 
               textAlign: 'center', 
@@ -830,7 +823,7 @@ export default function JamforElpriser() {
                 marginBottom: '0.5rem',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
-                Redo att spara pengar?
+                Just nu rekommenderar vi ett av dessa elavtal, beroende på om du vill ha rörligt avtal eller fastprisavtal.
               </h4>
               <div style={{ 
                 display: 'flex', 
@@ -869,6 +862,13 @@ export default function JamforElpriser() {
               >
                 Ladda upp ny faktura
               </GlassButton>
+            </div>
+
+            {/* Contact form section */}
+            <div className="analysis-slide-in" style={{ 
+              marginTop: '3rem'
+            }}>
+              <ContactForm />
             </div>
           </div>
         )}
