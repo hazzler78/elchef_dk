@@ -831,26 +831,38 @@ export default function JamforElpriser() {
                 flexWrap: 'wrap', 
                 justifyContent: 'center' 
               }}>
-                <GlassButton 
-                  variant="primary" 
-                  size="lg" 
-                  background="rgba(0,201,107,0.85)" 
-                  disableScrollEffect={true} 
-                  disableHoverEffect={true}
-                  onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
-                >
-                  Rörligt avtal
-                </GlassButton>
-                <GlassButton 
-                  variant="secondary" 
-                  size="lg" 
-                  background="rgba(22,147,255,0.85)" 
-                  disableScrollEffect={true} 
-                  disableHoverEffect={true}
-                  onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
-                >
-                  Fastpris
-                </GlassButton>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
+                  <GlassButton 
+                    variant="primary" 
+                    size="lg" 
+                    background="rgba(0,201,107,0.85)" 
+                    disableScrollEffect={true} 
+                    disableHoverEffect={true}
+                    onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
+                    aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                  >
+                    Rörligt avtal
+                  </GlassButton>
+                  <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', background: 'rgba(0,201,107,0.15)', border: '1px solid rgba(0,201,107,0.35)', padding: '0.35rem 0.6rem', borderRadius: 9999, textAlign: 'center' }}>
+                    0 kr i avgifter första året – utan bindningstid
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
+                  <GlassButton 
+                    variant="secondary" 
+                    size="lg" 
+                    background="rgba(22,147,255,0.85)" 
+                    disableScrollEffect={true} 
+                    disableHoverEffect={true}
+                    onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
+                    aria-label="Fastpris - Fastpris med prisgaranti"
+                  >
+                    Fastpris
+                  </GlassButton>
+                  <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', background: 'rgba(22,147,255,0.15)', border: '1px solid rgba(22,147,255,0.35)', padding: '0.35rem 0.6rem', borderRadius: 9999, textAlign: 'center' }}>
+                    Fastpris med prisgaranti
+                  </div>
+                </div>
               </div>
               <GlassButton 
                 variant="secondary" 
