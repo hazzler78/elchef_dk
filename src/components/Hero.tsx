@@ -114,7 +114,7 @@ export default function Hero() {
       <div className="container">
         <HeroContent>
           <TextContent>
-            <h1>Elchef gör det enkelt att välja rätt elavtal</h1>
+                         <h1>Elchef gör det enkelt att välja rätt elavtal!</h1>
             <p>Snabbt, gratis och utan krångel.</p>
             <USPList>
               <li>✔️ Vi lyfter bara fram elavtal som är värda att överväga.</li>
