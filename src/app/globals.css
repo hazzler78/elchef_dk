@@ -338,6 +338,24 @@ p {
   animation: shimmer 2s infinite;
 }
 
+/* Cookie-bot z-index fix */
+#CookieConsent,
+#CookieDeclaration,
+#Cookiebot,
+.cookieconsent,
+.cookie-declaration,
+[id*="cookie"],
+[class*="cookie"] {
+  z-index: 999 !important;
+}
+
+/* Ensure our navigation stays above cookie elements */
+nav[style*="z-index"],
+.nav,
+.bottom-nav {
+  z-index: 1001 !important;
+}
+
 /* Remove dark mode for now */
 @media (prefers-color-scheme: dark) {
   :root {

@@ -19,7 +19,7 @@ const Nav = styled.nav`
   align-items: center;
   padding: 0.5rem 0;
   box-shadow: var(--glass-shadow-light);
-  z-index: 1000;
+  z-index: 1001 !important;
 `;
 
 const NavItem = styled(Link)`
