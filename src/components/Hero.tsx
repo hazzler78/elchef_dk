@@ -124,19 +124,9 @@ export default function Hero() {
                          <ButtonRow>
                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
                  <div style={{
-                   transition: 'all 0.3s ease',
-                   transform: 'translateY(0)',
                    cursor: 'pointer',
                    position: 'relative',
                    zIndex: 10
-                 }}
-                 onMouseEnter={(e) => {
-                   e.currentTarget.style.transform = 'translateY(-4px)';
-                   e.currentTarget.style.filter = 'brightness(1.1)';
-                 }}
-                 onMouseLeave={(e) => {
-                   e.currentTarget.style.transform = 'translateY(0)';
-                   e.currentTarget.style.filter = 'brightness(1)';
                  }}
                  onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
                  >
@@ -168,19 +158,9 @@ export default function Hero() {
                </div>
                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
                   <div style={{
-                    transition: 'all 0.3s ease',
-                    transform: 'translateY(0)',
                     cursor: 'pointer',
                     position: 'relative',
                     zIndex: 10
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.filter = 'brightness(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.filter = 'brightness(1)';
                   }}
                   onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
                   >
