@@ -130,13 +130,13 @@ export default function Hero() {
                  }}
                  onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
                  >
-                   <GlassButton 
-                     variant="primary" 
-                     size="lg"
-                     background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
-                     aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
-                     disableHoverEffect={true}
-                   >
+                                       <GlassButton 
+                      variant="primary" 
+                      size="lg"
+                      background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
+                      aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                      disableScrollEffect={true}
+                    >
                      Rörligt avtal
                    </GlassButton>
                  </div>
@@ -164,13 +164,13 @@ export default function Hero() {
                   }}
                   onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
                   >
-                    <GlassButton 
-                      variant="secondary" 
-                      size="lg"
-                      background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
-                      aria-label="Fastpris - Fastpris med prisgaranti"
-                      disableHoverEffect={true}
-                    >
+                                                                                   <GlassButton 
+                        variant="secondary" 
+                        size="lg"
+                        background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
+                        aria-label="Fastpris - Fastpris med prisgaranti"
+                        disableScrollEffect={true}
+                      >
                       Fastpris
                     </GlassButton>
                   </div>
