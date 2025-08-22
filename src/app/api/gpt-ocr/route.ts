@@ -87,6 +87,15 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 2. Summera ALLA belopp till en total besparing
 3. Visa den totala besparingen tydligt i slutet
 
+**VIKTIGT - SLUTTEXT:**
+Efter summeringen, avsluta alltid med denna exakta text:
+
+"För att minska dessa kostnader bör du byta till ett elavtal utan fasta påslag och avgifter.
+
+Rörligt pris – kampanj utan bindningstid som gäller i ett helt år, helt utan påslag eller avgifter.
+
+Önskar du istället säkra ditt elpris med ett fast avtal, rekommenderar vi ett fastprisavtal med prisgaranti. Du bestämmer själv hur lång tid du vill säkra ditt elpris."
+
 Svara på svenska och var hjälpsam och pedagogisk.`;
 
     const openaiApiKey = process.env.OPENAI_API_KEY;
