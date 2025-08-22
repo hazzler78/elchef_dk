@@ -126,7 +126,9 @@ export default function Hero() {
                  <div style={{
                    transition: 'all 0.3s ease',
                    transform: 'translateY(0)',
-                   cursor: 'pointer'
+                   cursor: 'pointer',
+                   position: 'relative',
+                   zIndex: 10
                  }}
                  onMouseEnter={(e) => {
                    e.currentTarget.style.transform = 'translateY(-4px)';
@@ -157,7 +159,9 @@ export default function Hero() {
                    borderRadius: 9999, 
                    textAlign: 'center',
                    backdropFilter: 'blur(10px)',
-                   boxShadow: '0 4px 16px rgba(34,197,94,0.15)'
+                   boxShadow: '0 4px 16px rgba(34,197,94,0.15)',
+                   position: 'relative',
+                   zIndex: 10
                  }}>
                    0 kr i avgifter första året – utan bindningstid
                  </div>
@@ -166,7 +170,9 @@ export default function Hero() {
                   <div style={{
                     transition: 'all 0.3s ease',
                     transform: 'translateY(0)',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    position: 'relative',
+                    zIndex: 10
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
@@ -197,7 +203,9 @@ export default function Hero() {
                    borderRadius: 9999, 
                    textAlign: 'center',
                    backdropFilter: 'blur(10px)',
-                   boxShadow: '0 4px 16px rgba(59,130,246,0.15)'
+                   boxShadow: '0 4px 16px rgba(59,130,246,0.15)',
+                   position: 'relative',
+                   zIndex: 10
                  }}>
                    Fastpris med prisgaranti
                  </div>
