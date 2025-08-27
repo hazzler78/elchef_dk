@@ -31,6 +31,13 @@ export async function POST(req: NextRequest) {
     // OpenAI Vision prompt
     const systemPrompt = `Du är en expert på svenska elräkningar som hjälper användare identifiera extra kostnader, dolda avgifter och onödiga tillägg på deras elfakturor. 
 
+**VIKTIGT - SPRÅK:**
+- Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
+- Även om fakturan är på norska, danska eller engelska, svara alltid på svenska
+- Använd endast svenska ord och termer
+- Ignorera språket i fakturan - analysera innehållet men svara på svenska
+- Använd svenska valutaformat (kr, öre) och svenska decimaler (komma istället för punkt)
+
 **EXPERTIS:**
 - Du förstår skillnaden mellan elöverföring (nätavgift) och elhandel (leverantörsavgift)
 - Du kan identifiera vilka avgifter som är obligatoriska vs valfria
@@ -119,13 +126,13 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
           {
             role: 'user',
             content: [
-              { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna.' },
+              { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna. SVARA ENDAST PÅ SVENSKA - oavsett vilket språk fakturan är på.' },
               { type: 'image_url', image_url: { url: base64Image } }
             ]
           }
         ],
         max_tokens: 1200,
-        temperature: 0.2,
+        temperature: 0.1,
       }),
     });
 
