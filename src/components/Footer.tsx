@@ -100,7 +100,7 @@ export default function Footer() {
               <p>
                 <FaPhone /> 073-686 23 60
                 <span style={{ fontSize: '0.8rem', color: 'var(--gray-400)', marginLeft: '0.5rem' }}>
-                  10:00-18:00 Vardagar
+                  09:00-13:00 Vardagar
                 </span>
               </p>
               <p>
