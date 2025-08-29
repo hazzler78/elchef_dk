@@ -36,6 +36,8 @@ export default function AdminHeroAnalytics() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -98,21 +100,35 @@ export default function AdminHeroAnalytics() {
   }
 
   const impFiltered = impressions.filter(l =>
-    !search ||
-    (l.session_id || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.user_agent || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.referer || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.variant || '').toLowerCase().includes(search.toLowerCase())
+    // Text filter
+    (!search ||
+      (l.session_id || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.user_agent || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.referer || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.variant || '').toLowerCase().includes(search.toLowerCase())) &&
+    // Date filter
+    (() => {
+      const t = new Date(l.created_at).getTime();
+      const fromOk = !dateFrom || t >= new Date(dateFrom).getTime();
+      const toOk = !dateTo || t <= new Date(dateTo).getTime() + 24*60*60*1000 - 1;
+      return fromOk && toOk;
+    })()
   );
 
   const clkFiltered = clicks.filter(l =>
-    !search ||
-    (l.session_id || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.user_agent || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.referer || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.href || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.target || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.variant || '').toLowerCase().includes(search.toLowerCase())
+    (!search ||
+      (l.session_id || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.user_agent || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.referer || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.href || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.target || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.variant || '').toLowerCase().includes(search.toLowerCase())) &&
+    (() => {
+      const t = new Date(l.created_at).getTime();
+      const fromOk = !dateFrom || t >= new Date(dateFrom).getTime();
+      const toOk = !dateTo || t <= new Date(dateTo).getTime() + 24*60*60*1000 - 1;
+      return fromOk && toOk;
+    })()
   );
 
   const count = (arr: { variant: string | null }[], v: 'A'|'B') => arr.filter(x => x.variant === v).length;
@@ -124,6 +140,40 @@ export default function AdminHeroAnalytics() {
   const fmtPct = (n: number) => `${n.toFixed(1)}%`;
   const aCtr = aImp ? fmtPct((aClk / aImp) * 100) : '—';
   const bCtr = bImp ? fmtPct((bClk / bImp) * 100) : '—';
+  const winner: 'A'|'B'|null = aImp && bImp ? ((aClk / aImp) >= (bClk / bImp) ? 'A' : 'B') : null;
+
+  function quickRange(days: number) {
+    const to = new Date();
+    const from = new Date(Date.now() - days*24*60*60*1000);
+    setDateFrom(from.toISOString().slice(0,10));
+    setDateTo(to.toISOString().slice(0,10));
+  }
+
+  function clearFilters() {
+    setDateFrom("");
+    setDateTo("");
+    setSearch("");
+  }
+
+  function exportCsv(filename: string, rows: Record<string, unknown>[]) {
+    try {
+      const headers = Object.keys(rows[0] || {});
+      const escape = (val: unknown) => {
+        const s = String(val ?? "");
+        return '"' + s.replace(/"/g, '""') + '"';
+      };
+      const csv = [headers.join(',')]
+        .concat(rows.map(r => headers.map(h => escape((r as any)[h])).join(',')))
+        .join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {}
+  }
 
   return (
     <div style={{ maxWidth: 1200, margin: '2rem auto', padding: 24 }}>
@@ -132,14 +182,23 @@ export default function AdminHeroAnalytics() {
         CTR = klick / visningar per variant
       </p>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+      {/* Filters and Actions */}
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
         <input
           placeholder="Sök (session, agent, referer, href, variant)"
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{ flex: 1, padding: 8, border: '1px solid #cbd5e1', borderRadius: 6 }}
         />
+        <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} style={{ padding: 8, border: '1px solid #cbd5e1', borderRadius: 6 }} />
+        <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} style={{ padding: 8, border: '1px solid #cbd5e1', borderRadius: 6 }} />
         <button onClick={fetchData} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Uppdatera</button>
+        <button onClick={() => quickRange(1)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>24h</button>
+        <button onClick={() => quickRange(7)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>7d</button>
+        <button onClick={() => quickRange(30)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>30d</button>
+        <button onClick={clearFilters} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Rensa</button>
+        <button onClick={() => exportCsv('hero_impressions.csv', impFiltered as any)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export Impressions</button>
+        <button onClick={() => exportCsv('hero_clicks.csv', clkFiltered as any)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export Clicks</button>
       </div>
 
       {/* CTR Table */}
@@ -155,13 +214,13 @@ export default function AdminHeroAnalytics() {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr style={{ background: winner === 'A' ? 'rgba(16,185,129,0.08)' : undefined }}>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>A</td>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aImp}</td>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk}</td>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aCtr}</td>
             </tr>
-            <tr>
+            <tr style={{ background: winner === 'B' ? 'rgba(16,185,129,0.08)' : undefined }}>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>B</td>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bImp}</td>
               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bClk}</td>
