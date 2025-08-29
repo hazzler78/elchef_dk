@@ -1,7 +1,7 @@
 "use client";
 
 import styled from 'styled-components';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import GlassButton from './GlassButton';
 
 const HeroSection = styled.section`
@@ -101,6 +101,71 @@ const USPList = styled.ul`
 `;
 
 export default function Hero() {
+  const [variant, setVariant] = useState<'A' | 'B'>('A');
+
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? window.localStorage.getItem('hero_variant_v1') : null;
+      const storedExpiry = typeof window !== 'undefined' ? window.localStorage.getItem('hero_variant_expiry_v1') : null;
+      const now = Date.now();
+      const isExpired = storedExpiry ? now > Number(storedExpiry) : true;
+      if (stored && (stored === 'A' || stored === 'B') && !isExpired) {
+        setVariant(stored as 'A' | 'B');
+        return;
+      }
+      const newVariant: 'A' | 'B' = Math.random() < 0.5 ? 'A' : 'B';
+      const expiry = now + 30 * 24 * 60 * 60 * 1000;
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('hero_variant_v1', newVariant);
+        window.localStorage.setItem('hero_variant_expiry_v1', String(expiry));
+      }
+      setVariant(newVariant);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      const key = `hero_impression_${variant}`;
+      const last = Number(window.localStorage.getItem(key) || '0');
+      const now = Date.now();
+      const dayMs = 24 * 60 * 60 * 1000;
+      if (!last || now - last > dayMs) {
+        const sessionId = window.localStorage.getItem('invoice_session_id') || '';
+        const payload = JSON.stringify({ variant, sessionId });
+        const url = '/api/events/hero-impression';
+        if (navigator.sendBeacon) {
+          const blob = new Blob([payload], { type: 'application/json' });
+          navigator.sendBeacon(url, blob);
+        } else {
+          fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
+        }
+        window.localStorage.setItem(key, String(now));
+      }
+    } catch {}
+  }, [variant]);
+
+  const heroTitle = variant === 'A' ? 'Elchef gör det enkelt att välja rätt elavtal!' : 'Välj rätt elavtal – utan krångel';
+  const heroSub = variant === 'A' ? 'Vi lyfter fram avtal värda att överväga och sköter bytet åt dig.' : 'Snabbt, gratis och tryggt. Vi hjälper dig hela vägen.';
+
+  const trackHeroClick = (target: 'rorligt' | 'fastpris', href: string) => {
+    try {
+      const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
+      const params = new URLSearchParams({ utm_source: 'site', utm_medium: 'hero', utm_campaign: 'hero-ab', utm_content: `variant${variant}` });
+      const finalUrl = href.includes('?') ? `${href}&${params.toString()}` : `${href}?${params.toString()}`;
+      const payload = JSON.stringify({ variant, sessionId, target, href: finalUrl });
+      const url = '/api/events/hero-click';
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(url, blob);
+      } else {
+        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
+      }
+      window.open(finalUrl, '_blank');
+    } catch {
+      window.open(href, '_blank');
+    }
+  };
   const handleVideoClick = (event: React.MouseEvent<HTMLVideoElement>) => {
     const video = event.currentTarget;
     video.muted = !video.muted; // Växla mellan muted och unmuted
@@ -114,8 +179,8 @@ export default function Hero() {
       <div className="container">
         <HeroContent>
           <TextContent>
-                         <h1>Elchef gör det enkelt att välja rätt elavtal!</h1>
-            <p>Snabbt, gratis och utan krångel.</p>
+            <h1>{heroTitle}</h1>
+            <p>{heroSub}</p>
             <USPList>
               <li>✔️ Vi lyfter bara fram elavtal som är värda att överväga.</li>
               <li>✔️ Gratis byte – din gamla avtal sägs upp automatiskt.</li>
@@ -137,7 +202,7 @@ export default function Hero() {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.filter = 'brightness(1)';
                   }}
-                  onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}
+                  onClick={() => trackHeroClick('rorligt', 'https://www.cheapenergy.se/elchef-rorligt/')}
                   >
                                                                                <GlassButton 
                        variant="primary" 
@@ -181,7 +246,7 @@ export default function Hero() {
                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
                      e.currentTarget.style.filter = 'brightness(1)';
                    }}
-                   onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
+                   onClick={() => trackHeroClick('fastpris', 'https://www.svealandselbolag.se/elchef-fastpris/')}
                    >
                                                                                                                                                                        <GlassButton 
                          variant="secondary" 
