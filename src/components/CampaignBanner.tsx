@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
@@ -43,12 +44,53 @@ const StyledLink = styled.a`
 `;
 
 export default function CampaignBanner() {
+  const [variant, setVariant] = useState<'A' | 'B'>('A');
+
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? window.localStorage.getItem('banner_variant_v1') : null;
+      const storedExpiry = typeof window !== 'undefined' ? window.localStorage.getItem('banner_variant_expiry_v1') : null;
+      const now = Date.now();
+      const isExpired = storedExpiry ? now > Number(storedExpiry) : true;
+
+      if (stored && (stored === 'A' || stored === 'B') && !isExpired) {
+        setVariant(stored);
+        return;
+      }
+
+      const newVariant: 'A' | 'B' = Math.random() < 0.5 ? 'A' : 'B';
+      const expiry = now + 30 * 24 * 60 * 60 * 1000; // 30 dagar
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('banner_variant_v1', newVariant);
+        window.localStorage.setItem('banner_variant_expiry_v1', String(expiry));
+      }
+      setVariant(newVariant);
+    } catch {
+      // no-op
+    }
+  }, []);
+
+  const href = `/jamfor-elpriser?utm_source=site&utm_medium=banner&utm_campaign=ai-savings&utm_content=variant${variant}`;
+
+  const textA = (
+    <>
+      Nyhet! Låt vår <Highlight>AI</Highlight> analysera din elräkning och räkna ut din möjliga besparing.
+    </>
+  );
+
+  const textB = (
+    <>
+      Testa vår <Highlight>AI</Highlight> – ladda upp din faktura och se hur mycket du kan spara.
+    </>
+  );
+
   return (
     <Banner>
       <Image src="/favicon.svg" alt="Elchef" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-      Nyhet! Låt vår <Highlight>AI</Highlight> analysera din elräkning och räkna ut din möjliga besparing.<br />
+      {variant === 'A' ? textA : textB}
+      <br />
       Ladda upp din faktura och få en tydlig genomgång –
-      <StyledLink href="/jamfor-elpriser">Prova nu</StyledLink>
+      <StyledLink href={href}>Prova nu</StyledLink>
     </Banner>
   );
 } 
