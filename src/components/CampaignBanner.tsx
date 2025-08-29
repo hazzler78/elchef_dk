@@ -17,7 +17,10 @@ const Banner = styled.div`
   letter-spacing: 0.02em;
   box-shadow: var(--glass-shadow-light);
   z-index: 2000;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 `;
 
 const Highlight = styled.span`
