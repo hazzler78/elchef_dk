@@ -2,6 +2,11 @@
 
 import { useEffect, useRef } from "react";
 
+type SalesysFormInstance = {
+  setFields?: (fields: Array<{ fieldId: string; value: string }>) => void;
+  // Add other methods here if Salesys exposes them in the future
+};
+
 type SalesysFormOptions = {
   width?: string;
   test?: boolean;
@@ -13,8 +18,19 @@ type SalesysFormProps = {
   options?: SalesysFormOptions;
   defaultFields?: Array<{ fieldId: string; value: string }>; 
   wrapperClassName?: string;
-  onReady?: (formInstance: any) => void;
+  onReady?: (formInstance: SalesysFormInstance) => void;
 };
+
+declare global {
+  interface Window {
+    createWebForm?: (
+      containerEl: HTMLElement,
+      formId: string,
+      opts?: SalesysFormOptions
+    ) => SalesysFormInstance;
+    myForm?: SalesysFormInstance;
+  }
+}
 
 /**
  * Loads the Salesys web form script and initializes the form in a provided container.
@@ -41,37 +57,31 @@ export default function SalesysForm({
     document.body.appendChild(webFormScript);
 
     const onLoad = () => {
-      if (typeof (window as any).createWebForm !== "function") return;
+      if (typeof window.createWebForm !== "function") return;
 
       // Clear container and initialize form
       container.innerHTML = "";
-      const createWebForm = (window as any).createWebForm as (
-        containerEl: HTMLElement,
-        formId: string,
-        opts?: SalesysFormOptions
-      ) => any;
-
+      const createWebForm = window.createWebForm;
       const formInstance = createWebForm(container, formId, options);
-      (window as any).myForm = formInstance;
+      window.myForm = formInstance;
 
       if (defaultFields && typeof formInstance?.setFields === "function") {
         try {
           formInstance.setFields(defaultFields);
-        } catch (e) {
-          // noop
+        } catch {
+          /* noop */
         }
       }
 
       if (typeof onReady === "function") {
         try {
           onReady(formInstance);
-        } catch (_) {
-          // noop
+        } catch {
+          /* noop */
         }
       }
 
       initializedRef.current = true;
-      // eslint-disable-next-line no-console
       console.log("Salesys form initialized", formInstance);
     };
 
@@ -79,7 +89,7 @@ export default function SalesysForm({
     return () => {
       webFormScript.removeEventListener("load", onLoad);
     };
-  }, [containerId, formId, options, defaultFields]);
+  }, [containerId, formId, options, defaultFields, onReady]);
 
   return <div id={containerId} className={wrapperClassName} />;
 }
