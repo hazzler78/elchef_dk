@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styled from 'styled-components';
 
-const Nav = styled.nav`
+const Nav = styled.nav<{ offset?: number }>`
   position: fixed;
-  bottom: 0;
+  bottom: ${(props) => (props.offset ? `${props.offset}px` : '0')};
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.95);
@@ -54,9 +54,74 @@ const ActiveIndicator = styled.div`
 
 function BottomNavContent() {
   const pathname = usePathname();
+  const [bottomOffset, setBottomOffset] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+    const selectCookieBannerElement = (): HTMLElement | null => {
+      // Cookiebot commonly injects these IDs/classes; try a few sensible selectors
+      const candidates = [
+        '#CybotCookiebotDialog',
+        '[id^="CybotCookiebot"]',
+        '#CookiebotDialog',
+        '.CookieConsent',
+        '.CookiebotWidget',
+      ];
+      for (const selector of candidates) {
+        const el = document.querySelector(selector) as HTMLElement | null;
+        if (el) return el;
+      }
+      return null;
+    };
+
+    const isElementVisible = (el: HTMLElement): boolean => {
+      const style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+      const rect = el.getBoundingClientRect();
+      return rect.height > 0 && rect.width > 0;
+    };
+
+    const updateOffset = () => {
+      try {
+        const banner = selectCookieBannerElement();
+        if (banner && isElementVisible(banner)) {
+          const rect = banner.getBoundingClientRect();
+          // If banner is anchored to bottom, push nav above its height
+          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 2;
+          setBottomOffset(isAtBottom ? Math.ceil(rect.height) : 0);
+        } else {
+          setBottomOffset(0);
+        }
+      } catch {
+        setBottomOffset(0);
+      }
+    };
+
+    // Initial check
+    updateOffset();
+
+    // Recalculate on resize and orientation changes
+    window.addEventListener('resize', updateOffset);
+    window.addEventListener('orientationchange', updateOffset as any);
+
+    // Observe DOM mutations to detect when Cookiebot injects/hides the banner
+    const observer = new MutationObserver(() => updateOffset());
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+
+    // Also poll as a fallback (Cookiebot may animate in)
+    const interval = window.setInterval(updateOffset, 1000);
+
+    return () => {
+      window.removeEventListener('resize', updateOffset);
+      window.removeEventListener('orientationchange', updateOffset as any);
+      observer.disconnect();
+      window.clearInterval(interval);
+    };
+  }, []);
   
   return (
-    <Nav>
+    <Nav offset={bottomOffset}>
       <NavItem href="/" className={pathname === '/' ? 'active' : ''}>
         Hem
         {pathname === '/' && <ActiveIndicator />}
