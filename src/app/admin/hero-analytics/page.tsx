@@ -155,15 +155,16 @@ export default function AdminHeroAnalytics() {
     setSearch("");
   }
 
-  function exportCsv(filename: string, rows: Record<string, unknown>[]) {
+  function exportCsv(filename: string, rows: (HeroImpression | HeroClick)[]) {
     try {
-      const headers = Object.keys(rows[0] || {});
+      if (rows.length === 0) return;
+      const headers = Object.keys(rows[0]);
       const escape = (val: unknown) => {
         const s = String(val ?? "");
         return '"' + s.replace(/"/g, '""') + '"';
       };
       const csv = [headers.join(',')]
-        .concat(rows.map(r => headers.map(h => escape((r as any)[h])).join(',')))
+        .concat(rows.map(r => headers.map(h => escape((r as Record<string, unknown>)[h])).join(',')))
         .join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -197,8 +198,8 @@ export default function AdminHeroAnalytics() {
         <button onClick={() => quickRange(7)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>7d</button>
         <button onClick={() => quickRange(30)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>30d</button>
         <button onClick={clearFilters} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Rensa</button>
-        <button onClick={() => exportCsv('hero_impressions.csv', impFiltered as any)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export Impressions</button>
-        <button onClick={() => exportCsv('hero_clicks.csv', clkFiltered as any)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export Clicks</button>
+        <button onClick={() => exportCsv('hero_impressions.csv', impFiltered)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export Impressions</button>
+        <button onClick={() => exportCsv('hero_clicks.csv', clkFiltered)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export Clicks</button>
       </div>
 
       {/* CTR Table */}
