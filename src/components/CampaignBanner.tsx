@@ -90,7 +90,22 @@ export default function CampaignBanner() {
       {variant === 'A' ? textA : textB}
       <br />
       Ladda upp din faktura och få en tydlig genomgång –
-      <StyledLink href={href}>Prova nu</StyledLink>
+      <StyledLink
+        href={href}
+        onClick={(e) => {
+          try {
+            const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
+            const payload = JSON.stringify({ variant, href, sessionId });
+            const url = '/api/events/banner-click';
+            if (navigator.sendBeacon) {
+              const blob = new Blob([payload], { type: 'application/json' });
+              navigator.sendBeacon(url, blob);
+            } else {
+              fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
+            }
+          } catch {}
+        }}
+      >Prova nu</StyledLink>
     </Banner>
   );
 } 
