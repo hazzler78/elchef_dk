@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
 - **VIKTIGT**: Om du hittar en avgift som matchar listan, inkludera den OAVSETT var den står på fakturan
 - **EXTRA VIKTIGT**: Leta särskilt efter ord som innehåller "år", "månad", "fast", "rörlig", "påslag" - även om de står i samma rad som andra ord
 - **VIKTIGT**: Om du ser en avgift som har både ett årsbelopp (t.ex. "384 kr") och ett månadsbelopp (t.ex. "32,61 kr"), inkludera månadsbeloppet i beräkningen
+- **BERÄKNINGSREGEL FÖR Elcertifikat**: Om "Elcertifikat" eller "Elcertifikatavgift" anges i öre/kWh, räkna ut kostnaden som (öre per kWh × total kWh) / 100 = kr, avrunda till två decimaler. Denna post ska ALLTID ingå i onödiga kostnader.
 
 **SYFTE:**
 Analysera fakturan, leta efter poster som avviker från normala eller nödvändiga avgifter, och förklara dessa poster i ett enkelt och begripligt språk. Ge tips på hur användaren kan undvika dessa kostnader i framtiden eller byta till ett mer förmånligt elavtal.
@@ -64,6 +65,7 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - Alla "påslag" av något slag
 - **SÄRSKILT**: Leta efter "Elavtal årsavgift" eller liknande text som innehåller både "elavtal" och "årsavgift"
 - **EXTRA VIKTIGT**: Leta särskilt efter "Rörliga kostnader" eller "Rörlig kostnad" - detta är en vanlig extra avgift som ofta missas
+- **SÄRSKILT**: Leta efter "Elcertifikat" eller "Elcertifikatavgift" och inkludera den enligt beräkningsregeln ovan
 - Gå igenom VARJE rad på fakturan och kontrollera om den innehåller någon av dessa avgifter
 
 **ORDLISTA - ALLA DETTA RÄKNAS SOM ONÖDIGA KOSTNADER:**
