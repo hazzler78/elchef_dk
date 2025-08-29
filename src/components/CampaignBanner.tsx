@@ -46,10 +46,9 @@ export default function CampaignBanner() {
   return (
     <Banner>
       <Image src="/favicon.svg" alt="Elchef" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-      Begränsat erbjudande! Få <Highlight>200 kr rabatt</Highlight> på ditt elavtal!<br />
-      Registrera dig för
-      <StyledLink href="https://www.svekraft.com/elchef-rorligt/" target="_blank" rel="noopener noreferrer">Rörligt avtal</StyledLink>
-      med koden <Highlight>Elchef200</Highlight> – spara pengar direkt på din elräkning!
+      Nyhet! Låt vår <Highlight>AI</Highlight> analysera din elräkning och räkna ut din möjliga besparing.<br />
+      Ladda upp din faktura och få en tydlig genomgång –
+      <StyledLink href="/jamfor-elpriser">Prova nu</StyledLink>
     </Banner>
   );
 } 
