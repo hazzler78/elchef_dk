@@ -115,7 +115,7 @@ export default function CampaignBanner() {
       Ladda upp din faktura och få en tydlig genomgång –
       <StyledLink
         href={href}
-        onClick={(e) => {
+        onClick={() => {
           try {
             const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
             const payload = JSON.stringify({ variant, href, sessionId });
