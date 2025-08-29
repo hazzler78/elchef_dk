@@ -19,7 +19,7 @@ const Nav = styled.nav<{ offset?: number }>`
   align-items: center;
   padding: 0.5rem 0;
   box-shadow: var(--glass-shadow-light);
-  z-index: 1001 !important;
+  z-index: 1003 !important;
 `;
 
 const NavItem = styled(Link)`
@@ -67,6 +67,14 @@ function BottomNavContent() {
         '#CookiebotDialog',
         '.CookieConsent',
         '.CookiebotWidget',
+        '#CookieConsent',
+        '#CookieDeclaration',
+        '.cookieconsent',
+        '.cookie-declaration',
+        '[id*="cookie"]',
+        '[class*="cookie"]',
+        '[id*="Cookie"]',
+        '[class*="Cookie"]',
       ];
       for (const selector of candidates) {
         const el = document.querySelector(selector) as HTMLElement | null;
@@ -87,9 +95,16 @@ function BottomNavContent() {
         const banner = selectCookieBannerElement();
         if (banner && isElementVisible(banner)) {
           const rect = banner.getBoundingClientRect();
-          // If banner is anchored to bottom, push nav above its height
-          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 2;
-          setBottomOffset(isAtBottom ? Math.ceil(rect.height) : 0);
+          // Check if banner is at bottom or overlapping with bottom area
+          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
+          const isOverlappingBottom = rect.bottom > window.innerHeight - 100; // 100px from bottom
+          
+          if (isAtBottom || isOverlappingBottom) {
+            // Add extra padding to ensure nav is clearly above cookie banner
+            setBottomOffset(Math.ceil(rect.height) + 20);
+          } else {
+            setBottomOffset(0);
+          }
         } else {
           setBottomOffset(0);
         }

@@ -347,13 +347,17 @@ p {
 [id*="cookie"],
 [class*="cookie"] {
   z-index: 999 !important;
+  max-height: calc(100vh - 100px) !important;
+  overflow-y: auto !important;
 }
 
 /* Ensure our navigation stays above cookie elements */
 nav[style*="z-index"],
 .nav,
 .bottom-nav {
-  z-index: 1001 !important;
+  z-index: 1003 !important;
+  position: fixed !important;
+  bottom: 0 !important;
 }
 
 /* Remove dark mode for now */

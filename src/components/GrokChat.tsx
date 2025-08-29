@@ -131,15 +131,83 @@ export default function GrokChat() {
     }
   }, [sessionId]);
 
-  // Responsiv bottom-position för chatbubblan
+  // Responsiv bottom-position för chatbubblan och chat window
   const [chatBottom, setChatBottom] = useState(24);
+  const [chatWindowBottom, setChatWindowBottom] = useState(90);
+  const [chatWindowHeight, setChatWindowHeight] = useState(480);
+  
   useEffect(() => {
-    function updateBottom() {
-      setChatBottom(window.innerWidth <= 600 ? 96 : 24);
+    function selectCookieBannerElement(): HTMLElement | null {
+      const candidates = [
+        '#CybotCookiebotDialog',
+        '[id^="CybotCookiebot"]',
+        '#CookiebotDialog',
+        '.CookieConsent',
+        '.CookiebotWidget',
+        '#CookieConsent',
+        '#CookieDeclaration',
+        '.cookieconsent',
+        '.cookie-declaration',
+        '[id*="cookie"]',
+        '[class*="cookie"]',
+        '[id*="Cookie"]',
+        '[class*="Cookie"]',
+      ];
+      for (const selector of candidates) {
+        const el = document.querySelector(selector) as HTMLElement | null;
+        if (el) return el;
+      }
+      return null;
     }
-    updateBottom();
-    window.addEventListener('resize', updateBottom);
-    return () => window.removeEventListener('resize', updateBottom);
+
+    function isElementVisible(el: HTMLElement): boolean {
+      const style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+      const rect = el.getBoundingClientRect();
+      return rect.height > 0 && rect.width > 0;
+    }
+
+    function updatePositions() {
+      const mobile = window.innerWidth <= 600;
+      
+      // Check for cookie banner
+      let cookieOffset = 0;
+      try {
+        const banner = selectCookieBannerElement();
+        if (banner && isElementVisible(banner)) {
+          const rect = banner.getBoundingClientRect();
+          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
+          const isOverlappingBottom = rect.bottom > window.innerHeight - 100;
+          
+          if (isAtBottom || isOverlappingBottom) {
+            cookieOffset = Math.ceil(rect.height) + 10;
+          }
+        }
+      } catch {
+        // Ignore errors
+      }
+      
+      // Account for bottom navigation height (approximately 80px) plus cookie banner
+      setChatBottom(mobile ? 120 + cookieOffset : 24 + cookieOffset);
+      setChatWindowBottom(mobile ? 140 + cookieOffset : 90 + cookieOffset);
+      setChatWindowHeight(mobile ? 400 : 480);
+    }
+    
+    updatePositions();
+    window.addEventListener('resize', updatePositions);
+    
+    // Observe DOM mutations to detect when Cookiebot injects/hides the banner
+    const observer = new MutationObserver(() => updatePositions());
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+    
+    // Also poll as a fallback
+    const interval = window.setInterval(updatePositions, 1000);
+    
+    return () => {
+      window.removeEventListener('resize', updatePositions);
+      observer.disconnect();
+      window.clearInterval(interval);
+    };
   }, []);
 
   // Scrolla till toppen när chatten öppnas, annars ingen automatisk scroll
@@ -292,7 +360,7 @@ export default function GrokChat() {
           position: 'fixed',
           bottom: chatBottom,
           right: 24,
-          zIndex: 1000,
+          zIndex: 1004,
           background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))',
           color: 'white',
           border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -315,18 +383,18 @@ export default function GrokChat() {
         <div
           style={{
             position: 'fixed',
-            bottom: 90,
+            bottom: chatWindowBottom,
             right: 24,
             width: 360,
             maxWidth: '98vw',
-            height: 480,
+            height: chatWindowHeight,
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'var(--glass-blur)',
             WebkitBackdropFilter: 'var(--glass-blur)',
             border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: 18,
             boxShadow: 'var(--glass-shadow-heavy)',
-            zIndex: 1001,
+            zIndex: 1004,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
