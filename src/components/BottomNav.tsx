@@ -102,8 +102,10 @@ function BottomNavContent() {
     updateOffset();
 
     // Recalculate on resize and orientation changes
-    window.addEventListener('resize', updateOffset);
-    window.addEventListener('orientationchange', updateOffset as any);
+    const handleResize: EventListener = () => updateOffset();
+    const handleOrientationChange: EventListener = () => updateOffset();
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
 
     // Observe DOM mutations to detect when Cookiebot injects/hides the banner
     const observer = new MutationObserver(() => updateOffset());
@@ -113,8 +115,8 @@ function BottomNavContent() {
     const interval = window.setInterval(updateOffset, 1000);
 
     return () => {
-      window.removeEventListener('resize', updateOffset);
-      window.removeEventListener('orientationchange', updateOffset as any);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
       observer.disconnect();
       window.clearInterval(interval);
     };
