@@ -18,8 +18,18 @@ type BannerClick = {
   variant: string | null;
 };
 
+type BannerImpression = {
+  id: number;
+  created_at: string;
+  session_id: string | null;
+  user_agent: string | null;
+  referer: string | null;
+  variant: string | null;
+};
+
 export default function AdminBannerClicks() {
   const [logs, setLogs] = useState<BannerClick[]>([]);
+  const [impressions, setImpressions] = useState<BannerImpression[]>([]);
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
   const [input, setInput] = useState("");
@@ -39,6 +49,11 @@ export default function AdminBannerClicks() {
       .select('*')
       .order('created_at', { ascending: false });
     if (!error && data) setLogs(data as BannerClick[]);
+    const imp = await supabase
+      .from('banner_impressions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!imp.error && imp.data) setImpressions(imp.data as BannerImpression[]);
     setLoading(false);
   };
 
@@ -91,6 +106,9 @@ export default function AdminBannerClicks() {
   return (
     <div style={{ maxWidth: 1200, margin: '2rem auto', padding: 24 }}>
       <h1>Bannerklick (Admin)</h1>
+      <p style={{ color: '#64748b', marginTop: 4, marginBottom: 12 }}>
+        CTR = klick / visningar per variant (senaste hämtningen)
+      </p>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
         <input
           placeholder="Sök (session, agent, href, variant)"
@@ -128,6 +146,38 @@ export default function AdminBannerClicks() {
             ))}
           </tbody>
         </table>
+      )}
+
+      {/* CTR per variant */}
+      {!loading && (
+        <div style={{ marginTop: 24 }}>
+          <h2>CTR per variant</h2>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: '#f3f4f6' }}>
+                <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Variant</th>
+                <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Visningar</th>
+                <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Klick</th>
+                <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>CTR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {['A','B'].map(v => {
+                const vClicks = logs.filter(l => l.variant === v).length;
+                const vImps = impressions.filter(i => i.variant === v).length;
+                const ctr = vImps > 0 ? `${((vClicks / vImps) * 100).toFixed(1)}%` : '—';
+                return (
+                  <tr key={v}>
+                    <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{v}</td>
+                    <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{vImps}</td>
+                    <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{vClicks}</td>
+                    <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{ctr}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

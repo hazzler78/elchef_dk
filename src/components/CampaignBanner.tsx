@@ -70,6 +70,29 @@ export default function CampaignBanner() {
     }
   }, []);
 
+  // Impression tracking: 1 per 24h per variant
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      const key = `banner_impression_${variant}`;
+      const last = Number(window.localStorage.getItem(key) || '0');
+      const now = Date.now();
+      const dayMs = 24 * 60 * 60 * 1000;
+      if (!last || now - last > dayMs) {
+        const sessionId = window.localStorage.getItem('invoice_session_id') || '';
+        const payload = JSON.stringify({ variant, sessionId });
+        const url = '/api/events/banner-impression';
+        if (navigator.sendBeacon) {
+          const blob = new Blob([payload], { type: 'application/json' });
+          navigator.sendBeacon(url, blob);
+        } else {
+          fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
+        }
+        window.localStorage.setItem(key, String(now));
+      }
+    } catch {}
+  }, [variant]);
+
   const href = `/jamfor-elpriser?utm_source=site&utm_medium=banner&utm_campaign=ai-savings&utm_content=variant${variant}`;
 
   const textA = (
