@@ -163,10 +163,9 @@ function BottomNavContent() {
         if (banner && isElementVisible(banner)) {
           const rect = banner.getBoundingClientRect();
           
-          // More aggressive detection for Safari and mobile
-          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 20;
-          const isOverlappingBottom = rect.bottom > window.innerHeight - 120; // Increased from 100px
-          const isNearBottom = rect.top > window.innerHeight - 200; // New check for elements near bottom
+          // Check if banner is overlapping with bottom navigation area
+          const navHeight = 80; // Approximate height of bottom nav
+          const isOverlappingNav = rect.bottom > window.innerHeight - navHeight;
           
           // Debug logging (only in development)
           if (process.env.NODE_ENV === 'development') {
@@ -174,17 +173,23 @@ function BottomNavContent() {
               height: rect.height,
               bottom: rect.bottom,
               windowHeight: window.innerHeight,
-              isAtBottom,
-              isOverlappingBottom,
-              isNearBottom,
+              isOverlappingNav,
               element: banner
             });
           }
           
-          if (isAtBottom || isOverlappingBottom || isNearBottom) {
-            // More generous padding for mobile Safari
-            const extraPadding = window.innerWidth <= 768 ? 40 : 20;
-            setBottomOffset(Math.ceil(rect.height) + extraPadding);
+          if (isOverlappingNav) {
+            // Move the cookie banner up by adjusting its position
+            const newBottom = navHeight + 20; // 20px gap above nav
+            
+            if (banner.style.position === 'fixed' || banner.style.position === '') {
+              banner.style.position = 'fixed';
+              banner.style.bottom = `${newBottom}px`;
+              banner.style.zIndex = '1002'; // Below our nav (1003)
+            }
+            
+            // No offset needed for nav since we moved the banner
+            setBottomOffset(0);
           } else {
             setBottomOffset(0);
           }
