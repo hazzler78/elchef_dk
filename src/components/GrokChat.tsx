@@ -327,11 +327,11 @@ export default function GrokChat() {
       
       setMessages(prev => [...prev, { role: 'assistant', content: aiMessage }]);
       
-      // Direkt omdirigering till affiliate-länk efter kort fördröjning
+      // Navigering till rätt sida efter kort fördröjning
       setTimeout(() => {
-        const affiliateLink = contractType === 'rorligt' 
-          ? 'https://www.svekraft.com/elchef-rorligt/'
-          : 'https://www.svekraft.com/elchef-fastpris/';
+        const targetPage = contractType === 'rorligt' 
+          ? '/rorligt-avtal'
+          : '/fastpris-avtal';
         
         // Lägg till en notifiering i chatten
         setMessages(prev => [...prev, { 
@@ -339,7 +339,7 @@ export default function GrokChat() {
           content: '**🎯 Perfekt val!** Du skickas nu till registrering...' 
         }]);
         
-        window.open(affiliateLink, '_blank');
+        window.location.href = targetPage;
       }, 2000); // 2 sekunders fördröjning så användaren hinner se AI-svaret
     }
   };

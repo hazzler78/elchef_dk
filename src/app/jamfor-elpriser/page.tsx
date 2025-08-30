@@ -838,7 +838,7 @@ export default function JamforElpriser() {
                     background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
-                    onClick={() => window.open('https://www.svekraft.com/elchef-rorligt/', '_blank')}
+                    onClick={() => window.location.href = '/rorligt-avtal'}
                     aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
                   >
                     Rörligt avtal
@@ -864,7 +864,7 @@ export default function JamforElpriser() {
                     background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
-                    onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}
+                    onClick={() => window.location.href = '/fastpris-avtal'}
                     aria-label="Fastpris - Fastpris med prisgaranti"
                   >
                     Fastpris

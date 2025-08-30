@@ -161,9 +161,15 @@ export default function Hero() {
       } else {
         fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
       }
-      window.open(finalUrl, '_blank');
+      // Bara öppna nytt fönster för externa länkar
+      if (href.startsWith('http')) {
+        window.open(finalUrl, '_blank');
+      }
     } catch {
-      window.open(href, '_blank');
+      // Bara öppna nytt fönster för externa länkar
+      if (href.startsWith('http')) {
+        window.open(href, '_blank');
+      }
     }
   };
   const handleVideoClick = (event: React.MouseEvent<HTMLVideoElement>) => {
@@ -202,7 +208,10 @@ export default function Hero() {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.filter = 'brightness(1)';
                   }}
-                  onClick={() => trackHeroClick('rorligt', 'https://www.cheapenergy.se/elchef-rorligt/')}
+                  onClick={() => {
+                    trackHeroClick('rorligt', '/rorligt-avtal');
+                    window.location.href = '/rorligt-avtal';
+                  }}
                   >
                                                                                <GlassButton 
                        variant="primary" 
@@ -246,7 +255,10 @@ export default function Hero() {
                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
                      e.currentTarget.style.filter = 'brightness(1)';
                    }}
-                   onClick={() => trackHeroClick('fastpris', 'https://www.svealandselbolag.se/elchef-fastpris/')}
+                                       onClick={() => {
+                      trackHeroClick('fastpris', '/fastpris-avtal');
+                      window.location.href = '/fastpris-avtal';
+                    }}
                    >
                                                                                                                                                                        <GlassButton 
                          variant="secondary" 
