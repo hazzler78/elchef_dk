@@ -60,8 +60,9 @@ function BottomNavContent() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
     const selectCookieBannerElement = (): HTMLElement | null => {
-      // Cookiebot commonly injects these IDs/classes; try a few sensible selectors
+      // Comprehensive list of cookie banner selectors for different browsers and implementations
       const candidates = [
+        // Cookiebot specific
         '#CybotCookiebotDialog',
         '[id^="CybotCookiebot"]',
         '#CookiebotDialog',
@@ -71,15 +72,81 @@ function BottomNavContent() {
         '#CookieDeclaration',
         '.cookieconsent',
         '.cookie-declaration',
+        
+        // Generic cookie-related selectors
         '[id*="cookie"]',
         '[class*="cookie"]',
         '[id*="Cookie"]',
         '[class*="Cookie"]',
+        
+        // Safari-specific and other common patterns
+        '[id*="consent"]',
+        '[class*="consent"]',
+        '[id*="Consent"]',
+        '[class*="Consent"]',
+        '[id*="gdpr"]',
+        '[class*="gdpr"]',
+        '[id*="GDPR"]',
+        '[class*="GDPR"]',
+        
+        // Fixed positioned elements at bottom that might be cookie banners
+        '[style*="position: fixed"][style*="bottom"]',
+        '[style*="position:fixed"][style*="bottom"]',
+        
+        // Common cookie banner classes
+        '.cookie-banner',
+        '.cookie-notice',
+        '.privacy-banner',
+        '.consent-banner',
+        '.gdpr-banner',
+        '.cookie-policy',
+        '.cookie-widget',
+        '.cookie-popup',
+        '.cookie-modal',
+        '.cookie-overlay',
+        
+        // More specific patterns
+        '[data-testid*="cookie"]',
+        '[data-testid*="consent"]',
+        '[aria-label*="cookie"]',
+        '[aria-label*="consent"]',
+        '[title*="cookie"]',
+        '[title*="consent"]',
       ];
+      
       for (const selector of candidates) {
-        const el = document.querySelector(selector) as HTMLElement | null;
-        if (el) return el;
+        try {
+          const elements = document.querySelectorAll(selector);
+          for (const el of elements) {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl && isElementVisible(htmlEl)) {
+              return htmlEl;
+            }
+          }
+        } catch {
+          // Skip invalid selectors
+          continue;
+        }
       }
+      
+      // Fallback: look for any fixed positioned element at the bottom
+      const allElements = document.querySelectorAll('*');
+      for (const el of allElements) {
+        const htmlEl = el as HTMLElement;
+        if (htmlEl && htmlEl.style) {
+          const style = window.getComputedStyle(htmlEl);
+          const rect = htmlEl.getBoundingClientRect();
+          
+          // Check if element is fixed positioned and at bottom
+          if (style.position === 'fixed' && 
+              rect.bottom > window.innerHeight - 50 && 
+              rect.height > 20 && 
+              isElementVisible(htmlEl)) {
+            return htmlEl;
+          }
+        }
+      }
+      
       return null;
     };
 
@@ -95,20 +162,39 @@ function BottomNavContent() {
         const banner = selectCookieBannerElement();
         if (banner && isElementVisible(banner)) {
           const rect = banner.getBoundingClientRect();
-          // Check if banner is at bottom or overlapping with bottom area
-          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
-          const isOverlappingBottom = rect.bottom > window.innerHeight - 100; // 100px from bottom
           
-          if (isAtBottom || isOverlappingBottom) {
-            // Add extra padding to ensure nav is clearly above cookie banner
-            setBottomOffset(Math.ceil(rect.height) + 20);
+          // More aggressive detection for Safari and mobile
+          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 20;
+          const isOverlappingBottom = rect.bottom > window.innerHeight - 120; // Increased from 100px
+          const isNearBottom = rect.top > window.innerHeight - 200; // New check for elements near bottom
+          
+          // Debug logging (only in development)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Cookie banner detected:', {
+              height: rect.height,
+              bottom: rect.bottom,
+              windowHeight: window.innerHeight,
+              isAtBottom,
+              isOverlappingBottom,
+              isNearBottom,
+              element: banner
+            });
+          }
+          
+          if (isAtBottom || isOverlappingBottom || isNearBottom) {
+            // More generous padding for mobile Safari
+            const extraPadding = window.innerWidth <= 768 ? 40 : 20;
+            setBottomOffset(Math.ceil(rect.height) + extraPadding);
           } else {
             setBottomOffset(0);
           }
         } else {
           setBottomOffset(0);
         }
-      } catch {
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error updating bottom nav offset:', error);
+        }
         setBottomOffset(0);
       }
     };
@@ -126,14 +212,19 @@ function BottomNavContent() {
     const observer = new MutationObserver(() => updateOffset());
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
 
-    // Also poll as a fallback (Cookiebot may animate in)
-    const interval = window.setInterval(updateOffset, 1000);
+    // More frequent polling for Safari and mobile devices
+    const pollInterval = window.innerWidth <= 768 ? 500 : 1000;
+    const interval = window.setInterval(updateOffset, pollInterval);
+    
+    // Immediate check after a short delay for Safari
+    const immediateCheck = window.setTimeout(updateOffset, 100);
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleOrientationChange);
       observer.disconnect();
       window.clearInterval(interval);
+      window.clearTimeout(immediateCheck);
     };
   }, []);
   
