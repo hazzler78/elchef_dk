@@ -59,6 +59,14 @@ const FormContainer = styled.div`
   @media (min-width: 768px) {
     padding: 2rem;
   }
+  
+  /* Dölj fortsätt-knappen i fastpris-formuläret */
+  button[type="submit"], 
+  input[type="submit"],
+  .submit-button,
+  .continue-button {
+    display: none !important;
+  }
 `;
 
 export default function FastprisAvtalPage() {
