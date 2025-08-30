@@ -62,6 +62,7 @@ const FormContainer = styled.div`
 `;
 
 export default function RorligtAvtalPage() {
+  // Formulärsida för rörligt elavtal - optimerad för mobil
   return (
     <PageContainer>
       <Content>
