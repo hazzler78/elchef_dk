@@ -142,6 +142,12 @@ export default function AdminHeroAnalytics() {
   const bCtr = bImp ? fmtPct((bClk / bImp) * 100) : '—';
   const winner: 'A'|'B'|null = aImp && bImp ? ((aClk / aImp) >= (bClk / bImp) ? 'A' : 'B') : null;
 
+  // Variant descriptions
+  const variantNames = {
+    'A': 'Elchef gör det enkelt att välja rätt elavtal!',
+    'B': 'Välj rätt elavtal – utan krångel'
+  };
+
   function quickRange(days: number) {
     const to = new Date();
     const from = new Date(Date.now() - days*24*60*60*1000);
@@ -214,20 +220,26 @@ export default function AdminHeroAnalytics() {
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>CTR</th>
             </tr>
           </thead>
-          <tbody>
-            <tr style={{ background: winner === 'A' ? 'rgba(16,185,129,0.08)' : undefined }}>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>A</td>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aImp}</td>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk}</td>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aCtr}</td>
-            </tr>
-            <tr style={{ background: winner === 'B' ? 'rgba(16,185,129,0.08)' : undefined }}>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>B</td>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bImp}</td>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bClk}</td>
-              <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bCtr}</td>
-            </tr>
-          </tbody>
+                     <tbody>
+             <tr style={{ background: winner === 'A' ? 'rgba(16,185,129,0.08)' : undefined }}>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                 <div><strong>A</strong></div>
+                 <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['A']}</div>
+               </td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aImp}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aCtr}</td>
+             </tr>
+             <tr style={{ background: winner === 'B' ? 'rgba(16,185,129,0.08)' : undefined }}>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                 <div><strong>B</strong></div>
+                 <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['B']}</div>
+               </td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bImp}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bClk}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bCtr}</td>
+             </tr>
+           </tbody>
         </table>
       </div>
 
@@ -239,24 +251,29 @@ export default function AdminHeroAnalytics() {
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
           <thead>
             <tr style={{ background: '#f3f4f6' }}>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Datum</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Variant</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Session</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Referer</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Agent</th>
+              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Antal</th>
+              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Procent</th>
             </tr>
           </thead>
-          <tbody>
-            {impFiltered.map((l) => (
-              <tr key={l.id}>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{new Date(l.created_at).toLocaleString()}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{l.variant}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>{l.session_id}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={l.referer || ''}>{l.referer}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>{l.user_agent}</td>
-              </tr>
-            ))}
-          </tbody>
+                     <tbody>
+             <tr>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                 <div><strong>A</strong></div>
+                 <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['A']}</div>
+               </td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aImp}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aImp + bImp > 0 ? `${((aImp / (aImp + bImp)) * 100).toFixed(1)}%` : '—'}</td>
+             </tr>
+             <tr>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                 <div><strong>B</strong></div>
+                 <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['B']}</div>
+               </td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bImp}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aImp + bImp > 0 ? `${((bImp / (aImp + bImp)) * 100).toFixed(1)}%` : '—'}</td>
+             </tr>
+           </tbody>
         </table>
       )}
 
@@ -268,28 +285,29 @@ export default function AdminHeroAnalytics() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#f3f4f6' }}>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Datum</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Variant</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Session</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Target</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Href</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Referer</th>
-              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Agent</th>
+              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Antal</th>
+              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Procent</th>
             </tr>
           </thead>
-          <tbody>
-            {clkFiltered.map((l) => (
-              <tr key={l.id}>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{new Date(l.created_at).toLocaleString()}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{l.variant}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>{l.session_id}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{l.target}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={l.href || ''}>{l.href}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={l.referer || ''}>{l.referer}</td>
-                <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>{l.user_agent}</td>
-              </tr>
-            ))}
-          </tbody>
+                     <tbody>
+             <tr>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                 <div><strong>A</strong></div>
+                 <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['A']}</div>
+               </td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk + bClk > 0 ? `${((aClk / (aClk + bClk)) * 100).toFixed(1)}%` : '—'}</td>
+             </tr>
+             <tr>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                 <div><strong>B</strong></div>
+                 <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['B']}</div>
+               </td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{bClk}</td>
+               <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk + bClk > 0 ? `${((bClk / (aClk + bClk)) * 100).toFixed(1)}%` : '—'}</td>
+             </tr>
+           </tbody>
         </table>
       )}
     </div>

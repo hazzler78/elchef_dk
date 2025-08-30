@@ -170,17 +170,17 @@ export default function AdminInvoices() {
               <>
                 <tr key={log.id}>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{new Date(log.created_at).toLocaleString()}</td>
-                  <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>{log.session_id}</td>
-                  <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>
+                  <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 200, wordBreak: 'break-all' }} title={log.session_id || ''}>{log.session_id}</td>
+                  <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 150 }} title={`${log.file_mime} ${typeof log.file_size === 'number' ? `• ${(log.file_size/1024).toFixed(0)} KB` : ''}`}>
                     {log.file_mime} {typeof log.file_size === 'number' ? `• ${(log.file_size/1024).toFixed(0)} KB` : ''}
                   </td>
-                  <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12 }}>{log.user_agent}</td>
+                  <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 300, wordBreak: 'break-all' }} title={log.user_agent || ''}>{log.user_agent}</td>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
                     {log.is_correct === true && '✅'}
                     {log.is_correct === false && '❌'}
                     {log.is_correct === null && '—'}
                   </td>
-                  <td style={{ padding: 8, border: '1px solid #e5e7eb', maxWidth: 240, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={log.correction_notes || ''}>
+                  <td style={{ padding: 8, border: '1px solid #e5e7eb', maxWidth: 300, wordBreak: 'break-word' }} title={log.correction_notes || ''}>
                     {log.correction_notes || ''}
                   </td>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>

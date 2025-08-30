@@ -103,6 +103,12 @@ export default function AdminBannerClicks() {
     (l.variant || '').toLowerCase().includes(search.toLowerCase())
   );
 
+  // Variant descriptions for AI calculator banner
+  const variantNames = {
+    'A': 'Nyhet! Låt vår AI analysera din elräkning och räkna ut din möjliga besparing.',
+    'B': 'Testa vår AI – ladda upp din faktura och se hur mycket du kan spara.'
+  };
+
   return (
     <div style={{ maxWidth: 1200, margin: '2rem auto', padding: 24 }}>
       <h1>Bannerklick (Admin)</h1>
@@ -168,7 +174,10 @@ export default function AdminBannerClicks() {
                 const ctr = vImps > 0 ? `${((vClicks / vImps) * 100).toFixed(1)}%` : '—';
                 return (
                   <tr key={v}>
-                    <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{v}</td>
+                    <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                      <div><strong>{v}</strong></div>
+                      <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames[v as keyof typeof variantNames]}</div>
+                    </td>
                     <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{vImps}</td>
                     <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{vClicks}</td>
                     <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{ctr}</td>
