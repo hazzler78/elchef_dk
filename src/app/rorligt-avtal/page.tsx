@@ -10,7 +10,11 @@ const PageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
+  
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
 `;
 
 const Content = styled.div`
@@ -20,18 +24,27 @@ const Content = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: white;
   margin-bottom: 1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const Subtitle = styled.p`
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  
+  @media (min-width: 768px) {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+  }
 `;
 
 const FormContainer = styled.div`
@@ -39,9 +52,13 @@ const FormContainer = styled.div`
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
 `;
 
 export default function RorligtAvtalPage() {
