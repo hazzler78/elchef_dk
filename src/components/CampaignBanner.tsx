@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
-const Banner = styled.div`
+const Banner = styled.div<{ $isCollapsed: boolean }>`
   width: 100%;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: var(--glass-blur);
@@ -11,8 +11,8 @@ const Banner = styled.div`
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
   text-align: center;
-  padding: 1.2rem 0.5rem;
-  font-size: 1.15rem;
+  padding: ${props => props.$isCollapsed ? '0.8rem 0.5rem' : '1.2rem 0.5rem'};
+  font-size: ${props => props.$isCollapsed ? '1rem' : '1.15rem'};
   font-weight: 700;
   letter-spacing: 0.02em;
   box-shadow: var(--glass-shadow-light);
@@ -21,6 +21,7 @@ const Banner = styled.div`
   top: 0;
   left: 0;
   right: 0;
+  transition: all 0.3s ease-in-out;
 `;
 
 const Highlight = styled.span`
@@ -46,8 +47,17 @@ const StyledLink = styled.a`
   }
 `;
 
+const CollapsedText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+`;
+
 export default function CampaignBanner() {
   const [variant, setVariant] = useState<'A' | 'B'>('A');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     try {
@@ -71,6 +81,15 @@ export default function CampaignBanner() {
     } catch {
       // no-op
     }
+  }, []);
+
+  // Auto-collapse after 4 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsCollapsed(true);
+    }, 4000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Impression tracking: 1 per 24h per variant
@@ -98,6 +117,21 @@ export default function CampaignBanner() {
 
   const href = `/jamfor-elpriser?utm_source=site&utm_medium=banner&utm_campaign=ai-savings&utm_content=variant${variant}`;
 
+  const handleClick = () => {
+    try {
+      const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
+      const payload = JSON.stringify({ variant, href, sessionId });
+      const url = '/api/events/banner-click';
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(url, blob);
+      } else {
+        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
+      }
+    } catch {}
+  };
+
+  // Expanded text variants
   const textA = (
     <>
       Nyhet! Låt vår <Highlight>AI</Highlight> analysera din elräkning och räkna ut din möjliga besparing.
@@ -110,28 +144,36 @@ export default function CampaignBanner() {
     </>
   );
 
+  // Collapsed text variants
+  const collapsedTextA = (
+    <CollapsedText>
+      <Image src="/favicon.svg" alt="Elchef" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+      <Highlight>AI</Highlight>analys av din elräkning
+      <StyledLink href={href} onClick={handleClick}>Prova nu</StyledLink>
+    </CollapsedText>
+  );
+
+  const collapsedTextB = (
+    <CollapsedText>
+      <Image src="/favicon.svg" alt="Elchef" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+      Ladda upp faktura med <Highlight>AI</Highlight>
+      <StyledLink href={href} onClick={handleClick}>Prova nu</StyledLink>
+    </CollapsedText>
+  );
+
   return (
-    <Banner>
-      <Image src="/favicon.svg" alt="Elchef" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-      {variant === 'A' ? textA : textB}
-      <br />
-      Ladda upp din faktura och få en tydlig genomgång –
-      <StyledLink
-        href={href}
-        onClick={() => {
-          try {
-            const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-            const payload = JSON.stringify({ variant, href, sessionId });
-            const url = '/api/events/banner-click';
-            if (navigator.sendBeacon) {
-              const blob = new Blob([payload], { type: 'application/json' });
-              navigator.sendBeacon(url, blob);
-            } else {
-              fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
-            }
-          } catch {}
-        }}
-      >Prova nu</StyledLink>
+    <Banner $isCollapsed={isCollapsed}>
+      {isCollapsed ? (
+        variant === 'A' ? collapsedTextA : collapsedTextB
+      ) : (
+        <>
+          <Image src="/favicon.svg" alt="Elchef" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+          {variant === 'A' ? textA : textB}
+          <br />
+          Ladda upp din faktura och få en tydlig genomgång –
+          <StyledLink href={href} onClick={handleClick}>Prova nu</StyledLink>
+        </>
+      )}
     </Banner>
   );
 } 
