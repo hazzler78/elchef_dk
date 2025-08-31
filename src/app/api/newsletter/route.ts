@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 const MAILERLITE_API_KEY = process.env.MAILERLITE_API_KEY;
 const MAILERLITE_GROUP_ID = process.env.MAILERLITE_GROUP_ID;
@@ -8,6 +9,26 @@ const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id
 export async function POST(request: NextRequest) {
   try {
     const { email, ref, campaignCode }: { email: string; ref?: string; campaignCode?: string } = await request.json();
+
+    // Store newsletter subscription in contacts table for analytics
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      try {
+        await supabase.from('contacts').insert([{
+          email: email,
+          ref: ref || 'newsletter',
+          campaign_code: campaignCode || null,
+          subscribe_newsletter: true,
+          form_type: 'newsletter',
+          created_at: new Date().toISOString(),
+        }]);
+      } catch (e) {
+        console.warn('Failed to store newsletter subscription for analytics:', e);
+      }
+    }
 
     // Validera e-postadress
     if (!email || !email.includes('@')) {

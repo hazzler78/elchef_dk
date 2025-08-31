@@ -13,6 +13,13 @@ const adminSections = [
     color: "bg-blue-500"
   },
   {
+    title: "Form Analytics",
+    description: "Statistik över alla formulärinlämningar på hemsidan",
+    href: "/admin/form-analytics",
+    icon: "📝",
+    color: "bg-indigo-500"
+  },
+  {
     title: "Banner Analytics", 
     description: "Analysera A/B-test för AI-kalkylator banner",
     href: "/admin/banner-clicks",

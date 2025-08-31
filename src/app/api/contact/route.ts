@@ -126,7 +126,7 @@ async function addToMailerlite(email: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const data: ContactFormData & { ref?: string; campaignCode?: string } = await request.json();
+    const data: ContactFormData & { ref?: string; campaignCode?: string; formType?: string } = await request.json();
 
     // Validera e-postadress
     if (!data.email || !data.email.includes('@')) {
@@ -136,10 +136,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Determine form type based on data or ref
+    let formType = data.formType || 'contact';
+    if (data.ref?.includes('chat')) formType = 'chat';
+    if (data.ref?.includes('newsletter')) formType = 'newsletter';
+    if (data.ref?.includes('affiliate')) formType = 'affiliate';
+    if (data.ref?.includes('partner')) formType = 'partner';
+
     // Skapa pending-reminder och skicka Telegram-notifiering (med ID)
     await sendTelegramNotification(data);
 
-    // Optional: store contact with ref if available
+    // Store contact with enhanced tracking
     try {
       if (supabase) {
         await supabase.from('contacts').insert([{
@@ -150,6 +157,7 @@ export async function POST(request: NextRequest) {
           ref: data.ref || null,
           campaign_code: data.campaignCode || null,
           subscribe_newsletter: !!data.subscribeNewsletter,
+          form_type: formType,
           created_at: new Date().toISOString(),
         }]);
       }

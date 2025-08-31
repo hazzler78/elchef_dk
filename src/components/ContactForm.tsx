@@ -240,7 +240,8 @@ export default function ContactForm() {
           ...formData,
           subscribeNewsletter: formData.newsletter,
           ref,
-          campaignCode
+          campaignCode,
+          formType: 'contact'
         }),
       });
 

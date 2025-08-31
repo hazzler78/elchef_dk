@@ -46,6 +46,19 @@ export async function POST(request: NextRequest) {
         campaign_code: campaignCode || null,
         created_at: new Date().toISOString(),
       }]);
+
+      // Also store in contacts table for analytics
+      await supabase.from('contacts').insert([{
+        name: contactName,
+        email,
+        phone: phone || null,
+        message: `Företag: ${companyName}\nOrg.nr: ${orgNumber || '-'}\nWebb: ${website || '-'}\nTyp: ${partnershipType || '-'}\nVolym: ${estVolume || '-'}\nAnteckningar: ${notes || '-'}`,
+        ref: ref || 'partner',
+        campaign_code: campaignCode || null,
+        subscribe_newsletter: false,
+        form_type: 'partner',
+        created_at: new Date().toISOString(),
+      }]);
     }
 
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_IDS.length > 0) {

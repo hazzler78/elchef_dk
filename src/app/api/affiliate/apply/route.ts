@@ -30,6 +30,18 @@ export async function POST(request: NextRequest) {
         campaign_code: campaignCode || null,
         created_at: new Date().toISOString(),
       }]);
+
+      // Also store in contacts table for analytics
+      await supabase.from('contacts').insert([{
+        name,
+        email,
+        message: `Kanal: ${channel || '-'}\nFöljare: ${followers || '-'}\nAnteckningar: ${notes || '-'}`,
+        ref: ref || 'affiliate',
+        campaign_code: campaignCode || null,
+        subscribe_newsletter: false,
+        form_type: 'affiliate',
+        created_at: new Date().toISOString(),
+      }]);
     }
 
     // Notify via Telegram

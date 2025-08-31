@@ -155,7 +155,12 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, ref, campaignCode }),
+        body: JSON.stringify({ 
+          ...formData, 
+          ref: ref || 'chat', 
+          campaignCode,
+          formType: 'chat'
+        }),
       });
 
       const result = await response.json();
