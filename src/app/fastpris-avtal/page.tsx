@@ -130,7 +130,7 @@ export default function FastprisAvtalPage() {
           <SupplierText>Du kommer att få ett fastprisavtal från Svealands Elbolag</SupplierText>
         </SupplierInfo>
         
-        <AffiliateButton onClick={() => window.open('https://svealand.se', '_blank')}>
+        <AffiliateButton onClick={() => window.open('https://www.svealandselbolag.se/elchef-fastpris/', '_blank')}>
           🚀 Gå direkt till Svealand Elbolag
         </AffiliateButton>
 
