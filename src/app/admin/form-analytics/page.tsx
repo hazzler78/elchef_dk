@@ -161,13 +161,13 @@ export default function AdminFormAnalytics() {
   useEffect(() => {
     if (!authed) return;
     fetchData();
-  }, [authed]);
+  }, [authed, fetchData]);
 
   useEffect(() => {
     if (contacts.length > 0) {
       calculateAnalytics(contacts);
     }
-  }, [dateFrom, dateTo]);
+  }, [dateFrom, dateTo, calculateAnalytics, contacts]);
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
