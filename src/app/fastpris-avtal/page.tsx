@@ -72,6 +72,30 @@ const SupplierText = styled.p`
   font-weight: 500;
 `;
 
+const AffiliateButton = styled.button`
+  background-color: #4CAF50; /* A green color for the button */
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #388E3C; /* Darker green on hover */
+  }
+`;
+
+const FormNote = styled.p`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+`;
+
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -106,6 +130,14 @@ export default function FastprisAvtalPage() {
           <SupplierText>Du kommer att få ett fastprisavtal från Svealands Elbolag</SupplierText>
         </SupplierInfo>
         
+        <AffiliateButton onClick={() => window.open('https://svealand.se', '_blank')}>
+          🚀 Gå direkt till Svealand Elbolag
+        </AffiliateButton>
+
+        <FormNote>
+          ⚠️ Formuläret är temporärt otillgängligt. Klicka på knappen ovan för att gå direkt till Svealand Elbolag.
+        </FormNote>
+
         <FormContainer>
           <SalesysForm
             containerId="fastpris-avtal-container"
