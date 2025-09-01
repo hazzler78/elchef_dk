@@ -108,6 +108,43 @@ const PromoText = styled.p`
   line-height: 1.5;
 `;
 
+const AffiliateButton = styled.button`
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  margin: 2rem auto;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  display: block;
+  width: 100%;
+  max-width: 400px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const FormNote = styled.div`
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #856404;
+  font-size: 0.9rem;
+`;
+
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -145,6 +182,39 @@ export default function RorligtAvtalPage() {
           </PromoText>
         </Promo>
         
+        <div style={{
+          background: 'linear-gradient(135deg, #10b981, #059669)',
+          color: 'white',
+          padding: '1rem 2rem',
+          borderRadius: '12px',
+          fontSize: '1.1rem',
+          fontWeight: '600',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          border: 'none',
+          margin: '2rem auto',
+          boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)',
+          display: 'block',
+          width: '100%',
+          maxWidth: '400px',
+          textAlign: 'center'
+        }} onClick={() => window.open('https://www.cheapenergy.se/elchef-rorligt/', '_blank')}>
+          🚀 Gå direkt till Cheap Energy
+        </div>
+
+        <div style={{
+          background: 'rgba(255, 193, 7, 0.1)',
+          border: '1px solid rgba(255, 193, 7, 0.3)',
+          borderRadius: '8px',
+          padding: '1rem',
+          marginBottom: '1rem',
+          textAlign: 'center',
+          color: '#856404',
+          fontSize: '0.9rem'
+        }}>
+          ⚠️ Formuläret är temporärt otillgängligt. Klicka på knappen ovan för att gå direkt till Cheap Energy.
+        </div>
+
         <FormContainer>
           <SalesysForm
             containerId="rorligt-avtal-container"
