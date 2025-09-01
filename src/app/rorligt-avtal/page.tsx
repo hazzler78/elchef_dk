@@ -130,6 +130,11 @@ export default function RorligtAvtalPage() {
         <Title>Byt elavtal</Title>
         <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
         
+        <SupplierInfo>
+          <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
+          <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
+        </SupplierInfo>
+        
         <Promo>
           <PromoTitle>Kampanjpris i 12 månader</PromoTitle>
           <PromoBullets>
@@ -139,11 +144,6 @@ export default function RorligtAvtalPage() {
             Byt elavtal idag och ta del av ett riktigt förmånligt erbjudande. Du betalar endast för den el du använder – inga dolda avgifter, inga påslag. Gäller i 12 månader från startdatumet.
           </PromoText>
         </Promo>
-
-        <SupplierInfo>
-          <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
-          <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
-        </SupplierInfo>
         
         <FormContainer>
           <SalesysForm
