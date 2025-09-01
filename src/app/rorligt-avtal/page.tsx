@@ -72,6 +72,42 @@ const SupplierText = styled.p`
   font-weight: 500;
 `;
 
+const Promo = styled.div`
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  text-align: left;
+`;
+
+const PromoTitle = styled.h2`
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #111827;
+`;
+
+const PromoBullets = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+`;
+
+const PromoBullet = styled.li`
+  margin: 0.2rem 0;
+  color: #111827;
+  font-weight: 600;
+`;
+
+const PromoText = styled.p`
+  margin: 0;
+  color: #374151;
+  line-height: 1.5;
+`;
+
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -94,6 +130,16 @@ export default function RorligtAvtalPage() {
         <Title>Byt elavtal</Title>
         <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
         
+        <Promo>
+          <PromoTitle>Kampanjpris i 12 månader</PromoTitle>
+          <PromoBullets>
+            <PromoBullet>0 kr i månadsavgift – 0 öre i påslag</PromoBullet>
+          </PromoBullets>
+          <PromoText>
+            Byt elavtal idag och ta del av ett riktigt förmånligt erbjudande. Du betalar endast för den el du använder – inga dolda avgifter, inga påslag. Gäller i 12 månader från startdatumet.
+          </PromoText>
+        </Promo>
+
         <SupplierInfo>
           <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
           <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
