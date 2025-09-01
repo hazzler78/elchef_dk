@@ -47,6 +47,31 @@ const Subtitle = styled.p`
   }
 `;
 
+const SupplierInfo = styled.div`
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+`;
+
+const SupplierLogo = styled.img`
+  height: 60px;
+  margin-bottom: 1rem;
+  object-fit: contain;
+`;
+
+const SupplierText = styled.p`
+  color: #333;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+`;
+
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -68,6 +93,11 @@ export default function RorligtAvtalPage() {
       <Content>
         <Title>Byt elavtal</Title>
         <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
+        
+        <SupplierInfo>
+          <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
+          <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
+        </SupplierInfo>
         
         <FormContainer>
           <SalesysForm
