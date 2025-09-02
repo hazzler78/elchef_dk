@@ -46,6 +46,13 @@ const adminSections = [
     href: "/admin/chatlog",
     icon: "💬",
     color: "bg-pink-500"
+  },
+  {
+    title: "AI Kunskapsbas",
+    description: "Hantera AI-chattens kunskap, kampanjer och leverantörer",
+    href: "/admin/knowledge",
+    icon: "🧠",
+    color: "bg-emerald-500"
   }
 ];
 
@@ -248,6 +255,8 @@ export default function AdminPage() {
           <li>Exportera data till CSV för djupare analys</li>
           <li>Jämför CTR (Click-Through Rate) mellan varianter</li>
           <li>Spåra användarbeteende över tid</li>
+          <li>Uppdatera AI-chattens kunskap via kunskapsbasen</li>
+          <li>Hantera aktiva kampanjer och leverantörer</li>
         </ul>
       </div>
     </div>
