@@ -1,10 +1,66 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { 
+  findRelevantKnowledge, 
+  getActiveCampaigns, 
+  getProvidersByType, 
+  generateKnowledgeSummary 
+} from '@/lib/knowledgeBase';
 
 const XAI_API_KEY = process.env.XAI_API_KEY;
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Funktion för att hämta dynamisk kunskap från Supabase
+async function getDynamicKnowledge(userQuestion: string) {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    return null;
+  }
+
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Hämta relevant kunskap baserat på användarens fråga
+    const { data: knowledgeData } = await supabase
+      .from('ai_knowledge')
+      .select('*')
+      .eq('active', true)
+      .order('lastUpdated', { ascending: false });
+
+    // Hämta aktiva kampanjer
+    const { data: campaignData } = await supabase
+      .from('ai_campaigns')
+      .select('*')
+      .eq('active', true)
+      .gte('validTo', new Date().toISOString().split('T')[0])
+      .order('validTo', { ascending: true });
+
+    // Hämta aktiva leverantörer
+    const { data: providerData } = await supabase
+      .from('ai_providers')
+      .select('*')
+      .eq('active', true)
+      .order('name', { ascending: true });
+
+    // Hitta relevant kunskap baserat på användarens fråga
+    const relevantKnowledge = knowledgeData?.filter(item => 
+      item.keywords.some((keyword: string) => 
+        userQuestion.toLowerCase().includes(keyword.toLowerCase())
+      )
+    ) || [];
+
+    return {
+      knowledge: relevantKnowledge,
+      campaigns: campaignData || [],
+      providers: providerData || []
+    };
+  } catch (error) {
+    console.error('Error fetching dynamic knowledge:', error);
+    return null;
+  }
+}
 
 const SYSTEM_PROMPT = `Du är "Grodan", en AI-assistent som hjälper svenska konsumenter med elavtal och elmarknaden – särskilt via elchef.se.
 
@@ -156,9 +212,61 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'XAI_API_KEY saknas i miljövariabler' }, { status: 500 });
     }
     
-    // Lägg till system-prompt först
+    // Hämta användarens senaste meddelande för att hitta relevant kunskap
+    const userMessage = messages[messages.length - 1]?.content || '';
+    
+    // Hämta dynamisk kunskap från Supabase
+    const dynamicKnowledge = await getDynamicKnowledge(userMessage);
+    
+    // Debug: logga vad som hämtades
+    if (dynamicKnowledge) {
+      console.log('Dynamisk kunskap hämtad:', {
+        knowledgeCount: dynamicKnowledge.knowledge.length,
+        campaignCount: dynamicKnowledge.campaigns.length,
+        providerCount: dynamicKnowledge.providers.length
+      });
+    }
+    
+    // Skapa en dynamisk systemprompt som inkluderar aktuell information
+    let enhancedSystemPrompt = SYSTEM_PROMPT;
+    
+    if (dynamicKnowledge) {
+      // Lägg till relevant kunskap
+      if (dynamicKnowledge.knowledge.length > 0) {
+        enhancedSystemPrompt += '\n\n## RELEVANT KUNSKAP BASERAT PÅ DIN FRÅGA\n';
+        dynamicKnowledge.knowledge.forEach(item => {
+          enhancedSystemPrompt += `**${item.question}**\n${item.answer}\n\n`;
+        });
+      }
+      
+      // Lägg till aktuella kampanjer
+      if (dynamicKnowledge.campaigns.length > 0) {
+        enhancedSystemPrompt += '\n## AKTUELLA KAMPANJER\n';
+        dynamicKnowledge.campaigns.forEach(campaign => {
+          enhancedSystemPrompt += `• **${campaign.title}**: ${campaign.description}\n`;
+        });
+        enhancedSystemPrompt += '\n';
+      }
+      
+      // Lägg till aktuella leverantörer
+      if (dynamicKnowledge.providers.length > 0) {
+        enhancedSystemPrompt += '\n## AKTUELLA LEVERANTÖRER\n';
+        dynamicKnowledge.providers.forEach(provider => {
+          enhancedSystemPrompt += `• **${provider.name}** (${provider.type}): ${provider.features.join(', ')}\n`;
+        });
+        enhancedSystemPrompt += '\n';
+      }
+    }
+    
+    // Om ingen dynamisk kunskap finns, använd statisk fallback
+    if (!dynamicKnowledge) {
+      enhancedSystemPrompt += '\n\n## AKTUELL INFORMATION (från statisk kunskapsbas)\n';
+      enhancedSystemPrompt += generateKnowledgeSummary();
+    }
+    
+    // Lägg till system-prompt först (nu med dynamisk kunskap från Supabase)
     const fullMessages = [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: enhancedSystemPrompt },
       ...messages,
     ];
     
