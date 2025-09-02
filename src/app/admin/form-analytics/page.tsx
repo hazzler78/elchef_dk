@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -47,29 +47,7 @@ export default function AdminFormAnalytics() {
     }
   }, []);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('contacts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching contacts:', error);
-        return;
-      }
-
-      setContacts(data as ContactSubmission[]);
-      calculateAnalytics(data as ContactSubmission[]);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const calculateAnalytics = (data: ContactSubmission[]) => {
+  const calculateAnalytics = useCallback((data: ContactSubmission[]) => {
     const filtered = data.filter(contact => {
       if (!dateFrom && !dateTo) return true;
       const contactDate = new Date(contact.created_at).getTime();
@@ -156,7 +134,29 @@ export default function AdminFormAnalytics() {
       newsletterSubscriptions,
       conversionRate
     });
-  };
+  }, [dateFrom, dateTo]);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('contacts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching contacts:', error);
+        return;
+      }
+
+      setContacts(data as ContactSubmission[]);
+      calculateAnalytics(data as ContactSubmission[]);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [calculateAnalytics]);
 
   useEffect(() => {
     if (!authed) return;
