@@ -19,6 +19,18 @@ interface KnowledgeItem {
   active: boolean;
 }
 
+// Typ för databassvar (snake_case för timestamp)
+type DbKnowledgeRow = {
+  id?: number;
+  category: string;
+  question: string;
+  answer: string;
+  keywords: string[];
+  last_updated?: string;
+  lastUpdated?: string;
+  active: boolean;
+};
+
 interface CampaignInfo {
   id?: number;
   title: string;
@@ -77,7 +89,17 @@ export default function AdminKnowledge() {
         .order('category', { ascending: true });
       
       if (knowledgeData) {
-        setKnowledgeItems(knowledgeData);
+        // Map DB snake_case to UI camelCase for timestamps
+        const mapped: KnowledgeItem[] = (knowledgeData as DbKnowledgeRow[]).map((k) => ({
+          id: k.id,
+          category: k.category,
+          question: k.question,
+          answer: k.answer,
+          keywords: k.keywords,
+          active: k.active,
+          lastUpdated: k.lastUpdated || k.last_updated || new Date().toISOString(),
+        }));
+        setKnowledgeItems(mapped);
       }
 
       // Fetch campaigns
@@ -122,8 +144,13 @@ export default function AdminKnowledge() {
         const { error } = await supabase
           .from('ai_knowledge')
           .update({
-            ...item,
-            lastUpdated: new Date().toISOString()
+            category: item.category,
+            question: item.question,
+            answer: item.answer,
+            keywords: item.keywords,
+            active: item.active,
+            // Use snake_case column in DB
+            last_updated: new Date().toISOString(),
           })
           .eq('id', item.id);
         
@@ -133,8 +160,13 @@ export default function AdminKnowledge() {
         const { error } = await supabase
           .from('ai_knowledge')
           .insert([{
-            ...item,
-            lastUpdated: new Date().toISOString()
+            category: item.category,
+            question: item.question,
+            answer: item.answer,
+            keywords: item.keywords,
+            active: item.active,
+            // Use snake_case column in DB
+            last_updated: new Date().toISOString(),
           }]);
         
         if (error) throw error;

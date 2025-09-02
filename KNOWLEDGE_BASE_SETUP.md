@@ -16,7 +16,8 @@ CREATE TABLE ai_knowledge (
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
   keywords TEXT[] NOT NULL DEFAULT '{}',
-  lastUpdated TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  -- Använd snake_case i databasen för konsekvens
+  last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
