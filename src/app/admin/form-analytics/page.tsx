@@ -138,7 +138,12 @@ export default function AdminFormAnalytics() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(''); // Rensa tidigare fel
     try {
+      console.log('Försöker hämta data från Supabase...');
+      console.log('Supabase URL:', supabaseUrl);
+      console.log('Supabase Key:', supabaseKey ? 'Finns' : 'Saknas');
+      
       const { data, error } = await supabase
         .from('contacts')
         .select('*')
@@ -146,13 +151,16 @@ export default function AdminFormAnalytics() {
 
       if (error) {
         console.error('Error fetching contacts:', error);
+        setError(`Databasfel: ${error.message}`);
         return;
       }
 
+      console.log('Data hämtad:', data?.length || 0, 'kontakter');
       setContacts(data as ContactSubmission[]);
       calculateAnalytics(data as ContactSubmission[]);
     } catch (err) {
       console.error('Error fetching data:', err);
+      setError(`Ett fel uppstod: ${err instanceof Error ? err.message : 'Okänt fel'}`);
     } finally {
       setLoading(false);
     }
@@ -190,6 +198,33 @@ export default function AdminFormAnalytics() {
   function clearFilters() {
     setDateFrom("");
     setDateTo("");
+  }
+
+  async function testDatabaseConnection() {
+    try {
+      console.log('Testar Supabase-anslutning...');
+      console.log('URL:', supabaseUrl);
+      console.log('Key:', supabaseKey ? 'Finns' : 'Saknas');
+      
+      // Testa att hämta en enkel fråga
+      const { error } = await supabase
+        .from('contacts')
+        .select('count')
+        .limit(1);
+      
+      if (error) {
+        console.error('Databasfel vid test:', error);
+        setError(`Databasfel vid test: ${error.message}`);
+      } else {
+        console.log('Databasanslutning fungerar!');
+        setError('');
+        // Hämta data igen
+        fetchData();
+      }
+    } catch (err) {
+      console.error('Fel vid test av databasanslutning:', err);
+      setError(`Fel vid test: ${err instanceof Error ? err.message : 'Okänt fel'}`);
+    }
   }
 
   function exportCsv() {
@@ -257,9 +292,36 @@ export default function AdminFormAnalytics() {
         <button onClick={() => quickRange(30)} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>30d</button>
         <button onClick={clearFilters} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Rensa</button>
         <button onClick={exportCsv} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Export CSV</button>
+        <button onClick={testDatabaseConnection} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1', background: '#f3f4f6' }}>Testa anslutning</button>
       </div>
 
       {loading && <p>Laddar...</p>}
+
+      {error && (
+        <div style={{ 
+          background: '#fef2f2', 
+          border: '1px solid #fecaca', 
+          color: '#dc2626', 
+          padding: '16px', 
+          borderRadius: '8px', 
+          marginBottom: '16px' 
+        }}>
+          <strong>Fel:</strong> {error}
+        </div>
+      )}
+
+      {!loading && !error && contacts.length === 0 && (
+        <div style={{ 
+          background: '#f0f9ff', 
+          border: '1px solid #bae6fd', 
+          color: '#0369a1', 
+          padding: '16px', 
+          borderRadius: '8px', 
+          marginBottom: '16px' 
+        }}>
+          <strong>Ingen data:</strong> Det finns inga kontakter i databasen ännu.
+        </div>
+      )}
 
       {!loading && analytics && (
         <>
