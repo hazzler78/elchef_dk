@@ -101,7 +101,7 @@ export default function FastprisAvtalPage() {
     <PageContainer>
       <Content>
         <Title>Byt elavtal</Title>
-        <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
+        <Subtitle>Fyll i formuläret nedan för att se priser innan du påbörjar bytet.</Subtitle>
         
         <SupplierInfo>
           <SupplierLogo src="/svealand-logo.png" alt="Svealand Energi" />
