@@ -129,12 +129,52 @@ const FormContainer = styled.div`
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
   const [showSupplier, setShowSupplier] = React.useState(false);
-  function handleFormReady() {
+  function handleFormReady(formInstance?: any) {
     try {
       const container = document.getElementById('rorligt-avtal-container');
       if (!container) return;
       const inputSelector = 'input[placeholder*="personnummer" i], input[name*="personnummer" i], input[id*="personnummer" i]';
       const pnInput = container.querySelector<HTMLInputElement>(inputSelector);
+      // If input not directly accessible (likely iframe), fallback to polling formInstance.getFields
+      if (!pnInput && formInstance && typeof formInstance.getFields === 'function') {
+        let fired = false;
+        const startedAt = Date.now();
+        const intervalId = window.setInterval(() => {
+          if (fired) return;
+          try {
+            const fields = formInstance.getFields();
+            if (Array.isArray(fields)) {
+              const pnField = fields.find((f: any) => {
+                const key = `${f?.name || ''} ${f?.label || ''}`.toLowerCase();
+                return key.includes('personnummer');
+              });
+              const raw = pnField?.value || '';
+              const digits = String(raw).replace(/\D/g, '');
+              if (digits.length >= 10) {
+                const masked = digits.length >= 4 ? `${'*'.repeat(Math.max(0, digits.length - 4))}${digits.slice(-4)}` : '*'.repeat(digits.length);
+                fetch('/api/events/form-field', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    form: 'rorligt-avtal',
+                    field: 'personnummer',
+                    action: 'filled',
+                    valueMasked: masked,
+                  }),
+                  keepalive: true,
+                }).catch(() => {});
+                setShowSupplier(true);
+                fired = true;
+                window.clearInterval(intervalId);
+              }
+            }
+          } catch {}
+          if (Date.now() - startedAt > 2 * 60 * 1000) {
+            window.clearInterval(intervalId);
+          }
+        }, 500);
+        return;
+      }
       if (!pnInput) return;
 
       const fireOnce = () => {
