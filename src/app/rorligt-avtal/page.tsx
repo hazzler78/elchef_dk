@@ -136,7 +136,7 @@ export default function RorligtAvtalPage() {
       const findPnInput = () => {
         // Direct attributes
         const attrSelector = 'input[placeholder*="personnummer" i], input[name*="personnummer" i], input[id*="personnummer" i], input[aria-label*="personnummer" i]';
-        let inp = container.querySelector<HTMLInputElement>(attrSelector);
+        const inp = container.querySelector<HTMLInputElement>(attrSelector);
         if (inp) return inp;
         // Via label[for]
         const labels = Array.from(container.querySelectorAll('label')) as HTMLLabelElement[];
