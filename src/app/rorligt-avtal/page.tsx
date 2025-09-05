@@ -128,6 +128,7 @@ const FormContainer = styled.div`
 
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
+  const [showSupplier, setShowSupplier] = React.useState(false);
   function handleFormReady() {
     try {
       const container = document.getElementById('rorligt-avtal-container');
@@ -152,6 +153,7 @@ export default function RorligtAvtalPage() {
               }),
               keepalive: true,
             }).catch(() => {});
+            setShowSupplier(true);
             pnInput.removeEventListener('blur', fireOnce);
             pnInput.removeEventListener('change', fireOnce);
             pnInput.removeEventListener('input', onInput);
@@ -175,10 +177,12 @@ export default function RorligtAvtalPage() {
         <Title>Byt elavtal</Title>
         <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
         
-        <SupplierInfo>
-          <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
-          <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
-        </SupplierInfo>
+        {showSupplier && (
+          <SupplierInfo>
+            <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
+            <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
+          </SupplierInfo>
+        )}
         
         <Promo>
           <PromoTitle>Kampanjpris i 12 månader</PromoTitle>
