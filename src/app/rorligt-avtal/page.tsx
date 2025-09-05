@@ -234,6 +234,50 @@ export default function RorligtAvtalPage() {
       pnInput.addEventListener('input', onInput);
       // Immediate check if redan ifyllt
       onInput();
+      
+      // Fallback: time-based reveal when iframe focused long enough
+      try {
+        const thresholdMs = 3000; // 3s focus implies likely ifyllt
+        let focusTimeout: number | null = null;
+        let revealed = false;
+        const attachIframeFocusWatcher = () => {
+          const iframe = container.querySelector('iframe');
+          if (!iframe || revealed) return false;
+          const onFocus = () => {
+            if (revealed) return;
+            if (focusTimeout) window.clearTimeout(focusTimeout);
+            focusTimeout = window.setTimeout(() => {
+              if (revealed) return;
+              setShowSupplier(true);
+              revealed = true;
+              if (focusTimeout) window.clearTimeout(focusTimeout);
+              iframe.removeEventListener('focus', onFocus as EventListener);
+              iframe.removeEventListener('blur', onBlur as EventListener);
+            }, thresholdMs);
+          };
+          const onBlur = () => {
+            if (focusTimeout) {
+              window.clearTimeout(focusTimeout);
+              focusTimeout = null;
+            }
+          };
+          iframe.addEventListener('focus', onFocus as EventListener);
+          iframe.addEventListener('blur', onBlur as EventListener);
+          // If already focused when we attach
+          if (document.activeElement === iframe) onFocus();
+          return true;
+        };
+        // Poll for the iframe to appear
+        const start = Date.now();
+        const pollId = window.setInterval(() => {
+          if (attachIframeFocusWatcher()) {
+            window.clearInterval(pollId);
+          }
+          if (Date.now() - start > 2 * 60 * 1000) {
+            window.clearInterval(pollId);
+          }
+        }, 500);
+      } catch {}
     } catch {}
   }
   return (
