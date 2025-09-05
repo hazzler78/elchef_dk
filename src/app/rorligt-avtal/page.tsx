@@ -72,17 +72,6 @@ const SupplierText = styled.p`
   font-weight: 500;
 `;
 
-const Promo = styled.div`
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  text-align: left;
-`;
 
 const PromoTitle = styled.h2`
   margin: 0 0 0.5rem 0;
