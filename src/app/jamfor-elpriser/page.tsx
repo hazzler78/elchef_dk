@@ -72,6 +72,7 @@ export default function JamforElpriser() {
   const [logId, setLogId] = useState<number | null>(null);
   const sessionIdRef = useRef<string>('');
   const [consentToStore, setConsentToStore] = useState(false);
+  const [analysisConfirmed, setAnalysisConfirmed] = useState(false);
 
   useEffect(() => {
     try {
@@ -173,6 +174,7 @@ export default function JamforElpriser() {
     setGptResult(null);
     setError('');
     setShowFullAnalysis(false);
+    setAnalysisConfirmed(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
@@ -780,31 +782,28 @@ export default function JamforElpriser() {
                 AI:n visar ett estimat baserat på din faktura. För mer exakt analys och personlig hjälp, kontakta oss så hjälper vi dig hitta det bästa elavtalet för din situation.
               </p>
               {logId && (
-                <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <GlassButton 
-                    variant="primary" 
-                    size="md"
-                    background="rgba(0,201,107,0.85)"
-                    disableScrollEffect
-                    disableHoverEffect
-                    onClick={() => sendFeedback(true)}
-                  >
-                    Analysen stämmer
-                  </GlassButton>
-                  <GlassButton 
-                    variant="secondary" 
-                    size="md"
-                    background="rgba(239,68,68,0.7)"
-                    disableScrollEffect
-                    disableHoverEffect
-                    onClick={() => {
-                      const notes = window.prompt('Vad stämmer inte? Beskriv gärna kort.');
-                      if (notes !== null) sendFeedback(false, notes || undefined);
+                <label style={{ 
+                  marginTop: '1rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem', 
+                  color: 'rgba(255, 255, 255, 0.95)'
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={analysisConfirmed}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setAnalysisConfirmed(checked);
+                      if (checked) {
+                        // Skicka positiv feedback endast när man markerar rutan
+                        sendFeedback(true);
+                      }
                     }}
-                  >
-                    Analysen stämmer inte
-                  </GlassButton>
-                </div>
+                    style={{ width: 18, height: 18 }}
+                  />
+                  <span style={{ userSelect: 'none' }}>Analysen stämmer</span>
+                </label>
               )}
             </div>
 

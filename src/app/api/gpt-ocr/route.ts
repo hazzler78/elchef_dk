@@ -67,17 +67,18 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - **EXTRA VIKTIGT**: Leta särskilt efter "Rörliga kostnader" eller "Rörlig kostnad" - detta är en vanlig extra avgift som ofta missas
 - **SÄRSKILT**: Leta efter "Elcertifikat" eller "Elcertifikatavgift" och inkludera den enligt beräkningsregeln ovan
 - Gå igenom VARJE rad på fakturan och kontrollera om den innehåller någon av dessa avgifter
+- **KRITISKT**: Om du ser "Fast avgift" under sektionen Elhandel/Elhandelsföretag – inkludera den alltid i onödiga kostnader. Om "Fast avgift" även förekommer under Elnät/Elöverföring ska den EXKLUDERAS. Inkludera endast den under Elhandel.
 
 **ORDLISTA - ALLA DETTA RÄKNAS SOM ONÖDIGA KOSTNADER:**
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
 - Rörliga kostnader, Rörlig kostnad, Rörliga avgifter, Rörlig avgift
-- Fast påslag, Fasta påslag, Fast avgift, Fasta avgifter, Påslag
+- Fast påslag, Fasta påslag, Fast avgift, Fast avg., Fasta avgifter, Fast kostnad, Fasta kostnader, Påslag
 - Fast påslag spot, Fast påslag elcertifikat
 - Årsavgift, Årsavg., Årskostnad, Elavtal årsavgift, Årsavgift elavtal (endast om under Elhandel/leverantörsavgift; exkludera om under Elnät/Elöverföring)
 - Förvaltat Portfölj Utfall, Förvaltat portfölj utfall
 - Bra miljöval, Bra miljöval (Licens Elklart AB)
 - Trygg, Trygghetspaket
-- Basavgift, Grundavgift, Administrationsavgift
+- Basavgift, Grundavgift, Administrationsavgift, Abonnemangsavgift, Grundpris
 - Fakturaavgift, Kundavgift, Elhandelsavgift, Handelsavgift
 - Indexavgift, Elcertifikatavgift, Elcertifikat
 - Grön elavgift, Ursprungsgarantiavgift, Ursprung
