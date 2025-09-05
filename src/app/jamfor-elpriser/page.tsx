@@ -73,6 +73,8 @@ export default function JamforElpriser() {
   const sessionIdRef = useRef<string>('');
   const [consentToStore, setConsentToStore] = useState(false);
   const [analysisConfirmed, setAnalysisConfirmed] = useState(false);
+  const [parsedItems, setParsedItems] = useState<{ name: string; amountKr: number; section?: string; included?: boolean }[] | null>(null);
+  const [parsedTotal, setParsedTotal] = useState<number | null>(null);
 
   useEffect(() => {
     try {
@@ -134,9 +136,9 @@ export default function JamforElpriser() {
       }
       
       // Rensa bort matematiska formler från svaret
-      let cleanedResult = data.gptAnswer;
+      let cleanedResult: string = data.gptAnswer;
       
-      // Ta bort formler som ( \frac{...}{...} = ... )
+      // Ta bort formler som ( \\frac{...}{...} = ... )
       cleanedResult = cleanedResult.replace(/\( \\frac\{[^}]+\}\{[^}]+\} = [^)]+ \)/g, '');
       
       // Ta bort formler som ( ... + ... = ... )
@@ -147,7 +149,32 @@ export default function JamforElpriser() {
       
       // Ta bort tomma rader som kan ha skapats
       cleanedResult = cleanedResult.replace(/\n\s*\n\s*\n/g, '\n\n');
-      
+
+      // Extrahera sista JSON‑block (maskinläsbar summering) och ta bort det från visningen
+      try {
+        const codeBlockRegex = /```json\s*([\s\S]*?)\s*```/gi;
+        let match: RegExpExecArray | null = null;
+        let lastJson: string | null = null;
+        while ((match = codeBlockRegex.exec(cleanedResult)) !== null) {
+          lastJson = match[1];
+        }
+        if (lastJson) {
+          const parsed = JSON.parse(lastJson);
+          const items = Array.isArray(parsed.items) ? parsed.items : [];
+          const total = typeof parsed.totalIncludedKr === 'number' ? parsed.totalIncludedKr : null;
+          setParsedItems(items);
+          setParsedTotal(total);
+          cleanedResult = cleanedResult.replace(/```json[\s\S]*?```/gi, '').trim();
+        } else {
+          setParsedItems(null);
+          setParsedTotal(null);
+        }
+      } catch {
+        setParsedItems(null);
+        setParsedTotal(null);
+        cleanedResult = cleanedResult.replace(/```json[\s\S]*?```/gi, '').trim();
+      }
+ 
       setGptResult(cleanedResult);
     } catch (error) {
       console.error('Error analyzing invoice:', error);
@@ -175,6 +202,8 @@ export default function JamforElpriser() {
     setError('');
     setShowFullAnalysis(false);
     setAnalysisConfirmed(false);
+    setParsedItems(null);
+    setParsedTotal(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
@@ -410,6 +439,29 @@ export default function JamforElpriser() {
             padding: '2rem', 
             boxShadow: 'var(--glass-shadow-medium)' 
           }}>
+            {parsedItems && parsedItems.length > 0 && (
+              <div style={{ 
+                marginBottom: '1.5rem', 
+                background: 'rgba(0, 201, 107, 0.08)', 
+                border: '1px solid rgba(0, 201, 107, 0.25)', 
+                borderRadius: 'var(--radius-md)',
+                padding: '1rem'
+              }}>
+                <h4 style={{ color: 'white', marginTop: 0, marginBottom: '0.5rem', fontSize: '1.2rem' }}>Maskinverifierad summering</h4>
+                <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'rgba(255,255,255,0.95)' }}>
+                  {parsedItems.filter(it => it?.included !== false).map((it, idx) => (
+                    <li key={idx}>
+                      <strong style={{ color: 'white' }}>{it.name}</strong>: {new Intl.NumberFormat('sv-SE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(it.amountKr)} kr{it.section ? ` (${it.section})` : ''}
+                    </li>
+                  ))}
+                </ul>
+                {typeof parsedTotal === 'number' && (
+                  <div style={{ marginTop: '0.75rem', fontWeight: 600, color: 'white' }}>
+                    Total besparing: {new Intl.NumberFormat('sv-SE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parsedTotal)} kr
+                  </div>
+                )}
+              </div>
+            )}
                           <h3 style={{ 
                 fontSize: '1.75rem', 
                 fontWeight: 600, 

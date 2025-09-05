@@ -53,6 +53,15 @@ export async function POST(req: NextRequest) {
 - **EXTRA VIKTIGT**: Leta särskilt efter ord som innehåller "år", "månad", "fast", "rörlig", "påslag" - även om de står i samma rad som andra ord
 - **VIKTIGT**: Om du ser en avgift som har både ett årsbelopp (t.ex. "384 kr") och ett månadsbelopp (t.ex. "32,61 kr"), inkludera månadsbeloppet i beräkningen
 - **BERÄKNINGSREGEL FÖR Elcertifikat**: Om "Elcertifikat" eller "Elcertifikatavgift" anges i öre/kWh, räkna ut kostnaden som (öre per kWh × total kWh) / 100 = kr, avrunda till två decimaler. Denna post ska ALLTID ingå i onödiga kostnader.
+ - **BERÄKNINGSREGEL FÖR Elcertifikat**: Om "Elcertifikat" eller "Elcertifikatavgift" anges i öre/kWh, räkna ut kostnaden som (öre per kWh × total kWh) / 100 = kr, avrunda till två decimaler. Denna post ska ALLTID ingå i onödiga kostnader.
+
+**REGLER FÖR INKLUDERING/EXKLUDERING (MÅSTE FÖLJAS):**
+- Räkna ENDAST poster där ett belopp i kr (eller omräknat från öre/kWh) finns i samma tabellrad eller tydligt kopplat till raden.
+- Inkludera ENDAST poster under sektionen Elhandel/Elhandelsföretag.
+- EXKLUDERA alltid poster under Elnät/Elöverföring (även om de matchar ordlistan).
+- "Fast avgift" ska inkluderas om den ligger under Elhandel, och exkluderas om den ligger under Elnät.
+- "Profilpris" ska räknas ENDAST under Elhandel och ENDAST om ett kr‑belopp framgår.
+- Hoppa över rubriker, diagram och etiketter utan belopp (t.ex. ursprungsmärkning utan kr‑belopp).
 
 **SYFTE:**
 Analysera fakturan, leta efter poster som avviker från normala eller nödvändiga avgifter, och förklara dessa poster i ett enkelt och begripligt språk. Ge tips på hur användaren kan undvika dessa kostnader i framtiden eller byta till ett mer förmånligt elavtal.
@@ -97,6 +106,18 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 1. Lista ALLA hittade onödiga kostnader med belopp
 2. Summera ALLA belopp till en total besparing
 3. Visa den totala besparingen tydligt i slutet
+
+**MASKINLÄSBAR UTDATA (OBLIGATORISK):**
+Efter din textanalys, inkludera ALLTID en JSON‑struktur i ett kodblock med \`\`\`json ... \`\`\` enligt exakt format:
+\`\`\`json
+{
+  "items": [
+    { "name": "Fast avgift", "amountKr": 39.20, "section": "Elhandel", "included": true }
+  ],
+  "totalIncludedKr": 39.20
+}
+\`\`\`
+Regler: Sätt "included" till true endast om posten ska räknas enligt reglerna ovan. Skriv belopp i kronor med punkt som decimaltecken.
 
 **VIKTIGT - SLUTTEXT:**
 Efter summeringen, avsluta alltid med denna exakta text:
@@ -146,7 +167,35 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
     }
 
     const gptData = await openaiRes.json();
-    const gptAnswer = gptData.choices?.[0]?.message?.content || '';
+    let gptAnswer = gptData.choices?.[0]?.message?.content || '';
+
+    // Server-side verifiering: försök extrahera JSON-blocket och räkna om totalen
+    interface ParsedItem {
+      name?: string;
+      amountKr?: number;
+      section?: string;
+      included?: boolean;
+    }
+    try {
+      const jsonBlockMatch = gptAnswer.match(/```json\s*([\s\S]*?)\s*```/i);
+      if (jsonBlockMatch && jsonBlockMatch[1]) {
+        const parsed = JSON.parse(jsonBlockMatch[1]) as { items?: ParsedItem[]; totalIncludedKr?: number };
+        const items: ParsedItem[] = Array.isArray(parsed.items) ? parsed.items : [];
+        const includedSum = items
+          .filter((it) => Boolean(it) && it.included === true && typeof it.amountKr === 'number')
+          .reduce((acc: number, it) => acc + (it.amountKr as number), 0);
+
+        // Om totalIncludedKr saknas eller avviker mer än 0.01, lägg till en korrigerad summering i slutet
+        const reported = typeof parsed.totalIncludedKr === 'number' ? parsed.totalIncludedKr : null;
+        if (reported === null || Math.abs(includedSum - reported) > 0.01) {
+          const corrected = {
+            items,
+            totalIncludedKr: Math.round(includedSum * 100) / 100
+          };
+          gptAnswer += `\n\nKorrigerad summering (server-beräknad):\n\n\`\`\`json\n${JSON.stringify(corrected, null, 2)}\n\`\`\``.replace(/`/g, '`');
+        }
+      }
+    } catch {}
 
     // Försök logga analysen i Supabase
     let logId: number | null = null;
