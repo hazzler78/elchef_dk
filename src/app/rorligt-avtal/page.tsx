@@ -278,6 +278,29 @@ export default function RorligtAvtalPage() {
           }
         }, 500);
       } catch {}
+
+      // Additional robust fallback: reveal after meaningful typing in any input
+      try {
+        let revealTimer: number | null = null;
+        let revealedByTyping = false;
+        const onAnyInput = () => {
+          if (revealedByTyping) return;
+          const anyFilled = Array.from(container.querySelectorAll('input'))
+            .some((el) => ((el as HTMLInputElement).value || '').trim().replace(/\s+/g, '').length >= 6);
+          if (!anyFilled) return;
+          if (revealTimer) window.clearTimeout(revealTimer);
+          revealTimer = window.setTimeout(() => {
+            if (!revealedByTyping) {
+              setShowSupplier(true);
+              revealedByTyping = true;
+              container.removeEventListener('input', onAnyInput as EventListener);
+              container.removeEventListener('change', onAnyInput as EventListener);
+            }
+          }, 2000);
+        };
+        container.addEventListener('input', onAnyInput as EventListener);
+        container.addEventListener('change', onAnyInput as EventListener);
+      } catch {}
     } catch {}
   }
   return (
