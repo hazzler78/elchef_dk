@@ -128,11 +128,7 @@ const FormContainer = styled.div`
 
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
-  const [showSupplier, setShowSupplier] = React.useState(false);
-  React.useEffect(() => {
-    const timerId = window.setTimeout(() => setShowSupplier(true), 7000);
-    return () => window.clearTimeout(timerId);
-  }, []);
+  const [showSupplier, setShowSupplier] = React.useState(true);
   function handleFormReady(formInstance?: SalesysFormInstance) {
     try {
       const container = document.getElementById('rorligt-avtal-container');
@@ -238,80 +234,7 @@ export default function RorligtAvtalPage() {
       pnInput.addEventListener('input', onInput);
       // Immediate check if redan ifyllt
       onInput();
-      
-      // Fallback: time-based reveal when iframe focused long enough
-      try {
-        const thresholdMs = 3000; // 3s focus implies likely ifyllt
-        let focusTimeout: number | null = null;
-        let revealed = false;
-        const attachIframeFocusWatcher = () => {
-          const iframe = container.querySelector('iframe');
-          if (!iframe || revealed) return false;
-          const onFocus = () => {
-            if (revealed) return;
-            if (focusTimeout) window.clearTimeout(focusTimeout);
-            focusTimeout = window.setTimeout(() => {
-              if (revealed) return;
-              setShowSupplier(true);
-              revealed = true;
-              if (focusTimeout) window.clearTimeout(focusTimeout);
-              iframe.removeEventListener('focus', onFocus as EventListener);
-              iframe.removeEventListener('blur', onBlur as EventListener);
-            }, thresholdMs);
-          };
-          const onBlur = () => {
-            if (focusTimeout) {
-              window.clearTimeout(focusTimeout);
-              focusTimeout = null;
-            }
-          };
-          iframe.addEventListener('focus', onFocus as EventListener);
-          iframe.addEventListener('blur', onBlur as EventListener);
-          // If already focused when we attach
-          if (document.activeElement === iframe) onFocus();
-          return true;
-        };
-        // Poll for the iframe to appear
-        const start = Date.now();
-        const pollId = window.setInterval(() => {
-          if (attachIframeFocusWatcher()) {
-            window.clearInterval(pollId);
-          }
-          if (Date.now() - start > 2 * 60 * 1000) {
-            window.clearInterval(pollId);
-          }
-        }, 500);
-      } catch {}
-
-      // Additional robust fallback: reveal after meaningful typing in any input
-      try {
-        let revealTimer: number | null = null;
-        let revealedByTyping = false;
-        const onAnyInput = () => {
-          if (revealedByTyping) return;
-          const anyFilled = Array.from(container.querySelectorAll('input'))
-            .some((el) => ((el as HTMLInputElement).value || '').trim().replace(/\s+/g, '').length >= 6);
-          if (!anyFilled) return;
-          if (revealTimer) window.clearTimeout(revealTimer);
-          revealTimer = window.setTimeout(() => {
-            if (!revealedByTyping) {
-              setShowSupplier(true);
-              revealedByTyping = true;
-              container.removeEventListener('input', onAnyInput as EventListener);
-              container.removeEventListener('change', onAnyInput as EventListener);
-            }
-          }, 2000);
-        };
-        container.addEventListener('input', onAnyInput as EventListener);
-        container.addEventListener('change', onAnyInput as EventListener);
-      } catch {}
-
-      // Final fallback: reveal after a fixed delay post form ready
-      try {
-        window.setTimeout(() => {
-          setShowSupplier((prev) => prev || true);
-        }, 5000);
-      } catch {}
+      // Inga fallbacks - rutan visas direkt
     } catch {}
   }
   return (
@@ -319,23 +242,20 @@ export default function RorligtAvtalPage() {
       <Content>
         <Title>Byt elavtal</Title>
         <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
-        
+
         {showSupplier && (
           <SupplierInfo>
             <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
             <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
+            <PromoTitle style={{ marginTop: '1rem' }}>Kampanjpris i 12 månader</PromoTitle>
+            <PromoBullets>
+              <PromoBullet>0 kr i månadsavgift – 0 öre i påslag</PromoBullet>
+            </PromoBullets>
+            <PromoText>
+              Byt elavtal idag och ta del av ett riktigt förmånligt erbjudande. Du betalar endast för den el du använder – inga dolda avgifter, inga påslag. Gäller i 12 månader från startdatumet.
+            </PromoText>
           </SupplierInfo>
         )}
-        
-        <Promo>
-          <PromoTitle>Kampanjpris i 12 månader</PromoTitle>
-          <PromoBullets>
-            <PromoBullet>0 kr i månadsavgift – 0 öre i påslag</PromoBullet>
-          </PromoBullets>
-          <PromoText>
-            Byt elavtal idag och ta del av ett riktigt förmånligt erbjudande. Du betalar endast för den el du använder – inga dolda avgifter, inga påslag. Gäller i 12 månader från startdatumet.
-          </PromoText>
-        </Promo>
         
 
         <FormContainer>
