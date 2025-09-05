@@ -301,6 +301,13 @@ export default function RorligtAvtalPage() {
         container.addEventListener('input', onAnyInput as EventListener);
         container.addEventListener('change', onAnyInput as EventListener);
       } catch {}
+
+      // Final fallback: reveal after a fixed delay post form ready
+      try {
+        window.setTimeout(() => {
+          setShowSupplier((prev) => prev || true);
+        }, 5000);
+      } catch {}
     } catch {}
   }
   return (
