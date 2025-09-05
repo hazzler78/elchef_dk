@@ -128,6 +128,47 @@ const FormContainer = styled.div`
 
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
+  function handleFormReady() {
+    try {
+      const container = document.getElementById('rorligt-avtal-container');
+      if (!container) return;
+      const inputSelector = 'input[placeholder*="personnummer" i], input[name*="personnummer" i], input[id*="personnummer" i]';
+      const pnInput = container.querySelector<HTMLInputElement>(inputSelector);
+      if (!pnInput) return;
+
+      const fireOnce = () => {
+        try {
+          const digits = (pnInput.value || '').replace(/\D/g, '');
+          if (digits.length >= 10) {
+            const masked = digits.length >= 4 ? `${'*'.repeat(Math.max(0, digits.length - 4))}${digits.slice(-4)}` : '*'.repeat(digits.length);
+            fetch('/api/events/form-field', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                form: 'rorligt-avtal',
+                field: 'personnummer',
+                action: 'filled',
+                valueMasked: masked,
+              }),
+              keepalive: true,
+            }).catch(() => {});
+            pnInput.removeEventListener('blur', fireOnce);
+            pnInput.removeEventListener('change', fireOnce);
+            pnInput.removeEventListener('input', onInput);
+          }
+        } catch {}
+      };
+
+      const onInput = () => {
+        const digits = (pnInput.value || '').replace(/\D/g, '');
+        if (digits.length >= 12) fireOnce();
+      };
+
+      pnInput.addEventListener('blur', fireOnce);
+      pnInput.addEventListener('change', fireOnce);
+      pnInput.addEventListener('input', onInput);
+    } catch {}
+  }
   return (
     <PageContainer>
       <Content>
@@ -161,6 +202,7 @@ export default function RorligtAvtalPage() {
             defaultFields={[
               { fieldId: "66e9457420ef2d3b8c66f500", value: "2000" }
             ]}
+            onReady={handleFormReady}
           />
         </FormContainer>
       </Content>
