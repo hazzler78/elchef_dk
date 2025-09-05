@@ -2,9 +2,15 @@
 
 import { useEffect, useRef } from "react";
 
-type SalesysFormInstance = {
+export type SalesysFormField = {
+  name?: string;
+  label?: string;
+  value?: string;
+};
+
+export type SalesysFormInstance = {
   setFields?: (fields: Array<{ fieldId: string; value: string }>) => void;
-  // Add other methods here if Salesys exposes them in the future
+  getFields?: () => SalesysFormField[];
 };
 
 type SalesysFormOptions = {

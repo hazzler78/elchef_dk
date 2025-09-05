@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import SalesysForm from '@/components/SalesysForm';
+import SalesysForm, { SalesysFormInstance, SalesysFormField } from '@/components/SalesysForm';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -129,7 +129,7 @@ const FormContainer = styled.div`
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
   const [showSupplier, setShowSupplier] = React.useState(false);
-  function handleFormReady(formInstance?: any) {
+  function handleFormReady(formInstance?: SalesysFormInstance) {
     try {
       const container = document.getElementById('rorligt-avtal-container');
       if (!container) return;
@@ -142,9 +142,9 @@ export default function RorligtAvtalPage() {
         const intervalId = window.setInterval(() => {
           if (fired) return;
           try {
-            const fields = formInstance.getFields();
+            const fields = formInstance.getFields?.() as SalesysFormField[] | undefined;
             if (Array.isArray(fields)) {
-              const pnField = fields.find((f: any) => {
+              const pnField = fields.find((f: SalesysFormField) => {
                 const key = `${f?.name || ''} ${f?.label || ''}`.toLowerCase();
                 return key.includes('personnummer');
               });
