@@ -68,7 +68,8 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - **SÄRSKILT**: Leta efter "Elcertifikat" eller "Elcertifikatavgift" och inkludera den enligt beräkningsregeln ovan
 - Gå igenom VARJE rad på fakturan och kontrollera om den innehåller någon av dessa avgifter
 - **KRITISKT**: Om du ser "Fast avgift" under sektionen Elhandel/Elhandelsföretag – inkludera den alltid i onödiga kostnader. Om "Fast avgift" även förekommer under Elnät/Elöverföring ska den EXKLUDERAS. Inkludera endast den under Elhandel.
- - **KRITISKT**: Om du ser "Profilpris" eller "Bundet profilpris" under Elhandel – inkludera det i onödiga kostnader. Om det står under Elnät/Elöverföring ska det EXKLUDERAS.
+ - **KRITISKT**: Om du ser "Profilpris" eller "Bundet profilpris" som en EGEN radpost under Elhandel – inkludera den i onödiga kostnader. Om det står under Elnät/Elöverföring ska det EXKLUDERAS.
+ - **VIKTIG FÖRVÄXLINGSREGEL**: Blanda inte ihop "Bundet elpris" (själva energipriset per kWh) med "Profilpris". "Bundet elpris", "Elpris", "Fastpris per kWh" och liknande är INTE onödiga kostnader och ska exkluderas. "Profilpris"/"Bundet profilpris" är däremot ett extra påslag och ska inkluderas när det ligger under Elhandel.
 
 **ORDLISTA - ALLA DETTA RÄKNAS SOM ONÖDIGA KOSTNADER:**
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
@@ -90,6 +91,7 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 
 **ORDLISTA - KOSTNADER SOM INTE RÄKNAS SOM EXTRA:**
 - Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
+- Bundet elpris, Fastpris (själva energipriset), Rörligt elpris (själva energipriset)
 - Förbrukning, kWh, Öre/kWh, Kr/kWh
 
 **VIKTIGT: Inkludera ALLA kostnader från första listan i summeringen av onödiga kostnader. Exkludera kostnader från andra listan.**
