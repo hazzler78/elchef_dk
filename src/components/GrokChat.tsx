@@ -275,7 +275,11 @@ export default function GrokChat() {
         setShowContractChoice(false);
       }
       
-
+      // Remove greeting on subsequent assistant replies
+      const assistantRepliesSoFar = newMessages.filter(m => m.role === 'assistant').length;
+      if (assistantRepliesSoFar >= 1) {
+        aiMsg = aiMsg.replace(/^\s*(Hej|Hejsan|Hallå|Tjena|God\s*(morgon|dag|kväll))[,!\.\s-]*/i, '').trimStart();
+      }
       
       setMessages([...newMessages, { role: 'assistant', content: aiMsg }]);
     } catch {
