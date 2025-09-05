@@ -133,8 +133,31 @@ export default function RorligtAvtalPage() {
     try {
       const container = document.getElementById('rorligt-avtal-container');
       if (!container) return;
-      const inputSelector = 'input[placeholder*="personnummer" i], input[name*="personnummer" i], input[id*="personnummer" i]';
-      const pnInput = container.querySelector<HTMLInputElement>(inputSelector);
+      const findPnInput = () => {
+        // Direct attributes
+        const attrSelector = 'input[placeholder*="personnummer" i], input[name*="personnummer" i], input[id*="personnummer" i], input[aria-label*="personnummer" i]';
+        let inp = container.querySelector<HTMLInputElement>(attrSelector);
+        if (inp) return inp;
+        // Via label[for]
+        const labels = Array.from(container.querySelectorAll('label')) as HTMLLabelElement[];
+        for (const lbl of labels) {
+          if ((lbl.textContent || '').toLowerCase().includes('personnummer')) {
+            const forId = lbl.getAttribute('for');
+            if (forId) {
+              const candidate = container.querySelector<HTMLInputElement>(`#${CSS.escape(forId)}`);
+              if (candidate) return candidate;
+            }
+          }
+        }
+        // Heuristic: nearest input below a text node that includes the word
+        const inputs = Array.from(container.querySelectorAll('input')) as HTMLInputElement[];
+        for (const candidate of inputs) {
+          const parentText = (candidate.parentElement?.textContent || '').toLowerCase();
+          if (parentText.includes('personnummer')) return candidate;
+        }
+        return null;
+      };
+      const pnInput = findPnInput();
       // If input not directly accessible (likely iframe), fallback to polling formInstance.getFields
       if (!pnInput && formInstance && typeof formInstance.getFields === 'function') {
         let fired = false;
@@ -203,12 +226,14 @@ export default function RorligtAvtalPage() {
 
       const onInput = () => {
         const digits = (pnInput.value || '').replace(/\D/g, '');
-        if (digits.length >= 12) fireOnce();
+        if (digits.length >= 10) fireOnce();
       };
 
       pnInput.addEventListener('blur', fireOnce);
       pnInput.addEventListener('change', fireOnce);
       pnInput.addEventListener('input', onInput);
+      // Immediate check if redan ifyllt
+      onInput();
     } catch {}
   }
   return (
