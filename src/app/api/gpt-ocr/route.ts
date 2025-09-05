@@ -85,6 +85,7 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - Miljöpaket, Serviceavgift, Leverantörsavgift
 - Dröjsmålsränta, Påminnelsesavgift, Priskollen
 - Rent vatten, Fossilfri, Fossilfri ingår
+- Profilpris
 
 **ORDLISTA - KOSTNADER SOM INTE RÄKNAS SOM EXTRA:**
 - Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
