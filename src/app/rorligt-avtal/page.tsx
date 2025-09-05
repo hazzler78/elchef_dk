@@ -129,6 +129,10 @@ const FormContainer = styled.div`
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
   const [showSupplier, setShowSupplier] = React.useState(false);
+  React.useEffect(() => {
+    const timerId = window.setTimeout(() => setShowSupplier(true), 7000);
+    return () => window.clearTimeout(timerId);
+  }, []);
   function handleFormReady(formInstance?: SalesysFormInstance) {
     try {
       const container = document.getElementById('rorligt-avtal-container');
