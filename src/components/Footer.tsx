@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import Link from 'next/link';
+import { withDefaultCtaUtm } from '@/lib/utm';
 import { FaPhone, FaEnvelope, FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 const FooterWrapper = styled.div`
@@ -123,32 +124,32 @@ export default function Footer() {
           <FooterColumn>
             <h3>Tjänster</h3>
             <ul>
-              <li><Link href="/byt-elavtal">Byt elavtal</Link></li>
-              <li><Link href="/jamfor-elpriser">Jämför elpriser</Link></li>
-              <li><Link href="/elpriskollen">Elpriskollen</Link></li>
-              <li><Link href="/energiradgivning">Energirådgivning</Link></li>
-              <li><Link href="/foretag">Företag</Link></li>
+              <li><Link href={withDefaultCtaUtm('/byt-elavtal', 'footer', 'services-byt')}>Byt elavtal</Link></li>
+              <li><Link href={withDefaultCtaUtm('/jamfor-elpriser', 'footer', 'services-jamfor')}>Jämför elpriser</Link></li>
+              <li><Link href={withDefaultCtaUtm('/elpriskollen', 'footer', 'services-elpriskollen')}>Elpriskollen</Link></li>
+              <li><Link href={withDefaultCtaUtm('/energiradgivning', 'footer', 'services-energiradgivning')}>Energirådgivning</Link></li>
+              <li><Link href={withDefaultCtaUtm('/foretag', 'footer', 'services-foretag')}>Företag</Link></li>
             </ul>
           </FooterColumn>
 
           <FooterColumn>
             <h3>Information</h3>
             <ul>
-              <li><Link href="/om-oss">Om oss</Link></li>
-              <li><Link href="/vanliga-fragor">Vanliga frågor</Link></li>
-              <li><Link href="/kontakt">Kontakt</Link></li>
-              <li><Link href="/media">Media</Link></li>
-              <li><Link href="/partner">Partner</Link></li>
+              <li><Link href={withDefaultCtaUtm('/om-oss', 'footer', 'info-om-oss')}>Om oss</Link></li>
+              <li><Link href={withDefaultCtaUtm('/vanliga-fragor', 'footer', 'info-faq')}>Vanliga frågor</Link></li>
+              <li><Link href={withDefaultCtaUtm('/kontakt', 'footer', 'info-kontakt')}>Kontakt</Link></li>
+              <li><Link href={withDefaultCtaUtm('/media', 'footer', 'info-media')}>Media</Link></li>
+              <li><Link href={withDefaultCtaUtm('/partner', 'footer', 'info-partner')}>Partner</Link></li>
             </ul>
           </FooterColumn>
 
           <FooterColumn>
             <h3>Juridiskt</h3>
             <ul>
-              <li><Link href="/villkor">Användarvillkor</Link></li>
-              <li><Link href="/integritetspolicy">Integritetspolicy</Link></li>
-              <li><Link href="/cookies">Cookies</Link></li>
-              <li><Link href="/gdpr">GDPR</Link></li>
+              <li><Link href={withDefaultCtaUtm('/villkor', 'footer', 'legal-villkor')}>Användarvillkor</Link></li>
+              <li><Link href={withDefaultCtaUtm('/integritetspolicy', 'footer', 'legal-integritet')}>Integritetspolicy</Link></li>
+              <li><Link href={withDefaultCtaUtm('/cookies', 'footer', 'legal-cookies')}>Cookies</Link></li>
+              <li><Link href={withDefaultCtaUtm('/gdpr', 'footer', 'legal-gdpr')}>GDPR</Link></li>
             </ul>
           </FooterColumn>
         </FooterGrid>

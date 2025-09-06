@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import { withDefaultCtaUtm } from '@/lib/utm';
 
 const Banner = styled.div<{ $isCollapsed: boolean }>`
   width: 100%;
@@ -115,7 +116,7 @@ export default function CampaignBanner() {
     } catch {}
   }, [variant]);
 
-  const href = `/jamfor-elpriser?utm_source=site&utm_medium=banner&utm_campaign=ai-savings&utm_content=variant${variant}`;
+  const href = withDefaultCtaUtm('/jamfor-elpriser', 'banner', `variant${variant}`, 'ai-savings');
 
   const handleClick = () => {
     try {

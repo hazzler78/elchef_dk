@@ -3,6 +3,7 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import GlassButton from './GlassButton';
+import { withDefaultCtaUtm } from '@/lib/utm';
 
 const HeroSection = styled.section`
   padding: var(--section-spacing) 0;
@@ -151,8 +152,7 @@ export default function Hero() {
   const trackHeroClick = (target: 'rorligt' | 'fastpris', href: string) => {
     try {
       const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-      const params = new URLSearchParams({ utm_source: 'site', utm_medium: 'hero', utm_campaign: 'hero-ab', utm_content: `variant${variant}` });
-      const finalUrl = href.includes('?') ? `${href}&${params.toString()}` : `${href}?${params.toString()}`;
+      const finalUrl = withDefaultCtaUtm(href, 'hero', `variant${variant}`, 'hero-ab');
       const payload = JSON.stringify({ variant, sessionId, target, href: finalUrl });
       const url = '/api/events/hero-click';
       if (navigator.sendBeacon) {

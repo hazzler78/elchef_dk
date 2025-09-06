@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
 import ContactForm from '@/components/ContactForm';
+import { withDefaultCtaUtm } from '@/lib/utm';
 
 // SVG Ikoner i glassmorphism-stil
 const AnalysisIcon = () => (
@@ -323,7 +324,7 @@ export default function JamforElpriser() {
                   style={{ marginTop: 2 }}
                 />
                 <span style={{ lineHeight: 1.4 }}>
-                  Jag godkänner att min fakturabild lagras säkert för att förbättra AI‑analysen. Jag kan begära radering när som helst. Läs mer i vår <a href="/integritetspolicy" target="_blank" rel="noreferrer" style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 600 }}>integritetspolicy</a>.
+                  Jag godkänner att min fakturabild lagras säkert för att förbättra AI‑analysen. Jag kan begära radering när som helst. Läs mer i vår <a href={withDefaultCtaUtm('/integritetspolicy', 'jamfor', 'integritetspolicy')} target="_blank" rel="noreferrer" style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 600 }}>integritetspolicy</a>.
                 </span>
               </label>
             </div>
@@ -837,7 +838,7 @@ export default function JamforElpriser() {
                     background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
-                    onClick={() => window.location.href = '/rorligt-avtal'}
+                    onClick={() => window.location.href = withDefaultCtaUtm('/rorligt-avtal', 'jamfor', 'cta-rorligt')}
                     aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
                   >
                     Rörligt avtal
@@ -863,7 +864,7 @@ export default function JamforElpriser() {
                     background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
-                    onClick={() => window.location.href = '/fastpris-avtal'}
+                    onClick={() => window.location.href = withDefaultCtaUtm('/fastpris-avtal', 'jamfor', 'cta-fastpris')}
                     aria-label="Fastpris - Fastpris med prisgaranti"
                   >
                     Fastpris

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styled from 'styled-components';
+import { withDefaultCtaUtm } from '@/lib/utm';
 
 const Nav = styled.nav<{ offset?: number }>`
   position: fixed;
@@ -235,23 +236,23 @@ function BottomNavContent() {
   
   return (
     <Nav offset={bottomOffset}>
-      <NavItem href="/" className={pathname === '/' ? 'active' : ''}>
+      <NavItem href={withDefaultCtaUtm('/', 'bottomnav', 'home')} className={pathname === '/' ? 'active' : ''}>
         Hem
         {pathname === '/' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href="/jamfor-elpriser" className={pathname === '/jamfor-elpriser' ? 'active' : ''}>
+      <NavItem href={withDefaultCtaUtm('/jamfor-elpriser', 'bottomnav', 'compare')} className={pathname === '/jamfor-elpriser' ? 'active' : ''}>
         Jämför
         {pathname === '/jamfor-elpriser' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href="/media" className={pathname === '/media' ? 'active' : ''}>
+      <NavItem href={withDefaultCtaUtm('/media', 'bottomnav', 'media')} className={pathname === '/media' ? 'active' : ''}>
         Media
         {pathname === '/media' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href="/foretag" className={pathname === '/foretag' ? 'active' : ''}>
+      <NavItem href={withDefaultCtaUtm('/foretag', 'bottomnav', 'b2b')} className={pathname === '/foretag' ? 'active' : ''}>
         Företag
         {pathname === '/foretag' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href="/om-oss" className={pathname === '/om-oss' ? 'active' : ''}>
+      <NavItem href={withDefaultCtaUtm('/om-oss', 'bottomnav', 'about')} className={pathname === '/om-oss' ? 'active' : ''}>
         Om oss
         {pathname === '/om-oss' && <ActiveIndicator />}
       </NavItem>
