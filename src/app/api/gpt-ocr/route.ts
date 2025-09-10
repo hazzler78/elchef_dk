@@ -381,20 +381,26 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 } else {
                   console.log('Påslag not found in result, but exists in JSON - adding it to result');
                   
-                  // Add Påslag to the result if it's missing
-                  const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
-                  if (currentTotal) {
-                    const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(correctPaaslagAmount)).toFixed(2);
-                    
-                    gptAnswer = gptAnswer.replace(
-                      /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
-                      `### Onödiga kostnader:$1Påslag: ${correctPaaslagAmount} kr\n### Total besparing:`
-                    );
-                    gptAnswer = gptAnswer.replace(
-                      /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                      `spara totalt ${newTotal}`
-                    );
-                    console.log('Added missing Påslag to result and updated total');
+                  // Check if Påslag is already in the result (to avoid duplicates)
+                  const paaslagAlreadyExists = gptAnswer.includes('Påslag:');
+                  if (!paaslagAlreadyExists) {
+                    // Add Påslag to the result if it's missing
+                    const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
+                    if (currentTotal) {
+                      const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(correctPaaslagAmount)).toFixed(2);
+                      
+                      gptAnswer = gptAnswer.replace(
+                        /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
+                        `### Onödiga kostnader:$1Påslag: ${correctPaaslagAmount} kr\n### Total besparing:`
+                      );
+                      gptAnswer = gptAnswer.replace(
+                        /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
+                        `spara totalt ${newTotal}`
+                      );
+                      console.log('Added missing Påslag to result and updated total');
+                    }
+                  } else {
+                    console.log('Påslag already exists in result, skipping addition');
                   }
                 }
               } else {
