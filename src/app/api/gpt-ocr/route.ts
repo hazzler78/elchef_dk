@@ -29,9 +29,11 @@ export async function POST(req: NextRequest) {
     const imageSha256 = createHash('sha256').update(buffer).digest('hex');
 
     // Step 1: Extract structured data from invoice
-    const extractionPrompt = `Du är en expert på svenska elräkningar. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
+    const extractionPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
 
-**VIKTIGT - SPRÅK:**
+**VIKTIGT - FLEXIBILITET:**
+- Du MÅSTE hantera fakturor från ALLA elleverantörer (E.ON, Fortum, Vattenfall, EDF, Göteborg Energi, Stockholm Exergi, m.fl.)
+- Olika leverantörer har olika fakturaformat och terminologi - anpassa dig efter varje faktura
 - Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
 - Använd endast svenska ord och termer
 
@@ -75,7 +77,7 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
   }
 ]
 
-**VIKTIGT:**
+**VIKTIGT - FLEXIBELT FÖR ALLA LEVERANTÖRER:**
 - Inkludera ALLA kostnader, även de som inte är "onödiga"
 - **KRITISKT**: Läs ALLTID beloppet från "Totalt"-kolumnen eller den sista kolumnen med belopp
 - Läs INTE från "öre/kWh" eller "kr/mån" kolumner - bara slutbeloppet
@@ -84,6 +86,15 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 - Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
 - **EXTRA VIKTIGT**: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
 - **BELOPPSLÄSNING**: För "Påslag" - läs det exakta beloppet som står i "Totalt"-kolumnen, inte från beräkningen
+
+**LEVERANTÖRSSPECIFIKA TERMER:**
+- E.ON: "Elavtal årsavgift", "Fast påslag", "Rörliga kostnader"
+- Fortum: "Månadsavgift", "Påslag", "Elcertifikat"
+- Vattenfall: "Fast avgift", "Påslag", "Årsavgift"
+- EDF: "Abonnemangsavgift", "Påslag", "Serviceavgift"
+- Göteborg Energi: "Månadsavgift", "Påslag", "Elcertifikat"
+- Stockholm Exergi: "Fast avgift", "Påslag", "Årsavgift"
+- Andra leverantörer: Anpassa efter fakturans terminologi
 
 **JSON-FORMAT KRITISKT:**
 - Använd endast dubbla citattecken för strängar
@@ -100,7 +111,7 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
-    const calculationPrompt = `Du är en expert på svenska elräkningar. Baserat på den extraherade JSON-datan, identifiera onödiga kostnader och beräkna total besparing.
+    const calculationPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Baserat på den extraherade JSON-datan, identifiera onödiga kostnader och beräkna total besparing.
 
 **ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):**
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
@@ -119,6 +130,15 @@ Svara ENDAST med JSON-arrayen, inget annat text.`;
 - Dröjsmålsränta, Påminnelsesavgift, Priskollen
 - Rent vatten, Fossilfri, Fossilfri ingår
 - Profilpris, Bundet profilpris
+
+**LEVERANTÖRSSPECIFIKA ONÖDIGA KOSTNADER:**
+- E.ON: "Elavtal årsavgift", "Fast påslag", "Rörliga kostnader"
+- Fortum: "Månadsavgift", "Påslag", "Elcertifikat"
+- Vattenfall: "Fast avgift", "Påslag", "Årsavgift"
+- EDF: "Abonnemangsavgift", "Påslag", "Serviceavgift"
+- Göteborg Energi: "Månadsavgift", "Påslag", "Elcertifikat"
+- Stockholm Exergi: "Fast avgift", "Påslag", "Årsavgift"
+- Andra leverantörer: Identifiera liknande avgifter och påslag
 
 **EXKLUDERA (räknas INTE som onödiga):**
 - Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
