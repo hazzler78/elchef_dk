@@ -279,7 +279,7 @@ export default function AdminBannerClicks() {
               return acc;
             }, {});
             const entries = Object.entries(rows).map(([domain, c]) => {
-              const imp = impRows[domain] || { imps: 0, a: 0, b: 0 } as any;
+              const imp: { imps: number; a: number; b: number } = impRows[domain] || { imps: 0, a: 0, b: 0 };
               const ctr = imp.imps > 0 ? (c.clicks / imp.imps) : 0;
               return { domain, clicks: c.clicks, impressions: imp.imps, ctr };
             }).sort((a, b) => b.clicks - a.clicks).slice(0, 12);
@@ -320,7 +320,7 @@ export default function AdminBannerClicks() {
               acc[key].clicks += 1;
               return acc;
             }, {});
-            const impByHref = filteredImpressions.reduce<Record<string, number>>((acc, i) => {
+            const impByHref = filteredImpressions.reduce<Record<string, number>>((acc) => {
               const key = '(banner)';
               acc[key] = (acc[key] || 0) + 1;
               return acc;
