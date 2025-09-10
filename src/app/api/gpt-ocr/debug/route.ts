@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHash } from 'crypto';
 
 export const runtime = 'nodejs';
 
@@ -91,7 +90,15 @@ Svara ENDAST med JSON-arrayen, inget annat.`;
       }),
     });
 
-    let debugInfo = {
+    const debugInfo: {
+      step1_success: boolean;
+      extractedJson: string;
+      parsedData: unknown;
+      parseError: string | null;
+      elavtalFound: boolean;
+      elavtalAmount: number | null;
+      regexMatch: RegExpMatchArray | null;
+    } = {
       step1_success: false,
       extractedJson: '',
       parsedData: null,
@@ -113,7 +120,7 @@ Svara ENDAST med JSON-arrayen, inget annat.`;
         debugInfo.parsedData = parsedData;
         
         // Check if Elavtal årsavgift is in the data
-        const elavtalItem = parsedData.find((item: any) => 
+        const elavtalItem = parsedData.find((item: { name?: string }) => 
           item.name && item.name.toLowerCase().includes('elavtal årsavgift')
         );
         
