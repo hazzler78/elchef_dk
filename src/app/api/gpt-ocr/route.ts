@@ -367,8 +367,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 const finalPaaslagAmount = correctPaaslagAmount;
                 console.log('Using Påslag amount from JSON:', finalPaaslagAmount);
                 
-                // Check if Påslag is in the result (line item may be formatted with or without numbering)
-                const paaslagInResult = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
+                // Check if Påslag is in the result (line item may be formatted with or without numbering, with or without bold formatting)
+                const paaslagInResult = gptAnswer.match(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/);
                 console.log('Påslag in result regex match:', paaslagInResult);
                 
                 if (paaslagInResult) {
@@ -379,7 +379,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     console.log('Påslag amount is incorrect, correcting...');
                     
                     // Update the Påslag amount in the result
-                    gptAnswer = gptAnswer.replace(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/, `$1Påslag: ${finalPaaslagAmount} kr`);
+                    gptAnswer = gptAnswer.replace(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/, `$1Påslag: ${finalPaaslagAmount} kr`);
                     
                     // Recalculate total
                     const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
@@ -399,9 +399,9 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                   console.log('Påslag not found in result, but exists in JSON - checking if it should be added');
                   
                   // Check if Påslag is already in the result (to avoid duplicates)
-                  const paaslagCount = (gptAnswer.match(/Påslag:/g) || []).length;
+                  const paaslagCount = (gptAnswer.match(/\*?\*?Påslag\*?\*?:/g) || []).length;
                   console.log('Påslag count in result:', paaslagCount);
-                  const paaslagAlreadyExists = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
+                  const paaslagAlreadyExists = gptAnswer.match(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/);
                   console.log('Påslag already exists check:', paaslagAlreadyExists);
                   if (paaslagCount === 0) {
                     // Add Påslag to the result if it's missing
