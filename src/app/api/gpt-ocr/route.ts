@@ -38,9 +38,14 @@ export async function POST(req: NextRequest) {
 **EXTRAKTIONSREGEL:**
 Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Varje kostnad ska ha:
 - "name": exakt text från fakturan (t.ex. "Fast månadsavgift", "Elavtal årsavgift")
-- "amount": belopp i kr (t.ex. 31.20, 44.84)
+- "amount": belopp i kr från "Totalt"-kolumnen (t.ex. 31.20, 44.84) - INTE från "öre/kWh" eller "kr/mån"
 - "section": vilken sektion den tillhör ("Elnät" eller "Elhandel")
 - "description": kort beskrivning av vad kostnaden är
+
+**KRITISKT FÖR BELOPP:**
+- Läs ALLTID från den sista kolumnen som innehåller slutbeloppet i kr
+- Ignorera kolumner med "öre/kWh", "kr/mån", "kr/kWh" - dessa är bara pris per enhet
+- Slutbeloppet är det som faktiskt debiteras kunden
 
 **EXEMPEL JSON:**
 [
@@ -66,7 +71,7 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
     "name": "Påslag",
     "amount": 13.80,
     "section": "Elhandel",
-    "description": "Påslag på elpriset"
+    "description": "Påslag på elpriset (läs från Totalt-kolumnen, inte från öre/kWh)"
   }
 ]
 
@@ -86,6 +91,11 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 - Inga kommentarer i JSON
 - Perfekt formatering krävs
 - Starta direkt med [ och sluta med ]
+
+**SLUTLIG PÅMINNELSE:**
+- Läs belopp från "Totalt"-kolumnen, INTE från "öre/kWh" eller "kr/mån"
+- För "Månadsavgift": läs från "Totalt"-kolumnen (t.ex. 55,20 kr), inte från "kr/mån"-kolumnen
+- För "Påslag": läs från "Totalt"-kolumnen (t.ex. 13,80 kr), inte från "öre/kWh"-kolumnen
 
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
