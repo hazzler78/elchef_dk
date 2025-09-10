@@ -275,6 +275,27 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
           if (calculationRes.ok) {
             const calculationData = await calculationRes.json();
             gptAnswer = calculationData.choices?.[0]?.message?.content || '';
+            
+            // Step 3: Post-process to catch missed "Elavtal årsavgift"
+            if (gptAnswer && !gptAnswer.includes('Elavtal årsavgift')) {
+              // Look for "Elavtal årsavgift" pattern in the extracted JSON
+              const elavtalMatch = extractedJson.match(/["']?Elavtal årsavgift["']?\s*[,\]]\s*["']?(\d+(?:[,.]\d+)?)["']?\s*kr/);
+              if (elavtalMatch) {
+                const amount = elavtalMatch[1].replace(',', '.');
+                const currentTotal = gptAnswer.match(/total[^0-9]*(\d+(?:[,.]\d+)?)/i);
+                if (currentTotal) {
+                  const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(amount)).toFixed(2);
+                  gptAnswer = gptAnswer.replace(
+                    /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
+                    `### Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\n### Total besparing:`
+                  );
+                  gptAnswer = gptAnswer.replace(
+                    /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
+                    `spara totalt ${newTotal}`
+                  );
+                }
+              }
+            }
           }
         } catch {
           console.log('Failed to parse extraction JSON, falling back to single-step approach');
