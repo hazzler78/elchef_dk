@@ -349,10 +349,11 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
             const calculationData = await calculationRes.json();
             gptAnswer = calculationData.choices?.[0]?.message?.content || '';
             
-            // Step 3: Post-process to catch missed or incorrect amounts
-            if (gptAnswer) {
-              console.log('Post-processing to verify amounts...');
-              console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
+        // Step 3: Post-process to catch missed or incorrect amounts
+        if (gptAnswer) {
+          console.log('Post-processing to verify amounts...');
+          console.log('Full GPT Answer for debugging:', gptAnswer);
+          console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
               
               // Check for "Påslag" amount correction (match any name that starts with Påslag)
               const paaslagMatch = cleanJson.match(/"name"\s*:\s*"Påslag[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
