@@ -108,6 +108,13 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 - För "Månadsavgift": läs från "Totalt"-kolumnen (t.ex. 55,20 kr), inte från "kr/mån"-kolumnen
 - För "Påslag": läs från "Totalt"-kolumnen (t.ex. 13,80 kr), inte från "öre/kWh"-kolumnen
 
+**KRITISKT EXEMPEL FÖR FORTUM-FAKTUROR:**
+På Fortum-fakturor ser du ofta:
+- "Påslag: 690 kWh at 2,00 öre/kWh, totaling 13,80 kr"
+- Läs ALLTID "13,80 kr" (slutbeloppet), INTE "2,00 öre/kWh" (enhetspriset)
+- Samma gäller för "Månadsavgift: 1 Mån at 55,20 kr/mån, totaling 55,20 kr"
+- Läs ALLTID "55,20 kr" (slutbeloppet), INTE "55,20 kr/mån" (enhetspriset)
+
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
@@ -372,7 +379,23 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     console.log('Påslag amount is already correct');
                   }
                 } else {
-                  console.log('Påslag not found in result, but exists in JSON - this should not happen');
+                  console.log('Påslag not found in result, but exists in JSON - adding it to result');
+                  
+                  // Add Påslag to the result if it's missing
+                  const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
+                  if (currentTotal) {
+                    const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(correctPaaslagAmount)).toFixed(2);
+                    
+                    gptAnswer = gptAnswer.replace(
+                      /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
+                      `### Onödiga kostnader:$1Påslag: ${correctPaaslagAmount} kr\n### Total besparing:`
+                    );
+                    gptAnswer = gptAnswer.replace(
+                      /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
+                      `spara totalt ${newTotal}`
+                    );
+                    console.log('Added missing Påslag to result and updated total');
+                  }
                 }
               } else {
                 console.log('No Påslag found in extracted JSON');
