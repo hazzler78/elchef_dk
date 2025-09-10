@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
 import ContactForm from '@/components/ContactForm';
+import ShareResults from '@/components/ShareResults';
 import { withDefaultCtaUtm } from '@/lib/utm';
 
 // SVG Ikoner i glassmorphism-stil
@@ -895,6 +896,16 @@ export default function JamforElpriser() {
                 Ladda upp ny faktura
               </GlassButton>
             </div>
+
+            {/* Share results section */}
+            <ShareResults 
+              analysisResult={gptResult}
+              logId={logId}
+              onShare={(platform) => {
+                // Spåra delning för analytics
+                console.log(`Shared on ${platform}`);
+              }}
+            />
 
             {/* Contact form section */}
             <div className="analysis-slide-in" style={{ 
