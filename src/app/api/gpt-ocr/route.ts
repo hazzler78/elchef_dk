@@ -72,7 +72,14 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 - Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
 - **EXTRA VIKTIGT**: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
 
-Svara ENDAST med JSON-arrayen, inget annat.`;
+**JSON-FORMAT KRITISKT:**
+- Använd endast dubbla citattecken för strängar
+- Inga trailing commas
+- Inga kommentarer i JSON
+- Perfekt formatering krävs
+- Starta direkt med [ och sluta med ]
+
+Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
     const calculationPrompt = `Du är en expert på svenska elräkningar. Baserat på den extraherade JSON-datan, identifiera onödiga kostnader och beräkna total besparing.
@@ -246,10 +253,21 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
       if (extractionRes.ok) {
         const extractionData = await extractionRes.json();
         const extractedJson = extractionData.choices?.[0]?.message?.content || '';
+        console.log('Raw extraction response:', extractedJson.substring(0, 200));
         
         // Try to parse the JSON
         try {
-          JSON.parse(extractedJson); // Validate JSON structure
+          // Clean the JSON response - remove any markdown formatting
+          let cleanJson = extractedJson.trim();
+          if (cleanJson.startsWith('```json')) {
+            cleanJson = cleanJson.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+          }
+          if (cleanJson.startsWith('```')) {
+            cleanJson = cleanJson.replace(/^```\s*/, '').replace(/\s*```$/, '');
+          }
+          
+          console.log('Cleaned JSON:', cleanJson.substring(0, 200));
+          JSON.parse(cleanJson); // Validate JSON structure
           
           // Step 2: Calculate unnecessary costs from structured data
           const calculationRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -264,7 +282,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 { role: 'system', content: calculationPrompt },
                 {
                   role: 'user',
-                  content: `Här är den extraherade JSON-datan från elräkningen:\n\n${extractedJson}\n\nAnalysera denna data enligt instruktionerna.`
+                  content: `Här är den extraherade JSON-datan från elräkningen:\n\n${cleanJson}\n\nAnalysera denna data enligt instruktionerna.`
                 }
               ],
               max_tokens: 1200,
@@ -279,10 +297,10 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
             // Step 3: Post-process to catch missed "Elavtal årsavgift"
             if (gptAnswer && !gptAnswer.includes('Elavtal årsavgift')) {
               console.log('Elavtal årsavgift not found in result, checking extracted JSON...');
-              console.log('Extracted JSON preview:', extractedJson.substring(0, 500));
+              console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
               
               // Look for "Elavtal årsavgift" pattern in the extracted JSON
-              const elavtalMatch = extractedJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+              const elavtalMatch = cleanJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
               console.log('Regex match result:', elavtalMatch);
               
               if (elavtalMatch) {
@@ -313,8 +331,10 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
               console.log('Elavtal årsavgift already found in result or no result');
             }
           }
-        } catch {
-          console.log('Failed to parse extraction JSON, falling back to single-step approach');
+        } catch (parseError) {
+          console.log('Failed to parse extraction JSON:', parseError);
+          console.log('Raw response that failed to parse:', extractedJson);
+          console.log('Falling back to single-step approach');
         }
       }
     } catch {
