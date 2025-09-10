@@ -61,16 +61,24 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
     "amount": 217.13,
     "section": "Elnät",
     "description": "Nätavgift för elöverföring"
+  },
+  {
+    "name": "Påslag",
+    "amount": 13.80,
+    "section": "Elhandel",
+    "description": "Påslag på elpriset"
   }
 ]
 
 **VIKTIGT:**
 - Inkludera ALLA kostnader, även de som inte är "onödiga"
-- Läs exakt belopp från "Totalt" eller motsvarande kolumn
+- **KRITISKT**: Läs ALLTID beloppet från "Totalt"-kolumnen eller den sista kolumnen med belopp
+- Läs INTE från "öre/kWh" eller "kr/mån" kolumner - bara slutbeloppet
 - **KRITISKT**: Leta särskilt efter "Elavtal årsavgift" - denna kostnad missas ofta men är viktig
-- Var särskilt uppmärksam på "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag"
+- Var särskilt uppmärksam på "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag", "Påslag"
 - Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
 - **EXTRA VIKTIGT**: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
+- **BELOPPSLÄSNING**: För "Påslag" - läs det exakta beloppet som står i "Totalt"-kolumnen, inte från beräkningen
 
 **JSON-FORMAT KRITISKT:**
 - Använd endast dubbla citattecken för strängar
@@ -87,7 +95,7 @@ Svara ENDAST med JSON-arrayen, inget annat text.`;
 **ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):**
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
 - Rörliga kostnader, Rörlig kostnad, Rörliga avgifter, Rörlig avgift
-- Fast påslag, Fasta påslag, Fast avgift, Fast avg., Fasta avgifter, Fast kostnad, Fasta kostnader, Påslag
+- Fast påslag, Fasta påslag, Fast avgift, Fast avg., Fasta avgifter, Fast kostnad, Fasta kostnader, Påslag, Påslag (alla varianter)
 - Fast påslag spot, Fast påslag elcertifikat
 - Årsavgift, Årsavg., Årskostnad, Elavtal årsavgift, Årsavgift elavtal
 - Förvaltat Portfölj Utfall, Förvaltat portfölj utfall
