@@ -121,9 +121,10 @@ På Fortum-fakturor ser du ofta:
 - Slutbeloppet är det som faktiskt debiteras kunden
 
 **EXTRA VIKTIGT FÖR PÅSLAG:**
-- På Fortum-fakturor: "Påslag: 690 kWh at 2,00 öre/kWh, totaling 13,80 kr"
-- Läs "13,80 kr" från "totaling"-delen, INTE "2,00 öre/kWh"
+- På alla fakturor: läs från "Totalt"-kolumnen eller sista kolumnen med belopp
+- På Fortum-fakturor: "Påslag: 690 kWh at 2,00 öre/kWh, totaling 13,80 kr" - läs "13,80 kr"
 - På andra leverantörer: läs från "Totalt"-kolumnen eller sista kolumnen med belopp
+- **KRITISKT**: Läs ALLTID slutbeloppet, INTE enhetspriset (öre/kWh, kr/mån)
 
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
@@ -355,8 +356,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
           console.log('Full GPT Answer for debugging:', gptAnswer);
           console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
               
-              // Check for "Påslag" amount correction (match any name that starts with Påslag)
-              const paaslagMatch = cleanJson.match(/"name"\s*:\s*"Påslag[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+              // Check for "Påslag" amount correction (match any name that contains Påslag)
+              const paaslagMatch = cleanJson.match(/"name"\s*:\s*"[^"]*Påslag[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
               console.log('Påslag regex match result:', paaslagMatch);
               
               if (paaslagMatch) {
