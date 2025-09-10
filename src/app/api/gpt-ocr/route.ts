@@ -389,8 +389,11 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                   console.log('Påslag not found in result, but exists in JSON - checking if it should be added');
                   
                   // Check if Påslag is already in the result (to avoid duplicates)
+                  const paaslagCount = (gptAnswer.match(/Påslag:/g) || []).length;
+                  console.log('Påslag count in result:', paaslagCount);
                   const paaslagAlreadyExists = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
-                  if (!paaslagAlreadyExists) {
+                  console.log('Påslag already exists check:', paaslagAlreadyExists);
+                  if (paaslagCount === 0) {
                     // Add Påslag to the result if it's missing
                     const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
                     if (currentTotal) {
