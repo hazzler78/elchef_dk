@@ -28,7 +28,100 @@ export async function POST(req: NextRequest) {
     const base64Image = `data:${mimeType};base64,${buffer.toString('base64')}`;
     const imageSha256 = createHash('sha256').update(buffer).digest('hex');
 
-    // OpenAI Vision prompt
+    // Step 1: Extract structured data from invoice
+    const extractionPrompt = `Du är en expert på svenska elräkningar. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
+
+**VIKTIGT - SPRÅK:**
+- Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
+- Använd endast svenska ord och termer
+
+**EXTRAKTIONSREGEL:**
+Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Varje kostnad ska ha:
+- "name": exakt text från fakturan (t.ex. "Fast månadsavgift", "Elavtal årsavgift")
+- "amount": belopp i kr (t.ex. 31.20, 44.84)
+- "section": vilken sektion den tillhör ("Elnät" eller "Elhandel")
+- "description": kort beskrivning av vad kostnaden är
+
+**EXEMPEL JSON:**
+[
+  {
+    "name": "Fast månadsavgift",
+    "amount": 31.20,
+    "section": "Elhandel",
+    "description": "Månatlig fast avgift från elleverantören"
+  },
+  {
+    "name": "Elavtal årsavgift",
+    "amount": 44.84,
+    "section": "Elhandel", 
+    "description": "Årsavgift för elavtalet"
+  },
+  {
+    "name": "Elöverföring",
+    "amount": 217.13,
+    "section": "Elnät",
+    "description": "Nätavgift för elöverföring"
+  }
+]
+
+**VIKTIGT:**
+- Inkludera ALLA kostnader, även de som inte är "onödiga"
+- Läs exakt belopp från "Totalt" eller motsvarande kolumn
+- Var särskilt uppmärksam på "Elavtal årsavgift", "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag"
+- Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
+
+Svara ENDAST med JSON-arrayen, inget annat.`;
+
+    // Step 2: Calculate unnecessary costs from structured data
+    const calculationPrompt = `Du är en expert på svenska elräkningar. Baserat på den extraherade JSON-datan, identifiera onödiga kostnader och beräkna total besparing.
+
+**ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):**
+- Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
+- Rörliga kostnader, Rörlig kostnad, Rörliga avgifter, Rörlig avgift
+- Fast påslag, Fasta påslag, Fast avgift, Fast avg., Fasta avgifter, Fast kostnad, Fasta kostnader, Påslag
+- Fast påslag spot, Fast påslag elcertifikat
+- Årsavgift, Årsavg., Årskostnad, Elavtal årsavgift, Årsavgift elavtal
+- Förvaltat Portfölj Utfall, Förvaltat portfölj utfall
+- Bra miljöval, Bra miljöval (Licens Elklart AB)
+- Trygg, Trygghetspaket
+- Basavgift, Grundavgift, Administrationsavgift, Abonnemangsavgift, Grundpris
+- Fakturaavgift, Kundavgift, Elhandelsavgift, Handelsavgift
+- Indexavgift, Elcertifikatavgift, Elcertifikat
+- Grön elavgift, Ursprungsgarantiavgift, Ursprung
+- Miljöpaket, Serviceavgift, Leverantörsavgift
+- Dröjsmålsränta, Påminnelsesavgift, Priskollen
+- Rent vatten, Fossilfri, Fossilfri ingår
+- Profilpris, Bundet profilpris
+
+**EXKLUDERA (räknas INTE som onödiga):**
+- Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
+- Bundet elpris, Fastpris (själva energipriset), Rörligt elpris (själva energipriset)
+- Förbrukning, kWh, Öre/kWh, Kr/kWh
+
+**INSTRUKTION:**
+1. Gå igenom JSON-datan och identifiera alla kostnader som matchar ordlistan OCH är under "Elhandel"
+2. Summera alla onödiga kostnader
+3. Presentera resultatet enligt formatet nedan
+
+**FORMAT:**
+Här är en analys av din elräkning med fokus på onödiga kostnader:
+
+### Onödiga kostnader:
+1. **[Kostnadsnamn]**: [belopp] kr
+2. **[Kostnadsnamn]**: [belopp] kr
+
+### Total besparing:
+Genom att eliminera dessa kostnader kan du spara totalt **[total] kr**.
+
+För att minska dessa kostnader bör du byta till ett elavtal utan fasta påslag och avgifter.
+
+Rörligt pris – kampanj utan bindningstid som gäller i ett helt år, helt utan påslag eller avgifter.
+
+Önskar du istället säkra ditt elpris med ett fast avtal, rekommenderar vi ett fastprisavtal med prisgaranti. Du bestämmer själv hur lång tid du vill säkra ditt elpris.
+
+Svara på svenska och var hjälpsam och pedagogisk.`;
+
+    // Original single-step prompt (fallback)
     const systemPrompt = `Du är en expert på svenska elräkningar som hjälper användare identifiera extra kostnader, dolda avgifter och onödiga tillägg på deras elfakturor. 
 
 **VIKTIGT - SPRÅK:**
@@ -120,37 +213,109 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
       return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
     }
 
-    // Skicka bild + prompt till OpenAI Vision (gpt-4-vision-preview)
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiApiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna. SVARA ENDAST PÅ SVENSKA - oavsett vilket språk fakturan är på.' },
-              { type: 'image_url', image_url: { url: base64Image } }
-            ]
-          }
-        ],
-        max_tokens: 1200,
-        temperature: 0.1,
-      }),
-    });
+    // Two-step approach: Extract JSON first, then calculate
+    let gptAnswer = '';
+    
+    try {
+      // Step 1: Extract structured data
+      const extractionRes = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openaiApiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: extractionPrompt },
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: 'Extrahera alla kostnader från denna elräkning som JSON-array. SVARA ENDAST MED JSON.' },
+                { type: 'image_url', image_url: { url: base64Image } }
+              ]
+            }
+          ],
+          max_tokens: 2000,
+          temperature: 0.0,
+        }),
+      });
 
-    if (!openaiRes.ok) {
-      const err = await openaiRes.text();
-      return NextResponse.json({ error: 'OpenAI Vision error', details: err }, { status: 500 });
+      if (extractionRes.ok) {
+        const extractionData = await extractionRes.json();
+        const extractedJson = extractionData.choices?.[0]?.message?.content || '';
+        
+        // Try to parse the JSON
+        try {
+          JSON.parse(extractedJson); // Validate JSON structure
+          
+          // Step 2: Calculate unnecessary costs from structured data
+          const calculationRes = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${openaiApiKey}`,
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o',
+              messages: [
+                { role: 'system', content: calculationPrompt },
+                {
+                  role: 'user',
+                  content: `Här är den extraherade JSON-datan från elräkningen:\n\n${extractedJson}\n\nAnalysera denna data enligt instruktionerna.`
+                }
+              ],
+              max_tokens: 1200,
+              temperature: 0.1,
+            }),
+          });
+
+          if (calculationRes.ok) {
+            const calculationData = await calculationRes.json();
+            gptAnswer = calculationData.choices?.[0]?.message?.content || '';
+          }
+        } catch {
+          console.log('Failed to parse extraction JSON, falling back to single-step approach');
+        }
+      }
+    } catch {
+      console.log('Two-step approach failed, falling back to single-step approach');
     }
 
-    const gptData = await openaiRes.json();
-    const gptAnswer = gptData.choices?.[0]?.message?.content || '';
+    // Fallback to original single-step approach if two-step failed
+    if (!gptAnswer) {
+      const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openaiApiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna. SVARA ENDAST PÅ SVENSKA - oavsett vilket språk fakturan är på.' },
+                { type: 'image_url', image_url: { url: base64Image } }
+              ]
+            }
+          ],
+          max_tokens: 1200,
+          temperature: 0.1,
+        }),
+      });
+
+      if (openaiRes.ok) {
+        const gptData = await openaiRes.json();
+        gptAnswer = gptData.choices?.[0]?.message?.content || '';
+      }
+    }
+
+    if (!gptAnswer) {
+      return NextResponse.json({ error: 'OpenAI Vision error - both two-step and fallback approaches failed' }, { status: 500 });
+    }
 
     // Försök logga analysen i Supabase
     let logId: number | null = null;
