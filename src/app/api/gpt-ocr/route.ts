@@ -64,6 +64,7 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 - Alla "fasta" eller "rörliga" kostnader
 - Alla "påslag" av något slag
 - **SÄRSKILT**: Leta efter "Elavtal årsavgift" eller liknande text som innehåller både "elavtal" och "årsavgift"
+- **EXTRA VIKTIGT**: "Elavtal årsavgift" är en vanlig extra avgift som ofta missas - leta särskilt efter denna exakta text
 - **EXTRA VIKTIGT**: Leta särskilt efter "Rörliga kostnader" eller "Rörlig kostnad" - detta är en vanlig extra avgift som ofta missas
 - **SÄRSKILT**: Leta efter "Elcertifikat" eller "Elcertifikatavgift" och inkludera den enligt beräkningsregeln ovan
 - Gå igenom VARJE rad på fakturan och kontrollera om den innehåller någon av dessa avgifter
