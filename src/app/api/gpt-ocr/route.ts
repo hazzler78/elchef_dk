@@ -278,13 +278,24 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
             
             // Step 3: Post-process to catch missed "Elavtal årsavgift"
             if (gptAnswer && !gptAnswer.includes('Elavtal årsavgift')) {
+              console.log('Elavtal årsavgift not found in result, checking extracted JSON...');
+              console.log('Extracted JSON preview:', extractedJson.substring(0, 500));
+              
               // Look for "Elavtal årsavgift" pattern in the extracted JSON
               const elavtalMatch = extractedJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+              console.log('Regex match result:', elavtalMatch);
+              
               if (elavtalMatch) {
                 const amount = elavtalMatch[1].replace(',', '.');
+                console.log('Found Elavtal årsavgift amount:', amount);
+                
                 const currentTotal = gptAnswer.match(/total[^0-9]*(\d+(?:[,.]\d+)?)/i);
+                console.log('Current total match:', currentTotal);
+                
                 if (currentTotal) {
                   const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(amount)).toFixed(2);
+                  console.log('New total:', newTotal);
+                  
                   gptAnswer = gptAnswer.replace(
                     /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
                     `### Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\n### Total besparing:`
@@ -293,8 +304,13 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
                     `spara totalt ${newTotal}`
                   );
+                  console.log('Updated gptAnswer with Elavtal årsavgift');
                 }
+              } else {
+                console.log('No Elavtal årsavgift found in extracted JSON');
               }
+            } else {
+              console.log('Elavtal årsavgift already found in result or no result');
             }
           }
         } catch {
