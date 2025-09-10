@@ -115,6 +115,11 @@ På Fortum-fakturor ser du ofta:
 - Samma gäller för "Månadsavgift: 1 Mån at 55,20 kr/mån, totaling 55,20 kr"
 - Läs ALLTID "55,20 kr" (slutbeloppet), INTE "55,20 kr/mån" (enhetspriset)
 
+**VIKTIGT - FÖR ALLA LEVERANTÖRER:**
+- Leta efter ordet "totaling" eller "totalt" följt av beloppet i kr
+- Ignorera alltid siffror följda av "öre/kWh", "kr/mån", "kr/kWh"
+- Slutbeloppet är det som faktiskt debiteras kunden
+
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
@@ -355,6 +360,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 // Check if Påslag is in the result (line item may be formatted with or without numbering)
                 const paaslagInResult = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
                 console.log('Påslag in result regex match:', paaslagInResult);
+                
                 if (paaslagInResult) {
                   const currentPaaslagAmount = paaslagInResult[2].replace(',', '.');
                   console.log('Current Påslag amount in result:', currentPaaslagAmount);
@@ -380,7 +386,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     console.log('Påslag amount is already correct');
                   }
                 } else {
-                  console.log('Påslag not found in result, but exists in JSON - adding it to result');
+                  console.log('Påslag not found in result, but exists in JSON - checking if it should be added');
                   
                   // Check if Påslag is already in the result (to avoid duplicates)
                   const paaslagAlreadyExists = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
@@ -458,28 +464,28 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
 
     // Fallback to original single-step approach if two-step failed
     if (!gptAnswer) {
-      const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openaiApiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            {
-              role: 'user',
-              content: [
-                { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna. SVARA ENDAST PÅ SVENSKA - oavsett vilket språk fakturan är på.' },
-                { type: 'image_url', image_url: { url: base64Image } }
-              ]
-            }
-          ],
-          max_tokens: 1200,
-          temperature: 0.1,
-        }),
-      });
+    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openaiApiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna. SVARA ENDAST PÅ SVENSKA - oavsett vilket språk fakturan är på.' },
+              { type: 'image_url', image_url: { url: base64Image } }
+            ]
+          }
+        ],
+        max_tokens: 1200,
+        temperature: 0.1,
+      }),
+    });
 
       if (openaiRes.ok) {
         const gptData = await openaiRes.json();
