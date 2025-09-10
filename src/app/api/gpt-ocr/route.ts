@@ -67,8 +67,10 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 **VIKTIGT:**
 - Inkludera ALLA kostnader, även de som inte är "onödiga"
 - Läs exakt belopp från "Totalt" eller motsvarande kolumn
-- Var särskilt uppmärksam på "Elavtal årsavgift", "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag"
+- **KRITISKT**: Leta särskilt efter "Elavtal årsavgift" - denna kostnad missas ofta men är viktig
+- Var särskilt uppmärksam på "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag"
 - Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
+- **EXTRA VIKTIGT**: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
 
 Svara ENDAST med JSON-arrayen, inget annat.`;
 
