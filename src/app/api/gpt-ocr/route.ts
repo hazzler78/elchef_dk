@@ -279,7 +279,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
             // Step 3: Post-process to catch missed "Elavtal årsavgift"
             if (gptAnswer && !gptAnswer.includes('Elavtal årsavgift')) {
               // Look for "Elavtal årsavgift" pattern in the extracted JSON
-              const elavtalMatch = extractedJson.match(/["']?Elavtal årsavgift["']?\s*[,\]]\s*["']?(\d+(?:[,.]\d+)?)["']?\s*kr/);
+              const elavtalMatch = extractedJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
               if (elavtalMatch) {
                 const amount = elavtalMatch[1].replace(',', '.');
                 const currentTotal = gptAnswer.match(/total[^0-9]*(\d+(?:[,.]\d+)?)/i);
