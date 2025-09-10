@@ -346,16 +346,16 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 console.log('Correct Påslag amount from JSON:', correctPaaslagAmount);
                 
                 // Check if Påslag is in the result (line item may be formatted with or without numbering)
-                const paaslagInResult = gptAnswer.match(/Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
+                const paaslagInResult = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
                 if (paaslagInResult) {
-                  const currentPaaslagAmount = paaslagInResult[1].replace(',', '.');
+                  const currentPaaslagAmount = paaslagInResult[2].replace(',', '.');
                   console.log('Current Påslag amount in result:', currentPaaslagAmount);
                   
                   if (Math.abs(parseFloat(currentPaaslagAmount) - parseFloat(correctPaaslagAmount)) > 0.01) {
                     console.log('Påslag amount is incorrect, correcting...');
                     
                     // Update the Påslag amount in the result
-                    gptAnswer = gptAnswer.replace(/Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/, `Påslag: ${correctPaaslagAmount} kr`);
+                    gptAnswer = gptAnswer.replace(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/, `$1Påslag: ${correctPaaslagAmount} kr`);
                     
                     // Recalculate total
                     const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
@@ -368,8 +368,14 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                       );
                       console.log('Updated Påslag amount and total');
                     }
+                  } else {
+                    console.log('Påslag amount is already correct');
                   }
+                } else {
+                  console.log('Påslag not found in result, but exists in JSON - this should not happen');
                 }
+              } else {
+                console.log('No Påslag found in extracted JSON');
               }
               
               // Check for missed "Elavtal årsavgift"
