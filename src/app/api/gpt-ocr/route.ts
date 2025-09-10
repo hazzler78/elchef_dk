@@ -312,41 +312,85 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
             const calculationData = await calculationRes.json();
             gptAnswer = calculationData.choices?.[0]?.message?.content || '';
             
-            // Step 3: Post-process to catch missed "Elavtal årsavgift"
-            if (gptAnswer && !gptAnswer.includes('Elavtal årsavgift')) {
-              console.log('Elavtal årsavgift not found in result, checking extracted JSON...');
+            // Step 3: Post-process to catch missed or incorrect amounts
+            if (gptAnswer) {
+              console.log('Post-processing to verify amounts...');
               console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
               
-              // Look for "Elavtal årsavgift" pattern in the extracted JSON
-              const elavtalMatch = cleanJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
-              console.log('Regex match result:', elavtalMatch);
+              // Check for "Påslag" amount correction
+              const paaslagMatch = cleanJson.match(/"name"\s*:\s*"Påslag"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+              console.log('Påslag regex match result:', paaslagMatch);
               
-              if (elavtalMatch) {
-                const amount = elavtalMatch[1].replace(',', '.');
-                console.log('Found Elavtal årsavgift amount:', amount);
+              if (paaslagMatch) {
+                const correctPaaslagAmount = paaslagMatch[1].replace(',', '.');
+                console.log('Correct Påslag amount from JSON:', correctPaaslagAmount);
                 
-                const currentTotal = gptAnswer.match(/total[^0-9]*(\d+(?:[,.]\d+)?)/i);
-                console.log('Current total match:', currentTotal);
-                
-                if (currentTotal) {
-                  const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(amount)).toFixed(2);
-                  console.log('New total:', newTotal);
+                // Check if Påslag is in the result and if amount is wrong
+                const paaslagInResult = gptAnswer.match(/Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
+                if (paaslagInResult) {
+                  const currentPaaslagAmount = paaslagInResult[1].replace(',', '.');
+                  console.log('Current Påslag amount in result:', currentPaaslagAmount);
                   
-                  gptAnswer = gptAnswer.replace(
-                    /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
-                    `### Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\n### Total besparing:`
-                  );
-                  gptAnswer = gptAnswer.replace(
-                    /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                    `spara totalt ${newTotal}`
-                  );
-                  console.log('Updated gptAnswer with Elavtal årsavgift');
+                  if (Math.abs(parseFloat(currentPaaslagAmount) - parseFloat(correctPaaslagAmount)) > 0.01) {
+                    console.log('Påslag amount is incorrect, correcting...');
+                    
+                    // Update the Påslag amount in the result
+                    gptAnswer = gptAnswer.replace(
+                      /Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/,
+                      `Påslag: ${correctPaaslagAmount} kr`
+                    );
+                    
+                    // Recalculate total
+                    const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
+                    if (currentTotal) {
+                      const totalDiff = parseFloat(correctPaaslagAmount) - parseFloat(currentPaaslagAmount);
+                      const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + totalDiff).toFixed(2);
+                      gptAnswer = gptAnswer.replace(
+                        /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
+                        `spara totalt ${newTotal}`
+                      );
+                      console.log('Updated Påslag amount and total');
+                    }
+                  }
+                }
+              }
+              
+              // Check for missed "Elavtal årsavgift"
+              if (!gptAnswer.includes('Elavtal årsavgift')) {
+                console.log('Elavtal årsavgift not found in result, checking extracted JSON...');
+                
+                const elavtalMatch = cleanJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+                console.log('Elavtal regex match result:', elavtalMatch);
+                
+                if (elavtalMatch) {
+                  const amount = elavtalMatch[1].replace(',', '.');
+                  console.log('Found Elavtal årsavgift amount:', amount);
+                  
+                  const currentTotal = gptAnswer.match(/total[^0-9]*(\d+(?:[,.]\d+)?)/i);
+                  console.log('Current total match:', currentTotal);
+                  
+                  if (currentTotal) {
+                    const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(amount)).toFixed(2);
+                    console.log('New total:', newTotal);
+                    
+                    gptAnswer = gptAnswer.replace(
+                      /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
+                      `### Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\n### Total besparing:`
+                    );
+                    gptAnswer = gptAnswer.replace(
+                      /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
+                      `spara totalt ${newTotal}`
+                    );
+                    console.log('Updated gptAnswer with Elavtal årsavgift');
+                  }
+                } else {
+                  console.log('No Elavtal årsavgift found in extracted JSON');
                 }
               } else {
-                console.log('No Elavtal årsavgift found in extracted JSON');
+                console.log('Elavtal årsavgift already found in result');
               }
             } else {
-              console.log('Elavtal årsavgift already found in result or no result');
+              console.log('No result to post-process');
             }
           }
         } catch (parseError) {
