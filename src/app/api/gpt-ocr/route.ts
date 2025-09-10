@@ -317,15 +317,15 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
               console.log('Post-processing to verify amounts...');
               console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
               
-              // Check for "Påslag" amount correction
-              const paaslagMatch = cleanJson.match(/"name"\s*:\s*"Påslag"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+              // Check for "Påslag" amount correction (match any name that starts with Påslag)
+              const paaslagMatch = cleanJson.match(/"name"\s*:\s*"Påslag[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
               console.log('Påslag regex match result:', paaslagMatch);
               
               if (paaslagMatch) {
                 const correctPaaslagAmount = paaslagMatch[1].replace(',', '.');
                 console.log('Correct Påslag amount from JSON:', correctPaaslagAmount);
                 
-                // Check if Påslag is in the result and if amount is wrong
+                // Check if Påslag is in the result (line item may be formatted with or without numbering)
                 const paaslagInResult = gptAnswer.match(/Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
                 if (paaslagInResult) {
                   const currentPaaslagAmount = paaslagInResult[1].replace(',', '.');
@@ -335,10 +335,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     console.log('Påslag amount is incorrect, correcting...');
                     
                     // Update the Påslag amount in the result
-                    gptAnswer = gptAnswer.replace(
-                      /Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/,
-                      `Påslag: ${correctPaaslagAmount} kr`
-                    );
+                    gptAnswer = gptAnswer.replace(/Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/, `Påslag: ${correctPaaslagAmount} kr`);
                     
                     // Recalculate total
                     const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
