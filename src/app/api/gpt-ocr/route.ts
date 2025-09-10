@@ -120,6 +120,11 @@ På Fortum-fakturor ser du ofta:
 - Ignorera alltid siffror följda av "öre/kWh", "kr/mån", "kr/kWh"
 - Slutbeloppet är det som faktiskt debiteras kunden
 
+**EXTRA VIKTIGT FÖR PÅSLAG:**
+- På Fortum-fakturor: "Påslag: 690 kWh at 2,00 öre/kWh, totaling 13,80 kr"
+- Läs "13,80 kr" från "totaling"-delen, INTE "2,00 öre/kWh"
+- På andra leverantörer: läs från "Totalt"-kolumnen eller sista kolumnen med belopp
+
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
@@ -357,20 +362,9 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 const correctPaaslagAmount = paaslagMatch[1].replace(',', '.');
                 console.log('Correct Påslag amount from JSON:', correctPaaslagAmount);
                 
-                // Force correct amount for Påslag if it's wrong (common issue with Fortum invoices)
-                if (parseFloat(correctPaaslagAmount) < 10.0) {
-                  console.log('Påslag amount seems too low, forcing correction to 13.80 kr (typical Fortum amount)');
-                  const forcedPaaslagAmount = '13.80';
-                  console.log('Forced Påslag amount:', forcedPaaslagAmount);
-                
-                  // Use forced amount for all operations
-                  const finalPaaslagAmount = forcedPaaslagAmount;
-                  console.log('Using forced Påslag amount:', finalPaaslagAmount);
-                } else {
-                  // Use original amount if it seems correct
-                  const finalPaaslagAmount = correctPaaslagAmount;
-                  console.log('Using original Påslag amount:', finalPaaslagAmount);
-                }
+                // Use the amount from JSON (should be correct if AI reads from right column)
+                const finalPaaslagAmount = correctPaaslagAmount;
+                console.log('Using Påslag amount from JSON:', finalPaaslagAmount);
                 
                 // Check if Påslag is in the result (line item may be formatted with or without numbering)
                 const paaslagInResult = gptAnswer.match(/(\d+\.\s*)?Påslag:\s*(\d+(?:[,.]\d+)?)\s*kr/);
