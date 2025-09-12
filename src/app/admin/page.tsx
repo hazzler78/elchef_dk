@@ -60,13 +60,6 @@ const adminSections = [
     href: "/admin/contract-clicks",
     icon: "📈",
     color: "bg-cyan-500"
-  },
-  {
-    title: "Test Tracking",
-    description: "Testa kontraktsklick-tracking utan att påverka statistik",
-    href: "/admin/test-contract-tracking",
-    icon: "🧪",
-    color: "bg-yellow-500"
   }
 ];
 
