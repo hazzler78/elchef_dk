@@ -6,6 +6,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
 interface ContractClick {
   id: number;
   contract_type: 'rorligt' | 'fastpris';
@@ -48,20 +49,23 @@ export default function ContractClicksAdmin() {
 
     setClearingTestData(true);
     try {
-      // Ta bort testdata direkt via Supabase
-      const { error, count } = await supabase
-        .from('contract_clicks')
-        .delete()
-        .eq('source', 'test-admin');
+      const response = await fetch('/api/admin/clear-test-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-      if (error) {
-        alert('Fel vid borttagning av testdata: ' + error.message);
-      } else {
-        alert(`Testdata har tagits bort! (${count} rader)`);
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`Testdata har tagits bort! (${result.deletedCount} rader)`);
         fetchContractClicks(); // Refresh data
+      } else {
+        alert('Fel vid borttagning av testdata: ' + result.error);
+        console.error('Clear test data error:', result);
       }
     } catch (error) {
       alert('Fel vid borttagning av testdata: ' + (error as Error).message);
+      console.error('Clear test data error:', error);
     } finally {
       setClearingTestData(false);
     }
