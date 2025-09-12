@@ -141,19 +141,31 @@ export default function ContractClicksAdmin() {
         Kontraktsklick-statistik
       </h1>
 
-      {/* Datumfilter */}
-      <div style={{ marginBottom: '2rem' }}>
-        <label style={{ marginRight: '1rem', fontWeight: 'bold' }}>Tidsperiod:</label>
-        <select 
-          value={dateRange} 
-          onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')}
-          style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
-        >
-          <option value="7d">Senaste 7 dagarna</option>
-          <option value="30d">Senaste 30 dagarna</option>
-          <option value="90d">Senaste 90 dagarna</option>
-          <option value="all">Alla tider</option>
-        </select>
+      {/* Datumfilter och källfilter */}
+      <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div>
+          <label style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>Tidsperiod:</label>
+          <select 
+            value={dateRange} 
+            onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')}
+            style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+          >
+            <option value="7d">Senaste 7 dagarna</option>
+            <option value="30d">Senaste 30 dagarna</option>
+            <option value="90d">Senaste 90 dagarna</option>
+            <option value="all">Alla tider</option>
+          </select>
+        </div>
+        
+        <div style={{ 
+          padding: '0.5rem 1rem', 
+          background: '#fef3c7', 
+          border: '1px solid #f59e0b', 
+          borderRadius: '4px',
+          fontSize: '0.875rem'
+        }}>
+          💡 <strong>Tips:</strong> Testdata har källa "test-admin" - filtrera för att se bara riktig statistik
+        </div>
       </div>
 
       {/* Statistik-kort */}
@@ -299,7 +311,19 @@ export default function ContractClicksAdmin() {
                   <td style={{ padding: '1rem' }}>
                     {click.savings_amount ? formatCurrency(click.savings_amount) : '-'}
                   </td>
-                  <td style={{ padding: '1rem' }}>{click.source}</td>
+                  <td style={{ padding: '1rem' }}>
+                    <span style={{
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '4px',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      background: click.source === 'test-admin' ? '#fef3c7' : '#f3f4f6',
+                      color: click.source === 'test-admin' ? '#92400e' : '#374151',
+                      border: click.source === 'test-admin' ? '1px solid #f59e0b' : '1px solid #d1d5db'
+                    }}>
+                      {click.source === 'test-admin' ? '🧪 TEST' : click.source}
+                    </span>
+                  </td>
                   <td style={{ padding: '1rem', fontFamily: 'monospace', fontSize: '0.875rem' }}>
                     {click.session_id ? click.session_id.slice(0, 8) + '...' : '-'}
                   </td>
