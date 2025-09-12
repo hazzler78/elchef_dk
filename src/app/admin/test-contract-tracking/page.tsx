@@ -2,7 +2,14 @@
 import { useState } from 'react';
 
 export default function TestContractTracking() {
-  const [testResults, setTestResults] = useState<any[]>([]);
+  const [testResults, setTestResults] = useState<Array<{
+    timestamp: string;
+    contractType: string;
+    success: boolean;
+    response?: unknown;
+    error?: string;
+    status: string | number;
+  }>>([]);
   const [loading, setLoading] = useState(false);
 
   const testContractClick = async (contractType: 'rorligt' | 'fastpris') => {
@@ -66,7 +73,7 @@ export default function TestContractTracking() {
         <h3 style={{ margin: '0 0 0.5rem 0', color: '#0369a1' }}>ℹ️ Test Information</h3>
         <p style={{ margin: 0, color: '#0c4a6e', fontSize: '0.9rem' }}>
           Detta är en test-miljö som skickar testdata till contract-click API:et. 
-          Testdata använder <code>logId: 999999</code> och <code>source: 'test-admin'</code> 
+          Testdata använder <code>logId: 999999</code> och <code>source: &apos;test-admin&apos;</code> 
           så det inte blandas med riktig statistik.
         </p>
       </div>
@@ -201,9 +208,9 @@ export default function TestContractTracking() {
         <h4 style={{ margin: '0 0 0.5rem 0', color: '#92400e' }}>🔍 Nästa Steg</h4>
         <ol style={{ margin: 0, paddingLeft: '1.5rem', color: '#92400e' }}>
           <li>Klicka på test-knapparna ovan för att verifiera API:et fungerar</li>
-          <li>Kontrollera att du får "success: true" i resultaten</li>
+          <li>Kontrollera att du får &quot;success: true&quot; i resultaten</li>
           <li>Gå till <a href="/admin/contract-clicks" style={{ color: '#92400e', textDecoration: 'underline' }}>/admin/contract-clicks</a> för att se testdata</li>
-          <li>Filtrera på "test-admin" som källa för att se bara testdata</li>
+          <li>Filtrera på &quot;test-admin&quot; som källa för att se bara testdata</li>
           <li>När du är nöjd, testa med en riktig faktura på /jamfor-elpriser</li>
         </ol>
       </div>

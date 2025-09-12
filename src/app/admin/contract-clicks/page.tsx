@@ -164,7 +164,7 @@ export default function ContractClicksAdmin() {
           borderRadius: '4px',
           fontSize: '0.875rem'
         }}>
-          💡 <strong>Tips:</strong> Testdata har källa "test-admin" - filtrera för att se bara riktig statistik
+          💡 <strong>Tips:</strong> Testdata har källa &quot;test-admin&quot; - filtrera för att se bara riktig statistik
         </div>
       </div>
 
