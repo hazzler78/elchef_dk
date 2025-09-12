@@ -89,6 +89,47 @@ export default function JamforElpriser() {
     } catch {}
   }, []);
 
+  // Funktion för att spåra kontraktsklick från AI-användare
+  const trackContractClick = (contractType: 'rorligt' | 'fastpris') => {
+    try {
+      // Extrahera besparingsbelopp från AI-analysen
+      const extractSavings = (text: string): number => {
+        const savingsMatch = text.match(/(\d+[,.]?\d*)\s*kr.*?(?:spar|bespar|minska)/i);
+        if (savingsMatch) {
+          return parseFloat(savingsMatch[1].replace(',', '.'));
+        }
+        return 0;
+      };
+
+      const savingsAmount = gptResult ? extractSavings(gptResult) : 0;
+      
+      const payload = JSON.stringify({
+        contractType,
+        logId,
+        savingsAmount,
+        sessionId: sessionIdRef.current,
+        source: 'jamfor-elpriser',
+        utmSource: 'jamfor',
+        utmMedium: 'cta',
+        utmCampaign: `cta-${contractType}`
+      });
+
+      // Använd sendBeacon för bättre tillförlitlighet
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon('/api/events/contract-click', blob);
+      } else {
+        fetch('/api/events/contract-click', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        }).catch(() => {});
+      }
+    } catch (error) {
+      console.error('Error tracking contract click:', error);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -839,7 +880,10 @@ export default function JamforElpriser() {
                     background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
-                    onClick={() => window.location.href = withDefaultCtaUtm('/rorligt-avtal', 'jamfor', 'cta-rorligt')}
+                    onClick={() => {
+                      trackContractClick('rorligt');
+                      window.location.href = withDefaultCtaUtm('/rorligt-avtal', 'jamfor', 'cta-rorligt');
+                    }}
                     aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
                   >
                     Rörligt avtal
@@ -865,7 +909,10 @@ export default function JamforElpriser() {
                     background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
-                    onClick={() => window.location.href = withDefaultCtaUtm('/fastpris-avtal', 'jamfor', 'cta-fastpris')}
+                    onClick={() => {
+                      trackContractClick('fastpris');
+                      window.location.href = withDefaultCtaUtm('/fastpris-avtal', 'jamfor', 'cta-fastpris');
+                    }}
                     aria-label="Fastpris - Fastpris med prisgaranti"
                   >
                     Fastpris

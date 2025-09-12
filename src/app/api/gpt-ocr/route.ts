@@ -169,20 +169,27 @@ Svara ENDAST med JSON-arrayen, inget annat text.`;
 3. Presentera resultatet enligt formatet nedan
 
 **FORMAT:**
-Här är en analys av din elräkning med fokus på onödiga kostnader:
+🚨 **Dina onödiga elavgifter upptäckta!**
 
-### Onödiga kostnader:
+Jag har hittat **[antal]** onödiga avgifter på din elräkning som kostar dig pengar varje månad:
+
+### 💸 Onödiga kostnader denna månad:
 1. **[Kostnadsnamn]**: [belopp] kr
 2. **[Kostnadsnamn]**: [belopp] kr
 
-### Total besparing:
-Genom att eliminera dessa kostnader kan du spara totalt **[total] kr**.
+### 💰 **Din årliga besparing:**
+**Du betalar [total] kr/månad i onödiga avgifter = [total × 12] kr/år!**
 
-För att minska dessa kostnader bör du byta till ett elavtal utan fasta påslag och avgifter.
+Detta är pengar som går direkt till din elleverantör utan att du får något extra för dem.
 
-Rörligt pris – kampanj utan bindningstid som gäller i ett helt år, helt utan påslag eller avgifter.
+### ✅ **Lösningen:**
+Byt till ett avtal utan dessa avgifter och spara **[total × 12] kr/år**!
 
-Önskar du istället säkra ditt elpris med ett fast avtal, rekommenderar vi ett fastprisavtal med prisgaranti. Du bestämmer själv hur lång tid du vill säkra ditt elpris.
+**🎯 Välj ditt nya avtal:**
+- **Rörligt avtal**: 0 kr i avgifter första året – spara **[total × 12] kr/år**
+- **Fastprisavtal**: Prisgaranti med valfri bindningstid – spara **[total × 12] kr/år**
+
+**⏰ Byt idag** – det tar bara 2 minuter och vi fixar allt åt dig!
 
 Svara på svenska och var hjälpsam och pedagogisk.`;
 
@@ -263,11 +270,19 @@ Analysera fakturan, leta efter poster som avviker från normala eller nödvändi
 **VIKTIGT - SLUTTEXT:**
 Efter summeringen, avsluta alltid med denna exakta text:
 
-"För att minska dessa kostnader bör du byta till ett elavtal utan fasta påslag och avgifter.
+"### 💰 **Din årliga besparing:**
+**Du betalar [total] kr/månad i onödiga avgifter = [total × 12] kr/år!**
 
-Rörligt pris – kampanj utan bindningstid som gäller i ett helt år, helt utan påslag eller avgifter.
+Detta är pengar som går direkt till din elleverantör utan att du får något extra för dem.
 
-Önskar du istället säkra ditt elpris med ett fast avtal, rekommenderar vi ett fastprisavtal med prisgaranti. Du bestämmer själv hur lång tid du vill säkra ditt elpris."
+### ✅ **Lösningen:**
+Byt till ett avtal utan dessa avgifter och spara **[total × 12] kr/år**!
+
+**🎯 Välj ditt nya avtal:**
+- **Rörligt avtal**: 0 kr i avgifter första året – spara **[total × 12] kr/år**
+- **Fastprisavtal**: Prisgaranti med valfri bindningstid – spara **[total × 12] kr/år**
+
+**⏰ Byt idag** – det tar bara 2 minuter och vi fixar allt åt dig!"
 
 Svara på svenska och var hjälpsam och pedagogisk.`;
 
@@ -382,16 +397,26 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     // Update the Påslag amount in the result
                     gptAnswer = gptAnswer.replace(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/, `$1Påslag: ${finalPaaslagAmount} kr`);
                     
-                    // Recalculate total
+                    // Recalculate total (both monthly and yearly)
                     const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
                     if (currentTotal) {
                       const totalDiff = parseFloat(finalPaaslagAmount) - parseFloat(currentPaaslagAmount);
-                      const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + totalDiff).toFixed(2);
+                      const newMonthlyTotal = (parseFloat(currentTotal[1].replace(',', '.')) + totalDiff).toFixed(2);
+                      const newYearlyTotal = (parseFloat(newMonthlyTotal) * 12).toFixed(2);
+                      
                       gptAnswer = gptAnswer.replace(
                         /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                        `spara totalt ${newTotal}`
+                        `spara totalt ${newMonthlyTotal}`
                       );
-                      console.log('Updated Påslag amount and total');
+                      gptAnswer = gptAnswer.replace(
+                        /= (\d+(?:[,.]\d+)?) kr\/år/i,
+                        `= ${newYearlyTotal} kr/år`
+                      );
+                      gptAnswer = gptAnswer.replace(
+                        /spara \*\*\[total × 12\] kr\/år\*\*/g,
+                        `spara **${newYearlyTotal} kr/år**`
+                      );
+                      console.log('Updated Påslag amount and totals');
                     }
                   } else {
                     console.log('Påslag amount is already correct');
@@ -408,7 +433,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     // Add Påslag to the result if it's missing
                     const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
                     if (currentTotal) {
-                      const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(finalPaaslagAmount)).toFixed(2);
+                      const newMonthlyTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(finalPaaslagAmount)).toFixed(2);
+                      const newYearlyTotal = (parseFloat(newMonthlyTotal) * 12).toFixed(2);
                       
                       gptAnswer = gptAnswer.replace(
                         /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
@@ -416,9 +442,17 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                       );
                       gptAnswer = gptAnswer.replace(
                         /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                        `spara totalt ${newTotal}`
+                        `spara totalt ${newMonthlyTotal}`
                       );
-                      console.log('Added missing Påslag to result and updated total');
+                      gptAnswer = gptAnswer.replace(
+                        /= (\d+(?:[,.]\d+)?) kr\/år/i,
+                        `= ${newYearlyTotal} kr/år`
+                      );
+                      gptAnswer = gptAnswer.replace(
+                        /spara \*\*\[total × 12\] kr\/år\*\*/g,
+                        `spara **${newYearlyTotal} kr/år**`
+                      );
+                      console.log('Added missing Påslag to result and updated totals');
                     }
                   } else {
                     console.log('Påslag already exists in result, skipping addition');
@@ -443,8 +477,9 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                   console.log('Current total match:', currentTotal);
                   
                   if (currentTotal) {
-                    const newTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(amount)).toFixed(2);
-                    console.log('New total:', newTotal);
+                    const newMonthlyTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(amount)).toFixed(2);
+                    const newYearlyTotal = (parseFloat(newMonthlyTotal) * 12).toFixed(2);
+                    console.log('New monthly total:', newMonthlyTotal, 'New yearly total:', newYearlyTotal);
                     
                     gptAnswer = gptAnswer.replace(
                       /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
@@ -452,9 +487,17 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     );
                     gptAnswer = gptAnswer.replace(
                       /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                      `spara totalt ${newTotal}`
+                      `spara totalt ${newMonthlyTotal}`
                     );
-                    console.log('Updated gptAnswer with Elavtal årsavgift');
+                    gptAnswer = gptAnswer.replace(
+                      /= (\d+(?:[,.]\d+)?) kr\/år/i,
+                      `= ${newYearlyTotal} kr/år`
+                    );
+                    gptAnswer = gptAnswer.replace(
+                      /spara \*\*\[total × 12\] kr\/år\*\*/g,
+                      `spara **${newYearlyTotal} kr/år**`
+                    );
+                    console.log('Updated gptAnswer with Elavtal årsavgift and totals');
                   }
                 } else {
                   console.log('No Elavtal årsavgift found in extracted JSON');

@@ -14,12 +14,20 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Extrahera besparingsbelopp från analysen
+  // Extrahera besparingsbelopp från analysen (prioritera årlig besparing)
   const extractSavings = (text: string): number => {
-    const savingsMatch = text.match(/(\d+[,.]?\d*)\s*kr.*?(?:spar|bespar|minska)/i);
-    if (savingsMatch) {
-      return parseFloat(savingsMatch[1].replace(',', '.'));
+    // Först leta efter årlig besparing (kr/år)
+    const yearlyMatch = text.match(/(\d+[,.]?\d*)\s*kr\/år/i);
+    if (yearlyMatch) {
+      return parseFloat(yearlyMatch[1].replace(',', '.'));
     }
+    
+    // Sedan leta efter månatlig besparing och multiplicera med 12
+    const monthlyMatch = text.match(/(\d+[,.]?\d*)\s*kr.*?(?:spar|bespar|minska)/i);
+    if (monthlyMatch) {
+      return parseFloat(monthlyMatch[1].replace(',', '.')) * 12;
+    }
+    
     return savingsAmount || 0;
   };
 
