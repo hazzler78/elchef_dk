@@ -35,10 +35,37 @@ export default function ContractClicksAdmin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const [clearingTestData, setClearingTestData] = useState(false);
 
   useEffect(() => {
     fetchContractClicks();
   }, [dateRange]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const clearTestData = async () => {
+    if (!confirm('Är du säker på att du vill ta bort ALL testdata? Detta går inte att ångra.')) {
+      return;
+    }
+
+    setClearingTestData(true);
+    try {
+      // Ta bort testdata direkt via Supabase
+      const { error, count } = await supabase
+        .from('contract_clicks')
+        .delete()
+        .eq('source', 'test-admin');
+
+      if (error) {
+        alert('Fel vid borttagning av testdata: ' + error.message);
+      } else {
+        alert(`Testdata har tagits bort! (${count} rader)`);
+        fetchContractClicks(); // Refresh data
+      }
+    } catch (error) {
+      alert('Fel vid borttagning av testdata: ' + (error as Error).message);
+    } finally {
+      setClearingTestData(false);
+    }
+  };
 
   const fetchContractClicks = async () => {
     try {
@@ -141,19 +168,39 @@ export default function ContractClicksAdmin() {
         Kontraktsklick-statistik
       </h1>
 
-      {/* Datumfilter */}
-      <div style={{ marginBottom: '2rem' }}>
-        <label style={{ marginRight: '1rem', fontWeight: 'bold' }}>Tidsperiod:</label>
-        <select 
-          value={dateRange} 
-          onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')}
-          style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+      {/* Datumfilter och rensa testdata */}
+      <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div>
+          <label style={{ marginRight: '1rem', fontWeight: 'bold' }}>Tidsperiod:</label>
+          <select 
+            value={dateRange} 
+            onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')}
+            style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+          >
+            <option value="7d">Senaste 7 dagarna</option>
+            <option value="30d">Senaste 30 dagarna</option>
+            <option value="90d">Senaste 90 dagarna</option>
+            <option value="all">Alla tider</option>
+          </select>
+        </div>
+
+        <button
+          onClick={clearTestData}
+          disabled={clearingTestData}
+          style={{
+            padding: '0.5rem 1rem',
+            background: '#dc2626',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            cursor: clearingTestData ? 'not-allowed' : 'pointer',
+            opacity: clearingTestData ? 0.6 : 1
+          }}
         >
-          <option value="7d">Senaste 7 dagarna</option>
-          <option value="30d">Senaste 30 dagarna</option>
-          <option value="90d">Senaste 90 dagarna</option>
-          <option value="all">Alla tider</option>
-        </select>
+          {clearingTestData ? '⏳ Rensar...' : '🗑️ Rensa testdata'}
+        </button>
       </div>
 
       {/* Statistik-kort */}
