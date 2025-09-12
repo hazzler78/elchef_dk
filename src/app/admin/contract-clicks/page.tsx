@@ -35,10 +35,37 @@ export default function ContractClicksAdmin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const [showTestData, setShowTestData] = useState(false);
+  const [clearingTestData, setClearingTestData] = useState(false);
 
   useEffect(() => {
     fetchContractClicks();
-  }, [dateRange]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dateRange, showTestData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const clearTestData = async () => {
+    if (!confirm('Är du säker på att du vill ta bort ALL testdata? Detta går inte att ångra.')) {
+      return;
+    }
+
+    setClearingTestData(true);
+    try {
+      const response = await fetch('/api/admin/clear-test-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        alert('Testdata har tagits bort!');
+        fetchContractClicks(); // Refresh data
+      } else {
+        alert('Fel vid borttagning av testdata');
+      }
+    } catch (error) {
+      alert('Fel vid borttagning av testdata: ' + (error as Error).message);
+    } finally {
+      setClearingTestData(false);
+    }
+  };
 
   const fetchContractClicks = async () => {
     try {
@@ -68,15 +95,18 @@ export default function ContractClicksAdmin() {
 
       if (clicksError) throw clicksError;
 
-      setClicks(clicksData || []);
+      // Filtrera bort testdata från visning om inte explicit visat
+      const filteredClicks = showTestData ? clicksData : clicksData?.filter(c => c.source !== 'test-admin') || [];
+      setClicks(filteredClicks);
 
-      // Beräkna statistik
-      const totalClicks = clicksData?.length || 0;
-      const rorligtClicks = clicksData?.filter(c => c.contract_type === 'rorligt').length || 0;
-      const fastprisClicks = clicksData?.filter(c => c.contract_type === 'fastpris').length || 0;
-      const withAiAnalysis = clicksData?.filter(c => c.log_id !== null).length || 0;
+      // Beräkna statistik (exkludera alltid testdata från statistik)
+      const realClicks = clicksData?.filter(c => c.source !== 'test-admin') || [];
+      const totalClicks = realClicks.length;
+      const rorligtClicks = realClicks.filter(c => c.contract_type === 'rorligt').length;
+      const fastprisClicks = realClicks.filter(c => c.contract_type === 'fastpris').length;
+      const withAiAnalysis = realClicks.filter(c => c.log_id !== null).length;
       
-      const savingsAmounts = clicksData?.filter(c => c.savings_amount && c.savings_amount > 0).map(c => c.savings_amount!) || [];
+      const savingsAmounts = realClicks.filter(c => c.savings_amount && c.savings_amount > 0).map(c => c.savings_amount!) || [];
       const totalSavings = savingsAmounts.reduce((sum, amount) => sum + amount, 0);
       const averageSavings = savingsAmounts.length > 0 ? totalSavings / savingsAmounts.length : 0;
 
@@ -156,6 +186,36 @@ export default function ContractClicksAdmin() {
             <option value="all">Alla tider</option>
           </select>
         </div>
+
+        <div>
+          <label style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>
+            <input
+              type="checkbox"
+              checked={showTestData}
+              onChange={(e) => setShowTestData(e.target.checked)}
+              style={{ marginRight: '0.5rem' }}
+            />
+            Visa testdata
+          </label>
+        </div>
+
+        <button
+          onClick={clearTestData}
+          disabled={clearingTestData}
+          style={{
+            padding: '0.5rem 1rem',
+            background: '#dc2626',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            cursor: clearingTestData ? 'not-allowed' : 'pointer',
+            opacity: clearingTestData ? 0.6 : 1
+          }}
+        >
+          {clearingTestData ? '⏳ Rensar...' : '🗑️ Rensa testdata'}
+        </button>
         
         <div style={{ 
           padding: '0.5rem 1rem', 
@@ -164,7 +224,7 @@ export default function ContractClicksAdmin() {
           borderRadius: '4px',
           fontSize: '0.875rem'
         }}>
-          💡 <strong>Tips:</strong> Testdata har källa &quot;test-admin&quot; - filtrera för att se bara riktig statistik
+          💡 <strong>Tips:</strong> Statistik exkluderar alltid testdata. Använd checkboxen för att visa/dölja testdata i listan.
         </div>
       </div>
 
