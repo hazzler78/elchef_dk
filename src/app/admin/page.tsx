@@ -53,6 +53,13 @@ const adminSections = [
     href: "/admin/knowledge",
     icon: "🧠",
     color: "bg-emerald-500"
+  },
+  {
+    title: "Kontraktsklick",
+    description: "Spåra klick på Rörligt/Fastpris från AI-användare",
+    href: "/admin/contract-clicks",
+    icon: "📈",
+    color: "bg-cyan-500"
   }
 ];
 
