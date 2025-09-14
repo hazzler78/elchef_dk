@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS contract_clicks (
   id SERIAL PRIMARY KEY,
   contract_type VARCHAR(20) NOT NULL CHECK (contract_type IN ('rorligt', 'fastpris')),
-  log_id INTEGER REFERENCES invoice_ocr_logs(id) ON DELETE SET NULL,
+  log_id INTEGER REFERENCES invoice_ocr(id) ON DELETE SET NULL,
   savings_amount DECIMAL(10,2),
   session_id VARCHAR(255),
   source VARCHAR(50) DEFAULT 'jamfor-elpriser',
@@ -43,6 +43,6 @@ $$ LANGUAGE plpgsql;
 -- Kommentarer för dokumentation
 COMMENT ON TABLE contract_clicks IS 'Spårar klick på kontraktsknappar från användare som har fått AI-analys';
 COMMENT ON COLUMN contract_clicks.contract_type IS 'Typ av kontrakt som klickades på (rorligt/fastpris)';
-COMMENT ON COLUMN contract_clicks.log_id IS 'Referens till invoice_ocr_logs för att koppla till AI-analys';
+COMMENT ON COLUMN contract_clicks.log_id IS 'Referens till invoice_ocr för att koppla till AI-analys';
 COMMENT ON COLUMN contract_clicks.savings_amount IS 'Besparingsbelopp från AI-analysen';
 COMMENT ON COLUMN contract_clicks.source IS 'Varifrån klicket kom (jamfor-elpriser, hero, etc.)';

@@ -21,7 +21,7 @@ Spårar kontraktsklick och lagrar följande data:
 **Fil:** `supabase-contract-clicks.sql`
 
 Skapar tabellen `contract_clicks` med:
-- Foreign key till `invoice_ocr_logs` för att koppla till AI-analyser
+- Foreign key till `invoice_ocr` för att koppla till AI-analyser
 - Index för bättre prestanda
 - RLS (Row Level Security) policies
 - Cleanup-funktion för gamla poster
@@ -38,11 +38,12 @@ Uppdaterade knappar som:
 **Fil:** `src/app/admin/contract-clicks/page.tsx`
 
 Visar statistik över:
-- Totalt antal klick
+- Totalt antal klick på kontraktsknappar
 - Fördelning mellan rörligt/fastpris
 - Antal klick från användare med AI-analys
 - Genomsnittlig besparing
 - Konverteringsgrad (AI-analys → kontraktsklick)
+- Kvalitet på klick (andelen med AI-analys)
 - Detaljerad lista över senaste klick
 
 ## Installation

@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
       utmCampaign
     } = body;
 
-    // Validera att logId finns i invoice_ocr_logs om det är angivet
+    // Validera att logId finns i invoice_ocr om det är angivet
     let validLogId = null;
     if (typeof logId === 'number') {
       const { data: logExists } = await supabase
-        .from('invoice_ocr_logs')
+        .from('invoice_ocr')
         .select('id')
         .eq('id', logId)
         .single();

@@ -28,6 +28,8 @@ interface ContractStats {
   totalSavings: number;
   averageSavings: number;
   conversionRate: number;
+  totalAiAnalyses: number;
+  clickThroughRate: number;
 }
 
 export default function ContractClicksAdmin() {
@@ -113,12 +115,13 @@ export default function ContractClicksAdmin() {
 
       // Hämta totalt antal AI-analyser för att beräkna konverteringsgrad
       const { data: totalAnalyses } = await supabase
-        .from('invoice_ocr_logs')
+        .from('invoice_ocr')
         .select('id', { count: 'exact' })
         .gte('created_at', dateFilter ? dateFilter.split('.')[2] : '1900-01-01');
 
       const totalAiAnalyses = totalAnalyses?.length || 0;
       const conversionRate = totalAiAnalyses > 0 ? (withAiAnalysis / totalAiAnalyses) * 100 : 0;
+      const clickThroughRate = totalClicks > 0 ? (withAiAnalysis / totalClicks) * 100 : 0;
 
       setStats({
         totalClicks,
@@ -127,7 +130,9 @@ export default function ContractClicksAdmin() {
         withAiAnalysis,
         totalSavings,
         averageSavings,
-        conversionRate
+        conversionRate,
+        totalAiAnalyses,
+        clickThroughRate
       });
 
     } catch (err) {
@@ -168,9 +173,26 @@ export default function ContractClicksAdmin() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem', color: '#333' }}>
+      <h1 style={{ marginBottom: '1rem', color: '#333' }}>
         Kontraktsklick-statistik
       </h1>
+      
+      <div style={{ 
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
+        padding: '1rem', 
+        borderRadius: '8px', 
+        marginBottom: '2rem',
+        border: '1px solid #cbd5e1'
+      }}>
+        <h3 style={{ margin: '0 0 0.5rem 0', color: '#475569', fontSize: '1rem' }}>
+          📊 Vad spåras här?
+        </h3>
+        <p style={{ margin: '0 0 0.5rem 0', color: '#64748b', fontSize: '0.9rem', lineHeight: 1.4 }}>
+          <strong>AI-analyser:</strong> Antal som klickar "Analysera faktura" på /jamfor-elpriser<br/>
+          <strong>Kontraktsklick:</strong> Antal som klickar "Rörligt avtal" eller "Fastpris" efter AI-analys<br/>
+          <strong>Konverteringsgrad:</strong> Hur många % av AI-användare som går vidare till kontraktsval
+        </p>
+      </div>
 
       {/* Datumfilter och rensa testdata */}
       <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -287,9 +309,41 @@ export default function ContractClicksAdmin() {
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             border: '1px solid #e0e0e0'
           }}>
+            <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>AI-analyser totalt</h3>
+            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: '#6366f1' }}>
+              {stats.totalAiAnalyses}
+            </p>
+          </div>
+
+          <div style={{ 
+            background: 'white', 
+            padding: '1.5rem', 
+            borderRadius: '8px', 
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            border: '1px solid #e0e0e0'
+          }}>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Konverteringsgrad</h3>
             <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#ef4444' }}>
               {stats.conversionRate.toFixed(1)}%
+            </p>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: '#666' }}>
+              AI-analys → Kontraktsklick
+            </p>
+          </div>
+
+          <div style={{ 
+            background: 'white', 
+            padding: '1.5rem', 
+            borderRadius: '8px', 
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            border: '1px solid #e0e0e0'
+          }}>
+            <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Kvalitet på klick</h3>
+            <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#10b981' }}>
+              {stats.clickThroughRate.toFixed(1)}%
+            </p>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: '#666' }}>
+              Klick med AI-analys
             </p>
           </div>
         </div>

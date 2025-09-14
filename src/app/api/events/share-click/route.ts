@@ -23,11 +23,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Ogiltig plattform' }, { status: 400 });
     }
 
-    // Kontrollera att log_id finns i invoice_ocr_logs om det är angivet
+    // Kontrollera att log_id finns i invoice_ocr om det är angivet
     let validLogId = null;
     if (typeof logId === 'number') {
       const { data: logExists } = await supabase
-        .from('invoice_ocr_logs')
+        .from('invoice_ocr')
         .select('id')
         .eq('id', logId)
         .single();
