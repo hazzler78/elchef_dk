@@ -187,11 +187,11 @@ Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år!
 
 🎯 Välj ditt nya avtal:
 - Rörligt avtal: 0 kr i avgifter första året – spara [total × 12] kr/år
-- Fastprisavtal: Prisgaranti med valfri bindningstid – spara [total × 12] kr/år
+- Fastpris med prisgaranti: Prisgaranti med valfri bindningstid
 
 ⏰ Byt idag – det tar bara 2 minuter och vi fixar allt åt dig!
 
-Svara på svenska och var hjälpsam och pedagogisk.`;
+Svara på svenska och var hjälpsam och pedagogisk.`; // Updated fastpris text
 
     // Original single-step prompt (fallback)
     const systemPrompt = `Du är en expert på svenska elräkningar som hjälper användare identifiera extra kostnader, dolda avgifter och onödiga tillägg på deras elfakturor. 
