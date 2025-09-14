@@ -31,25 +31,25 @@ export async function POST(req: NextRequest) {
     // Step 1: Extract structured data from invoice
     const extractionPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
 
-**VIKTIGT - FLEXIBILITET:**
+VIKTIGT - FLEXIBILITET:
 - Du MÅSTE hantera fakturor från ALLA elleverantörer (E.ON, Fortum, Vattenfall, EDF, Göteborg Energi, Stockholm Exergi, m.fl.)
 - Olika leverantörer har olika fakturaformat och terminologi - anpassa dig efter varje faktura
 - Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
 - Använd endast svenska ord och termer
 
-**EXTRAKTIONSREGEL:**
+EXTRAKTIONSREGEL:
 Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Varje kostnad ska ha:
 - "name": exakt text från fakturan (t.ex. "Fast månadsavgift", "Elavtal årsavgift")
 - "amount": belopp i kr från "Totalt"-kolumnen (t.ex. 31.20, 44.84) - INTE från "öre/kWh" eller "kr/mån"
 - "section": vilken sektion den tillhör ("Elnät" eller "Elhandel")
 - "description": kort beskrivning av vad kostnaden är
 
-**KRITISKT FÖR BELOPP:**
+KRITISKT FÖR BELOPP:
 - Läs ALLTID från den sista kolumnen som innehåller slutbeloppet i kr
 - Ignorera kolumner med "öre/kWh", "kr/mån", "kr/kWh" - dessa är bara pris per enhet
 - Slutbeloppet är det som faktiskt debiteras kunden
 
-**EXEMPEL JSON:**
+EXEMPEL JSON:
 [
   {
     "name": "Fast månadsavgift",
@@ -77,17 +77,17 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
   }
 ]
 
-**VIKTIGT - FLEXIBELT FÖR ALLA LEVERANTÖRER:**
+VIKTIGT - FLEXIBELT FÖR ALLA LEVERANTÖRER:
 - Inkludera ALLA kostnader, även de som inte är "onödiga"
-- **KRITISKT**: Läs ALLTID beloppet från "Totalt"-kolumnen eller den sista kolumnen med belopp
+- KRITISKT: Läs ALLTID beloppet från "Totalt"-kolumnen eller den sista kolumnen med belopp
 - Läs INTE från "öre/kWh" eller "kr/mån" kolumner - bara slutbeloppet
-- **KRITISKT**: Leta särskilt efter "Elavtal årsavgift" - denna kostnad missas ofta men är viktig
+- KRITISKT: Leta särskilt efter "Elavtal årsavgift" - denna kostnad missas ofta men är viktig
 - Var särskilt uppmärksam på "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag", "Påslag"
 - Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
-- **EXTRA VIKTIGT**: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
-- **BELOPPSLÄSNING**: För "Påslag" - läs det exakta beloppet som står i "Totalt"-kolumnen, inte från beräkningen
+- EXTRA VIKTIGT: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
+- BELOPPSLÄSNING: För "Påslag" - läs det exakta beloppet som står i "Totalt"-kolumnen, inte från beräkningen
 
-**LEVERANTÖRSSPECIFIKA TERMER:**
+LEVERANTÖRSSPECIFIKA TERMER:
 - E.ON: "Elavtal årsavgift", "Fast påslag", "Rörliga kostnader"
 - Fortum: "Månadsavgift", "Påslag", "Elcertifikat"
 - Vattenfall: "Fast avgift", "Påslag", "Årsavgift"
@@ -96,42 +96,42 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 - Stockholm Exergi: "Fast avgift", "Påslag", "Årsavgift"
 - Andra leverantörer: Anpassa efter fakturans terminologi
 
-**JSON-FORMAT KRITISKT:**
+JSON-FORMAT KRITISKT:
 - Använd endast dubbla citattecken för strängar
 - Inga trailing commas
 - Inga kommentarer i JSON
 - Perfekt formatering krävs
 - Starta direkt med [ och sluta med ]
 
-**SLUTLIG PÅMINNELSE:**
+SLUTLIG PÅMINNELSE:
 - Läs belopp från "Totalt"-kolumnen, INTE från "öre/kWh" eller "kr/mån"
 - För "Månadsavgift": läs från "Totalt"-kolumnen (t.ex. 55,20 kr), inte från "kr/mån"-kolumnen
 - För "Påslag": läs från "Totalt"-kolumnen (t.ex. 13,80 kr), inte från "öre/kWh"-kolumnen
 
-**KRITISKT EXEMPEL FÖR FORTUM-FAKTUROR:**
+KRITISKT EXEMPEL FÖR FORTUM-FAKTUROR:
 På Fortum-fakturor ser du ofta:
 - "Påslag: 690 kWh at 2,00 öre/kWh, totaling 13,80 kr"
 - Läs ALLTID "13,80 kr" (slutbeloppet), INTE "2,00 öre/kWh" (enhetspriset)
 - Samma gäller för "Månadsavgift: 1 Mån at 55,20 kr/mån, totaling 55,20 kr"
 - Läs ALLTID "55,20 kr" (slutbeloppet), INTE "55,20 kr/mån" (enhetspriset)
 
-**VIKTIGT - FÖR ALLA LEVERANTÖRER:**
+VIKTIGT - FÖR ALLA LEVERANTÖRER:
 - Leta efter ordet "totaling" eller "totalt" följt av beloppet i kr
 - Ignorera alltid siffror följda av "öre/kWh", "kr/mån", "kr/kWh"
 - Slutbeloppet är det som faktiskt debiteras kunden
 
-**EXTRA VIKTIGT FÖR PÅSLAG:**
+EXTRA VIKTIGT FÖR PÅSLAG:
 - På alla fakturor: läs från "Totalt"-kolumnen eller sista kolumnen med belopp
 - På Fortum-fakturor: "Påslag: 690 kWh at 2,00 öre/kWh, totaling 13,80 kr" - läs "13,80 kr"
 - På andra leverantörer: läs från "Totalt"-kolumnen eller sista kolumnen med belopp
-- **KRITISKT**: Läs ALLTID slutbeloppet, INTE enhetspriset (öre/kWh, kr/mån)
+- KRITISKT: Läs ALLTID slutbeloppet, INTE enhetspriset (öre/kWh, kr/mån)
 
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
     const calculationPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Baserat på den extraherade JSON-datan, identifiera onödiga kostnader och beräkna total besparing.
 
-**ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):**
+ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
 - Rörliga kostnader, Rörlig kostnad, Rörliga avgifter, Rörlig avgift
 - Fast påslag, Fasta påslag, Fast avgift, Fast avg., Fasta avgifter, Fast kostnad, Fasta kostnader, Påslag, Påslag (alla varianter)
@@ -149,7 +149,7 @@ Svara ENDAST med JSON-arrayen, inget annat text.`;
 - Rent vatten, Fossilfri, Fossilfri ingår
 - Profilpris, Bundet profilpris
 
-**LEVERANTÖRSSPECIFIKA ONÖDIGA KOSTNADER:**
+LEVERANTÖRSSPECIFIKA ONÖDIGA KOSTNADER:
 - E.ON: "Elavtal årsavgift", "Fast påslag", "Rörliga kostnader"
 - Fortum: "Månadsavgift", "Påslag", "Elcertifikat"
 - Vattenfall: "Fast avgift", "Påslag", "Årsavgift"
@@ -255,34 +255,34 @@ ORDLISTA - ALLA DETTA RÄKNAS SOM ONÖDIGA KOSTNADER:
 - Rent vatten, Fossilfri, Fossilfri ingår
  - Profilpris, Bundet profilpris
 
-**ORDLISTA - KOSTNADER SOM INTE RÄKNAS SOM EXTRA:**
+ORDLISTA - KOSTNADER SOM INTE RÄKNAS SOM EXTRA:
 - Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
 - Bundet elpris, Fastpris (själva energipriset), Rörligt elpris (själva energipriset)
 - Förbrukning, kWh, Öre/kWh, Kr/kWh
 
-**VIKTIGT: Inkludera ALLA kostnader från första listan i summeringen av onödiga kostnader. Exkludera kostnader från andra listan.**
+VIKTIGT: Inkludera ALLA kostnader från första listan i summeringen av onödiga kostnader. Exkludera kostnader från andra listan.
 
-**SUMMERING:**
+SUMMERING:
 1. Lista ALLA hittade onödiga kostnader med belopp
 2. Summera ALLA belopp till en total besparing
 3. Visa den totala besparingen tydligt i slutet
 
-**VIKTIGT - SLUTTEXT:**
+VIKTIGT - SLUTTEXT:
 Efter summeringen, avsluta alltid med denna exakta text:
 
-"### 💰 **Din årliga besparing:**
-**Du betalar [total] kr/månad i onödiga avgifter = [total × 12] kr/år!**
+"💰 Din årliga besparing:
+Du betalar [total] kr/månad i onödiga avgifter = [total × 12] kr/år!
 
 Detta är pengar som går direkt till din elleverantör utan att du får något extra för dem.
 
-### ✅ **Lösningen:**
-Byt till ett avtal utan dessa avgifter och spara **[total × 12] kr/år**!
+✅ Lösningen:
+Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år!
 
-**🎯 Välj ditt nya avtal:**
-- **Rörligt avtal**: 0 kr i avgifter första året – spara **[total × 12] kr/år**
-- **Fastprisavtal**: Prisgaranti med valfri bindningstid – spara **[total × 12] kr/år**
+🎯 Välj ditt nya avtal:
+- Rörligt avtal: 0 kr i avgifter första året – spara [total × 12] kr/år
+- Fastprisavtal: Prisgaranti med valfri bindningstid – spara [total × 12] kr/år
 
-**⏰ Byt idag** – det tar bara 2 minuter och vi fixar allt åt dig!"
+⏰ Byt idag – det tar bara 2 minuter och vi fixar allt åt dig!"
 
 Svara på svenska och var hjälpsam och pedagogisk.`;
 
@@ -413,8 +413,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                         `= ${newYearlyTotal} kr/år`
                       );
                       gptAnswer = gptAnswer.replace(
-                        /spara \*\*\[total × 12\] kr\/år\*\*/g,
-                        `spara **${newYearlyTotal} kr/år**`
+                        /spara \[total × 12\] kr\/år/g,
+                        `spara ${newYearlyTotal} kr/år`
                       );
                       console.log('Updated Påslag amount and totals');
                     }
@@ -437,8 +437,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                       const newYearlyTotal = (parseFloat(newMonthlyTotal) * 12).toFixed(2);
                       
                       gptAnswer = gptAnswer.replace(
-                        /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
-                        `### Onödiga kostnader:$1Påslag: ${finalPaaslagAmount} kr\n### Total besparing:`
+                      /Onödiga kostnader:([\s\S]*?)Total besparing:/,
+                      `Onödiga kostnader:$1Påslag: ${finalPaaslagAmount} kr\nTotal besparing:`
                       );
                       gptAnswer = gptAnswer.replace(
                         /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
@@ -449,8 +449,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                         `= ${newYearlyTotal} kr/år`
                       );
                       gptAnswer = gptAnswer.replace(
-                        /spara \*\*\[total × 12\] kr\/år\*\*/g,
-                        `spara **${newYearlyTotal} kr/år**`
+                        /spara \[total × 12\] kr\/år/g,
+                        `spara ${newYearlyTotal} kr/år`
                       );
                       console.log('Added missing Påslag to result and updated totals');
                     }
@@ -482,8 +482,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                     console.log('New monthly total:', newMonthlyTotal, 'New yearly total:', newYearlyTotal);
                     
                     gptAnswer = gptAnswer.replace(
-                      /### Onödiga kostnader:([\s\S]*?)### Total besparing:/,
-                      `### Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\n### Total besparing:`
+                      /Onödiga kostnader:([\s\S]*?)Total besparing:/,
+                      `Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\nTotal besparing:`
                     );
                     gptAnswer = gptAnswer.replace(
                       /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
@@ -494,8 +494,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                       `= ${newYearlyTotal} kr/år`
                     );
                     gptAnswer = gptAnswer.replace(
-                      /spara \*\*\[total × 12\] kr\/år\*\*/g,
-                      `spara **${newYearlyTotal} kr/år**`
+                      /spara \[total × 12\] kr\/år/g,
+                      `spara ${newYearlyTotal} kr/år`
                     );
                     console.log('Updated gptAnswer with Elavtal årsavgift and totals');
                   }
