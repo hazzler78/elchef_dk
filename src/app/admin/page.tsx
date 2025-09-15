@@ -60,6 +60,13 @@ const adminSections = [
     href: "/admin/contract-clicks",
     icon: "📈",
     color: "bg-cyan-500"
+  },
+  {
+    title: "Delade länkar",
+    description: "Hantera kort som delats via Telegram (redigera/ta bort)",
+    href: "/admin/shared-cards",
+    icon: "🔗",
+    color: "bg-teal-500"
   }
 ];
 
