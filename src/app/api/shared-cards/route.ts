@@ -68,4 +68,35 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PATCH: update title/summary/url
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, title, summary, url } = body || {};
+    if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+    const payload: { title?: string; summary?: string; url?: string } = {};
+    if (title !== undefined) payload.title = title;
+    if (summary !== undefined) payload.summary = summary;
+    if (url !== undefined) payload.url = url;
+    const { error } = await supabase.from('shared_cards').update(payload).eq('id', id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+// DELETE: remove by id
+export async function DELETE(request: NextRequest) {
+  try {
+    const id = parseInt(request.nextUrl.searchParams.get('id') || '', 10);
+    if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+    const { error } = await supabase.from('shared_cards').delete().eq('id', id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 
