@@ -5,6 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const XAI_API_KEY = process.env.XAI_API_KEY;
+const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !TELEGRAM_BOT_TOKEN) {
   throw new Error('Missing required environment variables');
@@ -81,6 +83,82 @@ async function sendTelegramMessage(chatId: string, text: string) {
   }
 }
 
+// Extract URL from message
+function extractUrl(text: string): string | null {
+  const urlMatch = text.match(/https?:\/\/[^\s]+/i);
+  return urlMatch ? urlMatch[0] : null;
+}
+
+// Fetch page and extract title + readable text (simple heuristic, no external deps)
+async function fetchPageSummary(url: string): Promise<{ title: string; text: string } | null> {
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': 'elchef-telegram-bot/1.0' } });
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    const title = titleMatch ? titleMatch[1].trim().replace(/\s+/g, ' ') : url;
+
+    // Prefer meta description when available
+    const metaDescMatch = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["'][^>]*>/i) ||
+      html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["'][^>]*>/i);
+    const metaDescription = metaDescMatch ? metaDescMatch[1] : '';
+
+    // Strip scripts/styles and tags to get plain text
+    const bodyMatch = html.replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .match(/<body[\s\S]*?<\/body>/i);
+    const bodyHtml = bodyMatch ? bodyMatch[0] : html;
+    const text = bodyHtml
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const combined = [metaDescription, text].filter(Boolean).join(' \n ');
+    // Limit to avoid sending huge prompts
+    const limited = combined.slice(0, 6000);
+
+    return { title, text: limited };
+  } catch {
+    return null;
+  }
+}
+
+// Summarize content with Grok (X.ai)
+async function summarizeWithXAI(title: string, content: string): Promise<string | null> {
+  if (!XAI_API_KEY) return null;
+  const system = [
+    'Du är en svensk redaktör för elchef.se. Du får en artikel (titel + text) från en extern länk.',
+    'Skapa en kort sammanfattning anpassad för Telegram i Markdown med:',
+    '- En tydlig rubrik (fetstil).',
+    '- 3–6 viktigaste punkter i punktlista, konkreta och korta.',
+    '- En kort slutsats eller varför detta är relevant för våra läsare.',
+    'Undvik överdrifter. Använd svensk ton, enkel och saklig.'
+  ].join('\n');
+
+  const user = `TITEL: ${title}\n\nTEXT:\n${content}`;
+
+  const res = await fetch(XAI_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${XAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'grok-3-latest',
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: user },
+      ],
+      temperature: 0.3,
+      stream: false,
+    }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content || null;
+}
+
 // Parse contract response from team
 function parseContractResponse(text: string): { contractType: string; startDate?: string; note?: string } | null {
   const trimmed = text.trim();
@@ -130,6 +208,36 @@ export async function POST(request: NextRequest) {
     const { message } = update;
     const chatId = message.chat.id.toString();
     const text = message.text.trim();
+
+    // 0) If the message contains a URL, summarize it and reply with a card
+    const sharedUrl = extractUrl(text);
+    if (sharedUrl) {
+      try {
+        await sendTelegramMessage(chatId, '⏳ Analyserar länken och sammanfattar innehållet...');
+        const page = await fetchPageSummary(sharedUrl);
+        if (!page) {
+          await sendTelegramMessage(chatId, '❌ Kunde inte hämta sidan. Kontrollera länken och försök igen.');
+          return NextResponse.json({ success: true });
+        }
+
+        const summary = await summarizeWithXAI(page.title, page.text);
+        const summaryText = summary && summary.trim().length > 0 ? summary.trim() : '';
+        const card = [
+          `**${page.title}**`,
+          '',
+          summaryText || 'Ingen sammanfattning kunde genereras.',
+          '',
+          `[Läs mer](${sharedUrl})`
+        ].join('\n');
+
+        await sendTelegramMessage(chatId, card);
+        return NextResponse.json({ success: true });
+      } catch (err) {
+        console.error('Error summarizing shared URL:', err);
+        await sendTelegramMessage(chatId, '❌ Ett fel uppstod när länken skulle sammanfattas. Försök igen.');
+        return NextResponse.json({ success: true });
+      }
+    }
 
     // Determine target pending reminder using #ID in message or reply metadata
     // 1) Prefer explicit pattern in the operator's message: e.g., "12m #123"
