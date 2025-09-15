@@ -230,6 +230,23 @@ export async function POST(request: NextRequest) {
           `[Läs mer](${sharedUrl})`
         ].join('\n');
 
+        // Save card to Supabase for website listing
+        try {
+          const { error } = await supabase
+            .from('shared_cards')
+            .insert([
+              {
+                title: page.title,
+                summary: summaryText,
+                url: sharedUrl,
+                source_host: (() => { try { return new URL(sharedUrl).hostname; } catch { return null; } })(),
+              }
+            ]);
+          if (error) console.error('Error inserting shared card:', error);
+        } catch (e) {
+          console.error('Insert shared card exception:', e);
+        }
+
         await sendTelegramMessage(chatId, card);
         return NextResponse.json({ success: true });
       } catch (err) {

@@ -1,7 +1,7 @@
 "use client";
 
 import styled from 'styled-components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 
 
@@ -32,6 +32,26 @@ const Lead = styled.p`
   font-size: 1.2rem;
   color: var(--gray-700);
   margin-bottom: 2rem;
+`;
+
+const SubTitle = styled.h3`
+  font-size: 1.3rem;
+  margin: 2.5rem 0 1.5rem 0;
+  color: var(--primary-dark);
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 0.5rem;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+  }
 `;
 
 const PageBackground = styled.div`
@@ -166,6 +186,31 @@ const mediaArticles = [
 ];
 
 export default function Media() {
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch('/api/shared-cards?limit=12', { cache: 'no-store' });
+        const data = await res.json();
+        const mount = document.getElementById('shared-cards');
+        if (!mount) return;
+        if (!data?.items?.length) {
+          mount.innerHTML = '<p style="color: var(--gray-600)">Inga delade länkar ännu.</p>';
+          return;
+        }
+        type SharedCard = { title: string; summary: string; url: string };
+        const items = (data.items || []) as SharedCard[];
+        const html = items.map((item) => `
+          <div style="margin: 1rem 0; padding: 1rem 1.2rem; border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; background: rgba(255,255,255,0.9); box-shadow: var(--glass-shadow-light)">
+            <div style="font-weight:700; color: var(--primary); margin-bottom: 0.4rem">${(item.title || '').replace(/</g,'&lt;')}</div>
+            <div style="color: var(--gray-700); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap">${(item.summary || '').replace(/</g,'&lt;')}</div>
+            <a href="${item.url}" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:0.6rem; color: var(--primary); font-weight:600">Läs mer →</a>
+          </div>
+        `).join('');
+        mount.innerHTML = html;
+      } catch {}
+    }
+    load();
+  }, []);
   return (
     <PageBackground>
       <Section>
@@ -201,6 +246,9 @@ export default function Media() {
               </MediaCard>
             ))}
           </CardsGrid>
+
+          <SubTitle style={{ marginTop: '3rem' }}>Senaste delade länkar</SubTitle>
+          <div id="shared-cards"></div>
         </Container>
       </Section>
     </PageBackground>
