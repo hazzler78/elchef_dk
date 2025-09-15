@@ -220,10 +220,20 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ success: true });
         }
 
-        const summary = await summarizeWithXAI(page.title, page.text);
+        // Decode basic HTML entities in title
+        const decodedTitle = page.title
+          .replace(/&#x([0-9A-Fa-f]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)))
+          .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(parseInt(d, 10)))
+          .replace(/&amp;/g, '&')
+          .replace(/&quot;/g, '"')
+          .replace(/&apos;/g, "'")
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>');
+
+        const summary = await summarizeWithXAI(decodedTitle, page.text);
         const summaryText = summary && summary.trim().length > 0 ? summary.trim() : '';
         const card = [
-          `**${page.title}**`,
+          `**${decodedTitle}**`,
           '',
           summaryText || 'Ingen sammanfattning kunde genereras.',
           '',
@@ -236,7 +246,7 @@ export async function POST(request: NextRequest) {
             .from('shared_cards')
             .insert([
               {
-                title: page.title,
+                title: decodedTitle,
                 summary: summaryText,
                 url: sharedUrl,
                 source_host: (() => { try { return new URL(sharedUrl).hostname; } catch { return null; } })(),

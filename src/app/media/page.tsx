@@ -197,12 +197,39 @@ export default function Media() {
           mount.innerHTML = '<p style="color: var(--gray-600)">Inga delade länkar ännu.</p>';
           return;
         }
+        function renderMarkdown(md: string) {
+          const safe = String(md || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+          const withStrong = safe
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+          const lines = withStrong.split(/\r?\n/);
+          let html = '';
+          let inList = false;
+          for (const line of lines) {
+            if (/^\s*-\s+/.test(line)) {
+              if (!inList) { html += '<ul>'; inList = true; }
+              html += '<li>' + line.replace(/^\s*-\s+/, '') + '</li>';
+            } else if (line.trim().length === 0) {
+              if (inList) { html += '</ul>'; inList = false; }
+            } else {
+              if (inList) { html += '</ul>'; inList = false; }
+              html += '<p>' + line + '</p>';
+            }
+          }
+          if (inList) html += '</ul>';
+          return html;
+        }
+
         type SharedCard = { title: string; summary: string; url: string };
         const items = (data.items || []) as SharedCard[];
         const html = items.map((item) => `
           <div style="margin: 1rem 0; padding: 1rem 1.2rem; border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; background: rgba(255,255,255,0.9); box-shadow: var(--glass-shadow-light)">
             <div style="font-weight:700; color: var(--primary); margin-bottom: 0.4rem">${(item.title || '').replace(/</g,'&lt;')}</div>
-            <div style="color: var(--gray-700); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap">${(item.summary || '').replace(/</g,'&lt;')}</div>
+            <div style="color: var(--gray-700); font-size: 0.95rem; line-height: 1.6">${renderMarkdown(item.summary || '')}</div>
             <a href="${item.url}" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:0.6rem; color: var(--primary); font-weight:600">Läs mer →</a>
           </div>
         `).join('');
