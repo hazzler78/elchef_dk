@@ -38,6 +38,7 @@ export default function ContractClicksAdmin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const trackingStartDate = '2025-09-13'; // Start för AI-analys-spårning
   const [clearingTestData, setClearingTestData] = useState(false);
 
   useEffect(() => {
@@ -109,17 +110,23 @@ export default function ContractClicksAdmin() {
       const fastprisClicks = clicksData?.filter(c => c.contract_type === 'fastpris').length || 0;
       const withAiAnalysis = clicksData?.filter(c => c.log_id !== null).length || 0;
       
-      const savingsAmounts = clicksData?.filter(c => c.savings_amount && c.savings_amount > 0).map(c => c.savings_amount!) || [];
+      const savingsAmounts = (clicksData || [])
+        .map(c => (typeof c.savings_amount === 'number' ? c.savings_amount : 0))
+        .filter(v => v > 0);
       const totalSavings = savingsAmounts.reduce((sum, amount) => sum + amount, 0);
       const averageSavings = savingsAmounts.length > 0 ? totalSavings / savingsAmounts.length : 0;
 
-      // Hämta totalt antal AI-analyser för att beräkna konverteringsgrad
-      const { data: totalAnalyses } = await supabase
+      // Hämta totalt antal AI-analyser (respektera trackingStartDate)
+      const fromForAnalyses = (() => {
+        const filterFrom = dateFilter ? dateFilter.split('.')[2] : trackingStartDate;
+        return new Date(filterFrom) < new Date(trackingStartDate) ? trackingStartDate : filterFrom;
+      })();
+      const { count: analysesCount } = await supabase
         .from('invoice_ocr')
-        .select('id', { count: 'exact' })
-        .gte('created_at', dateFilter ? dateFilter.split('.')[2] : '1900-01-01');
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', fromForAnalyses);
 
-      const totalAiAnalyses = totalAnalyses?.length || 0;
+      const totalAiAnalyses = analysesCount || 0;
       const conversionRate = totalAiAnalyses > 0 ? (withAiAnalysis / totalAiAnalyses) * 100 : 0;
       const clickThroughRate = totalClicks > 0 ? (withAiAnalysis / totalClicks) * 100 : 0;
 
