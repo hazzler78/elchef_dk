@@ -57,38 +57,59 @@ export default function SalesysForm({
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    // Helper to attempt initializing when script and function are ready
+    const tryInit = () => {
+      if (initializedRef.current) return true;
+      if (typeof window.createWebForm !== "function") return false;
+      try {
+        container.innerHTML = "";
+        const formInstance = window.createWebForm(container, formId, options);
+        window.myForm = formInstance;
+
+        if (defaultFields && typeof formInstance?.setFields === "function") {
+          formInstance.setFields(defaultFields);
+        }
+
+        if (typeof onReady === "function") {
+          onReady(formInstance);
+        }
+
+        initializedRef.current = true;
+        console.log("Salesys form initialized", formInstance);
+        return true;
+      } catch (err) {
+        console.warn("Salesys form init failed, will retry", err);
+        return false;
+      }
+    };
+
+    // If the script is already on the page, try immediately
+    if (tryInit()) return;
+
+    // Otherwise, inject the script and try on load, with polling fallback
     const webFormScript = document.createElement("script");
     webFormScript.src = "https://salesys.se/scripts/web_form1.js";
     webFormScript.async = true;
+    webFormScript.onerror = () => {
+      console.error("Failed to load Salesys web form script");
+    };
     document.body.appendChild(webFormScript);
 
     const onLoad = () => {
-      if (typeof window.createWebForm !== "function") return;
-
-      // Clear container and initialize form
-      container.innerHTML = "";
-      const createWebForm = window.createWebForm;
-      const formInstance = createWebForm(container, formId, options);
-      window.myForm = formInstance;
-
-      if (defaultFields && typeof formInstance?.setFields === "function") {
-        try {
-          formInstance.setFields(defaultFields);
-        } catch {
-          /* noop */
+      // First attempt on load
+      if (tryInit()) return;
+      // Poll for up to ~10s if createWebForm is late-binding inside the script
+      let attempts = 0;
+      const maxAttempts = 40; // 40 * 250ms = 10s
+      const poll = setInterval(() => {
+        attempts += 1;
+        if (tryInit() || attempts >= maxAttempts) {
+          clearInterval(poll);
+          if (!initializedRef.current) {
+            console.error("Salesys form failed to initialize after waiting");
+          }
         }
-      }
-
-      if (typeof onReady === "function") {
-        try {
-          onReady(formInstance);
-        } catch {
-          /* noop */
-        }
-      }
-
-      initializedRef.current = true;
-      console.log("Salesys form initialized", formInstance);
+      }, 250);
     };
 
     webFormScript.addEventListener("load", onLoad);
