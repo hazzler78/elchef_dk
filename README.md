@@ -29,6 +29,10 @@ npm start
 
 Deploy rekommenderas via [Vercel](https://vercel.com/).
 
+## Preview-deploy
+
+Denna notering är tillagd för att trigga en Vercel preview-deploy för branchen `preview-form`.
+
 ## Teknikstack
 - [Next.js](https://nextjs.org/) (App Router)
 - [React](https://react.dev/)
