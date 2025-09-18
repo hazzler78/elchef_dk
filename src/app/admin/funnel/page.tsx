@@ -88,7 +88,9 @@ export default function FunnelAdmin() {
         <label style={{ marginRight: '1rem', fontWeight: 'bold' }}>Tidsperiod:</label>
         <select
           value={dateRange}
-          onChange={(e) => setDateRange(e.target.value as any)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')
+          }
           style={{ padding: '0.5rem', borderRadius: 4, border: '1px solid #ccc' }}
         >
           <option value="7d">Senaste 7 dagarna</option>
