@@ -115,6 +115,11 @@ export default function ContractClicksAdmin() {
         .filter(v => v > 0);
       const totalSavings = savingsAmounts.reduce((sum, amount) => sum + amount, 0);
       const averageSavings = savingsAmounts.length > 0 ? totalSavings / savingsAmounts.length : 0;
+      
+      // Debug: Logga besparingsdata
+      console.log('Contract clicks data:', clicksData);
+      console.log('Savings amounts:', savingsAmounts);
+      console.log('Total savings:', totalSavings);
 
       // Hämta totalt antal AI-analyser (respektera trackingStartDate)
       const fromForAnalyses = (() => {
@@ -306,6 +311,9 @@ export default function ContractClicksAdmin() {
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Total besparing</h3>
             <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#f59e0b' }}>
               {formatCurrency(stats.totalSavings)}
+            </p>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: '#666' }}>
+              {stats.totalSavings > 0 ? `${(clicks || []).filter(c => c.savings_amount && c.savings_amount > 0).length} poster med besparingsdata` : 'Inga besparingsdata än'}
             </p>
           </div>
 
