@@ -37,17 +37,47 @@ CREATE INDEX IF NOT EXISTS idx_shared_calculations_expires_at ON shared_calculat
 ALTER TABLE share_clicks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE shared_calculations ENABLE ROW LEVEL SECURITY;
 
--- Policy för share_clicks - tillåt alla att läsa och skriva
-CREATE POLICY "Allow all operations on share_clicks" ON share_clicks
-  FOR ALL USING (true);
+-- Policy för share_clicks - tillåt alla att läsa och skriva (idempotent)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE policyname = 'Allow all operations on share_clicks' 
+      AND schemaname = 'public' 
+      AND tablename = 'share_clicks'
+  ) THEN
+    CREATE POLICY "Allow all operations on share_clicks" ON share_clicks
+      FOR ALL USING (true);
+  END IF;
+END $$;
 
--- Policy för shared_calculations - tillåt alla att läsa aktiva delningar
-CREATE POLICY "Allow read active shared calculations" ON shared_calculations
-  FOR SELECT USING (expires_at > NOW());
+-- Policy för shared_calculations - tillåt alla att läsa aktiva delningar (idempotent)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE policyname = 'Allow read active shared calculations' 
+      AND schemaname = 'public' 
+      AND tablename = 'shared_calculations'
+  ) THEN
+    CREATE POLICY "Allow read active shared calculations" ON shared_calculations
+      FOR SELECT USING (expires_at > NOW());
+  END IF;
+END $$;
 
--- Policy för shared_calculations - tillåt skapande av delningar
-CREATE POLICY "Allow insert shared calculations" ON shared_calculations
-  FOR INSERT WITH CHECK (true);
+-- Policy för shared_calculations - tillåt skapande av delningar (idempotent)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE policyname = 'Allow insert shared calculations' 
+      AND schemaname = 'public' 
+      AND tablename = 'shared_calculations'
+  ) THEN
+    CREATE POLICY "Allow insert shared calculations" ON shared_calculations
+      FOR INSERT WITH CHECK (true);
+  END IF;
+END $$;
 
 -- Funktion för att rensa gamla delningar
 CREATE OR REPLACE FUNCTION cleanup_expired_shared_calculations()

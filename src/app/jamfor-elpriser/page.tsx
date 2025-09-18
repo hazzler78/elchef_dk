@@ -89,6 +89,22 @@ export default function JamforElpriser() {
     } catch {}
   }, []);
 
+  // Spåra sidvisning
+  useEffect(() => {
+    try {
+      if (typeof window === 'undefined') return;
+      const sid = sessionIdRef.current || localStorage.getItem('invoiceSessionId') || '';
+      const payload = JSON.stringify({ path: '/jamfor-elpriser', sessionId: sid });
+      const url = '/api/events/page-view';
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(url, blob);
+      } else {
+        fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
+      }
+    } catch {}
+  }, []);
+
   // Funktion för att spåra kontraktsklick från AI-användare
   const trackContractClick = (contractType: 'rorligt' | 'fastpris') => {
     try {

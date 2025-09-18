@@ -14,6 +14,24 @@ CREATE TABLE IF NOT EXISTS contract_clicks (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Tabell för page views
+CREATE TABLE IF NOT EXISTS page_views (
+  id SERIAL PRIMARY KEY,
+  path TEXT,
+  session_id VARCHAR(255),
+  utm_source VARCHAR(100),
+  utm_medium VARCHAR(100),
+  utm_campaign VARCHAR(100),
+  user_agent TEXT,
+  referer TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE page_views ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all to read page_views" ON page_views FOR SELECT USING (true);
+CREATE POLICY "Allow all to insert page_views" ON page_views FOR INSERT WITH CHECK (true);
+
+
 -- Index för bättre prestanda
 CREATE INDEX IF NOT EXISTS idx_contract_clicks_log_id ON contract_clicks(log_id);
 CREATE INDEX IF NOT EXISTS idx_contract_clicks_contract_type ON contract_clicks(contract_type);
