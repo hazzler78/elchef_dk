@@ -94,14 +94,33 @@ export default function JamforElpriser() {
     try {
       // Extrahera besparingsbelopp från AI-analysen
       const extractSavings = (text: string): number => {
-        const savingsMatch = text.match(/(\d+[,.]?\d*)\s*kr.*?(?:spar|bespar|minska)/i);
-        if (savingsMatch) {
-          return parseFloat(savingsMatch[1].replace(',', '.'));
+        // Försök olika format som används i GPT-svaret
+        const patterns = [
+          /spara totalt\s*(\d+(?:[,.]\d+)?)/i,  // "spara totalt 150"
+          /spara\s*(\d+(?:[,.]\d+)?)\s*kr\/år/i,  // "spara 150 kr/år"
+          /(\d+(?:[,.]\d+)?)\s*kr.*?(?:spar|bespar|minska)/i,  // ursprunglig pattern
+          /Din årliga besparing:\s*(\d+(?:[,.]\d+)?)/i,  // "Din årliga besparing: 150"
+          /Total besparing:\s*(\d+(?:[,.]\d+)?)/i  // "Total besparing: 150"
+        ];
+        
+        for (const pattern of patterns) {
+          const match = text.match(pattern);
+          if (match) {
+            const amount = parseFloat(match[1].replace(',', '.'));
+            if (amount > 0) {
+              return amount;
+            }
+          }
         }
+        
         return 0;
       };
 
       const savingsAmount = gptResult ? extractSavings(gptResult) : 0;
+      
+      // Debug: Logga extraktionsresultat
+      console.log('GPT Result:', gptResult);
+      console.log('Extracted savings amount:', savingsAmount);
       
       const payload = JSON.stringify({
         contractType,
