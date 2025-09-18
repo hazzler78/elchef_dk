@@ -303,9 +303,9 @@ export default function ContractClicksAdmin() {
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             border: '1px solid #e0e0e0'
           }}>
-            <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Genomsnittlig besparing</h3>
+            <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Total besparing</h3>
             <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#f59e0b' }}>
-              {formatCurrency(stats.averageSavings)}
+              {formatCurrency(stats.totalSavings)}
             </p>
           </div>
 
