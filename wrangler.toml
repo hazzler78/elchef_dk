@@ -1,5 +1,4 @@
 name = "elchef-pages"
-account_id = "YOUR_ACCOUNT_ID"
 compatibility_date = "2024-11-12"
 pages_build_output_dir = ".vercel/output"
 
@@ -20,14 +19,6 @@ MAILERLITE_GROUP_ID = "${MAILERLITE_GROUP_ID}"
 OPENAI_API_KEY = "${OPENAI_API_KEY}"
 XAI_API_KEY = "${XAI_API_KEY}"
 
-[[triggers.crons]]
-# 09:00 Europe/Stockholm and midnight UTC daily equivalent windows
-schedule = "0 7 * * *"
-
-[build]
-command = "npm run cf:build"
-
-[observability]
-enabled = true
+# Note: Pages config does not support account_id, triggers, or build/observability blocks
 
 
