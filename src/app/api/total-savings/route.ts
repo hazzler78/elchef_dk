@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+// removed unused createClient
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create Supabase client per-request
 
 export async function GET() {
   try {
+    const supabase = getSupabaseServerClient();
     // Hämta alla contract clicks med besparingsbelopp
     const { data: clicksData, error } = await supabase
       .from('contract_clicks')
