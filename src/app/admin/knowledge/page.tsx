@@ -218,6 +218,7 @@ export default function AdminKnowledge() {
   };
 
   const saveProvider = async (provider: ProviderInfo) => {
+    const supabase = getSupabase();
     try {
       if (provider.id) {
         // Update existing
