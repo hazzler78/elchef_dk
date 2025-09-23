@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+// removed unused createClient
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 import { CustomerReminder } from '@/lib/types';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Missing Supabase configuration');
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// Supabase client is created per-request via helper
 
 // Helper functions for precise date handling
 function addMonthsKeepingEnd(date: Date, monthsToAdd: number): Date {
@@ -79,6 +73,7 @@ export async function POST(request: NextRequest) {
       notes: data.notes || null
     };
 
+    const supabase = getSupabaseServerClient();
     const { data: insertedReminder, error } = await supabase
       .from('customer_reminders')
       .insert([reminderData])
@@ -113,7 +108,7 @@ export async function GET() {
     // Compute today's date in local time to match stored DATE values
     const now = new Date();
     const today = formatLocalYYYYMMDD(now);
-    
+    const supabase = getSupabaseServerClient();
     const { data: dueReminders, error } = await supabase
       .from('customer_reminders')
       .select('*')
