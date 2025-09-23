@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+// removed unused createClient
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Missing Supabase configuration');
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// Supabase client is created per-request via helper
 
 // PATCH: Mark reminder as sent
 export async function PATCH(
@@ -26,6 +20,7 @@ export async function PATCH(
       );
     }
 
+    const supabase = getSupabaseServerClient();
     const { data, error } = await supabase
       .from('customer_reminders')
       .update({ 
