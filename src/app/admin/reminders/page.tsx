@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { CustomerReminder } from "@/lib/types";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const getSupabase = () =>
+  createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+  );
 
 const ADMIN_PASSWORD = "grodan2025";
 
@@ -55,6 +57,7 @@ export default function AdminReminders() {
 
   const fetchReminders = async () => {
     setLoading(true);
+    const supabase = getSupabase();
     const { data, error } = await supabase
       .from("customer_reminders")
       .select("*")
@@ -87,6 +90,7 @@ export default function AdminReminders() {
       };
       
       // Try to get due reminders to test the system
+      const supabase = getSupabase();
       const { data: dueReminders } = await supabase
         .from("customer_reminders")
         .select("*")
@@ -159,6 +163,7 @@ export default function AdminReminders() {
     setTestResult("");
     
     try {
+      const supabase = getSupabase();
       const { error } = await supabase
         .from("customer_reminders")
         .update({ 
@@ -196,6 +201,7 @@ export default function AdminReminders() {
     
     setDeleting(true);
     try {
+      const supabase = getSupabase();
       const { error } = await supabase
         .from("customer_reminders")
         .delete()
@@ -237,6 +243,7 @@ export default function AdminReminders() {
     setUpdating(true);
     try {
       const newReminderDate = calculateReminderDate(editForm.contract_start_date, editForm.contract_type);
+      const supabase = getSupabase();
       const { error } = await supabase
         .from("customer_reminders")
         .update({
@@ -270,6 +277,7 @@ export default function AdminReminders() {
     
     setDeleting(true);
     try {
+      const supabase = getSupabase();
       const { error } = await supabase
         .from("customer_reminders")
         .delete()
@@ -387,6 +395,7 @@ export default function AdminReminders() {
         notes: newReminder.notes || null
       };
 
+      const supabase = getSupabase();
       const { error } = await supabase
         .from("customer_reminders")
         .insert([reminderData]);
