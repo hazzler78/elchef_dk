@@ -3,9 +3,7 @@ account_id = "YOUR_ACCOUNT_ID"
 compatibility_date = "2024-11-12"
 pages_build_output_dir = ".vercel/output"
 
-[pages]
-# Cloudflare Pages project name
-project_name = "elchef"
+## [pages] table is not supported by this runner; using pages_build_output_dir instead
 
 [vars]
 # NEXT_PUBLIC_* are exposed to client automatically in Next
@@ -21,10 +19,6 @@ MAILERLITE_API_KEY = "${MAILERLITE_API_KEY}"
 MAILERLITE_GROUP_ID = "${MAILERLITE_GROUP_ID}"
 OPENAI_API_KEY = "${OPENAI_API_KEY}"
 XAI_API_KEY = "${XAI_API_KEY}"
-
-[[kv_namespaces]]
-binding = "CRON_STATE"
-id = ""
 
 [[triggers.crons]]
 # 09:00 Europe/Stockholm and midnight UTC daily equivalent windows
