@@ -6,10 +6,24 @@ const MAILERLITE_API_KEY = process.env.MAILERLITE_API_KEY;
 const MAILERLITE_GROUP_ID = process.env.MAILERLITE_GROUP_ID;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const rawSUPABASE_URL = process.env.SUPABASE_URL;
+const rawSUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+function sanitizeEnv(value: string | undefined): string | undefined {
+  if (!value) return value;
+  const trimmed = value.trim();
+  // Strip surrounding quotes if present (common misconfiguration in dashboards)
+  return trimmed.replace(/^"|"$/g, '');
+}
+
+function getSupabaseClient() {
+  const url = sanitizeEnv(rawSUPABASE_URL);
+  const key = sanitizeEnv(rawSUPABASE_SERVICE_ROLE_KEY);
+  if (!url || !key) {
+    throw new Error('Supabase credentials are not configured');
+  }
+  return createClient(url, key);
+}
 
 async function sendTelegramNotification(data: ContactFormData) {
   if (!TELEGRAM_BOT_TOKEN || TELEGRAM_CHAT_IDS.length === 0) {
@@ -26,6 +40,7 @@ async function sendTelegramNotification(data: ContactFormData) {
     created_at: new Date().toISOString()
   };
 
+  const supabase = getSupabaseClient();
   const { data: pending, error: pendingError } = await supabase
     .from('pending_reminders')
     .insert([pendingReminderData])
@@ -148,8 +163,8 @@ export async function POST(request: NextRequest) {
 
     // Store contact with enhanced tracking
     try {
-      if (supabase) {
-        await supabase.from('contacts').insert([{
+      const supabase = getSupabaseClient();
+      await supabase.from('contacts').insert([{
           name: data.name || null,
           email: data.email,
           phone: data.phone || null,
@@ -160,7 +175,6 @@ export async function POST(request: NextRequest) {
           form_type: formType,
           created_at: new Date().toISOString(),
         }]);
-      }
     } catch (e) {
       console.warn('Failed to store contact with ref (optional):', e);
     }
