@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create Supabase client per-request
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +21,7 @@ export async function POST(request: NextRequest) {
     // Validera att logId finns i invoice_ocr om det är angivet
     let validLogId = null;
     if (typeof logId === 'number') {
+      const supabase = getSupabaseServerClient();
       const { data: logExists } = await supabase
         .from('invoice_ocr')
         .select('id')
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     const referer = request.headers.get('referer') || '';
 
     // Logga kontraktsklick
+    const supabase = getSupabaseServerClient();
     const { error } = await supabase.from('contract_clicks').insert({
       contract_type: typeof contractType === 'string' ? contractType : null,
       log_id: validLogId, // Kan vara null om logId inte finns
