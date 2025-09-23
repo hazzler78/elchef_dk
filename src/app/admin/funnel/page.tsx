@@ -2,10 +2,6 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 interface FunnelStats {
   pageViews: number;
   aiAnalyses: number;
@@ -27,6 +23,10 @@ export default function FunnelAdmin() {
   const fetchStats = async () => {
     try {
       setLoading(true);
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+      );
       let from: string | null = null;
       if (dateRange !== 'all') {
         const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
