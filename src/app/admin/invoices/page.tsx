@@ -2,10 +2,6 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 const ADMIN_PASSWORD = "grodan2025";
 
 type InvoiceLog = {
@@ -42,8 +38,16 @@ export default function AdminInvoices() {
     }
   }, []);
 
+  // Create Supabase client lazily at runtime to avoid build-time URL parsing
+  const getSupabase = () =>
+    createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+    );
+
   const fetchLogs = async () => {
     setLoading(true);
+    const supabase = getSupabase();
     const { data, error } = await supabase
       .from('invoice_ocr')
       .select('*')
