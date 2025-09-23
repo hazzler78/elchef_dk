@@ -25,4 +25,6 @@ export async function POST(req: NextRequest) {
 
   const data = await xaiRes.json();
   return NextResponse.json(data);
-} 
+}
+
+export const runtime = 'edge'; 

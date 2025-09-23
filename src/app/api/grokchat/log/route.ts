@@ -1,19 +1,8 @@
 import { NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+
+export const runtime = 'edge';
 
 export async function GET() {
-  try {
-    const logPath = join(process.cwd(), 'grokchat.log');
-    const data = await readFile(logPath);
-    return new NextResponse(data, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="grokchat.log"',
-      },
-    });
-  } catch {
-    return NextResponse.json({ error: 'Loggfilen finns inte.' }, { status: 404 });
-  }
-} 
+  // Filesystem access is not available on the Edge runtime.
+  return NextResponse.json({ error: 'Loggfilen kan inte läsas i Edge-miljön.' }, { status: 501 });
+}

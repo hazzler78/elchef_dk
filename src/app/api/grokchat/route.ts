@@ -305,7 +305,7 @@ export async function POST(req: NextRequest) {
       const correction = [
         '**Korrigering:**',
         '- elchef.se tillhandahålls av VKNG LTD enligt våra [villkor](/villkor) och [integritetspolicy](/integritetspolicy).',
-        '- Vi lämnar inte ut eller gissar organisationsnummer i chatten. Verifiera via [Bolagsverket](https://www.bolagsverket.se) eller kontakta oss på info@elchef.se.'
+        '- Vi lämnar inte ut el or gissar organisationsnummer i chatten. Verifiera via [Bolagsverket](https://www.bolagsverket.se) eller kontakta oss på info@elchef.se.'
       ].join('\n');
 
       // Behåll ursprunglig text men lägg till tydlig korrigering överst
@@ -357,3 +357,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Serverfel' }, { status: 500 });
   }
 } 
+
+export const runtime = 'edge'; 
