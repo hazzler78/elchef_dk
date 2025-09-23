@@ -1,11 +1,11 @@
 name = "elchef-pages"
 account_id = "YOUR_ACCOUNT_ID"
 compatibility_date = "2024-11-12"
+pages_build_output_dir = ".vercel/output"
 
 [pages]
 # Cloudflare Pages project name
 project_name = "elchef"
-build_output_dir = ".vercel/output"
 
 [vars]
 # NEXT_PUBLIC_* are exposed to client automatically in Next
