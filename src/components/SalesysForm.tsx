@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type SalesysFormField = {
   name?: string;
@@ -50,6 +50,7 @@ export default function SalesysForm({
   onReady,
 }: SalesysFormProps) {
   const initializedRef = useRef(false);
+  const [initFailed, setInitFailed] = useState(false);
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -75,6 +76,7 @@ export default function SalesysForm({
         }
 
         initializedRef.current = true;
+        setInitFailed(false);
         console.log("Salesys form initialized", formInstance);
         return true;
       } catch (err) {
@@ -92,6 +94,7 @@ export default function SalesysForm({
     webFormScript.async = true;
     webFormScript.onerror = () => {
       console.error("Failed to load Salesys web form script");
+      setInitFailed(true);
     };
     document.body.appendChild(webFormScript);
 
@@ -107,6 +110,7 @@ export default function SalesysForm({
           clearInterval(poll);
           if (!initializedRef.current) {
             console.error("Salesys form failed to initialize after waiting");
+            setInitFailed(true);
           }
         }
       }, 250);
@@ -118,7 +122,22 @@ export default function SalesysForm({
     };
   }, [containerId, formId, options, defaultFields, onReady]);
 
-  return <div id={containerId} className={wrapperClassName} />;
+  return (
+    <div id={containerId} className={wrapperClassName}>
+      {initFailed && (
+        <div style={{
+          padding: "12px",
+          background: "#fff4f4",
+          border: "1px solid #fecaca",
+          color: "#b91c1c",
+          borderRadius: 8,
+          fontSize: 14
+        }}>
+          Kunde inte ladda formuläret just nu. Kontrollera nätverket och att formId är giltigt.
+        </div>
+      )}
+    </div>
+  );
 }
 
 

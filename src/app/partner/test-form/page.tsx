@@ -12,8 +12,8 @@ export default function PartnerTestFormPage() {
 
       <SalesysForm
         containerId="salesys-form-test"
-        formId="tmp-9075a4d0-eca0-4466-86db-6ae1c41f05d9"
-        options={{ width: "100%" }}
+        formId="68b05450a1479b5cec96958c"
+        options={{ width: "100%", test: true }}
       />
     </main>
   );
