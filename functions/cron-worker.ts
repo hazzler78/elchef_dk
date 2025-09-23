@@ -1,6 +1,6 @@
 // Cloudflare Worker: scheduled cron to ping Next.js API routes on Pages
 export default {
-  async scheduled(controller, env, ctx) {
+  async scheduled(controller: any, env: any, ctx: any) {
     const base = (env && env.CRON_TARGET_BASE_URL) || 'https://www.elchef.se';
     const targets = [
       '/api/reminders/send',
