@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunkSize)) as unknown as number[]);
+  }
+  return btoa(binary);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,11 +20,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    // Läs filen som buffer
+    // Läs filen och konvertera till base64 utan Node Buffer
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
     const mimeType = file.type;
-    const base64Image = `data:${mimeType};base64,${buffer.toString('base64')}`;
+    const base64Image = `data:${mimeType};base64,${arrayBufferToBase64(arrayBuffer)}`;
 
     const openaiApiKey = process.env.OPENAI_API_KEY;
     if (!openaiApiKey) {
