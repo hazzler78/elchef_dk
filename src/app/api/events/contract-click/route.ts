@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+// removed unused createClient
 import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
 // Create Supabase client per-request
