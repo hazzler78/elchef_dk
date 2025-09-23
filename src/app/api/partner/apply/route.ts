@@ -56,6 +56,8 @@ export async function POST(request: NextRequest) {
         created_at: new Date().toISOString(),
       }]);
 
+    }
+
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_IDS.length > 0) {
       const msg = `
 🤝 *Ny företags-partneransökan*
