@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const getSupabase = () =>
+  createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+  );
 
 const ADMIN_PASSWORD = "grodan2025";
 
@@ -83,6 +84,7 @@ export default function AdminKnowledge() {
   const fetchKnowledgeData = async () => {
     try {
       // Fetch knowledge items
+      const supabase = getSupabase();
       const { data: knowledgeData } = await supabase
         .from('ai_knowledge')
         .select('*')
@@ -141,6 +143,7 @@ export default function AdminKnowledge() {
     try {
       if (item.id) {
         // Update existing
+        const supabase = getSupabase();
         const { error } = await supabase
           .from('ai_knowledge')
           .update({
@@ -157,6 +160,7 @@ export default function AdminKnowledge() {
         if (error) throw error;
       } else {
         // Create new
+        const supabase = getSupabase();
         const { error } = await supabase
           .from('ai_knowledge')
           .insert([{
@@ -186,6 +190,7 @@ export default function AdminKnowledge() {
     try {
       if (campaign.id) {
         // Update existing
+        const supabase = getSupabase();
         const { error } = await supabase
           .from('ai_campaigns')
           .update(campaign)
@@ -194,6 +199,7 @@ export default function AdminKnowledge() {
         if (error) throw error;
       } else {
         // Create new
+        const supabase = getSupabase();
         const { error } = await supabase
           .from('ai_campaigns')
           .insert([campaign]);
@@ -244,6 +250,7 @@ export default function AdminKnowledge() {
     if (!confirm('Är du säker på att du vill radera denna kunskapsartikel?')) return;
     
     try {
+      const supabase = getSupabase();
       const { error } = await supabase
         .from('ai_knowledge')
         .delete()
@@ -264,6 +271,7 @@ export default function AdminKnowledge() {
     if (!confirm('Är du säker på att du vill radera denna kampanj?')) return;
     
     try {
+      const supabase = getSupabase();
       const { error } = await supabase
         .from('ai_campaigns')
         .delete()
@@ -284,6 +292,7 @@ export default function AdminKnowledge() {
     if (!confirm('Är du säker på att du vill radera denna leverantör?')) return;
     
     try {
+      const supabase = getSupabase();
       const { error } = await supabase
         .from('ai_providers')
         .delete()
