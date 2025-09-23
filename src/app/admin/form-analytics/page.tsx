@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const getSupabase = () => createClient(supabaseUrl as string, supabaseKey as string);
 
 const ADMIN_PASSWORD = "grodan2025";
 
@@ -144,6 +144,7 @@ export default function AdminFormAnalytics() {
       console.log('Supabase URL:', supabaseUrl);
       console.log('Supabase Key:', supabaseKey ? 'Finns' : 'Saknas');
       
+      const supabase = getSupabase();
       const { data, error } = await supabase
         .from('contacts')
         .select('*')
@@ -207,6 +208,7 @@ export default function AdminFormAnalytics() {
       console.log('Key:', supabaseKey ? 'Finns' : 'Saknas');
       
       // Testa att hämta en enkel fråga
+      const supabase = getSupabase();
       const { error } = await supabase
         .from('contacts')
         .select('count')
