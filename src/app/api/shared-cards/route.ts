@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Missing required environment variables');
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// Supabase client is created per-request via helper
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseServerClient();
     const limit = Math.min(parseInt(request.nextUrl.searchParams.get('limit') || '50', 10), 100);
     const { data, error } = await supabase
       .from('shared_cards')
@@ -43,6 +38,7 @@ function stripMarkdown(md: string): string {
 // POST: normalize a card's summary to plain text
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseServerClient();
     const body = await request.json();
     const { url, id } = body || {};
     if (!url && !id) {
@@ -71,6 +67,7 @@ export async function POST(request: NextRequest) {
 // PATCH: update title/summary/url
 export async function PATCH(request: NextRequest) {
   try {
+    const supabase = getSupabaseServerClient();
     const body = await request.json();
     const { id, title, summary, url } = body || {};
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
@@ -89,6 +86,7 @@ export async function PATCH(request: NextRequest) {
 // DELETE: remove by id
 export async function DELETE(request: NextRequest) {
   try {
+    const supabase = getSupabaseServerClient();
     const id = parseInt(request.nextUrl.searchParams.get('id') || '', 10);
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
     const { error } = await supabase.from('shared_cards').delete().eq('id', id);

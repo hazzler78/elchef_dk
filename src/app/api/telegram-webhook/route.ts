@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PendingReminder } from '@/lib/types';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const XAI_API_KEY = process.env.XAI_API_KEY;
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !TELEGRAM_BOT_TOKEN) {
+if (!TELEGRAM_BOT_TOKEN) {
   throw new Error('Missing required environment variables');
 }
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// Create Supabase client per-request
 
 // Helper functions for precise date handling
 function addMonthsKeepingEnd(date: Date, monthsToAdd: number): Date {
@@ -242,6 +241,7 @@ export async function POST(request: NextRequest) {
 
         // Save card to Supabase for website listing
         try {
+          const supabase = getSupabaseServerClient();
           const { error } = await supabase
             .from('shared_cards')
             .insert([
@@ -272,6 +272,7 @@ export async function POST(request: NextRequest) {
     let targetPending: PendingReminder | null = null;
     if (inlineIdMatch) {
       const id = parseInt(inlineIdMatch[1]);
+      const supabase = getSupabaseServerClient();
       const { data, error } = await supabase
         .from('pending_reminders')
         .select('*')
@@ -289,6 +290,7 @@ export async function POST(request: NextRequest) {
       const replyIdMatch = repliedText.match(/\bID:\s*(\d+)\b/i);
       if (replyIdMatch) {
         const replyId = parseInt(replyIdMatch[1]);
+        const supabase = getSupabaseServerClient();
         const { data, error } = await supabase
           .from('pending_reminders')
           .select('*')
@@ -303,6 +305,7 @@ export async function POST(request: NextRequest) {
         const emailMatch = repliedText.match(/E-post:\s*([^\s]+)/i);
         if (emailMatch) {
           const email = emailMatch[1];
+          const supabase = getSupabaseServerClient();
           const { data, error } = await supabase
             .from('pending_reminders')
             .select('*')
@@ -349,6 +352,7 @@ export async function POST(request: NextRequest) {
             notes: `Skapad via Telegram svar: ${text}${contractInfo.note ? ` | Notering: ${contractInfo.note}` : ''}`
           };
 
+          const supabase = getSupabaseServerClient();
           const { error } = await supabase
             .from('customer_reminders')
             .insert([reminderData])
@@ -360,6 +364,7 @@ export async function POST(request: NextRequest) {
             await sendTelegramMessage(chatId, '❌ Kunde inte skapa påminnelse. Försök igen.');
           } else {
             // Delete the pending reminder
+            const supabase = getSupabaseServerClient();
             await supabase
               .from('pending_reminders')
               .delete()

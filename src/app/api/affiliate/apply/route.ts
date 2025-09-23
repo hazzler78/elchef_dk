@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
-
-const supabase = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-  : null;
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,9 +13,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Ogiltiga fält' }, { status: 400 });
     }
 
-    // Save to Supabase if configured
-    if (supabase) {
-      await supabase.from('affiliate_applications').insert([{
+    // Save to Supabase
+    const supabase = getSupabaseServerClient();
+    await supabase.from('affiliate_applications').insert([{
         name,
         email,
         channel: channel || null,
@@ -42,7 +37,6 @@ export async function POST(request: NextRequest) {
         form_type: 'affiliate',
         created_at: new Date().toISOString(),
       }]);
-    }
 
     // Notify via Telegram
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_IDS.length > 0) {

@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 import { CustomerReminder } from '@/lib/types';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_IDS = process.env.TELEGRAM_CHAT_IDS?.split(',').map(id => id.trim()) || [];
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Missing Supabase configuration');
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// Supabase client is created per-request via helper
 
 async function sendTelegramReminder(reminder: CustomerReminder) {
   if (!TELEGRAM_BOT_TOKEN || TELEGRAM_CHAT_IDS.length === 0) {
@@ -117,6 +111,7 @@ export async function POST(request: NextRequest) {
     const today = `${y}-${m}-${d}`;
     
     // Get all due reminders (including overdue ones)
+    const supabase = getSupabaseServerClient();
     const { data: dueReminders, error } = await supabase
       .from('customer_reminders')
       .select('*')
