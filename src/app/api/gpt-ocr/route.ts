@@ -1,8 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { createHash } from 'crypto';
-
 export const runtime = 'edge';
+
+async function sha256Hex(buffer: ArrayBuffer): Promise<string> {
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const bytes = new Uint8Array(hashBuffer);
+  return Array.from(bytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunkSize)) as unknown as number[]);
+  }
+  // btoa is available in Edge runtime
+  return btoa(binary);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,19 +31,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded or file is not a valid image.' }, { status: 400 });
     }
 
-    // Läs filen som buffer
+    // Läs filen som ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
     const mimeType = file.type;
-    const fileSize = (file as File).size ?? buffer.length;
+    const fileSize = (file as File).size;
     
     if (!['image/png', 'image/jpeg', 'image/jpg'].includes(mimeType)) {
       return NextResponse.json({ error: 'Endast PNG och JPG stöds just nu.' }, { status: 400 });
     }
 
-    // Konvertera bilden till base64
-    const base64Image = `data:${mimeType};base64,${buffer.toString('base64')}`;
-    const imageSha256 = createHash('sha256').update(buffer).digest('hex');
+    // Konvertera bilden till base64 (utan Buffer)
+    const base64Image = `data:${mimeType};base64,${arrayBufferToBase64(arrayBuffer)}`;
+    const imageSha256 = await sha256Hex(arrayBuffer);
 
     // Step 1: Extract structured data from invoice
     const extractionPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
@@ -606,7 +622,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 } catch {}
               }
               const storageKey = `${logId}/${imageSha256}.${mimeType === 'image/png' ? 'png' : 'jpg'}`;
-              const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, buffer, {
+              const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, file, {
                 contentType: mimeType,
                 upsert: false,
               });
