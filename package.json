@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "cf:build": "npx @cloudflare/next-on-pages build",
+    "cf:preview": "wrangler pages dev .vercel/output",
+    "cf:deploy": "wrangler pages deploy .vercel/output",
     "start": "next start",
     "lint": "next lint"
   },
@@ -28,11 +31,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@cloudflare/next-on-pages": "^1.13.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "wrangler": "^3.78.7",
     "typescript": "^5"
   }
 }

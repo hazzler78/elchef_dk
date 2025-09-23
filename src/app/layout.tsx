@@ -4,7 +4,6 @@ import Script from "next/script";
 import "./globals.css";
 import StyledComponentsRegistry from '../lib/registry';
 import BottomNav from '@/components/BottomNav';
-import { Analytics } from "@vercel/analytics/next";
 import CampaignBanner from '@/components/CampaignBanner';
 import GrokChat from '@/components/GrokChat';
 import Footer from '@/components/Footer';
@@ -93,7 +92,6 @@ export default function RootLayout({
           </div>
         </StyledComponentsRegistry>
         <GrokChat />
-        <Analytics />
       </body>
     </html>
   );

@@ -21,13 +21,51 @@ npm run dev
 
 ## Bygg & deploy
 
-Bygg för produktion:
+### Cloudflare Pages (Next.js on Pages)
+
+För produktion på Cloudflare Pages med `@cloudflare/next-on-pages`:
+
+1) Installera beroenden
 ```bash
-npm run build
-npm start
+npm install
 ```
 
-Deploy rekommenderas via [Vercel](https://vercel.com/).
+2) Bygg för Cloudflare
+```bash
+npm run cf:build
+```
+
+3) Lokal preview
+```bash
+npm run cf:preview
+```
+
+4) Deploy till Pages
+```bash
+npm run cf:deploy
+```
+
+Konfigurationen styrs via `wrangler.toml` (ange `account_id`, projektets namn under `[pages]`, samt miljövariabler under `[vars]`).
+
+### Miljövariabler
+Sätt följande variabler i Cloudflare Pages-projektet (Production och Preview):
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_IDS`
+- `MAILERLITE_API_KEY`
+- `MAILERLITE_GROUP_ID`
+- `OPENAI_API_KEY`
+- `XAI_API_KEY`
+
+### Cronersättning
+Tidigare Vercel-crons (`vercel.json`) ersätts av en Cloudflare Worker (`functions/cron-worker.ts`) som schemaläggs via `wrangler.toml` `triggers.crons`. Den pingar:
+- `/api/reminders/send`
+- `/api/update-prices`
+
+Sätt `CRON_TARGET_BASE_URL` i Pages miljövariabler till din publik URL (t.ex. `https://www.elchef.se`).
 
 ## Preview-deploy
 
@@ -38,7 +76,7 @@ Denna notering är tillagd för att trigga en Vercel preview-deploy för branche
 - [React](https://react.dev/)
 - [styled-components](https://styled-components.com/)
 - [TypeScript]
-- [Vercel] för hosting
+- Hosting: Cloudflare Pages
 
 ## Kontakt
 - E-post: info@elchef.se
