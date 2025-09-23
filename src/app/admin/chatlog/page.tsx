@@ -2,10 +2,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 const ADMIN_PASSWORD = "grodan2025";
 
 type ChatMessage = {
@@ -52,6 +48,10 @@ export default function AdminChatlog() {
 
   const fetchLogs = async () => {
     setLoading(true);
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+    );
     const { data, error } = await supabase
       .from("chatlog")
       .select("id, created_at, session_id, user_agent, messages, ai_response, total_tokens")
@@ -92,6 +92,10 @@ export default function AdminChatlog() {
     
     setDeleting(true);
     try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+      );
       const { error } = await supabase
         .from("chatlog")
         .delete()
@@ -119,6 +123,10 @@ export default function AdminChatlog() {
     
     setDeleting(true);
     try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+      );
       const { error } = await supabase
         .from("chatlog")
         .delete()
@@ -154,6 +162,10 @@ export default function AdminChatlog() {
     try {
       if (viewMode === "grouped" && selectedSessions.size > 0) {
         // Radera alla loggar för valda sessioner
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+        );
         const { error } = await supabase
           .from("chatlog")
           .delete()
@@ -167,6 +179,10 @@ export default function AdminChatlog() {
         }
       } else if (viewMode === "raw" && selectedItems.size > 0) {
         // Radera valda loggar
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+        );
         const { error } = await supabase
           .from("chatlog")
           .delete()
@@ -192,6 +208,10 @@ export default function AdminChatlog() {
     setDeleting(true);
     try {
       // Hämta alla loggar
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+      );
       const { data: allLogs, error: fetchError } = await supabase
         .from("chatlog")
         .select("*");
