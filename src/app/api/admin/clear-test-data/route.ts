@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+// removed unused createClient
+import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create Supabase client per-request
 
 export async function POST() {
   try {
+    const supabase = getSupabaseServerClient();
     // Ta bort alla rader där source = 'test-admin'
     const { error, count } = await supabase
       .from('contract_clicks')
