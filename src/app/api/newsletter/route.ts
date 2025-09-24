@@ -77,6 +77,14 @@ export async function POST(request: NextRequest) {
           { status: 409 }
         );
       }
+      // Plan-limit hos MailerLite (t.ex. "The subscriber might exceed the current subscriber limit.")
+      const message: string | undefined = (errorData && (errorData.message || errorData.error || errorData?.errors?.[0])) as string | undefined;
+      if (message && message.toLowerCase().includes('subscriber') && message.toLowerCase().includes('limit')) {
+        return NextResponse.json(
+          { error: 'Vi har nått gränsen för prenumeranter i vårt nyhetsbrev just nu. Försök gärna igen senare.' },
+          { status: 429 }
+        );
+      }
       if (errorData?.errors?.['groups.0']?.includes('The selected groups.0 is invalid.')) {
         return NextResponse.json(
           { error: 'Felaktigt grupp-ID för Mailerlite. Kontrollera att MAILERLITE_GROUP_ID är korrekt eller ta bort den från .env.local för att lägga till prenumeranter i "All subscribers".' },

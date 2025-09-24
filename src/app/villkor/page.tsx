@@ -20,7 +20,7 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #2563eb;
+  color: var(--primary);
 `;
 const Updated = styled.p`
   color: #64748b;
@@ -31,14 +31,14 @@ const SectionTitle = styled.h2`
   font-size: 1.2rem;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  color: #2563eb;
+  color: var(--primary);
 `;
 const Paragraph = styled.p`
   margin-bottom: 1.2rem;
   color: #374151;
 `;
 const Mail = styled.a`
-  color: #2563eb;
+  color: var(--primary);
   text-decoration: underline;
 `;
 

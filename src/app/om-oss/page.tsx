@@ -21,7 +21,7 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 2.2rem;
   margin-bottom: 1.5rem;
-  color: #2563eb;
+  color: var(--primary);
 `;
 const Lead = styled.p`
   font-size: 1.2rem;
@@ -37,8 +37,8 @@ const List = styled.ul`
 `;
 const Quote = styled.blockquote`
   font-style: italic;
-  color: #2563eb;
-  border-left: 4px solid #2563eb;
+  color: var(--primary);
+  border-left: 4px solid var(--primary);
   padding-left: 1rem;
   margin: 2rem 0;
 `;

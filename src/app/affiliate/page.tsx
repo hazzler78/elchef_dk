@@ -91,7 +91,7 @@ const Button = styled.button`
   margin-top: 1rem;
   width: 100%;
   padding: 0.9rem 1rem;
-  background: var(--primary, #10b981);
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 9999px;

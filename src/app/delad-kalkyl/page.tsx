@@ -87,7 +87,7 @@ function DeladKalkylContent() {
           <GlassButton
             variant="primary"
             size="lg"
-            background="rgba(0,201,107,0.85)"
+            background="linear-gradient(135deg, var(--primary), var(--secondary))"
             disableScrollEffect
             disableHoverEffect
             onClick={() => window.location.href = '/jamfor-elpriser'}
@@ -197,7 +197,7 @@ function DeladKalkylContent() {
           <GlassButton
             variant="primary"
             size="lg"
-            background="rgba(0,201,107,0.85)"
+            background="linear-gradient(135deg, var(--primary), var(--secondary))"
             disableScrollEffect
             disableHoverEffect
             onClick={() => window.location.href = withDefaultCtaUtm('/jamfor-elpriser', 'shared-calc', 'cta-analyze')}

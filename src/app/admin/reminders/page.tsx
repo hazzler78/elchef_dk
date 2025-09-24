@@ -485,20 +485,20 @@ export default function AdminReminders() {
         <div style={{ 
           padding: '1.5rem', 
           background: '#f0f9ff', 
-          border: '1px solid #0ea5e9', 
+          border: '1px solid var(--primary)', 
           borderRadius: '8px', 
           marginBottom: '2rem' 
         }}>
           <h3 style={{ marginTop: 0, marginBottom: '1rem', color: '#0c4a6e' }}>🔧 Systemstatus</h3>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '0.75rem', background: systemStatus.cronConfigured ? '#dcfce7' : '#fef2f2', border: `1px solid ${systemStatus.cronConfigured ? '#16a34a' : '#ef4444'}`, borderRadius: '4px' }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.cronConfigured ? 'rgba(254,204,0,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.cronConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.cronConfigured ? 'black' : undefined }}>
               <strong>Cron Jobs:</strong> {systemStatus.cronConfigured ? '✅ Konfigurerade' : '❌ Saknas'}
             </div>
-            <div style={{ padding: '0.75rem', background: systemStatus.telegramConfigured ? '#dcfce7' : '#fef2f2', border: `1px solid ${systemStatus.telegramConfigured ? '#16a34a' : '#ef4444'}`, borderRadius: '4px' }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.telegramConfigured ? 'rgba(254,204,0,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.telegramConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.telegramConfigured ? 'black' : undefined }}>
               <strong>Telegram:</strong> {systemStatus.telegramConfigured ? '✅ Konfigurerat' : '❌ Saknas'}
             </div>
-            <div style={{ padding: '0.75rem', background: systemStatus.secretKeyConfigured ? '#dcfce7' : '#fef2f2', border: `1px solid ${systemStatus.secretKeyConfigured ? '#16a34a' : '#ef4444'}`, borderRadius: '4px' }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.secretKeyConfigured ? 'rgba(254,204,0,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.secretKeyConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.secretKeyConfigured ? 'black' : undefined }}>
               <strong>Secret Key:</strong> {systemStatus.secretKeyConfigured ? '✅ Konfigurerat' : '❌ Saknas'}
             </div>
           </div>
@@ -509,7 +509,7 @@ export default function AdminReminders() {
               disabled={testingReminders}
               style={{ 
                 padding: '0.5rem 1rem', 
-                background: '#0ea5e9', 
+                background: 'var(--primary)', 
                 color: 'white', 
                 border: 'none', 
                 borderRadius: '4px',
@@ -555,8 +555,8 @@ export default function AdminReminders() {
             <div style={{ 
               marginTop: '1rem', 
               padding: '0.75rem', 
-              background: testResult.includes('✅') ? '#dcfce7' : '#fef2f2', 
-              border: `1px solid ${testResult.includes('✅') ? '#16a34a' : '#ef4444'}`, 
+              background: testResult.includes('✅') ? 'rgba(254,204,0,0.1)' : '#fef2f2', 
+              border: `1px solid ${testResult.includes('✅') ? 'var(--secondary)' : '#ef4444'}`, 
               borderRadius: '4px',
               whiteSpace: 'pre-line'
             }}>

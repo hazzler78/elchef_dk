@@ -164,7 +164,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
         <GlassButton
           variant="primary"
           size="md"
-          background="rgba(0,201,107,0.85)"
+          background="linear-gradient(135deg, var(--primary), var(--secondary))"
           disableScrollEffect
           disableHoverEffect
           onClick={() => setShowShareOptions(true)}

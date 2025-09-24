@@ -132,7 +132,7 @@ export default function BytElavtal() {
               <GlassButton 
                 variant="primary" 
                 size="lg"
-                background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
+                background="linear-gradient(135deg, var(--primary), var(--secondary))"
                 aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
                 disableScrollEffect={true}
                 disableHoverEffect={true}
@@ -166,7 +166,7 @@ export default function BytElavtal() {
               <GlassButton 
                 variant="secondary" 
                 size="lg"
-                background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
+                background="linear-gradient(135deg, var(--secondary), var(--primary))"
                 aria-label="Fastpris - Fastpris med prisgaranti"
                 disableScrollEffect={true}
                 disableHoverEffect={true}

@@ -22,7 +22,7 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  color: #2563eb;
+  color: var(--primary);
 `;
 const Lead = styled.p`
   font-size: 1.25rem;
@@ -42,7 +42,7 @@ export default function Foretag() {
           variant="primary" 
           size="lg" 
           onClick={() => window.open('https://energi2.se/elchef/', '_blank')}
-          background={'linear-gradient(135deg, rgba(0,201,107,0.95), rgba(22,147,255,0.95))'}
+          background={'linear-gradient(135deg, var(--primary), var(--secondary))'}
         >
           Läs mer & teckna företagsavtal
         </GlassButton>

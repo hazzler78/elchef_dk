@@ -8,7 +8,7 @@ export default function GoHomeButton() {
       variant="primary"
       size="lg"
       onClick={() => window.open('/', '_self')}
-      background={'linear-gradient(135deg, rgba(0,201,107,0.95), rgba(22,147,255,0.95))'}
+      background={'linear-gradient(135deg, var(--primary), var(--secondary))'}
     >
       Tillbaka till startsidan
     </GlassButton>

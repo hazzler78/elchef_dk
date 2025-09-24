@@ -25,7 +25,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
         maxWidth: 320,
         fontSize: 16,
         fontWeight: 500,
-        boxShadow: '0 2px 8px rgba(37,99,235,0.08)',
+        boxShadow: '0 2px 8px rgba(0,106,167,0.12)',
         marginLeft: 8,
       }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, opacity: 0.7 }}>

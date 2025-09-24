@@ -62,8 +62,8 @@ export default function AdminSharedCards() {
               <input style={{ padding: 8, border: '1px solid #e5e7eb', borderRadius: 8 }} value={item.url} onChange={e => setItems(prev => prev.map(p => p.id === item.id ? { ...p, url: e.target.value } : p))} />
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <button onClick={() => save(item)} style={{ padding: '8px 12px', background: '#1693ff', color: '#fff', borderRadius: 8, border: 'none' }}>Spara</button>
-              <button onClick={() => normalize(item.id)} style={{ padding: '8px 12px', background: '#10b981', color: '#fff', borderRadius: 8, border: 'none' }}>Normalisera</button>
+              <button onClick={() => save(item)} style={{ padding: '8px 12px', background: 'var(--primary)', color: '#fff', borderRadius: 8, border: 'none' }}>Spara</button>
+              <button onClick={() => normalize(item.id)} style={{ padding: '8px 12px', background: 'var(--secondary)', color: '#000', borderRadius: 8, border: 'none' }}>Normalisera</button>
               <button onClick={() => remove(item.id)} style={{ padding: '8px 12px', background: '#ef4444', color: '#fff', borderRadius: 8, border: 'none' }}>Ta bort</button>
               <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: 8, textDecoration: 'none' }}>Öppna</a>
             </div>
