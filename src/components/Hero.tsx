@@ -1,7 +1,7 @@
 "use client";
 
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import GlassButton from './GlassButton';
 import { withDefaultCtaUtm } from '@/lib/utm';
 
@@ -103,6 +103,7 @@ const USPList = styled.ul`
 
 export default function Hero() {
   const [variant, setVariant] = useState<'A' | 'B'>('A');
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     try {
@@ -179,6 +180,19 @@ export default function Hero() {
       video.play();
     }
   };
+
+  useEffect(() => {
+    // Nudge autoplay on some browsers that require an explicit play() after attach
+    const v = videoRef.current;
+    if (!v) return;
+    try {
+      v.muted = true;
+      const playPromise = v.play();
+      if (playPromise && typeof (playPromise as Promise<void>).catch === 'function') {
+        (playPromise as Promise<void>).catch(() => {/* ignore */});
+      }
+    } catch {/* ignore */}
+  }, []);
 
   return (
     <HeroSection>
@@ -291,10 +305,13 @@ export default function Hero() {
           </TextContent>
           <VideoWrapper>
             <video 
-              autoPlay 
-              muted 
-              loop 
+              ref={videoRef}
+              autoPlay
+              muted
+              loop
               playsInline
+              preload="auto"
+              onLoadedData={() => { try { videoRef.current?.play(); } catch {} }}
               onClick={handleVideoClick}
               style={{ cursor: 'pointer' }}
               title="Klicka för att växla ljud av/på"
