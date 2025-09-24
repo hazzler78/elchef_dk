@@ -316,7 +316,7 @@ export default function Hero() {
               style={{ cursor: 'pointer' }}
               title="Klicka för att växla ljud av/på"
             >
-              <source src="/Grodan%20presentation.mp4" type="video/mp4" />
+              <source src="/grodan-presentation.mp4" type="video/mp4" />
               Din webbläsare stöder inte video-elementet.
             </video>
           </VideoWrapper>
