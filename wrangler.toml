@@ -7,20 +7,8 @@ compatibility_flags = ["nodejs_compat"]
 
 ## [pages] table is not supported by this runner; using pages_build_output_dir instead
 
-[vars]
-# NEXT_PUBLIC_* are exposed to client automatically in Next
-NEXT_PUBLIC_SUPABASE_URL = "${NEXT_PUBLIC_SUPABASE_URL}"
-NEXT_PUBLIC_SUPABASE_ANON_KEY = "${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
-
-# Server-side envs used in API routes
-SUPABASE_URL = "${SUPABASE_URL}"
-SUPABASE_SERVICE_ROLE_KEY = "${SUPABASE_SERVICE_ROLE_KEY}"
-TELEGRAM_BOT_TOKEN = "${TELEGRAM_BOT_TOKEN}"
-TELEGRAM_CHAT_IDS = "${TELEGRAM_CHAT_IDS}"
-MAILERLITE_API_KEY = "${MAILERLITE_API_KEY}"
-MAILERLITE_GROUP_ID = "${MAILERLITE_GROUP_ID}"
-OPENAI_API_KEY = "${OPENAI_API_KEY}"
-XAI_API_KEY = "${XAI_API_KEY}"
+# Environment variables are managed in Cloudflare Pages UI (Production + Preview).
+# Remove this comment if you later re-introduce a [vars] block.
 
 # Note: Pages config does not support account_id, triggers, or build/observability blocks
 
