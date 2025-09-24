@@ -7,9 +7,7 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const XAI_API_KEY = process.env.XAI_API_KEY;
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 
-if (!TELEGRAM_BOT_TOKEN) {
-  throw new Error('Missing required environment variables');
-}
+// Do not throw at module load; guard inside handlers to avoid build-time failures
 
 // Create Supabase client per-request
 
@@ -58,6 +56,7 @@ function calculateReminderDate(contractStartDate: string, contractType: string):
 
 // Helper function to send Telegram message
 async function sendTelegramMessage(chatId: string, text: string) {
+  if (!TELEGRAM_BOT_TOKEN) return false;
   try {
     const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
@@ -197,6 +196,9 @@ function parseContractResponse(text: string): { contractType: string; startDate?
 // POST: Handle Telegram webhook
 export async function POST(request: NextRequest) {
   try {
+    if (!TELEGRAM_BOT_TOKEN) {
+      return NextResponse.json({ error: 'Telegram not configured' }, { status: 200 });
+    }
     const update = await request.json();
     
     // Handle only message updates
@@ -419,6 +421,9 @@ Påminnelse kommer skickas 11 månader före avtalsutgång.
 // GET: Set webhook (call this once to configure Telegram)
 export async function GET(request: NextRequest) {
   try {
+    if (!TELEGRAM_BOT_TOKEN) {
+      return NextResponse.json({ error: 'Telegram not configured' }, { status: 200 });
+    }
     // Prefer the actual request origin (works across custom domains and environments)
     const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
     const forwardedHost = request.headers.get('x-forwarded-host');
