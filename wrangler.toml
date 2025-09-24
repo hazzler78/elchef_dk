@@ -2,6 +2,9 @@ name = "elchef-pages"
 compatibility_date = "2024-11-12"
 pages_build_output_dir = ".vercel/output/static"
 
+# Enable Node.js built-in module compatibility for Workers runtime
+compatibility_flags = ["nodejs_compat"]
+
 ## [pages] table is not supported by this runner; using pages_build_output_dir instead
 
 [vars]
