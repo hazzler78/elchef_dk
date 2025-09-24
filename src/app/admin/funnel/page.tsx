@@ -114,7 +114,7 @@ export default function FunnelAdmin() {
 
           <div style={{ background: 'white', padding: '1.25rem', border: '1px solid #eee', borderRadius: 8 }}>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Kontraktsklick (med AI)</h3>
-            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: '#22c55e' }}>{stats.contractClicksWithAi}</p>
+            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: 'var(--secondary)' }}>{stats.contractClicksWithAi}</p>
           </div>
 
           <div style={{ background: 'white', padding: '1.25rem', border: '1px solid #eee', borderRadius: 8 }}>

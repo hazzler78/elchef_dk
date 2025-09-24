@@ -323,7 +323,7 @@ export default function AdminKnowledge() {
             style={{ width: "100%", padding: 10, fontSize: 16, marginBottom: 12, borderRadius: 6, border: "1px solid #cbd5e1" }}
             autoFocus
           />
-          <button type="submit" style={{ width: "100%", padding: 10, fontSize: 16, borderRadius: 6, background: "#2563eb", color: "white", border: "none", fontWeight: 600 }}>
+          <button type="submit" style={{ width: "100%", padding: 10, fontSize: 16, borderRadius: 6, background: "var(--primary)", color: "white", border: "none", fontWeight: 600 }}>
             Logga in
           </button>
         </form>
@@ -368,7 +368,7 @@ export default function AdminKnowledge() {
           onClick={() => setActiveTab('knowledge')}
           style={{ 
             padding: "12px 20px", 
-            background: activeTab === 'knowledge' ? "#2563eb" : "#e5e7eb", 
+            background: activeTab === 'knowledge' ? "var(--primary)" : "#e5e7eb", 
             color: activeTab === 'knowledge' ? "white" : "black",
             border: "none", 
             borderRadius: "6px 6px 0 0",
@@ -382,7 +382,7 @@ export default function AdminKnowledge() {
           onClick={() => setActiveTab('campaigns')}
           style={{ 
             padding: "12px 20px", 
-            background: activeTab === 'campaigns' ? "#2563eb" : "#e5e7eb", 
+            background: activeTab === 'campaigns' ? "var(--primary)" : "#e5e7eb", 
             color: activeTab === 'campaigns' ? "white" : "black",
             border: "none", 
             borderRadius: "6px 6px 0 0",
@@ -396,7 +396,7 @@ export default function AdminKnowledge() {
           onClick={() => setActiveTab('providers')}
           style={{ 
             padding: "12px 20px", 
-            background: activeTab === 'providers' ? "#2563eb" : "#e5e7eb", 
+            background: activeTab === 'providers' ? "var(--primary)" : "#e5e7eb", 
             color: activeTab === 'providers' ? "white" : "black",
             border: "none", 
             borderRadius: "6px 6px 0 0",
@@ -424,8 +424,8 @@ export default function AdminKnowledge() {
               })}
               style={{ 
                 padding: "8px 16px", 
-                background: "#10b981", 
-                color: "white", 
+                background: "var(--secondary)", 
+                color: "black", 
                 border: "none", 
                 borderRadius: 6,
                 cursor: "pointer"
@@ -481,7 +481,7 @@ export default function AdminKnowledge() {
                       onClick={() => setEditingKnowledge(item)}
                       style={{ 
                         padding: "4px 8px", 
-                        background: "#2563eb", 
+                        background: "var(--primary)", 
                         color: "white", 
                         border: "none", 
                         borderRadius: 4,
@@ -528,8 +528,8 @@ export default function AdminKnowledge() {
               })}
               style={{ 
                 padding: "8px 16px", 
-                background: "#10b981", 
-                color: "white", 
+                background: "var(--secondary)", 
+                color: "black", 
                 border: "none", 
                 borderRadius: 6,
                 cursor: "pointer"
@@ -572,7 +572,7 @@ export default function AdminKnowledge() {
                       onClick={() => setEditingCampaign(campaign)}
                       style={{ 
                         padding: "4px 8px", 
-                        background: "#2563eb", 
+                        background: "var(--primary)", 
                         color: "white", 
                         border: "none", 
                         borderRadius: 4,
@@ -619,8 +619,8 @@ export default function AdminKnowledge() {
               })}
               style={{ 
                 padding: "8px 16px", 
-                background: "#10b981", 
-                color: "white", 
+                background: "var(--secondary)", 
+                color: "black", 
                 border: "none", 
                 borderRadius: 6,
                 cursor: "pointer"
@@ -673,7 +673,7 @@ export default function AdminKnowledge() {
                       onClick={() => setEditingProvider(provider)}
                       style={{ 
                         padding: "4px 8px", 
-                        background: "#2563eb", 
+                        background: "var(--primary)", 
                         color: "white", 
                         border: "none", 
                         borderRadius: 4,
@@ -792,8 +792,8 @@ function KnowledgeForm({ item, onSave, onCancel }: {
       <div style={{ display: "flex", gap: 8 }}>
         <button type="submit" style={{ 
           padding: "8px 16px", 
-          background: "#10b981", 
-          color: "white", 
+          background: "var(--secondary)", 
+          color: "black", 
           border: "none", 
           borderRadius: 6,
           cursor: "pointer"
@@ -895,8 +895,8 @@ function CampaignForm({ campaign, onSave, onCancel }: {
       <div style={{ display: "flex", gap: 8 }}>
         <button type="submit" style={{ 
           padding: "8px 16px", 
-          background: "#10b981", 
-          color: "white", 
+          background: "var(--secondary)", 
+          color: "black", 
           border: "none", 
           borderRadius: 6,
           cursor: "pointer"
@@ -1005,8 +1005,8 @@ function ProviderForm({ provider, onSave, onCancel }: {
       <div style={{ display: "flex", gap: 8 }}>
         <button type="submit" style={{ 
           padding: "8px 16px", 
-          background: "#10b981", 
-          color: "white", 
+          background: "var(--secondary)", 
+          color: "black", 
           border: "none", 
           borderRadius: 6,
           cursor: "pointer"

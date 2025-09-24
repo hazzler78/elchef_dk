@@ -8,57 +8,57 @@ import { withDefaultCtaUtm } from '@/lib/utm';
 
 // SVG Ikoner i glassmorphism-stil
 const AnalysisIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,201,107,0.15))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(22,147,255,0.18)" />
-    <path d="M12 3c2.5 0 5 2.5 5 5 0 3-3 7-5 10C10 15 7 11 7 8c0-2.5 2.5-5 5-5z" fill="url(#analysis-gradient)" stroke="rgba(0,201,107,0.7)" strokeWidth="1.2" />
-    <circle cx="12" cy="8" r="2" fill="#fff" stroke="rgba(22,147,255,0.7)" strokeWidth="1" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.2))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.18)" />
+    <path d="M12 3c2.5 0 5 2.5 5 5 0 3-3 7-5 10C10 15 7 11 7 8c0-2.5 2.5-5 5-5z" fill="url(#analysis-gradient)" stroke="rgba(0,106,167,0.6)" strokeWidth="1.2" />
+    <circle cx="12" cy="8" r="2" fill="#fff" stroke="rgba(0,106,167,0.7)" strokeWidth="1" />
     <defs>
       <linearGradient id="analysis-gradient" x1="7" y1="3" x2="17" y2="18" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#00C96B" />
-        <stop offset="1" stopColor="#1693FF" />
+        <stop stopColor="#006aa7" />
+        <stop offset="1" stopColor="#fecc00" />
       </linearGradient>
     </defs>
   </svg>
 );
 
 const SavingsIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,201,107,0.12))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,201,107,0.13)" />
-    <ellipse cx="12" cy="12" rx="6" ry="4.5" fill="url(#savings-gradient)" stroke="#00C96B" strokeWidth="1" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.18))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.13)" />
+    <ellipse cx="12" cy="12" rx="6" ry="4.5" fill="url(#savings-gradient)" stroke="#006aa7" strokeWidth="1" />
     <circle cx="10" cy="11" r="0.8" fill="#fff" />
     <rect x="14" y="14" width="2" height="3" rx="1" fill="#1693FF" />
     <defs>
       <linearGradient id="savings-gradient" x1="6" y1="7.5" x2="18" y2="16.5" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#00C96B" />
-        <stop offset="1" stopColor="#1693FF" />
+        <stop stopColor="#006aa7" />
+        <stop offset="1" stopColor="#fecc00" />
       </linearGradient>
     </defs>
   </svg>
 );
 
 const ConclusionIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(22,147,255,0.15))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,201,107,0.13)" />
-    <circle cx="12" cy="12" r="6" fill="url(#conclusion-gradient)" stroke="#1693FF" strokeWidth="1.2" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.2))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.13)" />
+    <circle cx="12" cy="12" r="6" fill="url(#conclusion-gradient)" stroke="#006aa7" strokeWidth="1.2" />
     <path d="M9 12l2 2 4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <defs>
       <linearGradient id="conclusion-gradient" x1="6" y1="6" x2="18" y2="18" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#00C96B" />
-        <stop offset="1" stopColor="#1693FF" />
+        <stop stopColor="#006aa7" />
+        <stop offset="1" stopColor="#fecc00" />
       </linearGradient>
     </defs>
   </svg>
 );
 
 const RecommendationIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,201,107,0.15))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(22,147,255,0.18)" />
-    <path d="M12 3c-1.5 0-3 1.5-3 3v6c0 1.5 1.5 3 3 3s3-1.5 3-3V6c0-1.5-1.5-3-3-3z" fill="url(#recommendation-gradient)" stroke="rgba(0,201,107,0.7)" strokeWidth="1.2" />
-    <circle cx="12" cy="8" r="1.5" fill="#fff" stroke="rgba(22,147,255,0.7)" strokeWidth="1" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.2))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.18)" />
+    <path d="M12 3c-1.5 0-3 1.5-3 3v6c0 1.5 1.5 3 3 3s3-1.5 3-3V6c0-1.5-1.5-3-3-3z" fill="url(#recommendation-gradient)" stroke="rgba(0,106,167,0.6)" strokeWidth="1.2" />
+    <circle cx="12" cy="8" r="1.5" fill="#fff" stroke="rgba(0,106,167,0.7)" strokeWidth="1" />
     <defs>
       <linearGradient id="recommendation-gradient" x1="9" y1="3" x2="15" y2="15" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#00C96B" />
-        <stop offset="1" stopColor="#1693FF" />
+        <stop stopColor="#006aa7" />
+        <stop offset="1" stopColor="#fecc00" />
       </linearGradient>
     </defs>
   </svg>
@@ -370,7 +370,7 @@ export default function JamforElpriser() {
               alignItems: 'stretch'
             }}>
               <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
-                  <GlassButton as="span" variant="primary" size="lg" background="rgba(0,201,107,0.85)" disableScrollEffect disableHoverEffect>
+                  <GlassButton as="span" variant="primary" size="lg" background="linear-gradient(135deg, var(--primary), var(--secondary))" disableScrollEffect disableHoverEffect>
                   Välj fakturabild
                 </GlassButton>
               </label>
@@ -410,7 +410,7 @@ export default function JamforElpriser() {
               disabled={!file || loading}
               variant="primary"
                 size="lg"
-                background="rgba(22,147,255,0.85)"
+                background="linear-gradient(135deg, var(--primary), var(--secondary))"
               disableScrollEffect
               disableHoverEffect
             >
@@ -912,7 +912,7 @@ export default function JamforElpriser() {
                   <GlassButton 
                     variant="primary" 
                     size="lg" 
-                    background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))" 
+                    background="linear-gradient(135deg, var(--primary), var(--secondary))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
                     onClick={() => {
@@ -925,14 +925,14 @@ export default function JamforElpriser() {
                   </GlassButton>
                   <div style={{ 
                     fontSize: '0.9rem', 
-                    color: 'rgba(255, 255, 255, 0.95)', 
-                    background: 'rgba(34,197,94,0.2)', 
-                    border: '1px solid rgba(34,197,94,0.4)', 
+                    color: 'var(--foreground)', 
+                    background: 'rgba(255,255,255,0.95)', 
+                    border: '1px solid rgba(0,0,0,0.06)', 
                     padding: '0.35rem 0.6rem', 
                     borderRadius: 9999, 
                     textAlign: 'center',
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: '0 4px 16px rgba(34,197,94,0.15)'
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.08)'
                   }}>
                     0 kr i avgifter första året – utan bindningstid
                   </div>
@@ -941,7 +941,7 @@ export default function JamforElpriser() {
                   <GlassButton 
                     variant="secondary" 
                     size="lg" 
-                    background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))" 
+                    background="linear-gradient(135deg, var(--secondary), var(--primary))" 
                     disableScrollEffect={true} 
                     disableHoverEffect={true}
                     onClick={() => {
@@ -954,14 +954,14 @@ export default function JamforElpriser() {
                   </GlassButton>
                   <div style={{ 
                     fontSize: '0.9rem', 
-                    color: 'rgba(255, 255, 255, 0.95)', 
-                    background: 'rgba(59,130,246,0.2)', 
-                    border: '1px solid rgba(59,130,246,0.4)', 
+                    color: 'var(--foreground)', 
+                    background: 'rgba(255,255,255,0.95)', 
+                    border: '1px solid rgba(0,0,0,0.06)', 
                     padding: '0.35rem 0.6rem', 
                     borderRadius: 9999, 
                     textAlign: 'center',
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: '0 4px 16px rgba(59,130,246,0.15)'
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.08)'
                   }}>
                     Fastpris med prisgaranti
                   </div>

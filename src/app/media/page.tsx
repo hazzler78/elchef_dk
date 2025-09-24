@@ -57,7 +57,7 @@ const SubTitle = styled.h3`
 const PageBackground = styled.div`
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(120deg, rgba(0,201,107,0.10) 0%, rgba(22,147,255,0.10) 100%);
+  background: linear-gradient(120deg, rgba(0,106,167,0.10) 0%, rgba(254,204,0,0.10) 100%);
   padding: 0;
 `;
 
@@ -91,7 +91,7 @@ const MediaCard = styled(Link)<{ isExpanded: boolean }>`
   &:hover {
     transform: translateY(-4px);
     box-shadow: var(--glass-shadow-heavy);
-    border-color: rgba(22, 147, 255, 0.3);
+    border-color: rgba(0, 106, 167, 0.3);
     text-decoration: none;
     color: inherit;
   }

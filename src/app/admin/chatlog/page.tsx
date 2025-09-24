@@ -308,7 +308,7 @@ export default function AdminChatlog() {
             style={{ width: "100%", padding: 10, fontSize: 16, marginBottom: 12, borderRadius: 6, border: "1px solid #cbd5e1" }}
             autoFocus
           />
-          <button type="submit" style={{ width: "100%", padding: 10, fontSize: 16, borderRadius: 6, background: "#2563eb", color: "white", border: "none", fontWeight: 600 }}>
+          <button type="submit" style={{ width: "100%", padding: 10, fontSize: 16, borderRadius: 6, background: "var(--primary)", color: "white", border: "none", fontWeight: 600 }}>
             Logga in
           </button>
         </form>
@@ -326,7 +326,7 @@ export default function AdminChatlog() {
           onClick={() => setViewMode("grouped")}
           style={{ 
             padding: "8px 16px", 
-            background: viewMode === "grouped" ? "#2563eb" : "#e5e7eb", 
+            background: viewMode === "grouped" ? "var(--primary)" : "#e5e7eb", 
             color: viewMode === "grouped" ? "white" : "black",
             border: "none", 
             borderRadius: 6,
@@ -339,7 +339,7 @@ export default function AdminChatlog() {
           onClick={() => setViewMode("raw")}
           style={{ 
             padding: "8px 16px", 
-            background: viewMode === "raw" ? "#2563eb" : "#e5e7eb", 
+            background: viewMode === "raw" ? "var(--primary)" : "#e5e7eb", 
             color: viewMode === "raw" ? "white" : "black",
             border: "none", 
             borderRadius: 6,
@@ -426,7 +426,7 @@ export default function AdminChatlog() {
             onClick={selectAll}
             style={{
               padding: "6px 12px",
-              background: "#059669",
+              background: "var(--secondary)",
               color: "white",
               border: "none",
               borderRadius: 4,
@@ -570,7 +570,7 @@ export default function AdminChatlog() {
                 <div style={{ display: "flex", gap: 4 }}>
                   <button 
                     onClick={() => setExpanded(expanded === group.session_id ? null : group.session_id)}
-                    style={{ fontSize: 14, padding: "4px 8px", background: "#2563eb", color: "white", border: "none", borderRadius: 4 }}
+                    style={{ fontSize: 14, padding: "4px 8px", background: "var(--primary)", color: "white", border: "none", borderRadius: 4 }}
                   >
                     {expanded === group.session_id ? "Dölj" : "Visa"}
                   </button>
@@ -611,7 +611,7 @@ export default function AdminChatlog() {
                             padding: "8px 12px",
                             background: msg.role === "user" ? "#dbeafe" : "#f0f9ff",
                             borderRadius: 8,
-                            borderLeft: `4px solid ${msg.role === "user" ? "#3b82f6" : "#0ea5e9"}`
+                            borderLeft: `4px solid ${msg.role === "user" ? "var(--primary)" : "var(--secondary)"}`
                           }}>
                             <div style={{ 
                               fontWeight: 600, 

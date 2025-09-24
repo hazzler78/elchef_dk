@@ -46,7 +46,7 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.08);
+    box-shadow: 0 0 0 3px rgba(0, 106, 167, 0.15);
     color: #17416b;
   }
 `;
@@ -71,7 +71,7 @@ const CheckboxLabel = styled.label`
 `;
 
 const SubmitButton = styled.button`
-  background: linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5));
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
   padding: 0.9rem 1.7rem;
   border: none;
@@ -88,7 +88,7 @@ const SubmitButton = styled.button`
   &:hover {
     transform: translateY(-2px) scale(1.02);
     box-shadow: var(--glass-shadow-medium);
-    background: linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7));
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
   }
 
   &:active {

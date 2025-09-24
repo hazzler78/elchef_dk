@@ -270,7 +270,7 @@ export default function ContractClicksAdmin() {
             border: '1px solid #e0e0e0'
           }}>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Rörligt avtal</h3>
-            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: '#22c55e' }}>
+            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: 'var(--secondary)' }}>
               {stats.rorligtClicks}
             </p>
           </div>
@@ -283,7 +283,7 @@ export default function ContractClicksAdmin() {
             border: '1px solid #e0e0e0'
           }}>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Fastpris</h3>
-            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: '#3b82f6' }}>
+            <p style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>
               {stats.fastprisClicks}
             </p>
           </div>
@@ -354,7 +354,7 @@ export default function ContractClicksAdmin() {
             border: '1px solid #e0e0e0'
           }}>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#666' }}>Kvalitet på klick</h3>
-            <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: '#10b981' }}>
+            <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--secondary)' }}>
               {stats.clickThroughRate.toFixed(1)}%
             </p>
             <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: '#666' }}>
@@ -404,7 +404,7 @@ export default function ContractClicksAdmin() {
                       fontSize: '0.875rem',
                       fontWeight: 'bold',
                       color: 'white',
-                      background: click.contract_type === 'rorligt' ? '#22c55e' : '#3b82f6'
+                      background: click.contract_type === 'rorligt' ? 'var(--secondary)' : 'var(--primary)'
                     }}>
                       {click.contract_type === 'rorligt' ? 'Rörligt' : 'Fastpris'}
                     </span>

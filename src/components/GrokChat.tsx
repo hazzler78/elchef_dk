@@ -32,7 +32,7 @@ function renderMarkdown(text: string) {
   html = html.replace(/```([\s\S]*?)```/g, '<pre style="background: rgba(0,0,0,0.05); padding: 12px; border-radius: 6px; overflow-x: auto; margin: 8px 0;"><code style="font-family: monospace; white-space: pre;">$1</code></pre>');
   
   // Links [text](url)
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">$1</a>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: underline;">$1</a>');
   
   // Blockquotes
   html = html.replace(/^> (.*$)/gim, '<blockquote style="border-left: 4px solid #e5e7eb; padding-left: 16px; margin: 8px 0; color: #6b7280;">$1</blockquote>');
@@ -365,7 +365,7 @@ export default function GrokChat() {
           bottom: chatBottom,
           right: 24,
           zIndex: 1004,
-          background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))',
+          background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
           color: 'white',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           borderRadius: '50%',
@@ -405,7 +405,7 @@ export default function GrokChat() {
           }}
         >
           <div style={{ 
-            background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))', 
+            background: 'linear-gradient(135deg, var(--primary), var(--secondary))', 
             color: 'white', 
             padding: '1rem', 
             fontWeight: 700, 
@@ -477,7 +477,7 @@ export default function GrokChat() {
               }}>
                 {msg.role === 'assistant' && <GrodanIcon />}
                 <div style={{
-                  background: msg.role === 'user' ? 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))' : 'rgba(255, 255, 255, 0.9)',
+                  background: msg.role === 'user' ? 'linear-gradient(135deg, var(--primary), var(--secondary))' : 'rgba(255, 255, 255, 0.9)',
                   color: msg.role === 'user' ? 'white' : '#17416b',
                   borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                   padding: '12px 16px',
@@ -544,7 +544,7 @@ export default function GrokChat() {
                   maxWidth: 300,
                   fontSize: 16,
                   fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(37,99,235,0.08)',
+                  boxShadow: '0 2px 8px rgba(0,106,167,0.12)',
                   marginLeft: 8,
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
@@ -607,7 +607,7 @@ export default function GrokChat() {
               type="submit" 
               disabled={loading || !input.trim() || contactFormSubmitted || contractChoiceSubmitted} 
               style={{ 
-                background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.2), rgba(22, 147, 255, 0.2))', 
+                background: 'linear-gradient(135deg, var(--primary), var(--secondary))', 
                 color: 'white', 
                 border: '1px solid rgba(255, 255, 255, 0.2)', 
                 padding: '0 22px', 
@@ -628,7 +628,7 @@ export default function GrokChat() {
               onClick={() => setShowContactForm(true)}
               disabled={contactFormSubmitted || contractChoiceSubmitted}
               style={{ 
-                background: contactFormSubmitted || contractChoiceSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(22, 147, 255, 0.2))', 
+                background: contactFormSubmitted || contractChoiceSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, var(--secondary), var(--primary))', 
                 color: 'white', 
                 border: '1px solid rgba(255, 255, 255, 0.2)', 
                 padding: '0 12px', 

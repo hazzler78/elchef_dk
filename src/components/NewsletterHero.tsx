@@ -78,14 +78,14 @@ const EmailInput = styled.input`
   &:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 201, 107, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 106, 167, 0.15);
     color: var(--foreground);
   }
 `;
 
 const SubmitButton = styled.button`
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5));
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
   border: none;
   border-radius: var(--radius-full);
@@ -99,7 +99,7 @@ const SubmitButton = styled.button`
   box-shadow: var(--glass-shadow-light);
   white-space: nowrap;
   &:hover {
-    background: linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7));
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
     transform: translateY(-2px) scale(1.02);
     box-shadow: var(--glass-shadow-medium);
   }
@@ -220,36 +220,36 @@ const Benefit = styled.div`
 
 // SVG Ikoner i glassmorphism-stil
 const RocketIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,201,107,0.15))' }}>
-    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(22,147,255,0.18)" />
-    <path d="M16 4c3.5 0 7 3.5 7 7 0 4.5-4.5 10-7 13.5C13.5 21 9 15.5 9 11c0-3.5 3.5-7 7-7z" fill="url(#rocket-gradient)" stroke="rgba(0,201,107,0.7)" strokeWidth="1.5" />
-    <circle cx="16" cy="11" r="2.5" fill="#fff" stroke="rgba(22,147,255,0.7)" strokeWidth="1.2" />
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,106,167,0.18))' }}>
+    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,106,167,0.18)" />
+    <path d="M16 4c3.5 0 7 3.5 7 7 0 4.5-4.5 10-7 13.5C13.5 21 9 15.5 9 11c0-3.5 3.5-7 7-7z" fill="url(#rocket-gradient)" stroke="rgba(0,106,167,0.7)" strokeWidth="1.5" />
+    <circle cx="16" cy="11" r="2.5" fill="#fff" stroke="rgba(0,106,167,0.7)" strokeWidth="1.2" />
     <defs>
       <linearGradient id="rocket-gradient" x1="9" y1="4" x2="23" y2="24" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#00C96B" />
-        <stop offset="1" stopColor="#1693FF" />
+        <stop stopColor="#006aa7" />
+        <stop offset="1" stopColor="#fecc00" />
       </linearGradient>
     </defs>
   </svg>
 );
 const ChartIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(22,147,255,0.15))' }}>
-    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,201,107,0.13)" />
-    <rect x="10" y="14" width="3" height="7" rx="1.5" fill="#00C96B" />
-    <rect x="15" y="10" width="3" height="11" rx="1.5" fill="#1693FF" />
-    <rect x="20" y="17" width="3" height="4" rx="1.5" fill="#10b981" />
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,106,167,0.18))' }}>
+    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,106,167,0.13)" />
+    <rect x="10" y="14" width="3" height="7" rx="1.5" fill="#006aa7" />
+    <rect x="15" y="10" width="3" height="11" rx="1.5" fill="#fecc00" />
+    <rect x="20" y="17" width="3" height="4" rx="1.5" fill="#006aa7" />
   </svg>
 );
 const PiggyIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,201,107,0.12))' }}>
-    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,201,107,0.13)" />
-    <ellipse cx="16" cy="16" rx="8" ry="6" fill="url(#piggy-gradient)" stroke="#00C96B" strokeWidth="1.2" />
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ marginBottom: 8, filter: 'drop-shadow(0 2px 8px rgba(0,106,167,0.15))' }}>
+    <ellipse cx="16" cy="28" rx="8" ry="2.5" fill="rgba(0,106,167,0.13)" />
+    <ellipse cx="16" cy="16" rx="8" ry="6" fill="url(#piggy-gradient)" stroke="#006aa7" strokeWidth="1.2" />
     <circle cx="13" cy="15" r="1" fill="#fff" />
-    <rect x="19" y="19" width="2.5" height="4" rx="1.2" fill="#1693FF" />
+    <rect x="19" y="19" width="2.5" height="4" rx="1.2" fill="#fecc00" />
     <defs>
       <linearGradient id="piggy-gradient" x1="8" y1="10" x2="24" y2="22" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#00C96B" />
-        <stop offset="1" stopColor="#1693FF" />
+        <stop stopColor="#006aa7" />
+        <stop offset="1" stopColor="#fecc00" />
       </linearGradient>
     </defs>
   </svg>

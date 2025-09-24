@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
 
 const SavingsSection = styled.section`
   padding: 3rem 0;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-  border-top: 1px solid rgba(34, 197, 94, 0.2);
-  border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+  background: linear-gradient(135deg, rgba(0, 106, 167, 0.08) 0%, rgba(254, 204, 0, 0.08) 100%);
+  border-top: 1px solid rgba(0, 106, 167, 0.2);
+  border-bottom: 1px solid rgba(0, 106, 167, 0.2);
   position: relative;
   overflow: hidden;
 `;
@@ -25,17 +25,17 @@ const SavingsContent = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  border: 1px solid rgba(0, 106, 167, 0.25);
   border-radius: 20px;
   padding: 3rem 2rem;
-  box-shadow: 0 20px 40px rgba(34, 197, 94, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 106, 167, 0.12);
   position: relative;
   overflow: hidden;
 `;
 
 const SavingsTitle = styled.h2`
   font-size: 2rem;
-  color: #059669;
+  color: var(--primary);
   margin-bottom: 1rem;
   font-weight: 700;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -48,10 +48,10 @@ const SavingsTitle = styled.h2`
 const SavingsAmount = styled.div`
   font-size: 3rem;
   font-weight: 900;
-  color: #047857;
+  color: var(--primary);
   margin-bottom: 1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #059669, #047857);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -72,9 +72,9 @@ const LoadingSpinner = styled.div`
   display: inline-block;
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(34, 197, 94, 0.3);
+  border: 4px solid rgba(0, 106, 167, 0.3);
   border-radius: 50%;
-  border-top-color: #22c55e;
+  border-top-color: var(--primary);
   animation: spin 1s ease-in-out infinite;
   
   @keyframes spin {

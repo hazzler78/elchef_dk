@@ -128,7 +128,7 @@ export default function AdminPage() {
               padding: 12, 
               fontSize: 16, 
               borderRadius: 8, 
-              background: '#2563eb', 
+              background: 'var(--primary)', 
               color: 'white', 
               border: 'none', 
               fontWeight: 600,
@@ -241,7 +241,7 @@ export default function AdminPage() {
                 marginTop: 16,
                 display: 'flex',
                 alignItems: 'center',
-                color: '#2563eb',
+                color: 'var(--primary)',
                 fontWeight: 500
               }}>
                 Öppna →

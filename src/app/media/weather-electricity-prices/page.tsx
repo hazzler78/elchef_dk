@@ -125,7 +125,7 @@ const VideoBox = styled.div`
   border-radius: var(--radius-md);
   padding: 1.2rem;
   margin: 1.5rem 0;
-  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  box-shadow: 0 2px 8px rgba(0,106,167,0.12);
 `;
 
 const SubTitle = styled.h3`
@@ -170,7 +170,7 @@ const Quote = styled.blockquote`
   padding: 1.5rem;
   margin: 2rem 0;
   font-weight: 500;
-  background: linear-gradient(135deg, rgba(22, 147, 255, 0.05), rgba(0, 201, 107, 0.05));
+  background: linear-gradient(135deg, rgba(0,106,167,0.05), rgba(254,204,0,0.05));
   border-radius: 12px;
   font-size: 1.1rem;
   line-height: 1.6;
@@ -188,7 +188,7 @@ const Quote = styled.blockquote`
 `;
 
 const CTAButton = styled.a`
-  background: linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5));
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
   font-size: 1.1rem;
   padding: 1rem 2rem;
@@ -203,7 +203,7 @@ const CTAButton = styled.a`
   margin-top: 1.5rem;
   
   &:hover {
-    background: linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7));
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
     transform: translateY(-2px) scale(1.03);
     box-shadow: var(--glass-shadow-heavy);
   }
@@ -212,7 +212,7 @@ const CTAButton = styled.a`
 const PageBackground = styled.div`
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(120deg, rgba(0,201,107,0.10) 0%, rgba(22,147,255,0.10) 100%);
+  background: linear-gradient(120deg, rgba(0,106,167,0.10) 0%, rgba(254,204,0,0.10) 100%);
   padding: 0;
 `;
 

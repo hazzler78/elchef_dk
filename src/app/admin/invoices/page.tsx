@@ -124,7 +124,7 @@ export default function AdminInvoices() {
             style={{ width: '100%', padding: 10, fontSize: 16, marginBottom: 12, borderRadius: 6, border: '1px solid #cbd5e1' }}
             autoFocus
           />
-          <button type="submit" style={{ width: '100%', padding: 10, fontSize: 16, borderRadius: 6, background: '#2563eb', color: 'white', border: 'none', fontWeight: 600 }}>
+        <button type="submit" style={{ width: '100%', padding: 10, fontSize: 16, borderRadius: 6, background: 'var(--primary)', color: 'white', border: 'none', fontWeight: 600 }}>
             Logga in
           </button>
         </form>

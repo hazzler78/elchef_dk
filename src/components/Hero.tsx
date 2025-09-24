@@ -230,7 +230,7 @@ export default function Hero() {
                                                                                <GlassButton 
                        variant="primary" 
                        size="lg"
-                       background="linear-gradient(135deg, rgba(34,197,94,0.9), rgba(22,197,94,0.8))"
+                       background="linear-gradient(135deg, var(--primary), var(--secondary))"
                        aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
                        disableScrollEffect={true}
                        disableHoverEffect={true}
@@ -239,18 +239,18 @@ export default function Hero() {
                    </GlassButton>
                  </div>
                  <div style={{ 
-                   fontSize: '0.9rem', 
-                   color: 'rgba(255, 255, 255, 0.95)', 
-                   background: 'rgba(34,197,94,0.2)', 
-                   border: '1px solid rgba(34,197,94,0.4)', 
-                   padding: '0.35rem 0.6rem', 
-                   borderRadius: 9999, 
-                   textAlign: 'center',
-                   backdropFilter: 'blur(10px)',
-                   boxShadow: '0 4px 16px rgba(34,197,94,0.15)',
-                   position: 'relative',
-                   zIndex: 10
-                 }}>
+                  fontSize: '0.9rem', 
+                  color: 'var(--foreground)', 
+                  background: 'rgba(255, 255, 255, 0.95)', 
+                  border: '1px solid rgba(0,0,0,0.06)', 
+                  padding: '0.35rem 0.6rem', 
+                  borderRadius: 9999, 
+                  textAlign: 'center',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                  position: 'relative',
+                  zIndex: 10
+                }}>
                    0 kr i avgifter första året – utan bindningstid
                  </div>
                </div>
@@ -277,7 +277,7 @@ export default function Hero() {
                                                                                                                                                                        <GlassButton 
                          variant="secondary" 
                          size="lg"
-                         background="linear-gradient(135deg, rgba(59,130,246,0.9), rgba(37,99,235,0.8))"
+                         background="linear-gradient(135deg, var(--secondary), var(--primary))"
                          aria-label="Fastpris - Fastpris med prisgaranti"
                          disableScrollEffect={true}
                          disableHoverEffect={true}
@@ -286,18 +286,18 @@ export default function Hero() {
                     </GlassButton>
                   </div>
                  <div style={{ 
-                   fontSize: '0.9rem', 
-                   color: 'rgba(255, 255, 255, 0.95)', 
-                   background: 'rgba(59,130,246,0.2)', 
-                   border: '1px solid rgba(59,130,246,0.4)', 
-                   padding: '0.35rem 0.6rem', 
-                   borderRadius: 9999, 
-                   textAlign: 'center',
-                   backdropFilter: 'blur(10px)',
-                   boxShadow: '0 4px 16px rgba(59,130,246,0.15)',
-                   position: 'relative',
-                   zIndex: 10
-                 }}>
+                  fontSize: '0.9rem', 
+                  color: 'var(--foreground)', 
+                  background: 'rgba(255, 255, 255, 0.95)', 
+                  border: '1px solid rgba(0,0,0,0.06)', 
+                  padding: '0.35rem 0.6rem', 
+                  borderRadius: 9999, 
+                  textAlign: 'center',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                  position: 'relative',
+                  zIndex: 10
+                }}>
                    Fastpris med prisgaranti
                  </div>
                </div>

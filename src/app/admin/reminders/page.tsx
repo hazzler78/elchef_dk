@@ -453,8 +453,8 @@ export default function AdminReminders() {
             style={{ 
               marginRight: '1rem', 
               padding: '0.5rem 1rem', 
-              background: '#10b981', 
-              color: 'white', 
+              background: 'var(--secondary)', 
+              color: 'black', 
               border: 'none', 
               borderRadius: '4px',
               cursor: 'pointer'
@@ -663,8 +663,8 @@ export default function AdminReminders() {
                 disabled={creating}
                 style={{ 
                   padding: '0.5rem 1rem', 
-                  background: '#10b981', 
-                  color: 'white', 
+                  background: 'var(--secondary)', 
+                  color: 'black', 
                   border: 'none', 
                   borderRadius: '4px',
                   cursor: creating ? 'not-allowed' : 'pointer',
@@ -784,7 +784,7 @@ export default function AdminReminders() {
                 disabled={updating}
                 style={{ 
                   padding: '0.5rem 1rem', 
-                  background: '#2563eb', 
+                  background: 'var(--primary)', 
                   color: 'white', 
                   border: 'none', 
                   borderRadius: '4px',
@@ -817,7 +817,7 @@ export default function AdminReminders() {
         <button
           onClick={fetchReminders}
           disabled={loading}
-          style={{ marginRight: '1rem', padding: '0.5rem 1rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px' }}
+          style={{ marginRight: '1rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '4px' }}
         >
           {loading ? 'Laddar...' : 'Uppdatera'}
         </button>

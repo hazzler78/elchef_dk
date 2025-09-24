@@ -90,7 +90,7 @@ export default function AdminHeroAnalytics() {
             style={{ width: '100%', padding: 10, fontSize: 16, marginBottom: 12, borderRadius: 6, border: '1px solid #cbd5e1' }}
             autoFocus
           />
-          <button type="submit" style={{ width: '100%', padding: 10, fontSize: 16, borderRadius: 6, background: '#2563eb', color: 'white', border: 'none', fontWeight: 600 }}>
+        <button type="submit" style={{ width: '100%', padding: 10, fontSize: 16, borderRadius: 6, background: 'var(--primary)', color: 'white', border: 'none', fontWeight: 600 }}>
             Logga in
           </button>
         </form>
@@ -221,7 +221,7 @@ export default function AdminHeroAnalytics() {
             </tr>
           </thead>
                      <tbody>
-             <tr style={{ background: winner === 'A' ? 'rgba(16,185,129,0.08)' : undefined }}>
+            <tr style={{ background: winner === 'A' ? 'rgba(0,106,167,0.08)' : undefined }}>
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
                  <div><strong>A</strong></div>
                  <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['A']}</div>
@@ -230,7 +230,7 @@ export default function AdminHeroAnalytics() {
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk}</td>
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aCtr}</td>
              </tr>
-             <tr style={{ background: winner === 'B' ? 'rgba(16,185,129,0.08)' : undefined }}>
+            <tr style={{ background: winner === 'B' ? 'rgba(0,106,167,0.08)' : undefined }}>
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
                  <div><strong>B</strong></div>
                  <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['B']}</div>

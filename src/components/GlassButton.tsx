@@ -44,13 +44,13 @@ export default function GlassButton({
     switch (variant) {
       case 'primary':
         return {
-          background: 'linear-gradient(135deg, rgba(22, 147, 255, 0.5), rgba(0, 201, 107, 0.5))',
+          background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           color: 'white',
         };
       case 'secondary':
         return {
-          background: 'linear-gradient(135deg, rgba(0, 201, 107, 0.5), rgba(22, 147, 255, 0.5))',
+          background: 'linear-gradient(135deg, var(--secondary), var(--primary))',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           color: 'white',
         };
@@ -72,13 +72,13 @@ export default function GlassButton({
   const getHoverBackground = () => {
     switch (variant) {
       case 'primary':
-        return 'linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7))';
+        return 'linear-gradient(135deg, var(--primary-dark), var(--secondary-dark))';
       case 'secondary':
-        return 'linear-gradient(135deg, rgba(0, 201, 107, 0.7), rgba(22, 147, 255, 0.7))';
+        return 'linear-gradient(135deg, var(--secondary-dark), var(--primary-dark))';
       case 'outline':
         return 'rgba(255, 255, 255, 0.2)';
       default:
-        return 'linear-gradient(135deg, rgba(22, 147, 255, 0.7), rgba(0, 201, 107, 0.7))';
+        return 'linear-gradient(135deg, var(--primary-dark), var(--secondary-dark))';
     }
   };
 
