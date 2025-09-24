@@ -117,13 +117,15 @@ const CheckboxGroup = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  justify-content: center;
+  justify-content: flex-start;
+  text-align: left;
 `;
 
 const Checkbox = styled.input`
   margin-top: 0.25rem;
   width: 1rem;
   height: 1rem;
+  flex-shrink: 0;
   accent-color: var(--secondary);
 `;
 
@@ -131,9 +133,10 @@ const CheckboxLabel = styled.label`
   font-size: 0.9rem;
   color: var(--gray-700);
   opacity: 1;
-  line-height: 1.4;
+  line-height: 1.5;
   cursor: pointer;
   text-align: left;
+  word-break: break-word;
 `;
 
 const ErrorMessage = styled.div`

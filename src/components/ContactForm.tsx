@@ -110,13 +110,15 @@ const Textarea = styled.textarea`
 
 const CheckboxGroup = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 2rem;
+  gap: 0.75rem;
 `;
 
 const Checkbox = styled.input`
-  margin-right: 0.75rem;
+  margin-top: 0.25rem;
   transform: scale(1.2);
+  flex-shrink: 0;
 `;
 
 const CheckboxLabel = styled.label`
@@ -124,6 +126,7 @@ const CheckboxLabel = styled.label`
   color: white;
   cursor: pointer;
   text-shadow: var(--text-shadow);
+  line-height: 1.5;
 `;
 
 const SubmitButton = styled.button`
