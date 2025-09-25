@@ -18,17 +18,17 @@ const Container = styled.div`
 const Title = styled.h2`
   text-align: center;
   margin-bottom: 3rem;
-  color: var(--gray-900);
+  color: white;
   font-size: 2rem;
 `;
 
 const AccordionItem = styled.div`
   margin-bottom: 1rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: var(--glass-shadow-light);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
 `;
@@ -39,11 +39,11 @@ const AccordionHeader = styled.button<{ $isOpen: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: ${props => props.$isOpen ? 'var(--gray-50)' : 'white'};
+  background: ${props => props.$isOpen ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.06)'};
   border: none;
   cursor: pointer;
   font-weight: 600;
-  color: var(--gray-700);
+  color: white;
   text-align: left;
 
   svg {
@@ -53,13 +53,13 @@ const AccordionHeader = styled.button<{ $isOpen: boolean }>`
   }
 
   &:hover {
-    background: var(--gray-50);
+    background: rgba(255,255,255,0.12);
   }
 `;
 
 const AccordionContent = styled.div<{ $isOpen: boolean }>`
   padding: ${props => props.$isOpen ? '0 1.25rem 1.25rem' : '0 1.25rem'};
-  color: var(--gray-600);
+  color: rgba(255,255,255,0.9);
   max-height: ${props => props.$isOpen ? '1000px' : '0'};
   overflow: hidden;
   transition: all 0.3s ease-in-out;
