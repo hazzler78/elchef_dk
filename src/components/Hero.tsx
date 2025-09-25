@@ -201,11 +201,6 @@ export default function Hero() {
           <TextContent>
             <h1>{heroTitle}</h1>
             <p>{heroSub}</p>
-            <USPList>
-              <li>✔️ Vi lyfter bara fram elavtal som är värda att överväga.</li>
-              <li>✔️ Gratis byte – din gamla avtal sägs upp automatiskt.</li>
-              <li>✔️ Full valfrihet – välj mellan rörligt elpris eller fastpris med avtalad period.</li>
-            </USPList>
                          <ButtonRow>
                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
                                    <div style={{
@@ -302,6 +297,11 @@ export default function Hero() {
                  </div>
                </div>
             </ButtonRow>
+            <USPList>
+              <li>✔️ Vi lyfter bara fram elavtal som är värda att överväga.</li>
+              <li>✔️ Gratis byte – din gamla avtal sägs upp automatiskt.</li>
+              <li>✔️ Full valfrihet – välj mellan rörligt elpris eller fastpris med avtalad period.</li>
+            </USPList>
           </TextContent>
           <VideoWrapper>
             <video 
