@@ -87,10 +87,10 @@ const faqData = [
   },
   {
     question: "Hur fungerar Elchef.se?",
-    answer: "Elchef.se förhandlar fram bra elavtal från olika leverantörer och ger dig möjligheten att välja det avtal som passar dig bäst. Du kan vara säker på att de erbjudanden du hittar här är konkurrenskraftiga på marknaden!"
+    answer: "Elchef.se hittar bra elavtal från olika leverantörer och ger dig möjligheten att välja det avtal som passar dig bäst. Du kan vara säker på att de erbjudanden du hittar här är konkurrenskraftiga på marknaden!"
   },
   {
-    question: "Vad ska jag välja? Fastpris, Rörligt timpris eller Rörligt månadspris?",
+    question: "Vad ska jag välja? Fastpris eller Rörligt pris?",
     answer: "Det beror på din livsstil och vad du känner dig bekväm med. Med ett fastprisavtal har du förutsägbarhet under hela avtalsperioden. Med ett rörligt pris följer ditt elpris marknadens svängningar men kan eventuellt spara pengar i längden. Fråga dig själv: Tror du att elpriserna kommer att bli billigare eller dyrare framöver?"
   },
   {
