@@ -6,10 +6,17 @@ const ADMIN_PASSWORD = "grodan2025";
 
 const adminSections = [
   {
+    title: "Dashboard",
+    description: "Översiktlig statistik och KPI:er för hela hemsidan",
+    href: "/admin/dashboard",
+    icon: "📊",
+    color: "bg-gradient-to-br from-purple-500 to-blue-500"
+  },
+  {
     title: "Hero A/B Analytics",
     description: "Analysera A/B-test för hero-sektionen (huvudrubrik)",
     href: "/admin/hero-analytics",
-    icon: "📊",
+    icon: "🎯",
     color: "bg-blue-500"
   },
   {
@@ -23,7 +30,7 @@ const adminSections = [
     title: "Banner Analytics", 
     description: "Analysera A/B-test för AI-kalkylator banner",
     href: "/admin/banner-clicks",
-    icon: "🎯",
+    icon: "🎨",
     color: "bg-green-500"
   },
   {

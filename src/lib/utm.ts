@@ -38,4 +38,23 @@ export function withDefaultCtaUtm(href: string, medium: string, content?: string
   });
 }
 
+/**
+ * Hämta UTM-parametrar från URL:en (för tracking)
+ */
+export function getUTMParams(): UtmParams {
+  if (typeof window === 'undefined') return {};
+  
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      utm_source: params.get('utm_source') || undefined,
+      utm_medium: params.get('utm_medium') || undefined,
+      utm_campaign: params.get('utm_campaign') || undefined,
+      utm_content: params.get('utm_content') || undefined,
+    };
+  } catch {
+    return {};
+  }
+}
+
 

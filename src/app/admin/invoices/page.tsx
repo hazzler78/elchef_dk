@@ -59,6 +59,7 @@ export default function AdminInvoices() {
   useEffect(() => {
     if (!authed) return;
     fetchLogs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authed]);
 
   async function setCorrect(id: number, isCorrect: boolean) {

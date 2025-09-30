@@ -65,6 +65,7 @@ export default function AdminBannerClicks() {
   useEffect(() => {
     if (!authed) return;
     fetchLogs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authed]);
 
   function handleLogin(e: React.FormEvent) {

@@ -89,12 +89,25 @@ export default function JamforElpriser() {
     } catch {}
   }, []);
 
-  // Spåra sidvisning
+  // Spåra sidvisning med UTM-parametrar
   useEffect(() => {
     try {
       if (typeof window === 'undefined') return;
       const sid = sessionIdRef.current || localStorage.getItem('invoiceSessionId') || '';
-      const payload = JSON.stringify({ path: '/jamfor-elpriser', sessionId: sid });
+      
+      // Hämta UTM-parametrar från URL
+      const params = new URLSearchParams(window.location.search);
+      const utmSource = params.get('utm_source') || undefined;
+      const utmMedium = params.get('utm_medium') || undefined;
+      const utmCampaign = params.get('utm_campaign') || undefined;
+      
+      const payload = JSON.stringify({ 
+        path: '/jamfor-elpriser', 
+        sessionId: sid,
+        utmSource,
+        utmMedium,
+        utmCampaign
+      });
       const url = '/api/events/page-view';
       if (navigator.sendBeacon) {
         const blob = new Blob([payload], { type: 'application/json' });
