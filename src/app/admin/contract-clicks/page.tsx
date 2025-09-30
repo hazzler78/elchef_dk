@@ -33,7 +33,7 @@ export default function ContractClicksAdmin() {
   const [stats, setStats] = useState<ContractStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const [dateRange, setDateRange] = useState<'24h' | '7d' | '30d' | '90d' | 'all'>('30d');
   const trackingStartDate = '2025-09-13'; // Start för AI-analys-spårning
   const [clearingTestData, setClearingTestData] = useState(false);
 
@@ -81,9 +81,13 @@ export default function ContractClicksAdmin() {
       // Beräkna datumfilter
       let dateFilter = '';
       if (dateRange !== 'all') {
-        const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
         const fromDate = new Date();
-        fromDate.setDate(fromDate.getDate() - days);
+        if (dateRange === '24h') {
+          fromDate.setHours(fromDate.getHours() - 24);
+        } else {
+          const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
+          fromDate.setDate(fromDate.getDate() - days);
+        }
         dateFilter = `created_at.gte.${fromDate.toISOString()}`;
       }
 
@@ -212,9 +216,10 @@ export default function ContractClicksAdmin() {
           <label style={{ marginRight: '1rem', fontWeight: 'bold' }}>Tidsperiod:</label>
           <select 
             value={dateRange} 
-            onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d' | 'all')}
+            onChange={(e) => setDateRange(e.target.value as '24h' | '7d' | '30d' | '90d' | 'all')}
             style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
           >
+            <option value="24h">Senaste 24 timmarna</option>
             <option value="7d">Senaste 7 dagarna</option>
             <option value="30d">Senaste 30 dagarna</option>
             <option value="90d">Senaste 90 dagarna</option>
