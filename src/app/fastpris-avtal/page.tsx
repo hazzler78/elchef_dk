@@ -72,8 +72,6 @@ const SupplierText = styled.p`
   font-weight: 500;
 `;
 
-
-
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -200,11 +198,11 @@ export default function FastprisAvtalPage() {
   return (
     <PageContainer>
       <Content>
-        <Title>Byt elavtal</Title>
-        <Subtitle>Fyll i formuläret nedan för att se priser innan du påbörjar bytet.</Subtitle>
+        <Title>Fastprisavtal</Title>
+        <Subtitle>Se dina personliga priser och påbörja bytet till fastpris</Subtitle>
         
         <SupplierInfo>
-          <SupplierLogo src="/svealand-logo.png" alt="Svealand Energi" />
+          <SupplierLogo src="/svealand-logo.png" alt="Svealands Elbolag" />
           <SupplierText>Se dina personliga priser från Svealands Elbolag</SupplierText>
         </SupplierInfo>
 
