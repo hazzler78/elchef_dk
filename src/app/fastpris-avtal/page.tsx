@@ -205,7 +205,7 @@ export default function FastprisAvtalPage() {
         
         <SupplierInfo>
           <SupplierLogo src="/svealand-logo.png" alt="Svealand Energi" />
-          <SupplierText>Du kommer att få ett fastprisavtal från Svealands Elbolag</SupplierText>
+          <SupplierText>Se dina personliga priser från Svealands Elbolag</SupplierText>
         </SupplierInfo>
 
         <FormContainer>
