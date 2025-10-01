@@ -98,16 +98,17 @@ const Slide = styled.div`
     max-height: 100%;
     object-fit: contain;
     display: block;
-    border-radius: 1.5rem;
+    border-radius: 1.5rem !important;
     /* Subtle shadow for better visual separation */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all var(--transition-normal) ease;
     transform-origin: center;
+    overflow: hidden;
 
     &:hover {
       transform: scale(1.02);
-      border-radius: 1.5rem; /* Ensure rounded corners are maintained */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+      border-radius: 1.5rem !important; /* Force rounded corners */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
   }
 `;
