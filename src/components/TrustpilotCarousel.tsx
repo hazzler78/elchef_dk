@@ -72,8 +72,8 @@ const Slide = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* For 1:1 aspect ratio images, we'll show 3 on desktop, 2 on tablet, 1 on mobile */
-  flex: 0 0 33.333%;
+  /* For 1:1 aspect ratio images, we'll show 2 on desktop for larger images */
+  flex: 0 0 50%;
   height: 100%;
   padding: 0 0.25rem;
   overflow: hidden;
@@ -96,7 +96,7 @@ const Slide = styled.div`
     width: 100%;
     height: auto;
     max-height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     border-radius: 1.5rem;
     /* Subtle shadow for better visual separation */
@@ -108,12 +108,6 @@ const Slide = styled.div`
       transform: scale(1.02);
       border-radius: 1.5rem; /* Ensure rounded corners are maintained */
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-    }
-
-    /* Ensure text is fully visible on mobile */
-    @media (max-width: 640px) {
-      object-fit: contain;
-      max-height: 100%;
     }
   }
 `;
@@ -128,7 +122,7 @@ export default function TrustpilotCarousel({
   '/trustpilot/trustpilot-06.png',
   '/trustpilot/trustpilot-07.png',
 ],
-  height = 'clamp(250px, 30vw, 350px)',
+  height = 'clamp(250px, 25vw, 350px)',
   className,
 }: TrustpilotCarouselProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
