@@ -85,10 +85,11 @@ const Slide = styled.div`
     min-width: 50%;
   }
 
-  /* 1 card on typical phones */
+  /* 1 card on typical phones - ensure full visibility */
   @media (max-width: 640px) {
     flex-basis: 100%;
     min-width: 100%;
+    padding: 0 0.5rem;
   }
 
   img {
@@ -100,10 +101,19 @@ const Slide = styled.div`
     border-radius: 1.5rem;
     /* Subtle shadow for better visual separation */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform var(--transition-normal) ease;
+    transition: all var(--transition-normal) ease;
+    transform-origin: center;
 
     &:hover {
       transform: scale(1.02);
+      border-radius: 1.5rem; /* Ensure rounded corners are maintained */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+    }
+
+    /* Ensure text is fully visible on mobile */
+    @media (max-width: 640px) {
+      object-fit: contain;
+      max-height: 100%;
     }
   }
 `;
@@ -117,7 +127,7 @@ export default function TrustpilotCarousel({
     '/trustpilot/trustpilot-05.png',
     '/trustpilot/trustpilot-06.png',
   ],
-  height = 'clamp(200px, 25vw, 300px)',
+  height = 'clamp(250px, 30vw, 350px)',
   className,
 }: TrustpilotCarouselProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
