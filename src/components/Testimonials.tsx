@@ -24,7 +24,7 @@ export default function Testimonials() {
   return (
     <TestimonialsSection>
       <div className="container">
-        <SectionTitle>Din egen Elchef – så funkar det för andra</SectionTitle>
+        <SectionTitle>Vad våra elchefer säger</SectionTitle>
         <TrustpilotCarousel />
       </div>
     </TestimonialsSection>
