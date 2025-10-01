@@ -47,7 +47,7 @@ export default function AdminDashboard() {
   const [authed, setAuthed] = useState(false);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
-  const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [dateRange, setDateRange] = useState<'24h' | '7d' | '30d' | '90d'>('30d');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -64,21 +64,35 @@ export default function AdminDashboard() {
       );
 
       // Calculate date ranges
-      const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
       const fromDate = new Date();
-      fromDate.setDate(fromDate.getDate() - days);
+      if (dateRange === '24h') {
+        fromDate.setHours(fromDate.getHours() - 24);
+      } else {
+        const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
+        fromDate.setDate(fromDate.getDate() - days);
+      }
       const fromISO = fromDate.toISOString();
       
       // For growth comparison
       const prevFromDate = new Date(fromDate);
-      prevFromDate.setDate(prevFromDate.getDate() - days);
+      if (dateRange === '24h') {
+        prevFromDate.setHours(prevFromDate.getHours() - 24);
+      } else {
+        const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90;
+        prevFromDate.setDate(prevFromDate.getDate() - days);
+      }
       const prevFromISO = prevFromDate.toISOString();
 
       // 1. Page Views
-      const { count: pageViews } = await supabase
+      const { count: pageViews, error: pageViewsError } = await supabase
         .from('page_views')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', fromISO);
+
+      if (pageViewsError) {
+        console.error('Page views error:', pageViewsError);
+        throw new Error(`Page views: ${pageViewsError.message}`);
+      }
 
       const { count: prevPageViews } = await supabase
         .from('page_views')
@@ -432,7 +446,7 @@ export default function AdminDashboard() {
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <select 
             value={dateRange} 
-            onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d')}
+            onChange={(e) => setDateRange(e.target.value as '24h' | '7d' | '30d' | '90d')}
             style={{ 
               padding: '8px 16px', 
               borderRadius: 8, 
@@ -441,6 +455,7 @@ export default function AdminDashboard() {
               fontWeight: 500
             }}
           >
+            <option value="24h">Senaste 24 timmarna</option>
             <option value="7d">Senaste 7 dagarna</option>
             <option value="30d">Senaste 30 dagarna</option>
             <option value="90d">Senaste 90 dagarna</option>
@@ -475,6 +490,26 @@ export default function AdminDashboard() {
           marginBottom: 24
         }}>
           <strong>Fel:</strong> {error}
+          <div style={{ marginTop: 8, fontSize: '0.875rem' }}>
+            Kontrollera att page_views tabellen existerar i Supabase och att RLS-policies tillåter läsning.
+          </div>
+        </div>
+      )}
+      
+      {!loading && !error && stats && stats.pageViews === 0 && (
+        <div style={{ 
+          background: '#fffbeb', 
+          border: '1px solid #fbbf24', 
+          color: '#92400e', 
+          padding: 16, 
+          borderRadius: 8,
+          marginBottom: 24
+        }}>
+          <strong>ℹ️ Ingen data ännu:</strong> Inga besökare har registrerats i page_views tabellen. 
+          Besök startsidan eller /jamfor-elpriser för att generera data.
+          <div style={{ marginTop: 8, fontSize: '0.875rem' }}>
+            Tracking är aktiverat på: / och /jamfor-elpriser
+          </div>
         </div>
       )}
 
