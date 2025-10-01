@@ -120,13 +120,14 @@ const Slide = styled.div`
 
 export default function TrustpilotCarousel({
   images = [
-    '/trustpilot/trustpilot-01.png',
-    '/trustpilot/trustpilot-02.png',
-    '/trustpilot/trustpilot-03.png',
-    '/trustpilot/trustpilot-04.png',
-    '/trustpilot/trustpilot-05.png',
-    '/trustpilot/trustpilot-06.png',
-  ],
+  '/trustpilot/trustpilot-01.png',
+  '/trustpilot/trustpilot-02.png',
+  '/trustpilot/trustpilot-03.png',
+  '/trustpilot/trustpilot-04.png',
+  '/trustpilot/trustpilot-05.png',
+  '/trustpilot/trustpilot-06.png',
+  '/trustpilot/trustpilot-07.png',
+],
   height = 'clamp(250px, 30vw, 350px)',
   className,
 }: TrustpilotCarouselProps) {
