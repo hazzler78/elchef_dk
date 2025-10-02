@@ -44,7 +44,8 @@ export async function GET(req: NextRequest) {
     }
 
     // Create a proxy URL that will handle authentication and serve the image
-    const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'}/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
+    // Use relative URL to avoid issues with missing BASE_URL
+    const proxyUrl = `/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
     
     return NextResponse.json({ url: proxyUrl });
   } catch (err) {

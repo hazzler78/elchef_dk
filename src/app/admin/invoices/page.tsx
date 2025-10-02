@@ -204,7 +204,9 @@ export default function AdminInvoices() {
                             const res = await fetch(`/api/invoice-ocr/file-url?invoiceId=${log.id}`);
                             const data = await res.json();
                             if (res.ok && data?.url) {
-                              window.open(data.url, '_blank');
+                              // Handle both relative and absolute URLs
+                              const imageUrl = data.url.startsWith('http') ? data.url : `${window.location.origin}${data.url}`;
+                              window.open(imageUrl, '_blank');
                             } else {
                               const errorMsg = data?.error || 'Okänt fel';
                               const details = data?.details || '';

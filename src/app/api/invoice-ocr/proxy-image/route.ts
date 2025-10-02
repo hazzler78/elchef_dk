@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
       .createSignedUrl(storageKey, 60 * 10); // 10 minutes
 
     if (signErr || !signed?.signedUrl) {
+      console.error('Storage error when creating signed URL:', signErr);
       return NextResponse.json({ 
         error: 'Could not create signed URL', 
         details: signErr?.message || 'Unknown storage error'
