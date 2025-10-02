@@ -5,6 +5,11 @@ export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   try {
+    console.log('=== FILE-URL API DEBUG ===');
+    console.log('req.url:', req.url);
+    console.log('req.nextUrl:', req.nextUrl);
+    console.log('req.nextUrl.searchParams:', req.nextUrl.searchParams);
+    
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -13,12 +18,15 @@ export async function GET(req: NextRequest) {
 
     // Use req.nextUrl which is designed for edge runtime
     const invoiceIdParam = req.nextUrl.searchParams.get('invoiceId');
+    console.log('invoiceIdParam from searchParams:', invoiceIdParam);
     const invoiceId = invoiceIdParam ? parseInt(invoiceIdParam, 10) : NaN;
     if (!invoiceIdParam || Number.isNaN(invoiceId)) {
       return NextResponse.json({ error: 'Missing or invalid invoiceId' }, { status: 400 });
     }
 
+    console.log('About to create Supabase client...');
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    console.log('Supabase client created successfully');
     
     // First check if the invoice_ocr_files table exists and has data
     const { data: fileRow, error } = await supabase
