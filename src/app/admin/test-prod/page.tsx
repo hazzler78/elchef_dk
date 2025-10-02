@@ -162,7 +162,7 @@ export default function TestProd() {
               <h3>Testa bildlänk</h3>
               <p><strong>URL:</strong> <a href={results.proxy.finalUrl} target="_blank" rel="noopener noreferrer">{results.proxy.finalUrl}</a></p>
               <button 
-                onClick={() => window.open(results.proxy.finalUrl, '_blank')}
+                onClick={() => window.open(results.proxy?.finalUrl, '_blank')}
                 style={{ padding: '8px 16px', background: '#10b981', color: 'white', border: 'none', borderRadius: 4, marginRight: 8 }}
               >
                 Öppna bild
