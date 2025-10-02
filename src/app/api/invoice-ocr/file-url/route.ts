@@ -34,39 +34,48 @@ export async function GET(req: NextRequest) {
 
     // List objects under the invoice folder in the public bucket using Storage API (works with anon key for public buckets)
     const listUrl = `${cleanSupabaseUrl}/storage/v1/object/list/invoice-ocr`;
-    const listRes = await fetch(listUrl, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        prefix: `${invoiceId}/`,
-        limit: 1,
-        sortBy: { column: 'name', order: 'asc' },
-      }),
-    });
+    const prefixesToTry = [`${invoiceId}/`, `${invoiceId}`];
+    type StorageObject = { name: string };
+    let objectName: string | null = null;
 
-    if (!listRes.ok) {
-      const text = await listRes.text().catch(() => '');
-      return NextResponse.json({
-        error: 'Storage list error',
-        details: `HTTP ${listRes.status}: ${text}`,
-      }, { status: 500 });
+    for (const prefix of prefixesToTry) {
+      const res = await fetch(listUrl, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          prefix,
+          limit: 1,
+          sortBy: { column: 'name', order: 'asc' },
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        return NextResponse.json({
+          error: 'Storage list error',
+          details: `HTTP ${res.status}: ${text} (prefix=${prefix})`,
+        }, { status: 500 });
+      }
+
+      const objs: StorageObject[] = await res.json();
+      if (objs && objs.length > 0 && objs[0]?.name) {
+        objectName = objs[0].name;
+        break;
+      }
     }
 
-    type StorageObject = { name: string };
-    const objects: StorageObject[] = await listRes.json();
-    if (!objects || objects.length === 0 || !objects[0]?.name) {
+    if (!objectName) {
       return NextResponse.json({
         error: 'No image found for this invoice',
-        details: `No storage object under prefix ${invoiceId}/`,
+        details: `No storage object under prefix ${invoiceId}/ or ${invoiceId}`,
       }, { status: 404 });
     }
 
-    const objectName = objects[0].name; // e.g., filename.png
     const directUrl = `${cleanSupabaseUrl}/storage/v1/object/public/invoice-ocr/${invoiceId}/${objectName}`;
     console.log('Returning direct Supabase URL:', directUrl);
 
