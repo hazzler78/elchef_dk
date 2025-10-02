@@ -44,9 +44,17 @@ export async function GET(req: NextRequest) {
 
     const signPayload = await signRes.json();
     const signedURL = (signPayload && (signPayload.signedURL || signPayload.signedUrl || signPayload.url)) || '';
-    const fetchUrl = signedURL.startsWith('http')
-      ? signedURL
-      : `${cleanSupabaseUrl}${signedURL.startsWith('/') ? signedURL : `/${signedURL}`}`;
+    let fetchUrl: string;
+    if (signedURL.startsWith('http')) {
+      fetchUrl = signedURL;
+    } else {
+      let path = signedURL.startsWith('/') ? signedURL : `/${signedURL}`;
+      if (!path.startsWith('/storage/v1/')) {
+        // Some deployments return '/object/sign/...'; normalize to '/storage/v1/object/sign/...'
+        path = path.startsWith('/object/') ? `/storage/v1${path}` : `/storage/v1${path}`;
+      }
+      fetchUrl = `${cleanSupabaseUrl}${path}`;
+    }
 
     // Fetch the image from the signed URL
     const imageResponse = await fetch(fetchUrl);
