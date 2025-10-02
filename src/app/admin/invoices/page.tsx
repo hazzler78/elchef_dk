@@ -206,7 +206,26 @@ export default function AdminInvoices() {
                             if (res.ok && data?.url) {
                               // Handle both relative and absolute URLs
                               const imageUrl = data.url.startsWith('http') ? data.url : `${window.location.origin}${data.url}`;
-                              window.open(imageUrl, '_blank');
+                              console.log('Opening image URL:', imageUrl);
+                              
+                              // Try window.open first, fallback to creating img element
+                              const newWindow = window.open(imageUrl, '_blank');
+                              if (!newWindow) {
+                                // If popup was blocked, create img element instead
+                                const img = document.createElement('img');
+                                img.src = imageUrl;
+                                img.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:90vw;max-height:90vh;z-index:9999;background:white;padding:20px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
+                                
+                                const overlay = document.createElement('div');
+                                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998;';
+                                overlay.onclick = () => {
+                                  document.body.removeChild(overlay);
+                                  document.body.removeChild(img);
+                                };
+                                
+                                document.body.appendChild(overlay);
+                                document.body.appendChild(img);
+                              }
                             } else {
                               const errorMsg = data?.error || 'Okänt fel';
                               const details = data?.details || '';
