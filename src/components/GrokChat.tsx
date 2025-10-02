@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ChatContactForm from './ChatContactForm';
 import ContractChoice from './ContractChoice';
 import BillUpload from './BillUpload';
@@ -386,6 +386,17 @@ export default function GrokChat() {
     setMessages(newMessages);
   };
 
+  // Memoized callback for bill analysis
+  const handleBillAnalyzed = useCallback((result: string) => {
+    // Add the analysis result to chat
+    const newMessages = [...messages, { 
+      role: 'assistant', 
+      content: `**📊 Analys av din elräkning:**\n\n${result}` 
+    }];
+    setMessages(newMessages);
+    setBillUploadSubmitted(true);
+  }, [messages]);
+
   return (
     <>
       {/* Floating button */}
@@ -625,15 +636,7 @@ export default function GrokChat() {
                     Grodan
                   </div>
                   <BillUpload 
-                    onAnalyzed={(result) => {
-                      // Add the analysis result to chat
-                      const newMessages = [...messages, { 
-                        role: 'assistant', 
-                        content: `**📊 Analys av din elräkning:**\n\n${result}` 
-                      }];
-                      setMessages(newMessages);
-                      setBillUploadSubmitted(true);
-                    }}
+                    onAnalyzed={handleBillAnalyzed}
                   />
                 </div>
               </div>
