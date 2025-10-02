@@ -10,74 +10,19 @@ export async function GET(req: NextRequest) {
     console.log('req.nextUrl:', req.nextUrl);
     console.log('req.nextUrl.searchParams:', req.nextUrl.searchParams);
     
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      return NextResponse.json({ error: 'Supabase is not configured' }, { status: 500 });
-    }
-
     // Use req.nextUrl which is designed for edge runtime
     const invoiceIdParam = req.nextUrl.searchParams.get('invoiceId');
     console.log('invoiceIdParam from searchParams:', invoiceIdParam);
-    const invoiceId = invoiceIdParam ? parseInt(invoiceIdParam, 10) : NaN;
-    if (!invoiceIdParam || Number.isNaN(invoiceId)) {
-      return NextResponse.json({ error: 'Missing or invalid invoiceId' }, { status: 400 });
-    }
-
-    console.log('About to create Supabase client...');
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    console.log('Supabase client created successfully');
     
-    // First check if the invoice_ocr_files table exists and has data
-    const { data: fileRow, error } = await supabase
-      .from('invoice_ocr_files')
-      .select('storage_key')
-      .eq('invoice_ocr_id', invoiceId)
-      .single();
-
-    if (error) {
-      console.error('Database error when fetching file:', error);
-      return NextResponse.json({ 
-        error: 'Database error', 
-        details: error.message,
-        hint: 'Make sure the invoice_ocr_files table exists. Run the SQL in supabase-invoice-ocr-files.sql'
-      }, { status: 500 });
+    if (!invoiceIdParam) {
+      return NextResponse.json({ error: 'Missing invoiceId' }, { status: 400 });
     }
 
-    if (!fileRow) {
-      return NextResponse.json({ 
-        error: 'No image found for this invoice',
-        details: `No file record found for invoice ID ${invoiceId}`
-      }, { status: 404 });
-    }
-
-    // Validate storage key first
-    if (!fileRow.storage_key || typeof fileRow.storage_key !== 'string') {
-      console.error('Invalid storage key:', fileRow.storage_key);
-      return NextResponse.json({ 
-        error: 'Invalid storage key', 
-        details: `Storage key is missing or invalid: ${fileRow.storage_key}`
-      }, { status: 500 });
-    }
-
-    // Create a proxy URL that will handle authentication and serve the image
-    // Use relative URL to avoid issues with missing BASE_URL
-    const proxyUrl = `/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
+    // For now, just return a test URL to see if the basic API works
+    const testUrl = `/api/invoice-ocr/proxy-image?key=test-key-${invoiceIdParam}`;
+    console.log('Returning test URL:', testUrl);
     
-    console.log('Created proxy URL:', proxyUrl);
-    console.log('Storage key:', fileRow.storage_key);
-    
-    // Simple validation - just check if the URL looks valid
-    if (!proxyUrl.startsWith('/api/')) {
-      console.error('Invalid proxy URL format:', proxyUrl);
-      return NextResponse.json({ 
-        error: 'Invalid URL format', 
-        details: `Proxy URL does not start with /api/: ${proxyUrl}`,
-        storageKey: fileRow.storage_key
-      }, { status: 500 });
-    }
-    
-    return NextResponse.json({ url: proxyUrl });
+    return NextResponse.json({ url: testUrl });
   } catch (err) {
     console.error('Unexpected error in file-url API:', err);
     return NextResponse.json({ 
