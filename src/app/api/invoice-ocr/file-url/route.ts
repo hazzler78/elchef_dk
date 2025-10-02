@@ -59,17 +59,13 @@ export async function GET(req: NextRequest) {
     console.log('Created proxy URL:', proxyUrl);
     console.log('Storage key:', fileRow.storage_key);
     
-    // Test the URL creation to make sure it's valid
-    try {
-      const testUrl = new URL(proxyUrl, 'https://example.com');
-      console.log('URL validation successful:', testUrl.toString());
-    } catch (urlError) {
-      console.error('URL validation failed:', urlError);
+    // Simple validation - just check if the URL looks valid
+    if (!proxyUrl.startsWith('/api/')) {
+      console.error('Invalid proxy URL format:', proxyUrl);
       return NextResponse.json({ 
-        error: 'URL validation failed', 
-        details: `Could not create valid URL: ${urlError}`,
-        storageKey: fileRow.storage_key,
-        proxyUrl: proxyUrl
+        error: 'Invalid URL format', 
+        details: `Proxy URL does not start with /api/: ${proxyUrl}`,
+        storageKey: fileRow.storage_key
       }, { status: 500 });
     }
     

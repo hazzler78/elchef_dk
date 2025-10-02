@@ -12,8 +12,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Supabase is not configured' }, { status: 500 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const storageKey = searchParams.get('key');
+    // Parse URL parameters manually to avoid edge runtime issues
+    const urlString = req.url;
+    const urlParts = urlString.split('?');
+    const queryString = urlParts[1] || '';
+    const params = new URLSearchParams(queryString);
+    const storageKey = params.get('key');
     
     console.log('Proxy endpoint - storage key:', storageKey);
     console.log('Request URL:', req.url);
