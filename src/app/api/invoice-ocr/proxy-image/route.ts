@@ -24,9 +24,8 @@ export async function GET(req: NextRequest) {
 
     // Create signed URL via Storage REST (edge-safe)
     const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
-    // storageKey is already a path like "9/abc.png"; don't double-encode slashes
-    const encodedPath = storageKey.split('/').map(encodeURIComponent).join('/');
-    const signUrl = `${cleanSupabaseUrl}/storage/v1/object/sign/invoice-ocr/${encodedPath}?download=false`;
+    // Use raw storageKey; Supabase handles encoding
+    const signUrl = `${cleanSupabaseUrl}/storage/v1/object/sign/invoice-ocr/${storageKey}?download=false`;
     const signRes = await fetch(signUrl, {
       method: 'POST',
       headers: {
