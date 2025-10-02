@@ -1,7 +1,7 @@
 "use client";
 
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import GlassButton from './GlassButton';
 import { withDefaultCtaUtm } from '@/lib/utm';
 
@@ -150,7 +150,7 @@ export default function Hero() {
   const heroTitle = variant === 'A' ? 'Elchef gör det enkelt att välja rätt elavtal!' : 'Välj rätt elavtal – utan krångel';
   const heroSub = variant === 'A' ? 'Vi lyfter fram avtal värda att överväga och sköter bytet åt dig.' : 'Snabbt, gratis och tryggt. Vi hjälper dig hela vägen.';
 
-  const trackHeroClick = (target: 'rorligt' | 'fastpris', href: string) => {
+  const trackHeroClick = useCallback((target: 'rorligt' | 'fastpris', href: string) => {
     try {
       const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
       const finalUrl = withDefaultCtaUtm(href, 'hero', `variant${variant}`, 'hero-ab');
@@ -172,26 +172,33 @@ export default function Hero() {
         window.open(href, '_blank');
       }
     }
-  };
-  const handleVideoClick = (event: React.MouseEvent<HTMLVideoElement>) => {
+  }, [variant]);
+  
+  const handleVideoClick = useCallback((event: React.MouseEvent<HTMLVideoElement>) => {
     const video = event.currentTarget;
     video.muted = !video.muted; // Växla mellan muted och unmuted
     if (!video.muted) {
-      video.play();
+      video.play().catch(() => {/* ignore */});
     }
-  };
+  }, []);
 
   useEffect(() => {
     // Nudge autoplay on some browsers that require an explicit play() after attach
     const v = videoRef.current;
     if (!v) return;
-    try {
-      v.muted = true;
-      const playPromise = v.play();
-      if (playPromise && typeof (playPromise as Promise<void>).catch === 'function') {
-        (playPromise as Promise<void>).catch(() => {/* ignore */});
-      }
-    } catch {/* ignore */}
+    
+    // Add a small delay to prevent blocking the main thread
+    const timeoutId = setTimeout(() => {
+      try {
+        v.muted = true;
+        const playPromise = v.play();
+        if (playPromise && typeof (playPromise as Promise<void>).catch === 'function') {
+          (playPromise as Promise<void>).catch(() => {/* ignore */});
+        }
+      } catch {/* ignore */}
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return (
@@ -209,14 +216,14 @@ export default function Hero() {
                     zIndex: 10,
                     transition: 'all 0.3s ease'
                   }}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
                     e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
                     e.currentTarget.style.filter = 'brightness(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
+                  }, [])}
+                  onMouseLeave={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.filter = 'brightness(1)';
-                  }}
+                  }, [])}
                   onClick={() => {
                     trackHeroClick('rorligt', '/rorligt-avtal');
                     window.location.href = '/rorligt-avtal';
@@ -256,14 +263,14 @@ export default function Hero() {
                      zIndex: 10,
                      transition: 'all 0.3s ease'
                    }}
-                   onMouseEnter={(e) => {
+                   onMouseEnter={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
                      e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
                      e.currentTarget.style.filter = 'brightness(1.1)';
-                   }}
-                   onMouseLeave={(e) => {
+                   }, [])}
+                   onMouseLeave={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
                      e.currentTarget.style.filter = 'brightness(1)';
-                   }}
+                   }, [])}
                                        onClick={() => {
                       trackHeroClick('fastpris', '/fastpris-avtal');
                       window.location.href = '/fastpris-avtal';
@@ -310,8 +317,14 @@ export default function Hero() {
               muted
               loop
               playsInline
-              preload="auto"
-              onLoadedData={() => { try { videoRef.current?.play(); } catch {} }}
+              preload="metadata"
+              onLoadedData={() => { 
+                try { 
+                  if (videoRef.current) {
+                    videoRef.current.play().catch(() => {/* ignore */});
+                  }
+                } catch {} 
+              }}
               onClick={handleVideoClick}
               style={{ cursor: 'pointer' }}
               title="Klicka för att växla ljud av/på"

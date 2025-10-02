@@ -138,7 +138,11 @@ export default function TrustpilotCarousel({
   React.useEffect(() => {
     let raf: number;
     let last = performance.now();
+    let isRunning = true;
+    
     const step = (now: number) => {
+      if (!isRunning) return;
+      
       const el = scrollerRef.current;
       // Cap dt to keep movement consistent and avoid large jumps
       const dt = Math.min(24, now - last);
@@ -155,8 +159,19 @@ export default function TrustpilotCarousel({
       }
       raf = requestAnimationFrame(step);
     };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    
+    // Add a small delay to prevent blocking initial render
+    const timeoutId = setTimeout(() => {
+      raf = requestAnimationFrame(step);
+    }, 100);
+    
+    return () => {
+      isRunning = false;
+      clearTimeout(timeoutId);
+      if (raf) {
+        cancelAnimationFrame(raf);
+      }
+    };
   }, [isPaused, isDragging]);
 
   // Mouse drag-to-scroll
