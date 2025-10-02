@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Removed edge runtime - using Node.js runtime instead
+export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,11 +17,21 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Missing invoiceId' }, { status: 400 });
     }
 
-    // For now, just return a test URL to see if the basic API works
-    const testUrl = `/api/invoice-ocr/proxy-image?key=test-key-${invoiceIdParam}`;
-    console.log('Returning test URL:', testUrl);
+    // Return a direct Supabase storage URL instead of using proxy
+    // This avoids edge runtime compatibility issues with Supabase client
+    const storageKey = `9/01bdee771f2e0070b4c5b7099e64b337a247f53a43b9150a389b997f6d433988.png`; // Hardcoded for testing
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const bucketName = 'invoice-ocr';
     
-    return NextResponse.json({ url: testUrl });
+    if (!supabaseUrl) {
+      return NextResponse.json({ error: 'Supabase URL not configured' }, { status: 500 });
+    }
+    
+    // Create direct storage URL
+    const directUrl = `${supabaseUrl}/storage/v1/object/public/${bucketName}/${storageKey}`;
+    console.log('Returning direct Supabase URL:', directUrl);
+    
+    return NextResponse.json({ url: directUrl });
   } catch (err) {
     console.error('Unexpected error in file-url API:', err);
     return NextResponse.json({ 
