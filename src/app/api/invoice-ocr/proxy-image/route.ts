@@ -39,10 +39,11 @@ export async function GET(req: NextRequest) {
 
     if (!signRes.ok) {
       const text = await signRes.text().catch(() => '');
-      return NextResponse.json({ error: 'Could not create signed URL', details: `HTTP ${signRes.status}: ${text}` }, { status: 500 });
+      return NextResponse.json({ error: 'Could not create signed URL', details: `HTTP ${signRes.status}: ${text}`, debug: { signUrl } }, { status: 500 });
     }
 
-    const { signedURL } = await signRes.json();
+    const signPayload = await signRes.json();
+    const signedURL = (signPayload && (signPayload.signedURL || signPayload.signedUrl || signPayload.url)) || '';
     const fetchUrl = signedURL.startsWith('http')
       ? signedURL
       : `${cleanSupabaseUrl}${signedURL.startsWith('/') ? signedURL : `/${signedURL}`}`;
@@ -52,9 +53,11 @@ export async function GET(req: NextRequest) {
 
     if (!imageResponse.ok) {
       console.error('Failed to fetch image from signed URL:', fetchUrl, 'Status:', imageResponse.status);
+      const body = await imageResponse.text().catch(() => '');
       return NextResponse.json({ 
         error: 'Could not fetch image',
-        details: `HTTP ${imageResponse.status}: ${imageResponse.statusText}`
+        details: `HTTP ${imageResponse.status}: ${imageResponse.statusText}`,
+        debug: { fetchUrl, body }
       }, { status: 500 });
     }
 
