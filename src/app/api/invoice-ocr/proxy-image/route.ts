@@ -32,7 +32,10 @@ export async function GET(req: NextRequest) {
       headers: {
         apikey: SUPABASE_SERVICE_ROLE_KEY,
         Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
+      body: JSON.stringify({ expiresIn: 600 }), // 10 minutes
     });
 
     if (!signRes.ok) {
