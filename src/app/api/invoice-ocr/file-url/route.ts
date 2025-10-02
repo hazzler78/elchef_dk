@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-export const runtime = 'edge';
+// Removed edge runtime to avoid URL parsing issues
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,12 +11,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Supabase is not configured' }, { status: 500 });
     }
 
-    // Parse URL parameters manually to avoid edge runtime issues
-    const urlString = req.url;
-    const urlParts = urlString.split('?');
-    const queryString = urlParts[1] || '';
-    const params = new URLSearchParams(queryString);
-    const invoiceIdParam = params.get('invoiceId');
+    const { searchParams } = new URL(req.url);
+    const invoiceIdParam = searchParams.get('invoiceId');
     const invoiceId = invoiceIdParam ? parseInt(invoiceIdParam, 10) : NaN;
     if (!invoiceIdParam || Number.isNaN(invoiceId)) {
       return NextResponse.json({ error: 'Missing or invalid invoiceId' }, { status: 400 });

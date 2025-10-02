@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-export const runtime = 'edge';
+// Removed edge runtime to avoid URL parsing issues
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,12 +12,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Supabase is not configured' }, { status: 500 });
     }
 
-    // Parse URL parameters manually to avoid edge runtime issues
-    const urlString = req.url;
-    const urlParts = urlString.split('?');
-    const queryString = urlParts[1] || '';
-    const params = new URLSearchParams(queryString);
-    const storageKey = params.get('key');
+    const { searchParams } = new URL(req.url);
+    const storageKey = searchParams.get('key');
     
     console.log('Proxy endpoint - storage key:', storageKey);
     console.log('Request URL:', req.url);
