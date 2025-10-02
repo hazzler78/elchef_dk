@@ -43,11 +43,7 @@ export async function GET(req: NextRequest) {
       }, { status: 404 });
     }
 
-    // For edge runtime, we'll create a direct URL instead of signed URL
-    // This works because the bucket is private but we have service role access
-    const directUrl = `${SUPABASE_URL}/storage/v1/object/invoice-ocr/${fileRow.storage_key}`;
-    
-    // Create a simple proxy URL that will handle authentication
+    // Create a proxy URL that will handle authentication and serve the image
     const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'}/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
     
     return NextResponse.json({ url: proxyUrl });
