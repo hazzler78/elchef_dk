@@ -203,13 +203,16 @@ export default function AdminInvoices() {
                           try {
                             const res = await fetch(`/api/invoice-ocr/file-url?invoiceId=${log.id}`);
                             const data = await res.json();
-                            if (data?.url) {
+                            if (res.ok && data?.url) {
                               window.open(data.url, '_blank');
                             } else {
-                              alert('Ingen bild hittades eller kunde inte skapa länk.');
+                              const errorMsg = data?.error || 'Okänt fel';
+                              const details = data?.details || '';
+                              const hint = data?.hint || '';
+                              alert(`Kunde inte visa bild:\n${errorMsg}\n${details ? `\nDetaljer: ${details}` : ''}${hint ? `\n\nTips: ${hint}` : ''}`);
                             }
-                          } catch {
-                            alert('Kunde inte hämta bildlänk.');
+                          } catch (err) {
+                            alert(`Kunde inte hämta bildlänk: ${err}`);
                           }
                         }}
                         style={{ padding: '4px 8px' }}

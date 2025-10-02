@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-export const runtime = 'edge';
+// Removed edge runtime to avoid potential issues with Supabase client
 
 export async function GET(req: NextRequest) {
   try {
@@ -19,14 +19,28 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    
+    // First check if the invoice_ocr_files table exists and has data
     const { data: fileRow, error } = await supabase
       .from('invoice_ocr_files')
       .select('storage_key')
       .eq('invoice_ocr_id', invoiceId)
       .single();
 
-    if (error || !fileRow) {
-      return NextResponse.json({ error: 'No image found for this invoice' }, { status: 404 });
+    if (error) {
+      console.error('Database error when fetching file:', error);
+      return NextResponse.json({ 
+        error: 'Database error', 
+        details: error.message,
+        hint: 'Make sure the invoice_ocr_files table exists. Run the SQL in supabase-invoice-ocr-files.sql'
+      }, { status: 500 });
+    }
+
+    if (!fileRow) {
+      return NextResponse.json({ 
+        error: 'No image found for this invoice',
+        details: `No file record found for invoice ID ${invoiceId}`
+      }, { status: 404 });
     }
 
     const { data: signed, error: signErr } = await supabase
@@ -35,12 +49,20 @@ export async function GET(req: NextRequest) {
       .createSignedUrl(fileRow.storage_key, 60 * 10); // 10 minutes
 
     if (signErr || !signed?.signedUrl) {
-      return NextResponse.json({ error: 'Could not create signed URL' }, { status: 500 });
+      console.error('Storage error when creating signed URL:', signErr);
+      return NextResponse.json({ 
+        error: 'Could not create signed URL', 
+        details: signErr?.message || 'Unknown storage error'
+      }, { status: 500 });
     }
 
     return NextResponse.json({ url: signed.signedUrl });
   } catch (err) {
-    return NextResponse.json({ error: 'Server error', details: String(err) }, { status: 500 });
+    console.error('Unexpected error in file-url API:', err);
+    return NextResponse.json({ 
+      error: 'Server error', 
+      details: String(err) 
+    }, { status: 500 });
   }
 }
 
