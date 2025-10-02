@@ -170,41 +170,49 @@ export default function GrokChat() {
       return rect.height > 0 && rect.width > 0;
     }
 
+    let updateTimeout: NodeJS.Timeout;
     function updatePositions() {
-      const mobile = window.innerWidth <= 600;
+      // Throttle updates to prevent excessive calls
+      if (updateTimeout) return;
       
-      // Check for cookie banner
-      let cookieOffset = 0;
-      try {
-        const banner = selectCookieBannerElement();
-        if (banner && isElementVisible(banner)) {
-          const rect = banner.getBoundingClientRect();
-          const navHeight = 80; // Bottom nav height
-          const isOverlappingNav = rect.bottom > window.innerHeight - navHeight;
-          
-          // If banner is overlapping with nav, it should be moved up by BottomNav component
-          // So we don't need to add extra offset for chat
-          if (isOverlappingNav) {
-            // The banner will be moved up, so no additional offset needed
-            cookieOffset = 0;
-          } else {
-            // Banner is not overlapping nav, check if it's at bottom and might interfere with chat
-            const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
-            const isOverlappingBottom = rect.bottom > window.innerHeight - 100;
+      updateTimeout = setTimeout(() => {
+        const mobile = window.innerWidth <= 600;
+        
+        // Check for cookie banner
+        let cookieOffset = 0;
+        try {
+          const banner = selectCookieBannerElement();
+          if (banner && isElementVisible(banner)) {
+            const rect = banner.getBoundingClientRect();
+            const navHeight = 80; // Bottom nav height
+            const isOverlappingNav = rect.bottom > window.innerHeight - navHeight;
             
-            if (isAtBottom || isOverlappingBottom) {
-              cookieOffset = Math.ceil(rect.height) + 10;
+            // If banner is overlapping with nav, it should be moved up by BottomNav component
+            // So we don't need to add extra offset for chat
+            if (isOverlappingNav) {
+              // The banner will be moved up, so no additional offset needed
+              cookieOffset = 0;
+            } else {
+              // Banner is not overlapping nav, check if it's at bottom and might interfere with chat
+              const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
+              const isOverlappingBottom = rect.bottom > window.innerHeight - 100;
+              
+              if (isAtBottom || isOverlappingBottom) {
+                cookieOffset = Math.ceil(rect.height) + 10;
+              }
             }
           }
+        } catch {
+          // Ignore errors
         }
-      } catch {
-        // Ignore errors
-      }
-      
-      // Account for bottom navigation height (approximately 80px) plus cookie banner
-      setChatBottom(mobile ? 120 + cookieOffset : 24 + cookieOffset);
-      setChatWindowBottom(mobile ? 140 + cookieOffset : 90 + cookieOffset);
-      setChatWindowHeight(mobile ? 400 : 480);
+        
+        // Account for bottom navigation height (approximately 80px) plus cookie banner
+        setChatBottom(mobile ? 120 + cookieOffset : 24 + cookieOffset);
+        setChatWindowBottom(mobile ? 140 + cookieOffset : 90 + cookieOffset);
+        setChatWindowHeight(mobile ? 400 : 480);
+        
+        updateTimeout = undefined as any;
+      }, 100); // Throttle to max once per 100ms
     }
     
     updatePositions();
@@ -212,7 +220,7 @@ export default function GrokChat() {
     
     // Observe DOM mutations to detect when Cookiebot injects/hides the banner
     const observer = new MutationObserver(() => updatePositions());
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+    observer.observe(document.body, { childList: true, subtree: false, attributes: true, attributeFilter: ['style', 'class'] });
     
     // Also poll as a fallback
     const interval = window.setInterval(updatePositions, 1000);
@@ -388,14 +396,13 @@ export default function GrokChat() {
 
   // Memoized callback for bill analysis
   const handleBillAnalyzed = useCallback((result: string) => {
-    // Add the analysis result to chat
-    const newMessages = [...messages, { 
+    // Add the analysis result to chat using functional state update
+    setMessages(prevMessages => [...prevMessages, { 
       role: 'assistant', 
       content: `**📊 Analys av din elräkning:**\n\n${result}` 
-    }];
-    setMessages(newMessages);
+    }]);
     setBillUploadSubmitted(true);
-  }, [messages]);
+  }, []);
 
   return (
     <>
