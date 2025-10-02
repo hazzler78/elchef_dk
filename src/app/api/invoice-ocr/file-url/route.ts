@@ -43,9 +43,21 @@ export async function GET(req: NextRequest) {
       }, { status: 404 });
     }
 
+    // Validate storage key first
+    if (!fileRow.storage_key || typeof fileRow.storage_key !== 'string') {
+      console.error('Invalid storage key:', fileRow.storage_key);
+      return NextResponse.json({ 
+        error: 'Invalid storage key', 
+        details: `Storage key is missing or invalid: ${fileRow.storage_key}`
+      }, { status: 500 });
+    }
+
     // Create a proxy URL that will handle authentication and serve the image
     // Use relative URL to avoid issues with missing BASE_URL
     const proxyUrl = `/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
+    
+    console.log('Created proxy URL:', proxyUrl);
+    console.log('Storage key:', fileRow.storage_key);
     
     return NextResponse.json({ url: proxyUrl });
   } catch (err) {
