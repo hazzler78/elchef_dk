@@ -27,8 +27,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Supabase URL not configured' }, { status: 500 });
     }
     
-    // Create direct storage URL
-    const directUrl = `${supabaseUrl}/storage/v1/object/public/${bucketName}/${storageKey}`;
+    // Create direct storage URL - remove any quotes from supabaseUrl
+    const cleanSupabaseUrl = supabaseUrl.replace(/"/g, '');
+    const directUrl = `${cleanSupabaseUrl}/storage/v1/object/public/${bucketName}/${storageKey}`;
     console.log('Returning direct Supabase URL:', directUrl);
     
     return NextResponse.json({ url: directUrl });

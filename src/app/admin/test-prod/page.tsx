@@ -50,7 +50,7 @@ export default function TestProd() {
           status: proxyResponse.status,
           ok: proxyResponse.ok,
           url: fileUrlData.url,
-          finalUrl: window.location.origin + fileUrlData.url
+          finalUrl: fileUrlData.url // Use the URL directly since it's already absolute
         };
       }
       
