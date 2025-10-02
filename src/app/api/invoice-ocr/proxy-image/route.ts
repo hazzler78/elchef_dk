@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
 
@@ -23,24 +22,27 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Missing storage key' }, { status: 400 });
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    
-    // Create signed URL for the image
-    const { data: signed, error: signErr } = await supabase
-      .storage
-      .from('invoice-ocr')
-      .createSignedUrl(storageKey, 60 * 10); // 10 minutes
+    // Create signed URL via Storage REST (edge-safe)
+    const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
+    const signUrl = `${cleanSupabaseUrl}/storage/v1/object/sign/invoice-ocr/${encodeURIComponent(storageKey)}?download=false`;
+    const signRes = await fetch(signUrl, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    });
 
-    if (signErr || !signed?.signedUrl) {
-      console.error('Storage error when creating signed URL:', signErr);
-      return NextResponse.json({ 
-        error: 'Could not create signed URL', 
-        details: signErr?.message || 'Unknown storage error'
-      }, { status: 500 });
+    if (!signRes.ok) {
+      const text = await signRes.text().catch(() => '');
+      return NextResponse.json({ error: 'Could not create signed URL', details: `HTTP ${signRes.status}: ${text}` }, { status: 500 });
     }
 
+    const { signedURL } = await signRes.json();
+    const fetchUrl = `${cleanSupabaseUrl}${signedURL.startsWith('/') ? signedURL : `/${signedURL}`}`;
+
     // Fetch the image from the signed URL
-    const imageResponse = await fetch(signed.signedUrl);
+    const imageResponse = await fetch(fetchUrl);
     
     if (!imageResponse.ok) {
       console.error('Failed to fetch image from signed URL:', signed.signedUrl, 'Status:', imageResponse.status);

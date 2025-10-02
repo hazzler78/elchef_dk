@@ -23,63 +23,70 @@ export async function GET(req: NextRequest) {
     }
 
     const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
     }
 
     // Sanitize Supabase URL (guard against accidental quotes and trailing slash)
     const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
 
-    // List objects under the invoice folder in the public bucket using Storage API (works with anon key for public buckets)
-    const listUrl = `${cleanSupabaseUrl}/storage/v1/object/list/invoice-ocr`;
-    const prefixesToTry = [`${invoiceId}/`, `${invoiceId}`];
-    type StorageObject = { name: string };
-    let objectName: string | null = null;
+    // 1) Resolve invoice_ocr_id from bill_analysis (treat query as bill_analysis.id first)
+    let invoiceOcrId: number | null = null;
+    const resolveUrl = `${cleanSupabaseUrl}/rest/v1/bill_analysis?id=eq.${invoiceId}&select=invoice_ocr_id,consent_to_store&limit=1`;
+    const resolveRes = await fetch(resolveUrl, {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        Accept: 'application/json',
+      },
+    });
 
-    for (const prefix of prefixesToTry) {
-      const res = await fetch(listUrl, {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          prefix,
-          limit: 1,
-          sortBy: { column: 'name', order: 'asc' },
-        }),
-      });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => '');
-        return NextResponse.json({
-          error: 'Storage list error',
-          details: `HTTP ${res.status}: ${text} (prefix=${prefix})`,
-        }, { status: 500 });
-      }
-
-      const objs: StorageObject[] = await res.json();
-      if (objs && objs.length > 0 && objs[0]?.name) {
-        objectName = objs[0].name;
-        break;
-      }
+    if (!resolveRes.ok) {
+      const text = await resolveRes.text().catch(() => '');
+      return NextResponse.json({ error: 'Database error', details: `HTTP ${resolveRes.status}: ${text}` }, { status: 500 });
     }
 
-    if (!objectName) {
-      return NextResponse.json({
-        error: 'No image found for this invoice',
-        details: `No storage object under prefix ${invoiceId}/ or ${invoiceId}`,
-      }, { status: 404 });
+    const resolveRows: Array<{ invoice_ocr_id: number | null; consent_to_store: boolean | null }> = await resolveRes.json();
+    if (resolveRows && resolveRows.length > 0 && resolveRows[0]?.invoice_ocr_id) {
+      // honor consent
+      const consent = Boolean(resolveRows[0].consent_to_store);
+      if (!consent) {
+        return NextResponse.json({ error: 'No image (no consent)' }, { status: 404 });
+      }
+      invoiceOcrId = resolveRows[0].invoice_ocr_id;
     }
 
-    const directUrl = `${cleanSupabaseUrl}/storage/v1/object/public/invoice-ocr/${invoiceId}/${objectName}`;
-    console.log('Returning direct Supabase URL:', directUrl);
+    // Fallback: treat the provided id as invoice_ocr.id
+    if (!invoiceOcrId) {
+      invoiceOcrId = invoiceId;
+    }
 
-    return NextResponse.json({ url: directUrl });
+    // 2) Fetch latest storage_key for that invoice_ocr_id
+    const filesUrl = `${cleanSupabaseUrl}/rest/v1/invoice_ocr_files?invoice_ocr_id=eq.${invoiceOcrId}&select=storage_key,created_at&order=created_at.desc&limit=1`;
+    const filesRes = await fetch(filesUrl, {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (!filesRes.ok) {
+      const text = await filesRes.text().catch(() => '');
+      return NextResponse.json({ error: 'Database error', details: `HTTP ${filesRes.status}: ${text}` }, { status: 500 });
+    }
+
+    const fileRows: Array<{ storage_key: string }> = await filesRes.json();
+    const fileRow = fileRows && fileRows.length > 0 ? fileRows[0] : null;
+    if (!fileRow?.storage_key) {
+      return NextResponse.json({ error: 'No image found for this invoice' }, { status: 404 });
+    }
+
+    // 3) Return proxy URL (relative)
+    const proxyUrl = `/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
+    return NextResponse.json({ url: proxyUrl });
   } catch (err) {
     console.error('Unexpected error in file-url API:', err);
     return NextResponse.json({ 
