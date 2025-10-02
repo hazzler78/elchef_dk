@@ -9,8 +9,13 @@ export default function TestProd() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<{
-    environment: any;
-    fileUrl: { status: number; data: any };
+    environment: {
+      hostname: string;
+      protocol: string;
+      origin: string;
+      userAgent: string;
+    };
+    fileUrl: { status: number; data: { url?: string; error?: string } };
     proxy: { status: number; ok: boolean; url: string; finalUrl: string } | null;
     timestamp: string;
   } | null>(null);
