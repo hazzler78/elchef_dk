@@ -82,7 +82,7 @@ function BottomNavContent() {
         
         // Set a small offset if cookie banner is detected
         setBottomOffset(foundBanner ? 20 : 0);
-      } catch (error) {
+      } catch {
         setBottomOffset(0);
       }
     };
