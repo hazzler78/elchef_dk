@@ -8,7 +8,12 @@ export default function TestProd() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<{
+    environment: any;
+    fileUrl: { status: number; data: any };
+    proxy: { status: number; ok: boolean; url: string; finalUrl: string } | null;
+    timestamp: string;
+  } | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
