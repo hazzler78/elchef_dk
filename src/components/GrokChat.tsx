@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ChatContactForm from './ChatContactForm';
 import ContractChoice from './ContractChoice';
+import BillUpload from './BillUpload';
 
 function renderMarkdown(text: string) {
   if (!text) return '';
@@ -114,6 +115,8 @@ export default function GrokChat() {
   const [contactFormSubmitted, setContactFormSubmitted] = useState(false);
   const [showContractChoice, setShowContractChoice] = useState(false);
   const [contractChoiceSubmitted, setContractChoiceSubmitted] = useState(false);
+  const [showBillUpload, setShowBillUpload] = useState(false);
+  const [billUploadSubmitted, setBillUploadSubmitted] = useState(false);
 
   
   // Debug: Log when showContactForm changes
@@ -286,6 +289,21 @@ export default function GrokChat() {
         setShowContractChoice(false);
       }
       
+      // Check if AI wants to show bill upload
+      if (aiMsg.includes('[SHOW_BILL_UPLOAD]')) {
+        console.log('Bill upload trigger detected!');
+        aiMsg = aiMsg.replace('[SHOW_BILL_UPLOAD]', '');
+        setShowBillUpload(true);
+      }
+      
+      // Check if bill upload has been submitted
+      if (aiMsg.includes('[BILL_UPLOAD_SUBMITTED]')) {
+        console.log('Bill upload submitted trigger detected!');
+        aiMsg = aiMsg.replace('[BILL_UPLOAD_SUBMITTED]', '');
+        setBillUploadSubmitted(true);
+        setShowBillUpload(false);
+      }
+      
       // Remove greeting on subsequent assistant replies
       const assistantRepliesSoFar = newMessages.filter(m => m.role === 'assistant').length;
       if (assistantRepliesSoFar >= 1) {
@@ -309,6 +327,8 @@ export default function GrokChat() {
     setContactFormSubmitted(false);
     setShowContractChoice(false);
     setContractChoiceSubmitted(false);
+    setShowBillUpload(false);
+    setBillUploadSubmitted(false);
   };
 
   // Funktion för att hantera avtalsval
@@ -582,6 +602,43 @@ export default function GrokChat() {
                 onClose={closeContractChoice}
               />
             )}
+            {showBillUpload && (
+              <div style={{
+                marginBottom: 18,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+                <GrodanIcon />
+                <div style={{
+                  background: '#f0fdf4',
+                  color: '#17416b',
+                  borderRadius: '16px 16px 16px 4px',
+                  padding: '12px 16px',
+                  maxWidth: 300,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)',
+                  marginLeft: 8,
+                }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
+                    Grodan
+                  </div>
+                  <BillUpload 
+                    onClose={() => setShowBillUpload(false)} 
+                    onAnalyzed={(result) => {
+                      // Add the analysis result to chat
+                      const newMessages = [...messages, { 
+                        role: 'assistant', 
+                        content: `**📊 Analys av din elräkning:**\n\n${result}` 
+                      }];
+                      setMessages(newMessages);
+                      setBillUploadSubmitted(true);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
             {error && <div style={{ color: 'red', fontSize: 15, marginLeft: 8 }}>{error}</div>}
             <div ref={chatEndRef} />
           </div>
@@ -597,7 +654,7 @@ export default function GrokChat() {
               type="text"
               value={input}
               onChange={event => setInput(event.target.value)}
-              placeholder={contactFormSubmitted ? "Tack för din kontakt!" : contractChoiceSubmitted ? "Tack för ditt val!" : "Skriv din fråga…"}
+              placeholder={contactFormSubmitted ? "Tack för din kontakt!" : contractChoiceSubmitted ? "Tack för ditt val!" : billUploadSubmitted ? "Analysen är klar!" : "Skriv din fråga…"}
               style={{ 
                 flex: 1, 
                 border: '1px solid rgba(203, 213, 225, 0.5)', 
@@ -605,18 +662,18 @@ export default function GrokChat() {
                 padding: '0.8rem 1rem', 
                 fontSize: 16, 
                 outline: 'none', 
-                background: contactFormSubmitted || contractChoiceSubmitted ? 'rgba(243, 244, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)', 
+                background: contactFormSubmitted || contractChoiceSubmitted || billUploadSubmitted ? 'rgba(243, 244, 246, 0.8)' : 'rgba(255, 255, 255, 0.9)', 
                 marginRight: 8,
                 backdropFilter: 'var(--glass-blur)',
                 WebkitBackdropFilter: 'var(--glass-blur)',
               }}
-              disabled={loading || contactFormSubmitted || contractChoiceSubmitted}
+              disabled={loading || contactFormSubmitted || contractChoiceSubmitted || billUploadSubmitted}
               maxLength={500}
               autoFocus
             />
             <button 
               type="submit" 
-              disabled={loading || !input.trim() || contactFormSubmitted || contractChoiceSubmitted} 
+              disabled={loading || !input.trim() || contactFormSubmitted || contractChoiceSubmitted || billUploadSubmitted} 
               style={{ 
                 background: 'linear-gradient(135deg, var(--primary), var(--secondary))', 
                 color: 'white', 
@@ -637,9 +694,9 @@ export default function GrokChat() {
             <button 
               type="button" 
               onClick={() => setShowContactForm(true)}
-              disabled={contactFormSubmitted || contractChoiceSubmitted}
+              disabled={contactFormSubmitted || contractChoiceSubmitted || billUploadSubmitted}
               style={{ 
-                background: contactFormSubmitted || contractChoiceSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, var(--secondary), var(--primary))', 
+                background: contactFormSubmitted || contractChoiceSubmitted || billUploadSubmitted ? 'rgba(148, 163, 184, 0.5)' : 'linear-gradient(135deg, var(--secondary), var(--primary))', 
                 color: 'white', 
                 border: '1px solid rgba(255, 255, 255, 0.2)', 
                 padding: '0 12px', 
