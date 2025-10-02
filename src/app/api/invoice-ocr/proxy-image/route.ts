@@ -39,8 +39,10 @@ export async function GET(req: NextRequest) {
     const imageResponse = await fetch(signed.signedUrl);
     
     if (!imageResponse.ok) {
+      console.error('Failed to fetch image from signed URL:', signed.signedUrl, 'Status:', imageResponse.status);
       return NextResponse.json({ 
-        error: 'Could not fetch image' 
+        error: 'Could not fetch image',
+        details: `HTTP ${imageResponse.status}: ${imageResponse.statusText}`
       }, { status: 500 });
     }
 

@@ -204,27 +204,45 @@ export default function AdminInvoices() {
                             const res = await fetch(`/api/invoice-ocr/file-url?invoiceId=${log.id}`);
                             const data = await res.json();
                             if (res.ok && data?.url) {
-                              // Handle both relative and absolute URLs
-                              const imageUrl = data.url.startsWith('http') ? data.url : `${window.location.origin}${data.url}`;
-                              console.log('Opening image URL:', imageUrl);
+                              console.log('Raw URL from API:', data.url);
                               
-                              // Try window.open first, fallback to creating img element
-                              const newWindow = window.open(imageUrl, '_blank');
-                              if (!newWindow) {
-                                // If popup was blocked, create img element instead
-                                const img = document.createElement('img');
-                                img.src = imageUrl;
-                                img.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:90vw;max-height:90vh;z-index:9999;background:white;padding:20px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
+                              // Create absolute URL more safely
+                              let imageUrl;
+                              if (data.url.startsWith('http')) {
+                                imageUrl = data.url;
+                              } else {
+                                // Use current page's origin
+                                const origin = window.location.protocol + '//' + window.location.host;
+                                imageUrl = origin + data.url;
+                              }
+                              
+                              console.log('Final image URL:', imageUrl);
+                              
+                              // Validate URL before using it
+                              try {
+                                new URL(imageUrl);
                                 
-                                const overlay = document.createElement('div');
-                                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998;';
-                                overlay.onclick = () => {
-                                  document.body.removeChild(overlay);
-                                  document.body.removeChild(img);
-                                };
-                                
-                                document.body.appendChild(overlay);
-                                document.body.appendChild(img);
+                                // Try window.open first, fallback to creating img element
+                                const newWindow = window.open(imageUrl, '_blank');
+                                if (!newWindow) {
+                                  // If popup was blocked, create img element instead
+                                  const img = document.createElement('img');
+                                  img.src = imageUrl;
+                                  img.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:90vw;max-height:90vh;z-index:9999;background:white;padding:20px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.3);';
+                                  
+                                  const overlay = document.createElement('div');
+                                  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998;';
+                                  overlay.onclick = () => {
+                                    document.body.removeChild(overlay);
+                                    document.body.removeChild(img);
+                                  };
+                                  
+                                  document.body.appendChild(overlay);
+                                  document.body.appendChild(img);
+                                }
+                              } catch (urlError) {
+                                console.error('Invalid URL created:', imageUrl, urlError);
+                                alert(`Ogiltig URL skapad: ${imageUrl}\nFel: ${urlError}`);
                               }
                             } else {
                               const errorMsg = data?.error || 'Okänt fel';
