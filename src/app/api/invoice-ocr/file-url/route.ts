@@ -59,6 +59,20 @@ export async function GET(req: NextRequest) {
     console.log('Created proxy URL:', proxyUrl);
     console.log('Storage key:', fileRow.storage_key);
     
+    // Test the URL creation to make sure it's valid
+    try {
+      const testUrl = new URL(proxyUrl, 'https://example.com');
+      console.log('URL validation successful:', testUrl.toString());
+    } catch (urlError) {
+      console.error('URL validation failed:', urlError);
+      return NextResponse.json({ 
+        error: 'URL validation failed', 
+        details: `Could not create valid URL: ${urlError}`,
+        storageKey: fileRow.storage_key,
+        proxyUrl: proxyUrl
+      }, { status: 500 });
+    }
+    
     return NextResponse.json({ url: proxyUrl });
   } catch (err) {
     console.error('Unexpected error in file-url API:', err);

@@ -15,7 +15,11 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const storageKey = searchParams.get('key');
     
+    console.log('Proxy endpoint - storage key:', storageKey);
+    console.log('Request URL:', req.url);
+    
     if (!storageKey) {
+      console.error('Missing storage key in proxy request');
       return NextResponse.json({ error: 'Missing storage key' }, { status: 400 });
     }
 
