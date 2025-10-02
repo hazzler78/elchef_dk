@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Removed edge runtime to avoid potential issues with Supabase client
+export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   try {
@@ -43,20 +43,14 @@ export async function GET(req: NextRequest) {
       }, { status: 404 });
     }
 
-    const { data: signed, error: signErr } = await supabase
-      .storage
-      .from('invoice-ocr')
-      .createSignedUrl(fileRow.storage_key, 60 * 10); // 10 minutes
-
-    if (signErr || !signed?.signedUrl) {
-      console.error('Storage error when creating signed URL:', signErr);
-      return NextResponse.json({ 
-        error: 'Could not create signed URL', 
-        details: signErr?.message || 'Unknown storage error'
-      }, { status: 500 });
-    }
-
-    return NextResponse.json({ url: signed.signedUrl });
+    // For edge runtime, we'll create a direct URL instead of signed URL
+    // This works because the bucket is private but we have service role access
+    const directUrl = `${SUPABASE_URL}/storage/v1/object/invoice-ocr/${fileRow.storage_key}`;
+    
+    // Create a simple proxy URL that will handle authentication
+    const proxyUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'}/api/invoice-ocr/proxy-image?key=${encodeURIComponent(fileRow.storage_key)}`;
+    
+    return NextResponse.json({ url: proxyUrl });
   } catch (err) {
     console.error('Unexpected error in file-url API:', err);
     return NextResponse.json({ 
