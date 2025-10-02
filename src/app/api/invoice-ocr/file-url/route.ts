@@ -32,39 +32,8 @@ export async function GET(req: NextRequest) {
     // Sanitize Supabase URL (guard against accidental quotes and trailing slash)
     const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
 
-    // 1) Resolve invoice_ocr_id from bill_analysis (treat query as bill_analysis.id first)
-    let invoiceOcrId: number | null = null;
-    const resolveUrl = `${cleanSupabaseUrl}/rest/v1/bill_analysis?id=eq.${invoiceId}&select=invoice_ocr_id,consent_to_store&limit=1`;
-    const resolveRes = await fetch(resolveUrl, {
-      headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        Accept: 'application/json',
-      },
-    });
-
-    if (!resolveRes.ok) {
-      const text = await resolveRes.text().catch(() => '');
-      return NextResponse.json({ error: 'Database error', details: `HTTP ${resolveRes.status}: ${text}` }, { status: 500 });
-    }
-
-    const resolveRows: Array<{ invoice_ocr_id: number | null; consent_to_store: boolean | null }> = await resolveRes.json();
-    if (resolveRows && resolveRows.length > 0 && resolveRows[0]?.invoice_ocr_id) {
-      // honor consent
-      const consent = Boolean(resolveRows[0].consent_to_store);
-      if (!consent) {
-        return NextResponse.json({ error: 'No image (no consent)' }, { status: 404 });
-      }
-      invoiceOcrId = resolveRows[0].invoice_ocr_id;
-    }
-
-    // Fallback: treat the provided id as invoice_ocr.id
-    if (!invoiceOcrId) {
-      invoiceOcrId = invoiceId;
-    }
-
-    // 2) Fetch latest storage_key for that invoice_ocr_id
-    const filesUrl = `${cleanSupabaseUrl}/rest/v1/invoice_ocr_files?invoice_ocr_id=eq.${invoiceOcrId}&select=storage_key,created_at&order=created_at.desc&limit=1`;
+    // Fetch latest storage_key for this invoice_ocr_id (admin passes invoice_ocr.id)
+    const filesUrl = `${cleanSupabaseUrl}/rest/v1/invoice_ocr_files?invoice_ocr_id=eq.${invoiceId}&select=storage_key,created_at&order=created_at.desc&limit=1`;
     const filesRes = await fetch(filesUrl, {
       headers: {
         apikey: SUPABASE_SERVICE_ROLE_KEY,
