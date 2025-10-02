@@ -43,7 +43,9 @@ export async function GET(req: NextRequest) {
     }
 
     const { signedURL } = await signRes.json();
-    const fetchUrl = `${cleanSupabaseUrl}${signedURL.startsWith('/') ? signedURL : `/${signedURL}`}`;
+    const fetchUrl = signedURL.startsWith('http')
+      ? signedURL
+      : `${cleanSupabaseUrl}${signedURL.startsWith('/') ? signedURL : `/${signedURL}`}`;
 
     // Fetch the image from the signed URL
     const imageResponse = await fetch(fetchUrl);
