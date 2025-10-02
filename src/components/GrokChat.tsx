@@ -625,7 +625,6 @@ export default function GrokChat() {
                     Grodan
                   </div>
                   <BillUpload 
-                    onClose={() => setShowBillUpload(false)} 
                     onAnalyzed={(result) => {
                       // Add the analysis result to chat
                       const newMessages = [...messages, { 

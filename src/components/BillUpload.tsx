@@ -166,11 +166,10 @@ const Message = styled.div<{ $type: 'success' | 'error' }>`
 `;
 
 interface BillUploadProps {
-  onClose: () => void;
   onAnalyzed?: (result: string) => void;
 }
 
-export default function BillUpload({ onClose, onAnalyzed }: BillUploadProps) {
+export default function BillUpload({ onAnalyzed }: BillUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
