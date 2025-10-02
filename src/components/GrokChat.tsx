@@ -176,11 +176,22 @@ export default function GrokChat() {
         const banner = selectCookieBannerElement();
         if (banner && isElementVisible(banner)) {
           const rect = banner.getBoundingClientRect();
-          const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
-          const isOverlappingBottom = rect.bottom > window.innerHeight - 100;
+          const navHeight = 80; // Bottom nav height
+          const isOverlappingNav = rect.bottom > window.innerHeight - navHeight;
           
-          if (isAtBottom || isOverlappingBottom) {
-            cookieOffset = Math.ceil(rect.height) + 10;
+          // If banner is overlapping with nav, it should be moved up by BottomNav component
+          // So we don't need to add extra offset for chat
+          if (isOverlappingNav) {
+            // The banner will be moved up, so no additional offset needed
+            cookieOffset = 0;
+          } else {
+            // Banner is not overlapping nav, check if it's at bottom and might interfere with chat
+            const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
+            const isOverlappingBottom = rect.bottom > window.innerHeight - 100;
+            
+            if (isAtBottom || isOverlappingBottom) {
+              cookieOffset = Math.ceil(rect.height) + 10;
+            }
           }
         }
       } catch {

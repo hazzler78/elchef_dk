@@ -20,7 +20,7 @@ const Nav = styled.nav<{ offset?: number }>`
   align-items: center;
   padding: 0.5rem 0;
   box-shadow: var(--glass-shadow-light);
-  z-index: 1003 !important;
+  z-index: 9999 !important;
 `;
 
 const NavItem = styled(Link)`
@@ -180,21 +180,61 @@ function BottomNavContent() {
           }
           
           if (isOverlappingNav) {
-            // Move the cookie banner up by adjusting its position
+            // Try to move the cookie banner up first
             const newBottom = navHeight + 20; // 20px gap above nav
             
+            // Force cookie banner positioning with higher specificity
             if (banner.style.position === 'fixed' || banner.style.position === '') {
-              banner.style.position = 'fixed';
-              banner.style.bottom = `${newBottom}px`;
-              banner.style.zIndex = '1002'; // Below our nav (1003)
+              banner.style.setProperty('position', 'fixed', 'important');
+              banner.style.setProperty('bottom', `${newBottom}px`, 'important');
+              banner.style.setProperty('z-index', '1001', 'important');
+              banner.style.setProperty('transform', 'none', 'important');
             }
+            
+            // Also try to move it via CSS classes for better compatibility
+            banner.classList.add('elchef-cookie-banner-adjusted');
+            
+            // Add CSS rule to ensure positioning
+            const styleId = 'elchef-cookie-banner-fix';
+            let existingStyle = document.getElementById(styleId);
+            if (!existingStyle) {
+              existingStyle = document.createElement('style');
+              existingStyle.id = styleId;
+              document.head.appendChild(existingStyle);
+            }
+            
+            existingStyle.textContent = `
+              .elchef-cookie-banner-adjusted,
+              #CybotCookiebotDialog,
+              [id^="CybotCookiebot"],
+              #CookiebotDialog,
+              .CookieConsent,
+              .CookiebotWidget {
+                position: fixed !important;
+                bottom: ${newBottom}px !important;
+                z-index: 1001 !important;
+                transform: none !important;
+              }
+            `;
             
             // No offset needed for nav since we moved the banner
             setBottomOffset(0);
           } else {
+            // Clean up any adjustments if banner is not overlapping
+            const styleId = 'elchef-cookie-banner-fix';
+            const existingStyle = document.getElementById(styleId);
+            if (existingStyle) {
+              existingStyle.remove();
+            }
             setBottomOffset(0);
           }
         } else {
+          // Clean up any adjustments if no banner found
+          const styleId = 'elchef-cookie-banner-fix';
+          const existingStyle = document.getElementById(styleId);
+          if (existingStyle) {
+            existingStyle.remove();
+          }
           setBottomOffset(0);
         }
       } catch (error) {

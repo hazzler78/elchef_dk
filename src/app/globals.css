@@ -391,24 +391,51 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie-bot z-index fix */
+/* Cookie banner adjustments - Prevent blocking navigation */
+#CybotCookiebotDialog,
+[id^="CybotCookiebot"],
+#CookiebotDialog,
+.CookieConsent,
+.CookiebotWidget,
 #CookieConsent,
 #CookieDeclaration,
 #Cookiebot,
 .cookieconsent,
 .cookie-declaration,
 [id*="cookie"],
-[class*="cookie"] {
+[class*="cookie"],
+[id*="Cookie"],
+[class*="Cookie"],
+[id*="consent"],
+[class*="consent"],
+[id*="Consent"],
+[class*="Consent"],
+[id*="gdpr"],
+[class*="gdpr"],
+[id*="GDPR"],
+[class*="GDPR"],
+.cookie-banner,
+.cookie-notice,
+.privacy-banner,
+.consent-banner,
+.gdpr-banner,
+.cookie-policy,
+.cookie-widget,
+.cookie-popup,
+.cookie-modal,
+.cookie-overlay {
   z-index: 999 !important;
   max-height: calc(100vh - 100px) !important;
   overflow-y: auto !important;
+  /* Ensure cookie banners don't overlap with bottom navigation */
+  bottom: 100px !important;
 }
 
-/* Ensure our navigation stays above cookie elements */
+/* Ensure our navigation stays above all cookie elements */
 nav[style*="z-index"],
 .nav,
 .bottom-nav {
-  z-index: 1003 !important;
+  z-index: 9999 !important;
   position: fixed !important;
   bottom: 0 !important;
 }
