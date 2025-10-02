@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
 
@@ -25,40 +24,46 @@ export async function GET(req: NextRequest) {
 
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
+
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
     }
 
-    // Create Supabase client
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    // Sanitize Supabase URL (guard against accidental quotes in env)
+    const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
 
-    // Get storage key from database
-    const { data: fileRow, error } = await supabase
-      .from('invoice_ocr_files')
-      .select('storage_key')
-      .eq('invoice_ocr_id', invoiceId)
-      .single();
+    // Query PostgREST directly from edge to avoid supabase-js/node deps
+    const restUrl = `${cleanSupabaseUrl}/rest/v1/invoice_ocr_files?invoice_ocr_id=eq.${invoiceId}&select=storage_key&limit=1`;
+    const restRes = await fetch(restUrl, {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        Accept: 'application/json',
+      },
+    });
 
-    if (error) {
-      console.error('Database error:', error);
+    if (!restRes.ok) {
+      const text = await restRes.text().catch(() => '');
       return NextResponse.json({
         error: 'Database error',
-        details: error.message
+        details: `HTTP ${restRes.status}: ${text}`,
       }, { status: 500 });
     }
 
-    if (!fileRow) {
+    const rows: Array<{ storage_key: string }> = await restRes.json();
+    const fileRow = rows && rows.length > 0 ? rows[0] : null;
+
+    if (!fileRow || !fileRow.storage_key) {
       return NextResponse.json({
-        error: 'No image found for this invoice'
+        error: 'No image found for this invoice',
+        details: `invoice_ocr_files not found for invoice_ocr_id=${invoiceId}`,
       }, { status: 404 });
     }
 
     // Create direct public storage URL
-    const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '');
     const directUrl = `${cleanSupabaseUrl}/storage/v1/object/public/invoice-ocr/${fileRow.storage_key}`;
     console.log('Returning direct Supabase URL:', directUrl);
-    
+
     return NextResponse.json({ url: directUrl });
   } catch (err) {
     console.error('Unexpected error in file-url API:', err);
