@@ -119,10 +119,6 @@ export default function GrokChat() {
   const [billUploadSubmitted, setBillUploadSubmitted] = useState(false);
 
   
-  // Debug: Log when showContactForm changes
-  useEffect(() => {
-    console.log('showContactForm state:', showContactForm);
-  }, [showContactForm]);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(false);
@@ -140,95 +136,21 @@ export default function GrokChat() {
   const [chatWindowHeight, setChatWindowHeight] = useState(480);
   
   useEffect(() => {
-    function selectCookieBannerElement(): HTMLElement | null {
-      const candidates = [
-        '#CybotCookiebotDialog',
-        '[id^="CybotCookiebot"]',
-        '#CookiebotDialog',
-        '.CookieConsent',
-        '.CookiebotWidget',
-        '#CookieConsent',
-        '#CookieDeclaration',
-        '.cookieconsent',
-        '.cookie-declaration',
-        '[id*="cookie"]',
-        '[class*="cookie"]',
-        '[id*="Cookie"]',
-        '[class*="Cookie"]',
-      ];
-      for (const selector of candidates) {
-        const el = document.querySelector(selector) as HTMLElement | null;
-        if (el) return el;
-      }
-      return null;
-    }
-
-    function isElementVisible(el: HTMLElement): boolean {
-      const style = window.getComputedStyle(el);
-      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
-      const rect = el.getBoundingClientRect();
-      return rect.height > 0 && rect.width > 0;
-    }
-
-    let updateTimeout: NodeJS.Timeout | undefined;
+    // Simplified positioning without expensive DOM queries
     function updatePositions() {
-      // Throttle updates to prevent excessive calls
-      if (updateTimeout) return;
+      const mobile = window.innerWidth <= 600;
       
-      updateTimeout = setTimeout(() => {
-        const mobile = window.innerWidth <= 600;
-        
-        // Check for cookie banner
-        let cookieOffset = 0;
-        try {
-          const banner = selectCookieBannerElement();
-          if (banner && isElementVisible(banner)) {
-            const rect = banner.getBoundingClientRect();
-            const navHeight = 80; // Bottom nav height
-            const isOverlappingNav = rect.bottom > window.innerHeight - navHeight;
-            
-            // If banner is overlapping with nav, it should be moved up by BottomNav component
-            // So we don't need to add extra offset for chat
-            if (isOverlappingNav) {
-              // The banner will be moved up, so no additional offset needed
-              cookieOffset = 0;
-            } else {
-              // Banner is not overlapping nav, check if it's at bottom and might interfere with chat
-              const isAtBottom = Math.abs(window.innerHeight - rect.bottom) < 10;
-              const isOverlappingBottom = rect.bottom > window.innerHeight - 100;
-              
-              if (isAtBottom || isOverlappingBottom) {
-                cookieOffset = Math.ceil(rect.height) + 10;
-              }
-            }
-          }
-        } catch {
-          // Ignore errors
-        }
-        
-        // Account for bottom navigation height (approximately 80px) plus cookie banner
-        setChatBottom(mobile ? 120 + cookieOffset : 24 + cookieOffset);
-        setChatWindowBottom(mobile ? 140 + cookieOffset : 90 + cookieOffset);
-        setChatWindowHeight(mobile ? 400 : 480);
-        
-        updateTimeout = undefined;
-      }, 100); // Throttle to max once per 100ms
+      // Set basic positions without cookie banner detection
+      setChatBottom(mobile ? 120 : 24);
+      setChatWindowBottom(mobile ? 140 : 90);
+      setChatWindowHeight(mobile ? 400 : 480);
     }
     
     updatePositions();
     window.addEventListener('resize', updatePositions);
     
-    // Observe DOM mutations to detect when Cookiebot injects/hides the banner
-    const observer = new MutationObserver(() => updatePositions());
-    observer.observe(document.body, { childList: true, subtree: false, attributes: true, attributeFilter: ['style', 'class'] });
-    
-    // Also poll as a fallback
-    const interval = window.setInterval(updatePositions, 1000);
-    
     return () => {
       window.removeEventListener('resize', updatePositions);
-      observer.disconnect();
-      window.clearInterval(interval);
     };
   }, []);
 
@@ -269,14 +191,12 @@ export default function GrokChat() {
       
       // Check if AI wants to show contact form
       if (aiMsg.includes('[SHOW_CONTACT_FORM]')) {
-        console.log('Contact form trigger detected!');
         aiMsg = aiMsg.replace('[SHOW_CONTACT_FORM]', '');
         setShowContactForm(true);
       }
       
       // Check if contact form has been submitted
       if (aiMsg.includes('[CONTACT_FORM_SUBMITTED]')) {
-        console.log('Contact form submitted trigger detected!');
         aiMsg = aiMsg.replace('[CONTACT_FORM_SUBMITTED]', '');
         setContactFormSubmitted(true);
         setShowContactForm(false);
@@ -284,14 +204,12 @@ export default function GrokChat() {
       
       // Check if AI wants to show contract choice
       if (aiMsg.includes('[SHOW_CONTRACT_CHOICE]')) {
-        console.log('Contract choice trigger detected!');
         aiMsg = aiMsg.replace('[SHOW_CONTRACT_CHOICE]', '');
         setShowContractChoice(true);
       }
       
       // Check if contract choice has been submitted
       if (aiMsg.includes('[CONTRACT_CHOICE_SUBMITTED]')) {
-        console.log('Contract choice submitted trigger detected!');
         aiMsg = aiMsg.replace('[CONTRACT_CHOICE_SUBMITTED]', '');
         setContractChoiceSubmitted(true);
         setShowContractChoice(false);
@@ -299,14 +217,12 @@ export default function GrokChat() {
       
       // Check if AI wants to show bill upload
       if (aiMsg.includes('[SHOW_BILL_UPLOAD]')) {
-        console.log('Bill upload trigger detected!');
         aiMsg = aiMsg.replace('[SHOW_BILL_UPLOAD]', '');
         setShowBillUpload(true);
       }
       
       // Check if bill upload has been submitted
       if (aiMsg.includes('[BILL_UPLOAD_SUBMITTED]')) {
-        console.log('Bill upload submitted trigger detected!');
         aiMsg = aiMsg.replace('[BILL_UPLOAD_SUBMITTED]', '');
         setBillUploadSubmitted(true);
         setShowBillUpload(false);
