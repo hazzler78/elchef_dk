@@ -11,12 +11,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Supabase is not configured' }, { status: 500 });
     }
 
-    // Parse URL manually to avoid edge runtime issues
-    const urlString = req.url;
-    const urlParts = urlString.split('?');
-    const queryString = urlParts[1] || '';
-    const params = new URLSearchParams(queryString);
-    const invoiceIdParam = params.get('invoiceId');
+    // Use req.nextUrl which is designed for edge runtime
+    const invoiceIdParam = req.nextUrl.searchParams.get('invoiceId');
     const invoiceId = invoiceIdParam ? parseInt(invoiceIdParam, 10) : NaN;
     if (!invoiceIdParam || Number.isNaN(invoiceId)) {
       return NextResponse.json({ error: 'Missing or invalid invoiceId' }, { status: 400 });
