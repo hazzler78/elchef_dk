@@ -170,7 +170,7 @@ export default function GrokChat() {
       return rect.height > 0 && rect.width > 0;
     }
 
-    let updateTimeout: NodeJS.Timeout;
+    let updateTimeout: NodeJS.Timeout | undefined;
     function updatePositions() {
       // Throttle updates to prevent excessive calls
       if (updateTimeout) return;
@@ -211,7 +211,7 @@ export default function GrokChat() {
         setChatWindowBottom(mobile ? 140 + cookieOffset : 90 + cookieOffset);
         setChatWindowHeight(mobile ? 400 : 480);
         
-        updateTimeout = undefined as any;
+        updateTimeout = undefined;
       }, 100); // Throttle to max once per 100ms
     }
     
