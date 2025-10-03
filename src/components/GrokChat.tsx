@@ -131,8 +131,8 @@ export default function GrokChat() {
   }, [sessionId]);
 
   // Responsiv bottom-position för chatbubblan och chat window
-  const [chatBottom, setChatBottom] = useState(24);
-  const [chatWindowBottom, setChatWindowBottom] = useState(90);
+  const [chatBottom, setChatBottom] = useState(104); // 80px nav + 24px margin
+  const [chatWindowBottom, setChatWindowBottom] = useState(120); // 80px nav + 40px margin
   const [chatWindowHeight, setChatWindowHeight] = useState(480);
   
   useEffect(() => {
@@ -140,9 +140,9 @@ export default function GrokChat() {
     function updatePositions() {
       const mobile = window.innerWidth <= 600;
       
-      // Set basic positions without cookie banner detection
-      setChatBottom(mobile ? 120 : 24);
-      setChatWindowBottom(mobile ? 140 : 90);
+      // Set positions to be above bottom navigation (80px height)
+      setChatBottom(mobile ? 120 : 104); // 80px nav + 24px margin
+      setChatWindowBottom(mobile ? 140 : 120); // 80px nav + 40px margin
       setChatWindowHeight(mobile ? 400 : 480);
     }
     
