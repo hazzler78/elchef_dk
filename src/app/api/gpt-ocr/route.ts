@@ -175,14 +175,16 @@ LEVERANTÖRSSPECIFIKA ONÖDIGA KOSTNADER:
 - Andra leverantörer: Identifiera liknande avgifter och påslag
 
 EXKLUDERA (räknas INTE som onödiga):
-- Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
+- Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
+- **OBS**: Moms inkluderas i besparingsberäkningen eftersom konsumenten betalar den verkliga kostnaden inklusive moms
 - Bundet elpris, Fastpris (själva energipriset), Rörligt elpris (själva energipriset)
 - Förbrukning, kWh, Öre/kWh, Kr/kWh
 
 INSTRUKTION:
 1. Gå igenom JSON-datan och identifiera alla kostnader som matchar ordlistan OCH är under "Elhandel"
 2. Summera alla onödiga kostnader
-3. Presentera resultatet enligt formatet nedan
+3. **VIKTIGT**: Inkludera moms (25%) i besparingsberäkningen eftersom konsumenten betalar den verkliga kostnaden inklusive moms
+4. Presentera resultatet enligt formatet nedan
 
 FORMAT:
 🚨 Dina onödiga elavgifter upptäckta!
@@ -194,12 +196,12 @@ Jag har hittat [antal] onödiga avgifter på din elräkning som kostar dig penga
 2. [Kostnadsnamn]: [belopp] kr
 
 💰 Din årliga besparing:
-Du betalar [total] kr/månad i onödiga avgifter = [total × 12] kr/år!
+Du betalar [total] kr/månad i onödiga avgifter (inklusive moms) = [total × 12] kr/år!
 
 Detta är pengar som går direkt till din elleverantör utan att du får något extra för dem.
 
 ✅ Lösningen:
-Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år!
+Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år (inklusive moms)!
 
 🎯 Välj ditt nya avtal:
 - Rörligt avtal: 0 kr i avgifter första året – spara [total × 12] kr/år
@@ -287,12 +289,12 @@ VIKTIGT - SLUTTEXT:
 Efter summeringen, avsluta alltid med denna exakta text:
 
 "💰 Din årliga besparing:
-Du betalar [total] kr/månad i onödiga avgifter = [total × 12] kr/år!
+Du betalar [total] kr/månad i onödiga avgifter (inklusive moms) = [total × 12] kr/år!
 
 Detta är pengar som går direkt till din elleverantör utan att du får något extra för dem.
 
 ✅ Lösningen:
-Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år!
+Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år (inklusive moms)!
 
 🎯 Välj ditt nya avtal:
 - Rörligt avtal: 0 kr i avgifter första året – spara [total × 12] kr/år
