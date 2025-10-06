@@ -451,6 +451,28 @@ p {
   }
 }
 
+/* Extra-small phones: force full-width, scrollable dialog and stacked buttons */
+@media (max-width: 414px) {
+  #CybotCookiebotDialog {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 120px) !important;
+    max-height: 76vh !important;
+    overflow: auto !important;
+  }
+  #CybotCookiebotDialog [role="group"],
+  [id^="CybotCookiebotDialogBodyButtons"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  #CybotCookiebotDialog button {
+    width: 100% !important;
+    min-height: 44px !important; /* tap-friendly */
+    font-size: 16px !important;
+  }
+}
+
 /* Move Cookiebot widget/icon away from chat bubble (bottom-left) */
 #CybotCookiebotDialogPoweredByLink,
 [id^="CybotCookiebotDialogPoweredByLink"],
