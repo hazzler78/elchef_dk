@@ -391,17 +391,20 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie banner adjustments - Position in top-right corner to avoid navigation issues */
+/* Cookie banner adjustments - Ensure visibility and proper positioning */
 #CybotCookiebotDialog,
 [id^="CybotCookiebot"],
 #CookiebotDialog,
 .CookieConsent,
 .CookiebotWidget {
   z-index: 9999 !important;
-  /* Position in top-right corner to avoid any navigation conflicts */
+  /* Ensure dialog is visible and positioned correctly */
   position: fixed !important;
   top: 20px !important;     /* Top of screen */
   right: 20px !important;  /* Right side */
+  display: block !important; /* Force visibility */
+  visibility: visible !important; /* Ensure it's not hidden */
+  opacity: 1 !important; /* Ensure it's not transparent */
   /* Let Cookiebot handle its own sizing naturally */
 }
 

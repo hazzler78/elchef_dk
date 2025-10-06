@@ -31,6 +31,45 @@ export default function RootLayout({
           data-blockingmode="auto" 
           strategy="beforeInteractive"
         />
+        
+        {/* Cookiebot debug script */}
+        <Script id="cookiebot-debug" strategy="afterInteractive">
+          {`
+            console.log('🔍 Checking Cookiebot status...');
+            
+            // Check if Cookiebot script loaded
+            setTimeout(() => {
+              const cookiebotScript = document.getElementById('Cookiebot');
+              console.log('📜 Cookiebot script element:', !!cookiebotScript);
+              
+              if (cookiebotScript) {
+                console.log('📜 Script src:', cookiebotScript.src);
+                console.log('📜 Script readyState:', cookiebotScript.readyState);
+              }
+              
+              // Check for Cookiebot objects
+              console.log('🍪 window.cookiebot:', typeof window.cookiebot);
+              console.log('🍪 window.Cookiebot:', typeof window.Cookiebot);
+              console.log('🍪 window.CookieControl:', typeof window.CookieControl);
+              
+              // Check if dialog exists
+              const dialog = document.getElementById('CybotCookiebotDialog');
+              console.log('📋 Cookiebot dialog element:', !!dialog);
+              
+              if (dialog) {
+                console.log('📋 Dialog visible:', dialog.style.display !== 'none');
+                console.log('📋 Dialog position:', dialog.style.position);
+              }
+              
+              // Force show dialog if it exists but is hidden
+              if (dialog && dialog.style.display === 'none') {
+                console.log('🔧 Forcing dialog to show...');
+                dialog.style.display = 'block';
+              }
+              
+            }, 3000);
+          `}
+        </Script>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script type="application/ld+json" suppressHydrationWarning>{`
           {
