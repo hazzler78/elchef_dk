@@ -391,90 +391,17 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie banner adjustments - Fix display issues and prevent blocking navigation */
+/* Cookie banner adjustments - Simple fix to ensure proper layering */
 #CybotCookiebotDialog,
 [id^="CybotCookiebot"],
 #CookiebotDialog,
 .CookieConsent,
-.CookiebotWidget,
-#CookieConsent,
-#CookieDeclaration,
-#Cookiebot,
-.cookieconsent,
-.cookie-declaration,
-[id*="cookie"],
-[class*="cookie"],
-[id*="Cookie"],
-[class*="Cookie"],
-[id*="consent"],
-[class*="consent"],
-[id*="Consent"],
-[class*="Consent"],
-[id*="gdpr"],
-[class*="gdpr"],
-[id*="GDPR"],
-[class*="GDPR"],
-.cookie-banner,
-.cookie-notice,
-.privacy-banner,
-.consent-banner,
-.gdpr-banner,
-.cookie-policy,
-.cookie-widget,
-.cookie-popup,
-.cookie-modal,
-.cookie-overlay {
+.CookiebotWidget {
   z-index: 9999 !important;
-  max-height: 80vh !important;
-  overflow: visible !important;
-  position: fixed !important;
-  /* Ensure cookie banners don't overlap with bottom navigation */
-  bottom: 100px !important;
-  /* Ensure cookie banners are always on top */
-  top: auto !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  /* Don't override Cookiebot's own positioning - let it handle itself */
 }
 
-/* Fix specific Cookiebot dialog content overflow and display issues */
-#CybotCookiebotDialog {
-  max-width: 90vw !important;
-  width: auto !important;
-  min-width: 320px !important;
-}
-
-#CybotCookiebotDialog .CybotCookiebotDialogBody,
-#CybotCookiebotDialog .CybotCookiebotDialogContent {
-  overflow: visible !important;
-  max-width: none !important;
-  width: 100% !important;
-  padding: 20px !important;
-}
-
-#CybotCookiebotDialog .CybotCookiebotDialogLogo,
-#CybotCookiebotDialog .CybotCookiebotDialogRobot {
-  overflow: visible !important;
-  max-width: none !important;
-  width: auto !important;
-  display: block !important;
-  position: relative !important;
-}
-
-/* Ensure robot image is fully visible */
-#CybotCookiebotDialog .CybotCookiebotDialogRobot img {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block !important;
-}
-
-/* Fix button container */
-#CybotCookiebotDialog .CybotCookiebotDialogButtons {
-  overflow: visible !important;
-  white-space: nowrap !important;
-  display: flex !important;
-  gap: 10px !important;
-  flex-wrap: wrap !important;
-}
+/* Only ensure admin dialogs stay below Cookiebot */
 
 /* Ensure our navigation stays above all cookie elements */
 nav[style*="z-index"],
@@ -485,13 +412,7 @@ nav[style*="z-index"],
   bottom: 0 !important;
 }
 
-/* Fix admin login dialog z-index - should be below Cookiebot */
-div[style*="maxWidth: 400"][style*="margin: '4rem auto'"],
-div[style*="max-width: 400"][style*="margin: 4rem auto"],
-.admin-login-dialog {
-  z-index: 100 !important;
-  position: relative !important;
-}
+/* Ensure admin dialogs don't interfere with Cookiebot */
 
 /* Remove dark mode for now */
 @media (prefers-color-scheme: dark) {
