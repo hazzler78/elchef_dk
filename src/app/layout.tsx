@@ -24,7 +24,15 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <head>
-        <Script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="adbd0838-8684-44d4-951e-f4eddcb600cc" data-blockingmode="auto" strategy="beforeInteractive" />
+        <Script 
+          id="Cookiebot" 
+          src="https://consent.cookiebot.com/uc.js" 
+          data-cbid="adbd0838-8684-44d4-951e-f4eddcb600cc" 
+          data-blockingmode="auto" 
+          strategy="beforeInteractive"
+          onLoad={() => console.log('🍪 Cookiebot script loaded successfully')}
+          onError={(e) => console.error('❌ Cookiebot script failed to load:', e)}
+        />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script type="application/ld+json" suppressHydrationWarning>{`
           {
@@ -81,6 +89,27 @@ export default function RootLayout({
           />
         </noscript>
         {/* End Meta Pixel Code */}
+
+        {/* Fallback Cookiebot check */}
+        <Script id="cookiebot-check" strategy="afterInteractive">
+          {`
+            // Check if Cookiebot loaded after a delay
+            setTimeout(() => {
+              if (typeof window.cookiebot === 'undefined') {
+                console.log('⚠️ Cookiebot not loaded, trying manual load...');
+                // Try to manually load Cookiebot
+                const script = document.createElement('script');
+                script.id = 'CookiebotFallback';
+                script.src = 'https://consent.cookiebot.com/uc.js';
+                script.setAttribute('data-cbid', 'adbd0838-8684-44d4-951e-f4eddcb600cc');
+                script.setAttribute('data-blockingmode', 'auto');
+                document.head.appendChild(script);
+              } else {
+                console.log('✅ Cookiebot is available:', window.cookiebot);
+              }
+            }, 2000);
+          `}
+        </Script>
 
         {/* TikTok Pixel Code */}
         <Script id="tiktok-pixel" strategy="afterInteractive">
