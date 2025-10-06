@@ -137,6 +137,9 @@ export default function RootLayout({
                 if (cookiebot?.consent?.marketing) {
                   ttq.grantConsent();
                   ttq.page();
+                  
+                  // Fire test event
+                  ttq.track('TEST23145');
                 }
               });
               
@@ -152,6 +155,10 @@ export default function RootLayout({
                 if (cookiebot?.consent?.marketing && !consentGranted) {
                   ttq.grantConsent();
                   ttq.page();
+                  
+                  // Fire test event
+                  ttq.track('TEST23145');
+                  
                   consentGranted = true;
                 }
               }, 2000);
