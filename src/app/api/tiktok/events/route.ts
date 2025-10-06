@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const runtime = 'edge';
+
 // Server-side TikTok Events API proxy
 // Expects JSON body: { event: string, data: object, event_id?: string, timestamp?: string }
 
