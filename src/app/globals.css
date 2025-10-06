@@ -391,26 +391,23 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie banner adjustments - Position to avoid menu conflicts */
+/* Cookie banner adjustments - Only z-index; Cookiebot controls placement */
 #CybotCookiebotDialog,
 [id^="CybotCookiebot"],
 #CookiebotDialog,
 .CookieConsent,
 .CookiebotWidget {
   z-index: 9999 !important;
-  /* Position to avoid menu conflicts - move to top-right corner */
-  position: fixed !important;
-  top: 20px !important;
-  right: 20px !important;
-  /* Ensure it doesn't interfere with navigation */
 }
 
-/* Cookiebot widget/icon positioning */
+/* Move Cookiebot widget/icon away from chat bubble (bottom-left) */
 #CybotCookiebotDialogPoweredByLink,
-[id^="CybotCookiebotDialogPoweredByLink"] {
+[id^="CybotCookiebotDialogPoweredByLink"],
+.CybotCookiebotDialogPoweredByLink {
   position: fixed !important;
   bottom: 20px !important;
-  right: 20px !important;
+  left: 20px !important; /* move to left side to avoid chat bubble on right */
+  right: auto !important;
   z-index: 9998 !important;
 }
 
