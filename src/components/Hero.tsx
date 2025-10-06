@@ -162,6 +162,18 @@ export default function Hero() {
       } else {
         fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
       }
+
+      // TikTok ClickButton event (after Cookiebot marketing consent)
+      try {
+        const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+        const ttq: any = (window as any).ttq;
+        if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+          ttq.track('ClickButton', {
+            content_name: target,
+            content_type: 'button'
+          });
+        }
+      } catch { /* no-op */ }
       // Bara öppna nytt fönster för externa länkar
       if (href.startsWith('http')) {
         window.open(finalUrl, '_blank');
@@ -226,6 +238,16 @@ export default function Hero() {
                   }, [])}
                   onClick={() => {
                     trackHeroClick('rorligt', '/rorligt-avtal');
+                    // TikTok InitiateCheckout-style event when we send user to Salesys flow
+                    try {
+                      const ttq: any = (window as any).ttq;
+                      const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+                      if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+                        ttq.track('InitiateCheckout', {
+                          content_name: 'rorligt_avtal_click'
+                        });
+                      }
+                    } catch { /* no-op */ }
                     window.location.href = '/rorligt-avtal';
                   }}
                   >
@@ -273,6 +295,15 @@ export default function Hero() {
                    }, [])}
                                        onClick={() => {
                       trackHeroClick('fastpris', '/fastpris-avtal');
+                      try {
+                        const ttq: any = (window as any).ttq;
+                        const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+                        if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+                          ttq.track('InitiateCheckout', {
+                            content_name: 'fastpris_avtal_click'
+                          });
+                        }
+                      } catch { /* no-op */ }
                       window.location.href = '/fastpris-avtal';
                     }}
                    >

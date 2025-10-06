@@ -95,6 +95,19 @@ const FormContainer = styled.div`
 `;
 
 export default function FastprisAvtalPage() {
+  React.useEffect(() => {
+    try {
+      const ttq: any = (window as any).ttq;
+      const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+      if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+        ttq.track('ViewContent', {
+          content_id: 'fastpris-avtal',
+          content_name: 'Fastprisavtal',
+          content_type: 'product'
+        });
+      }
+    } catch { /* no-op */ }
+  }, []);
   function handleFormReady(formInstance?: SalesysFormInstance) {
     try {
       const container = document.getElementById('fastpris-avtal-container');

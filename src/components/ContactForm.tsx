@@ -257,6 +257,17 @@ export default function ContactForm() {
           message: '', 
           newsletter: false
         });
+
+        // TikTok Lead event (after Cookiebot marketing consent)
+        try {
+          const ttq: any = (window as any).ttq;
+          const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+          if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+            ttq.track('Lead', {
+              content_name: 'contact_form'
+            });
+          }
+        } catch { /* no-op */ }
       } else {
         setSubmitStatus('error');
       }

@@ -118,6 +118,19 @@ const FormContainer = styled.div`
 export default function RorligtAvtalPage() {
   // Formulärsida för rörligt elavtal - optimerad för mobil
   const [showSupplier, setShowSupplier] = React.useState(true);
+  React.useEffect(() => {
+    try {
+      const ttq: any = (window as any).ttq;
+      const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+      if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+        ttq.track('ViewContent', {
+          content_id: 'rorligt-avtal',
+          content_name: 'Rörligt avtal',
+          content_type: 'product'
+        });
+      }
+    } catch { /* no-op */ }
+  }, []);
   function handleFormReady(formInstance?: SalesysFormInstance) {
     try {
       const container = document.getElementById('rorligt-avtal-container');

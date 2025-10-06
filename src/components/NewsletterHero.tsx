@@ -304,6 +304,17 @@ export default function NewsletterHero() {
         setSuccess('Tack! Du är nu anmäld till vårt nyhetsbrev. Vi skickar dig snart de bästa elpriserna!');
         setEmail('');
         setConsent(false);
+
+        // TikTok Subscribe event (after Cookiebot marketing consent)
+        try {
+          const ttq: any = (window as any).ttq;
+          const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
+          if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
+            ttq.track('Subscribe', {
+              content_name: 'newsletter'
+            });
+          }
+        } catch { /* no-op */ }
       } else {
         const data = await response.json();
         setError(data.error || 'Ett fel uppstod. Försök igen senare.');
