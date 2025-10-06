@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
     }
 
     const userAgent = req.headers.get('user-agent') || '';
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.ip || '';
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || req.headers.get('cf-connecting-ip')
+      || '';
     const url = req.headers.get('referer') || '';
 
     const payload = {
