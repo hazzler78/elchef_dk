@@ -129,6 +129,9 @@ export default function RorligtAvtalPage() {
           content_name: 'Rörligt avtal',
           content_type: 'product'
         });
+        if ((window as any).__ttq_capi) {
+          (window as any).__ttq_capi('ViewContent', { content_id: 'rorligt-avtal', content_name: 'Rörligt avtal', content_type: 'product' });
+        }
       }
     } catch { /* no-op */ }
   }, []);

@@ -106,6 +106,9 @@ export default function FastprisAvtalPage() {
           content_name: 'Fastprisavtal',
           content_type: 'product'
         });
+        if ((window as any).__ttq_capi) {
+          (window as any).__ttq_capi('ViewContent', { content_id: 'fastpris-avtal', content_name: 'Fastprisavtal', content_type: 'product' });
+        }
       }
     } catch { /* no-op */ }
   }, []);

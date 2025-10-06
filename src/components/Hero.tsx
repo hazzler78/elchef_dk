@@ -175,6 +175,9 @@ export default function Hero() {
             content_name: target,
             content_type: 'button'
           });
+          if ((window as any).__ttq_capi) {
+            (window as any).__ttq_capi('ClickButton', { content_name: target, content_type: 'button' });
+          }
         }
       } catch { /* no-op */ }
       // Bara öppna nytt fönster för externa länkar
@@ -249,6 +252,9 @@ export default function Hero() {
                         ttq.track('InitiateCheckout', {
                           content_name: 'rorligt_avtal_click'
                         });
+                        if ((window as any).__ttq_capi) {
+                          (window as any).__ttq_capi('InitiateCheckout', { content_name: 'rorligt_avtal_click' });
+                        }
                       }
                     } catch { /* no-op */ }
                     const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
@@ -307,6 +313,9 @@ export default function Hero() {
                           ttq.track('InitiateCheckout', {
                             content_name: 'fastpris_avtal_click'
                           });
+                          if ((window as any).__ttq_capi) {
+                            (window as any).__ttq_capi('InitiateCheckout', { content_name: 'fastpris_avtal_click' });
+                          }
                         }
                       } catch { /* no-op */ }
                       const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';

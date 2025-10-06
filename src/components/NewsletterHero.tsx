@@ -314,6 +314,9 @@ export default function NewsletterHero() {
             ttq.track('Subscribe', {
               content_name: 'newsletter'
             });
+            if ((window as any).__ttq_capi) {
+              (window as any).__ttq_capi('Subscribe', { content_name: 'newsletter' });
+            }
           }
         } catch { /* no-op */ }
       } else {

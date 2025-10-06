@@ -267,6 +267,9 @@ export default function ContactForm() {
             ttq.track('Lead', {
               content_name: 'contact_form'
             });
+            if ((window as any).__ttq_capi) {
+              (window as any).__ttq_capi('Lead', { content_name: 'contact_form' });
+            }
           }
         } catch { /* no-op */ }
       } else {

@@ -202,6 +202,17 @@ export default function RootLayout({
                 }
               }, 2000);
               
+              // Simple client-to-server mirroring for CAPI
+              window.__ttq_capi = async function(eventName, props) {
+                try {
+                  await fetch('/api/tiktok/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event: eventName, data: props || {} })
+                  });
+                } catch (e) { }
+              }
+              
             }(window, document, 'ttq');
           `}
         </Script>

@@ -25,6 +25,9 @@ export default function TackPage() {
           status: status || undefined
         });
       }
+      if ((window as any).__ttq_capi) {
+        (window as any).__ttq_capi('Lead', { content_name: 'salesys_redirect', event_id: sid || undefined, status: status || undefined });
+      }
     } catch { /* no-op */ }
   }, [sid, status]);
 
