@@ -178,7 +178,6 @@ export default function TrustpilotCarousel({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollerRef.current) return;
     // Avoid preventing default on passive listeners
-    // @ts-expect-error: nativeEvent exists on React mouse events
     const cancelable = e?.nativeEvent?.cancelable;
     if (cancelable) {
       e.preventDefault();
