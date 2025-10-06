@@ -153,7 +153,9 @@ export default function Hero() {
   const trackHeroClick = useCallback((target: 'rorligt' | 'fastpris', href: string) => {
     try {
       const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-      const finalUrl = withDefaultCtaUtm(href, 'hero', `variant${variant}`, 'hero-ab');
+      const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
+      const withSid = href + (href.includes('?') ? `&sid=${encodeURIComponent(sid)}` : `?sid=${encodeURIComponent(sid)}`);
+      const finalUrl = withDefaultCtaUtm(withSid, 'hero', `variant${variant}`, 'hero-ab');
       const payload = JSON.stringify({ variant, sessionId, target, href: finalUrl });
       const url = '/api/events/hero-click';
       if (navigator.sendBeacon) {
@@ -248,7 +250,9 @@ export default function Hero() {
                         });
                       }
                     } catch { /* no-op */ }
-                    window.location.href = '/rorligt-avtal';
+                    const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
+                    const url = '/rorligt-avtal' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
+                    window.location.href = url;
                   }}
                   >
                                                                                <GlassButton 
@@ -304,7 +308,9 @@ export default function Hero() {
                           });
                         }
                       } catch { /* no-op */ }
-                      window.location.href = '/fastpris-avtal';
+                      const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
+                      const url = '/fastpris-avtal' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
+                      window.location.href = url;
                     }}
                    >
                                                                                                                                                                        <GlassButton 
