@@ -88,22 +88,15 @@ export default function RootLayout({
         </noscript>
         {/* End Meta Pixel Code */}
 
-        {/* Fallback Cookiebot check */}
-        <Script id="cookiebot-check" strategy="afterInteractive">
+        {/* Cookiebot debug check */}
+        <Script id="cookiebot-debug" strategy="afterInteractive">
           {`
-            // Check if Cookiebot loaded after a delay
+            // Debug Cookiebot loading
             setTimeout(() => {
-              if (typeof window.cookiebot === 'undefined') {
-                console.log('⚠️ Cookiebot not loaded, trying manual load...');
-                // Try to manually load Cookiebot
-                const script = document.createElement('script');
-                script.id = 'CookiebotFallback';
-                script.src = 'https://consent.cookiebot.com/uc.js';
-                script.setAttribute('data-cbid', 'adbd0838-8684-44d4-951e-f4eddcb600cc');
-                script.setAttribute('data-blockingmode', 'auto');
-                document.head.appendChild(script);
+              if (typeof window.cookiebot !== 'undefined') {
+                console.log('✅ Cookiebot is available:', window.cookiebot.consent);
               } else {
-                console.log('✅ Cookiebot is available:', window.cookiebot);
+                console.log('❌ Cookiebot not available');
               }
             }, 2000);
           `}
@@ -133,8 +126,8 @@ export default function RootLayout({
                     ttq.holdConsent();
                   }
                 } else {
-                  console.log('🚀 TikTok Pixel: No Cookiebot detected, waiting for Cookiebot to load...');
-                  // Wait a bit for Cookiebot to load, then check again
+                  console.log('🚀 TikTok Pixel: No Cookiebot detected, waiting longer for Cookiebot to load...');
+                  // Wait longer for Cookiebot to load, then check again
                   setTimeout(() => {
                     if (typeof window.cookiebot !== 'undefined') {
                       console.log('🍪 Cookiebot loaded later, consent.marketing:', window.cookiebot.consent.marketing);
@@ -146,10 +139,10 @@ export default function RootLayout({
                         ttq.holdConsent();
                       }
                     } else {
-                      console.log('🚀 TikTok Pixel: Still no Cookiebot, firing immediately');
+                      console.log('🚀 TikTok Pixel: Still no Cookiebot after delay, firing immediately');
                       ttq.page();
                     }
-                  }, 1000);
+                  }, 3000); // Increased delay to 3 seconds
                 }
               }
               
