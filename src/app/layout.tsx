@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <head>
-        <Script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="adbd0838-8684-44d4-951e-f4eddcb600cc" data-blockingmode="auto" strategy="beforeInteractive" />
+        <Script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="adbd0838-8684-44d4-951e-f4eddcb600cc" data-blockingmode="manual" strategy="beforeInteractive" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script type="application/ld+json" suppressHydrationWarning>{`
           {
@@ -91,7 +91,34 @@ export default function RootLayout({
             ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
               ttq.load('D3HL2E3C77UEJKF0D9C0');
-              ttq.page();
+              
+              // Check Cookiebot consent and fire page event
+              function fireTikTokPage() {
+                if (typeof window.cookiebot !== 'undefined') {
+                  // If Cookiebot is present, check consent
+                  if (window.cookiebot.consent.marketing) {
+                    ttq.page();
+                  } else {
+                    // Hold consent until user accepts
+                    ttq.holdConsent();
+                  }
+                } else {
+                  // No Cookiebot, fire immediately
+                  ttq.page();
+                }
+              }
+              
+              // Fire immediately or when consent is given
+              fireTikTokPage();
+              
+              // Listen for consent changes
+              document.addEventListener('CookiebotOnConsentReady', function() {
+                if (window.cookiebot.consent.marketing) {
+                  ttq.grantConsent();
+                  ttq.page();
+                }
+              });
+              
             }(window, document, 'ttq');
           `}
         </Script>
