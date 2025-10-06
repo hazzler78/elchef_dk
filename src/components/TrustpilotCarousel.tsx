@@ -211,7 +211,6 @@ export default function TrustpilotCarousel({
     const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
     if (Math.abs(delta) < 0.5) return;
     // Only call preventDefault if allowed; some browsers set wheel listeners passive
-    // @ts-expect-error: nativeEvent exists and can be cancelable
     const cancelable = e?.nativeEvent?.cancelable;
     if (cancelable) {
       e.preventDefault();
