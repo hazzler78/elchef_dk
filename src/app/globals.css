@@ -401,6 +401,24 @@ p {
   /* Let Cookiebot handle everything else naturally */
 }
 
+/* Mobile: lift Cookiebot above bottom nav and move widget away from Home button */
+@media (max-width: 768px) {
+  /* Lift the consent dialog a bit above bottom nav without changing its width */
+  #CybotCookiebotDialog {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 72px) !important;
+  }
+
+  /* Place the small Cookiebot widget icon bottom-left, above nav */
+  #CybotCookiebotDialogPoweredByLink,
+  [id^="CybotCookiebotDialogPoweredByLink"],
+  .CybotCookiebotDialogPoweredByLink {
+    position: fixed !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 72px) !important;
+    left: 16px !important;
+    right: auto !important;
+  }
+}
+
 /* Move Cookiebot widget/icon away from chat bubble (bottom-left) */
 #CybotCookiebotDialogPoweredByLink,
 [id^="CybotCookiebotDialogPoweredByLink"],
