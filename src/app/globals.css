@@ -391,36 +391,15 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie banner adjustments - Ensure visibility and proper positioning */
+/* Cookie banner adjustments - Only z-index, let Cookiebot handle positioning */
 #CybotCookiebotDialog,
 [id^="CybotCookiebot"],
 #CookiebotDialog,
 .CookieConsent,
 .CookiebotWidget {
   z-index: 9999 !important;
-  /* Ensure dialog is visible and positioned correctly */
-  position: fixed !important;
-  top: 20px !important;     /* Top of screen */
-  right: 20px !important;  /* Right side */
-  display: block !important; /* Force visibility */
-  visibility: visible !important; /* Ensure it's not hidden */
-  opacity: 1 !important; /* Ensure it's not transparent */
-  /* Let Cookiebot handle its own sizing naturally */
+  /* Let Cookiebot handle its own positioning and sizing */
 }
-
-/* Alternative: If you prefer bottom positioning, use this instead */
-/*
-#CybotCookiebotDialog,
-[id^="CybotCookiebot"],
-#CookiebotDialog,
-.CookieConsent,
-.CookiebotWidget {
-  z-index: 9999 !important;
-  position: fixed !important;
-  bottom: 120px !important;
-  right: 20px !important;
-}
-*/
 
 /* Only ensure admin dialogs stay below Cookiebot */
 
