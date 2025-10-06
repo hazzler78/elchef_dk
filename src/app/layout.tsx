@@ -194,10 +194,14 @@ export default function RootLayout({
               document.addEventListener('CookiebotOnConsentReady', function() {
                 const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
                 console.log('🍪 Cookiebot consent ready, marketing:', cookiebot?.consent?.marketing);
+                console.log('🍪 Full consent object:', cookiebot?.consent);
                 if (cookiebot?.consent?.marketing) {
                   console.log('✅ TikTok Pixel: Granting consent and firing page');
                   ttq.grantConsent();
                   ttq.page();
+                } else {
+                  console.log('⚠️ TikTok Pixel: Marketing consent not given, checking other consent types...');
+                  console.log('🍪 All consent types:', Object.keys(cookiebot?.consent || {}));
                 }
               });
               
@@ -206,6 +210,23 @@ export default function RootLayout({
                 console.log('🚫 TikTok Pixel: Cookiebot consent declined');
                 ttq.revokeConsent();
               });
+              
+              // Listen for any consent changes
+              document.addEventListener('CookiebotOnAccept', function() {
+                console.log('✅ Cookiebot: User accepted cookies');
+                const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
+                console.log('🍪 Updated consent:', cookiebot?.consent);
+              });
+              
+              // Manual check every 2 seconds for consent changes
+              setInterval(() => {
+                const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
+                if (cookiebot?.consent?.marketing) {
+                  console.log('🔄 Manual check: Marketing consent now available!');
+                  ttq.grantConsent();
+                  ttq.page();
+                }
+              }, 2000);
               
             }(window, document, 'ttq');
           `}
