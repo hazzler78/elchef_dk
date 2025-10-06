@@ -391,28 +391,14 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie banner adjustments - Only z-index; Cookiebot controls placement */
+/* Cookie banner adjustments - Minimal interference, let Cookiebot work naturally */
 #CybotCookiebotDialog,
 [id^="CybotCookiebot"],
 #CookiebotDialog,
 .CookieConsent,
 .CookiebotWidget {
   z-index: 9999 !important;
-}
-
-/* Mobile adjustments - Let Cookiebot handle positioning but ensure visibility */
-@media (max-width: 768px) {
-  #CybotCookiebotDialog,
-  [id^="CybotCookiebot"],
-  #CookiebotDialog,
-  .CookieConsent,
-  .CookiebotWidget {
-    z-index: 9999 !important;
-    /* Let Cookiebot handle its own positioning on mobile too */
-    display: block !important; /* Force visibility */
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
+  /* Let Cookiebot handle everything else naturally */
 }
 
 /* Move Cookiebot widget/icon away from chat bubble (bottom-left) */
