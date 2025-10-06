@@ -400,6 +400,22 @@ p {
   z-index: 9999 !important;
 }
 
+/* Mobile adjustments - Move Cookiebot up to avoid bottom menu */
+@media (max-width: 768px) {
+  #CybotCookiebotDialog,
+  [id^="CybotCookiebot"],
+  #CookiebotDialog,
+  .CookieConsent,
+  .CookiebotWidget {
+    position: fixed !important;
+    bottom: 80px !important; /* Above bottom navigation */
+    left: 15px !important;
+    right: 15px !important;
+    top: auto !important;
+    max-width: none !important;
+  }
+}
+
 /* Move Cookiebot widget/icon away from chat bubble (bottom-left) */
 #CybotCookiebotDialogPoweredByLink,
 [id^="CybotCookiebotDialogPoweredByLink"],
