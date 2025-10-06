@@ -4,6 +4,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/jamfor-elpriser",
+        destination: "/fakturaanalys",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [
           {

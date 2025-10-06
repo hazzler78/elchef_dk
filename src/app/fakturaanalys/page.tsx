@@ -1,4 +1,27 @@
 'use client';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Fakturaanalys – AI som hittar dolda elavgifter | Elchef',
+  description: 'Ladda upp din elräkning och få en AI‑analys som hittar dolda avgifter och visar din möjliga besparing. Gratis och utan bindning.',
+  keywords: ['fakturaanalys', 'elräkning', 'AI analys', 'elavtal', 'dolda avgifter', 'elpriser', 'elbesparing'],
+  alternates: {
+    canonical: 'https://elchef.se/fakturaanalys',
+  },
+  openGraph: {
+    type: 'website',
+    url: 'https://elchef.se/fakturaanalys',
+    title: 'Fakturaanalys – AI som hittar dolda elavgifter | Elchef',
+    description: 'Ladda upp din elräkning och få en AI‑analys som hittar dolda avgifter och visar din möjliga besparing.',
+    images: [{ url: 'https://elchef.se/og-image.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fakturaanalys – AI som hittar dolda elavgifter | Elchef',
+    description: 'Ladda upp din elräkning och få en AI‑analys som hittar dolda avgifter och visar din möjliga besparing.',
+    images: ['https://elchef.se/og-image.png'],
+  },
+};
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import GlassButton from '@/components/GlassButton';
