@@ -219,12 +219,38 @@ export default function RootLayout({
               });
               
               // Manual check every 2 seconds for consent changes
+              let consentGranted = false;
               setInterval(() => {
                 const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
-                if (cookiebot?.consent?.marketing) {
+                if (cookiebot?.consent?.marketing && !consentGranted) {
                   console.log('🔄 Manual check: Marketing consent now available!');
+                  console.log('🍪 Full consent object:', cookiebot.consent);
+                  console.log('🚀 TikTok Pixel: Granting consent and firing page');
                   ttq.grantConsent();
                   ttq.page();
+                  consentGranted = true;
+                  
+                  // Test if TikTok pixel is working
+                  console.log('🧪 Testing TikTok pixel functionality...');
+                  console.log('🧪 ttq object:', typeof ttq);
+                  console.log('🧪 ttq methods:', Object.keys(ttq || {}));
+                  
+                  // Try to fire a test event
+                  try {
+                    ttq.track('ViewContent', {
+                      content_type: 'test',
+                      content_name: 'TikTok Pixel Test'
+                    });
+                    console.log('✅ TikTok test event fired successfully');
+                    
+                    // Check if requests are being made
+                    setTimeout(() => {
+                      console.log('🔍 Check Network tab for requests to analytics.tiktok.com');
+                      console.log('🔍 Look for requests with "events" in the URL');
+                    }, 1000);
+                  } catch (error) {
+                    console.error('❌ TikTok test event failed:', error);
+                  }
                 }
               }, 2000);
               
