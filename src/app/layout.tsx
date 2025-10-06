@@ -88,55 +88,6 @@ export default function RootLayout({
         </noscript>
         {/* End Meta Pixel Code */}
 
-        {/* Cookiebot debug check */}
-        <Script id="cookiebot-debug" strategy="afterInteractive">
-          {`
-            // Debug Cookiebot loading
-            console.log('🔍 Starting Cookiebot debug...');
-            
-            // Check if script tag exists
-            const cookiebotScript = document.getElementById('Cookiebot');
-            console.log('📜 Cookiebot script tag found:', !!cookiebotScript);
-            if (cookiebotScript) {
-              console.log('📜 Script src:', cookiebotScript.src);
-              console.log('📜 Script loaded:', cookiebotScript.readyState || 'unknown');
-            }
-            
-            // Check for any errors in script loading
-            const checkInterval = setInterval(() => {
-              // Check multiple possible Cookiebot objects
-              const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
-              if (cookiebot && cookiebot.consent) {
-                console.log('✅ Cookiebot is available:', cookiebot.consent);
-                clearInterval(checkInterval);
-              } else {
-                console.log('⏳ Still waiting for Cookiebot...', {
-                  cookiebot: typeof window.cookiebot,
-                  Cookiebot: typeof window.Cookiebot,
-                  CookieControl: typeof window.CookieControl
-                });
-              }
-            }, 500);
-            
-            // Stop checking after 10 seconds
-            setTimeout(() => {
-              clearInterval(checkInterval);
-              if (typeof window.cookiebot === 'undefined') {
-                console.log('❌ Cookiebot not available after 10 seconds');
-                console.log('🔍 Available window properties:', Object.keys(window).filter(k => k.includes('cookie') || k.includes('Cookie')));
-                
-                // Test if we can reach Cookiebot server
-                fetch('https://consent.cookiebot.com/uc.js')
-                  .then(response => {
-                    console.log('🌐 Cookiebot server reachable:', response.status);
-                  })
-                  .catch(error => {
-                    console.log('🌐 Cookiebot server unreachable:', error.message);
-                  });
-              }
-            }, 10000);
-          `}
-        </Script>
 
         {/* TikTok Pixel Code */}
         <Script id="tiktok-pixel" strategy="afterInteractive">
@@ -150,40 +101,30 @@ export default function RootLayout({
               
               // Check Cookiebot consent and fire page event
               function fireTikTokPage() {
-                console.log('🔥 TikTok Pixel: fireTikTokPage called');
-                
                 // Check multiple possible Cookiebot objects
                 const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
                 
                 if (cookiebot && cookiebot.consent) {
-                  console.log('🍪 Cookiebot found, consent.marketing:', cookiebot.consent.marketing);
                   // If Cookiebot is present, check consent
                   if (cookiebot.consent.marketing) {
-                    console.log('✅ TikTok Pixel: Firing page event (consent given)');
                     ttq.page();
                   } else {
-                    console.log('⏸️ TikTok Pixel: Holding consent (waiting for user)');
                     ttq.holdConsent();
                   }
                 } else {
-                  console.log('🚀 TikTok Pixel: No Cookiebot detected, waiting longer for Cookiebot to load...');
                   // Wait longer for Cookiebot to load, then check again
                   setTimeout(() => {
                     const cookiebotLater = window.cookiebot || window.Cookiebot || window.CookieControl;
                     if (cookiebotLater && cookiebotLater.consent) {
-                      console.log('🍪 Cookiebot loaded later, consent.marketing:', cookiebotLater.consent.marketing);
                       if (cookiebotLater.consent.marketing) {
-                        console.log('✅ TikTok Pixel: Firing page event (consent given after delay)');
                         ttq.page();
                       } else {
-                        console.log('⏸️ TikTok Pixel: Holding consent after delay');
                         ttq.holdConsent();
                       }
                     } else {
-                      console.log('🚀 TikTok Pixel: Still no Cookiebot after delay, firing immediately');
                       ttq.page();
                     }
-                  }, 3000); // Increased delay to 3 seconds
+                  }, 3000);
                 }
               }
               
@@ -193,64 +134,25 @@ export default function RootLayout({
               // Listen for consent changes
               document.addEventListener('CookiebotOnConsentReady', function() {
                 const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
-                console.log('🍪 Cookiebot consent ready, marketing:', cookiebot?.consent?.marketing);
-                console.log('🍪 Full consent object:', cookiebot?.consent);
                 if (cookiebot?.consent?.marketing) {
-                  console.log('✅ TikTok Pixel: Granting consent and firing page');
                   ttq.grantConsent();
                   ttq.page();
-                } else {
-                  console.log('⚠️ TikTok Pixel: Marketing consent not given, checking other consent types...');
-                  console.log('🍪 All consent types:', Object.keys(cookiebot?.consent || {}));
                 }
               });
               
-              // Also listen for Cookiebot declaration ready
+              // Listen for Cookiebot decline
               document.addEventListener('CookiebotOnDecline', function() {
-                console.log('🚫 TikTok Pixel: Cookiebot consent declined');
                 ttq.revokeConsent();
               });
               
-              // Listen for any consent changes
-              document.addEventListener('CookiebotOnAccept', function() {
-                console.log('✅ Cookiebot: User accepted cookies');
-                const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
-                console.log('🍪 Updated consent:', cookiebot?.consent);
-              });
-              
-              // Manual check every 2 seconds for consent changes
+              // Manual check for consent changes
               let consentGranted = false;
               setInterval(() => {
                 const cookiebot = window.cookiebot || window.Cookiebot || window.CookieControl;
                 if (cookiebot?.consent?.marketing && !consentGranted) {
-                  console.log('🔄 Manual check: Marketing consent now available!');
-                  console.log('🍪 Full consent object:', cookiebot.consent);
-                  console.log('🚀 TikTok Pixel: Granting consent and firing page');
                   ttq.grantConsent();
                   ttq.page();
                   consentGranted = true;
-                  
-                  // Test if TikTok pixel is working
-                  console.log('🧪 Testing TikTok pixel functionality...');
-                  console.log('🧪 ttq object:', typeof ttq);
-                  console.log('🧪 ttq methods:', Object.keys(ttq || {}));
-                  
-                  // Try to fire a test event
-                  try {
-                    ttq.track('ViewContent', {
-                      content_type: 'test',
-                      content_name: 'TikTok Pixel Test'
-                    });
-                    console.log('✅ TikTok test event fired successfully');
-                    
-                    // Check if requests are being made
-                    setTimeout(() => {
-                      console.log('🔍 Check Network tab for requests to analytics.tiktok.com');
-                      console.log('🔍 Look for requests with "events" in the URL');
-                    }, 1000);
-                  } catch (error) {
-                    console.error('❌ TikTok test event failed:', error);
-                  }
                 }
               }, 2000);
               
