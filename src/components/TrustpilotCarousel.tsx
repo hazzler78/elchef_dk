@@ -177,7 +177,12 @@ export default function TrustpilotCarousel({
   // Mouse drag-to-scroll
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollerRef.current) return;
-    e.preventDefault();
+    // Avoid preventing default on passive listeners
+    // @ts-expect-error: nativeEvent exists on React mouse events
+    const cancelable = e?.nativeEvent?.cancelable;
+    if (cancelable) {
+      e.preventDefault();
+    }
     setIsDragging(true);
     setIsPaused(true);
     dragStartX.current = e.clientX;
@@ -206,7 +211,12 @@ export default function TrustpilotCarousel({
     if (!el) return;
     const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
     if (Math.abs(delta) < 0.5) return;
-    e.preventDefault();
+    // Only call preventDefault if allowed; some browsers set wheel listeners passive
+    // @ts-expect-error: nativeEvent exists and can be cancelable
+    const cancelable = e?.nativeEvent?.cancelable;
+    if (cancelable) {
+      e.preventDefault();
+    }
     wheelAccum.current += delta;
     if (!wheelRaf.current) {
       wheelRaf.current = requestAnimationFrame(() => {
