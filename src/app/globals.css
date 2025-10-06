@@ -391,54 +391,18 @@ p {
   animation: shimmer 2s infinite;
 }
 
-/* Cookie banner adjustments - Position to match chat bubble height */
+/* Cookie banner adjustments - Simple positioning without width constraints */
 #CybotCookiebotDialog,
 [id^="CybotCookiebot"],
 #CookiebotDialog,
 .CookieConsent,
 .CookiebotWidget {
   z-index: 9999 !important;
-  /* Position to match chat bubble - right side, above bottom nav */
+  /* Just position it above bottom nav, let Cookiebot handle its own sizing */
   position: fixed !important;
   bottom: 80px !important; /* Above bottom navigation */
   right: 20px !important;   /* Same side as chat bubble */
-  max-width: 300px !important;
-}
-
-/* Cookiebot dialog content adjustments */
-#CybotCookiebotDialogBody,
-[id^="CybotCookiebotDialogBody"] {
-  max-height: 400px !important;
-  overflow-y: auto !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Cookiebot buttons positioning */
-#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll,
-#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAllSelection,
-#CybotCookiebotDialogBodyLevelButtonAccept {
-  margin-top: 10px !important;
-  border-radius: 8px !important;
-}
-
-/* Mobile adjustments for Cookiebot */
-@media (max-width: 768px) {
-  #CybotCookiebotDialog,
-  [id^="CybotCookiebot"],
-  #CookiebotDialog,
-  .CookieConsent,
-  .CookiebotWidget {
-    bottom: 70px !important; /* Slightly higher on mobile */
-    right: 15px !important;
-    left: 15px !important;   /* Full width on mobile */
-    max-width: none !important;
-  }
-  
-  #CybotCookiebotDialogBody,
-  [id^="CybotCookiebotDialogBody"] {
-    max-height: 300px !important; /* Shorter on mobile */
-  }
+  /* Remove max-width constraint to let Cookiebot size itself naturally */
 }
 
 /* Only ensure admin dialogs stay below Cookiebot */
