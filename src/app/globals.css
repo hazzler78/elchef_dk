@@ -403,16 +403,14 @@ p {
 
 /* Mobile: lift Cookiebot above bottom nav and move widget away from Home button */
 @media (max-width: 768px) {
-  /* Lift dialog and keep it centered horizontally */
+  /* Lift dialog above bottom nav without touching Cookiebot's positioning */
   #CybotCookiebotDialog {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 112px) !important;
-    top: auto !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: auto !important;
-    max-width: calc(100vw - 24px) !important;
-    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 140px) !important;
+    margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 112px) !important;
+  }
+
+  /* Make inner body scrollable to ensure all actions are reachable */
+  [id^="CybotCookiebotDialogBody"] {
+    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 160px) !important;
     overflow: auto !important;
   }
 
@@ -457,14 +455,10 @@ p {
 /* Extra-small phones: force full-width, scrollable dialog and stacked buttons */
 @media (max-width: 414px) {
   #CybotCookiebotDialog {
-    top: auto !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 120px) !important;
-    max-width: calc(100vw - 16px) !important;
-    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 128px) !important;
-    overflow: auto !important;
+    margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 120px) !important;
+  }
+  [id^="CybotCookiebotDialogBody"] {
+    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 148px) !important;
   }
   #CybotCookiebotDialog [role="group"],
   [id^="CybotCookiebotDialogBodyButtons"] {
