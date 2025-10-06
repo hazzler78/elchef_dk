@@ -406,6 +406,11 @@ p {
   /* Lift the consent dialog higher so both Accept/Decline are fully visible */
   #CybotCookiebotDialog {
     bottom: calc(env(safe-area-inset-bottom, 0px) + 112px) !important;
+    left: 12px !important;
+    right: 12px !important;
+    max-width: none !important;
+    max-height: 70vh !important;
+    overflow: auto !important;
   }
 
   /* Place the small Cookiebot widget/icon well above the bottom nav and away from Home button */
@@ -418,6 +423,30 @@ p {
     bottom: calc(env(safe-area-inset-bottom, 0px) + 112px) !important;
     left: 16px !important;
     right: auto !important;
+  }
+
+  /* Ensure Cookiebot buttons are always visible and tappable on small screens */
+  #CybotCookiebotDialog button {
+    width: 100% !important;
+  }
+  
+  /* If a dedicated buttons container exists, allow wrapping */
+  #CybotCookiebotDialog [role="group"],
+  #CybotCookiebotDialog .buttons,
+  [id^="CybotCookiebotDialogBodyButtons"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Prevent bottom gap/jump on iOS caused by fixed background */
+  body {
+    background-attachment: scroll;
+  }
+  .bottom-nav {
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    left: 0;
+    width: 100%;
   }
 }
 
