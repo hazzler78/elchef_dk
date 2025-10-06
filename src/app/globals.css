@@ -403,13 +403,14 @@ p {
 
 /* Mobile: lift Cookiebot above bottom nav and move widget away from Home button */
 @media (max-width: 768px) {
-  /* Lift the consent dialog higher so both Accept/Decline are fully visible */
+  /* Lift dialog and allow full viewport use */
   #CybotCookiebotDialog {
     bottom: calc(env(safe-area-inset-bottom, 0px) + 112px) !important;
+    top: 12px !important;
     left: 12px !important;
     right: 12px !important;
     max-width: none !important;
-    max-height: 70vh !important;
+    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 140px) !important;
     overflow: auto !important;
   }
 
@@ -456,8 +457,9 @@ p {
   #CybotCookiebotDialog {
     left: 8px !important;
     right: 8px !important;
+    top: 8px !important;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 120px) !important;
-    max-height: 76vh !important;
+    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 128px) !important;
     overflow: auto !important;
   }
   #CybotCookiebotDialog [role="group"],
