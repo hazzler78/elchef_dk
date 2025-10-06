@@ -30,8 +30,6 @@ export default function RootLayout({
           data-cbid="adbd0838-8684-44d4-951e-f4eddcb600cc" 
           data-blockingmode="auto" 
           strategy="beforeInteractive"
-          onLoad={() => console.log('🍪 Cookiebot script loaded successfully')}
-          onError={(e) => console.error('❌ Cookiebot script failed to load:', e)}
         />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script type="application/ld+json" suppressHydrationWarning>{`
