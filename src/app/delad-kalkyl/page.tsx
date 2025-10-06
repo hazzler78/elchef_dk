@@ -90,7 +90,7 @@ function DeladKalkylContent() {
             background="linear-gradient(135deg, var(--primary), var(--secondary))"
             disableScrollEffect
             disableHoverEffect
-            onClick={() => window.location.href = '/jamfor-elpriser'}
+            onClick={() => window.location.href = '/fakturaanalys'}
           >
             Skapa din egen AI-analys
           </GlassButton>
@@ -200,7 +200,7 @@ function DeladKalkylContent() {
             background="linear-gradient(135deg, var(--primary), var(--secondary))"
             disableScrollEffect
             disableHoverEffect
-            onClick={() => window.location.href = withDefaultCtaUtm('/jamfor-elpriser', 'shared-calc', 'cta-analyze')}
+            onClick={() => window.location.href = withDefaultCtaUtm('/fakturaanalys', 'shared-calc', 'cta-analyze')}
           >
             Analysera min elräkning med AI
           </GlassButton>

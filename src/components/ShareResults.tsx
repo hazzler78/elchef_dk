@@ -38,10 +38,10 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
     const baseText = `💡 AI-analys av min elräkning visar att jag betalar ${detectedSavings > 0 ? `${detectedSavings.toLocaleString('sv-SE')} kr/år` : 'flera hundra kronor/år'} i onödiga avgifter!`;
     
     const platformTexts = {
-      facebook: `${baseText}\n\n🔍 Testa själv på elchef.se/jamfor-elpriser\n\n#Elbesparing #AI #Elchef`,
-      instagram: `${baseText}\n\n🔍 Testa själv på elchef.se/jamfor-elpriser\n\n#Elbesparing #AI #Elchef #Energi`,
-      linkedin: `${baseText}\n\nSom energikonsult ser jag många kunder som betalar onödiga avgifter på sina elräkningar. Denna AI-verktyg från Elchef hjälper dig identifiera dolda kostnader.\n\n🔍 Testa själv: elchef.se/jamfor-elpriser\n\n#Energibesparing #AI #Elchef #Hållbarhet`,
-      twitter: `${baseText}\n\n🔍 Testa själv: elchef.se/jamfor-elpriser\n\n#Elbesparing #AI #Elchef`
+      facebook: `${baseText}\n\n🔍 Testa själv på elchef.se/fakturaanalys\n\n#Elbesparing #AI #Elchef`,
+      instagram: `${baseText}\n\n🔍 Testa själv på elchef.se/fakturaanalys\n\n#Elbesparing #AI #Elchef #Energi`,
+      linkedin: `${baseText}\n\nSom energikonsult ser jag många kunder som betalar onödiga avgifter på sina elräkningar. Denna AI-verktyg från Elchef hjälper dig identifiera dolda kostnader.\n\n🔍 Testa själv: elchef.se/fakturaanalys\n\n#Energibesparing #AI #Elchef #Hållbarhet`,
+      twitter: `${baseText}\n\n🔍 Testa själv: elchef.se/fakturaanalys\n\n#Elbesparing #AI #Elchef`
     };
 
     return platformTexts[platform];
@@ -53,7 +53,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
     // Generera unik delningslänk baserat på logId
     const shareUrl = logId 
       ? `https://elchef.se/delad-kalkyl?id=${logId}`
-      : 'https://elchef.se/jamfor-elpriser';
+      : 'https://elchef.se/fakturaanalys';
     const url = encodeURIComponent(shareUrl);
     
     const urls = {
@@ -100,7 +100,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
       // Facebook - kopiera text och öppna
       const shareUrl = logId 
         ? `https://elchef.se/delad-kalkyl?id=${logId}`
-        : 'https://elchef.se/jamfor-elpriser';
+        : 'https://elchef.se/fakturaanalys';
       
       navigator.clipboard.writeText(text);
       // Använd den enkla sharer.php metoden (fungerar utan App Domains)

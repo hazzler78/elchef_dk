@@ -105,9 +105,9 @@ function BottomNavContent() {
         Hem
         {pathname === '/' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href={withDefaultCtaUtm('/jamfor-elpriser', 'bottomnav', 'compare')} className={pathname === '/jamfor-elpriser' ? 'active' : ''}>
-        Jämför
-        {pathname === '/jamfor-elpriser' && <ActiveIndicator />}
+      <NavItem href={withDefaultCtaUtm('/fakturaanalys', 'bottomnav', 'compare')} className={pathname === '/fakturaanalys' ? 'active' : ''}>
+        Fakturaanalys
+        {pathname === '/fakturaanalys' && <ActiveIndicator />}
       </NavItem>
       <NavItem href={withDefaultCtaUtm('/media', 'bottomnav', 'media')} className={pathname === '/media' ? 'active' : ''}>
         Media

@@ -116,7 +116,7 @@ export default function CampaignBanner() {
     } catch {}
   }, [variant]);
 
-  const href = withDefaultCtaUtm('/jamfor-elpriser', 'banner', `variant${variant}`, 'ai-savings');
+  const href = withDefaultCtaUtm('/fakturaanalys', 'banner', `variant${variant}`, 'ai-savings');
 
   const handleClick = () => {
     try {
