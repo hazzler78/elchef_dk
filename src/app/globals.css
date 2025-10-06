@@ -397,7 +397,7 @@ p {
 #CookiebotDialog,
 .CookieConsent,
 .CookiebotWidget {
-  z-index: 9999 !important;
+  z-index: 100000 !important; /* Above any site UI */
   /* Let Cookiebot handle everything else naturally */
 }
 
@@ -447,6 +447,7 @@ p {
     bottom: env(safe-area-inset-bottom, 0px) !important;
     left: 0;
     width: 100%;
+    z-index: 100 !important; /* Keep it below Cookiebot */
   }
 }
 
@@ -463,14 +464,7 @@ p {
 
 /* Only ensure admin dialogs stay below Cookiebot */
 
-/* Ensure our navigation stays above all cookie elements */
-nav[style*="z-index"],
-.nav,
-.bottom-nav {
-  z-index: 9999 !important;
-  position: fixed !important;
-  bottom: 0 !important;
-}
+/* Remove aggressive nav layering so Cookiebot can sit above */
 
 /* Ensure admin dialogs don't interfere with Cookiebot */
 
