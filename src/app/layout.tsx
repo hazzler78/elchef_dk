@@ -94,16 +94,19 @@ export default function RootLayout({
               
               // Check Cookiebot consent and fire page event
               function fireTikTokPage() {
+                console.log('🔥 TikTok Pixel: fireTikTokPage called');
                 if (typeof window.cookiebot !== 'undefined') {
+                  console.log('🍪 Cookiebot found, consent.marketing:', window.cookiebot.consent.marketing);
                   // If Cookiebot is present, check consent
                   if (window.cookiebot.consent.marketing) {
+                    console.log('✅ TikTok Pixel: Firing page event (consent given)');
                     ttq.page();
                   } else {
-                    // Hold consent until user accepts
+                    console.log('⏸️ TikTok Pixel: Holding consent (waiting for user)');
                     ttq.holdConsent();
                   }
                 } else {
-                  // No Cookiebot, fire immediately
+                  console.log('🚀 TikTok Pixel: No Cookiebot, firing immediately');
                   ttq.page();
                 }
               }
@@ -113,7 +116,9 @@ export default function RootLayout({
               
               // Listen for consent changes
               document.addEventListener('CookiebotOnConsentReady', function() {
+                console.log('🍪 Cookiebot consent ready, marketing:', window.cookiebot.consent.marketing);
                 if (window.cookiebot.consent.marketing) {
+                  console.log('✅ TikTok Pixel: Granting consent and firing page');
                   ttq.grantConsent();
                   ttq.page();
                 }
