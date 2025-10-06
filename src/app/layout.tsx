@@ -92,13 +92,43 @@ export default function RootLayout({
         <Script id="cookiebot-debug" strategy="afterInteractive">
           {`
             // Debug Cookiebot loading
-            setTimeout(() => {
+            console.log('🔍 Starting Cookiebot debug...');
+            
+            // Check if script tag exists
+            const cookiebotScript = document.getElementById('Cookiebot');
+            console.log('📜 Cookiebot script tag found:', !!cookiebotScript);
+            if (cookiebotScript) {
+              console.log('📜 Script src:', cookiebotScript.src);
+              console.log('📜 Script loaded:', cookiebotScript.readyState || 'unknown');
+            }
+            
+            // Check for any errors in script loading
+            const checkInterval = setInterval(() => {
               if (typeof window.cookiebot !== 'undefined') {
                 console.log('✅ Cookiebot is available:', window.cookiebot.consent);
+                clearInterval(checkInterval);
               } else {
-                console.log('❌ Cookiebot not available');
+                console.log('⏳ Still waiting for Cookiebot...');
               }
-            }, 2000);
+            }, 500);
+            
+            // Stop checking after 10 seconds
+            setTimeout(() => {
+              clearInterval(checkInterval);
+              if (typeof window.cookiebot === 'undefined') {
+                console.log('❌ Cookiebot not available after 10 seconds');
+                console.log('🔍 Available window properties:', Object.keys(window).filter(k => k.includes('cookie') || k.includes('Cookie')));
+                
+                // Test if we can reach Cookiebot server
+                fetch('https://consent.cookiebot.com/uc.js')
+                  .then(response => {
+                    console.log('🌐 Cookiebot server reachable:', response.status);
+                  })
+                  .catch(error => {
+                    console.log('🌐 Cookiebot server unreachable:', error.message);
+                  });
+              }
+            }, 10000);
           `}
         </Script>
 
