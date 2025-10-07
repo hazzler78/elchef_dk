@@ -244,7 +244,7 @@ export default function TrustpilotCarousel({
           >
             {images.concat(images).map((src, idx) => (
               <Slide key={`${src}-${idx}`}>
-                <img src={src} alt="Trustpilot omdöme" loading={idx < images.length ? 'eager' : 'lazy'} />
+                <img src={src} alt="Trustpilot anmeldelse" loading={idx < images.length ? 'eager' : 'lazy'} />
               </Slide>
             ))}
           </Scroller>

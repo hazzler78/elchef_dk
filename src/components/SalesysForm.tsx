@@ -133,7 +133,7 @@ export default function SalesysForm({
           borderRadius: 8,
           fontSize: 14
         }}>
-          Kunde inte ladda formuläret just nu. Kontrollera nätverket och att formId är giltigt.
+          Kunne ikke indlæse formularen lige nu. Kontroller netværket og at formId er gyldig.
         </div>
       )}
     </div>

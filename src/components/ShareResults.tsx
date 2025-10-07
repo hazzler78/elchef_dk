@@ -35,13 +35,13 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
 
   // Generera delningstext
   const generateShareText = (platform: 'facebook' | 'instagram' | 'linkedin' | 'twitter') => {
-    const baseText = `💡 AI-analys av min elräkning visar att jag betalar ${detectedSavings > 0 ? `${detectedSavings.toLocaleString('sv-SE')} kr/år` : 'flera hundra kronor/år'} i onödiga avgifter!`;
+    const baseText = `💡 AI-analyse af min elregning viser, at jeg betaler ${detectedSavings > 0 ? `${detectedSavings.toLocaleString('da-DK')} kr/år` : 'flere hundrede kroner/år'} i unødvendige gebyrer!`;
     
     const platformTexts = {
-      facebook: `${baseText}\n\n🔍 Testa själv på elchef.se/fakturaanalys\n\n#Elbesparing #AI #Elchef`,
-      instagram: `${baseText}\n\n🔍 Testa själv på elchef.se/fakturaanalys\n\n#Elbesparing #AI #Elchef #Energi`,
-      linkedin: `${baseText}\n\nSom energikonsult ser jag många kunder som betalar onödiga avgifter på sina elräkningar. Denna AI-verktyg från Elchef hjälper dig identifiera dolda kostnader.\n\n🔍 Testa själv: elchef.se/fakturaanalys\n\n#Energibesparing #AI #Elchef #Hållbarhet`,
-      twitter: `${baseText}\n\n🔍 Testa själv: elchef.se/fakturaanalys\n\n#Elbesparing #AI #Elchef`
+      facebook: `${baseText}\n\n🔍 Test selv på elchef.dk/faktura-analyse\n\n#Elbesparelse #AI #Elchef`,
+      instagram: `${baseText}\n\n🔍 Test selv på elchef.dk/faktura-analyse\n\n#Elbesparelse #AI #Elchef #Energi`,
+      linkedin: `${baseText}\n\nSom energikonsulent ser jeg mange kunder, der betaler unødvendige gebyrer på deres elregninger. Dette AI-værktøj fra Elchef hjælper dig med at identificere skjulte omkostninger.\n\n🔍 Test selv: elchef.dk/faktura-analyse\n\n#Energibesparelse #AI #Elchef #Bæredygtighed`,
+      twitter: `${baseText}\n\n🔍 Test selv: elchef.dk/faktura-analyse\n\n#Elbesparelse #AI #Elchef`
     };
 
     return platformTexts[platform];
@@ -52,12 +52,12 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
     const encodedText = encodeURIComponent(text);
     // Generera unik delningslänk baserat på logId
     const shareUrl = logId 
-      ? `https://elchef.se/delad-kalkyl?id=${logId}`
-      : 'https://elchef.se/fakturaanalys';
+      ? `https://elchef.dk/delt-beregning?id=${logId}`
+      : 'https://elchef.dk/faktura-analyse';
     const url = encodeURIComponent(shareUrl);
     
     const urls = {
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}&hashtag=%23Elbesparing&display=popup&ref=plugin&src=share_button`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}&hashtag=%23Elbesparelse&display=popup&ref=plugin&src=share_button`,
       // Låt endast texten (som redan innehåller vår länk) delas, utan extra URL-parameter
       twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
@@ -92,20 +92,20 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
 
     if (platform === 'instagram') {
       // För Instagram, visa instruktioner
-      alert('Kopiera texten och dela på Instagram:\n\n' + text);
+      alert('Kopier teksten og del på Instagram:\n\n' + text);
       navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } else if (platform === 'facebook') {
       // Facebook - kopiera text och öppna
       const shareUrl = logId 
-        ? `https://elchef.se/delad-kalkyl?id=${logId}`
-        : 'https://elchef.se/fakturaanalys';
+        ? `https://elchef.dk/delt-beregning?id=${logId}`
+        : 'https://elchef.dk/faktura-analyse';
       
       navigator.clipboard.writeText(text);
       // Använd den enkla sharer.php metoden (fungerar utan App Domains)
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup`, '_blank', 'width=600,height=400');
-      alert('Texten har kopierats! Klistra in den i Facebook-inlägget (Ctrl+V)');
+      alert('Teksten er kopieret! Indsæt den i Facebook-opslaget (Ctrl+V)');
     } else {
       // Öppna direkt utan popup-kontroll
       window.open(url, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
@@ -145,7 +145,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
         textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
       }}>
         <FaShare />
-        Dela din AI-analys
+        Del din AI-analyse
       </h4>
       
       <p style={{
@@ -155,8 +155,8 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
         lineHeight: 1.5
       }}>
         {detectedSavings > 0 
-          ? `Dela att du kan spara ${detectedSavings.toLocaleString('sv-SE')} kr/år och hjälp andra att upptäcka sina dolda elavgifter!`
-          : 'Dela din AI-analys och hjälp andra att upptäcka dolda elavgifter!'
+          ? `Del at du kan spare ${detectedSavings.toLocaleString('da-DK')} kr/år og hjælp andre med at opdage deres skjulte elgebyrer!`
+          : 'Del din AI-analyse og hjælp andre med at opdage skjulte elgebyrer!'
         }
       </p>
 
@@ -170,7 +170,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
           onClick={() => setShowShareOptions(true)}
         >
           <FaShare style={{ marginRight: '0.5rem' }} />
-          Dela resultat
+          Del resultat
         </GlassButton>
       ) : (
         <div style={{
@@ -192,8 +192,8 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
               onClick={() => {
                 const text = generateShareText('facebook');
                 const shareUrl = logId 
-                  ? `https://elchef.se/delad-kalkyl?id=${logId}`
-                  : 'https://elchef.se/jamfor-elpriser';
+                  ? `https://elchef.dk/delt-beregning?id=${logId}`
+                  : 'https://elchef.dk/sammenlign-elpriser';
                 
                 // Kopiera texten automatiskt
                 navigator.clipboard.writeText(text);
@@ -202,7 +202,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
                 window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&display=popup`, '_blank', 'width=600,height=400');
                 
                 // Visa meddelande
-                alert('Texten har kopierats! Klistra in den i Facebook-inlägget (Ctrl+V)');
+                alert('Teksten er kopieret! Indsæt den i Facebook-opslaget (Ctrl+V)');
               }}
             >
               <FaFacebook style={{ marginRight: '0.5rem' }} />
@@ -260,7 +260,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
               onClick={copyToClipboard}
             >
               <FaCopy style={{ marginRight: '0.5rem' }} />
-              {copied ? 'Kopierat!' : 'Kopiera text'}
+              {copied ? 'Kopieret!' : 'Kopier tekst'}
             </GlassButton>
             
             <GlassButton
@@ -271,7 +271,7 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
               disableHoverEffect
               onClick={() => setShowShareOptions(false)}
             >
-              Stäng
+              Luk
             </GlassButton>
           </div>
         </div>

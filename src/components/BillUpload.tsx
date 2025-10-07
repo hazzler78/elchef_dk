@@ -181,13 +181,13 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(selectedFile.type)) {
-      setError('Endast JPG och PNG bilder stöds');
+      setError('Kun JPG og PNG billeder understøttes');
       return;
     }
 
     // Validate file size (20MB max)
     if (selectedFile.size > 20 * 1024 * 1024) {
-      setError('Filen är för stor. Max storlek är 20MB');
+      setError('Filen er for stor. Maks størrelse er 20MB');
       return;
     }
 
@@ -254,14 +254,14 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
       const data = await response.json();
       
       if (!data.gptAnswer) {
-        throw new Error('Inget svar från AI:n');
+        throw new Error('Intet svar fra AI\'en');
       }
 
       // Check if AI returned an error message
       if (data.gptAnswer.includes("I'm sorry") || data.gptAnswer.includes("can't assist") || 
-          data.gptAnswer.includes("Tyvärr") || data.gptAnswer.includes("kan inte") ||
-          data.gptAnswer.includes("Jag kan inte") || data.gptAnswer.includes("kan inte hjälpa")) {
-        throw new Error('AI:n kunde inte analysera fakturan. Kontrollera att bilden är tydlig och innehåller en elräkning.');
+          data.gptAnswer.includes("Desværre") || data.gptAnswer.includes("kan ikke") ||
+          data.gptAnswer.includes("Jeg kan ikke") || data.gptAnswer.includes("kan ikke hjælpe")) {
+        throw new Error('AI\'en kunne ikke analysere fakturaen. Kontroller at billedet er tydeligt og indeholder en elregning.');
       }
 
       // Clean up mathematical formulas from the response
@@ -274,7 +274,7 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
       }
 
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Något gick fel');
+      setError(error instanceof Error ? error.message : 'Noget gik galt');
     } finally {
       setLoading(false);
     }
@@ -283,11 +283,11 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
   return (
     <BillUploadContainer>
       <Title>
-        📄 Analysera din elräkning
+        📄 Analyser din elregning
       </Title>
       
       <Description>
-        Ladda upp en bild av din elräkning så analyserar vår AI den och visar exakt hur mycket du kan spara.
+        Upload et billede af din elregning, så analyserer vores AI den og viser præcis, hvor meget du kan spare.
       </Description>
 
       {error && (
@@ -316,14 +316,14 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
           <FileInfo>
             <FileName>{file.name}</FileName>
             <RemoveButton onClick={(e) => { e.stopPropagation(); removeFile(); }}>
-              Ta bort
+              Fjern
             </RemoveButton>
           </FileInfo>
         ) : (
           <>
             <UploadIcon>📁</UploadIcon>
-            <UploadText>Klicka för att välja fil eller dra och släpp här</UploadText>
-            <UploadSubtext>JPG, PNG • Max 20MB</UploadSubtext>
+            <UploadText>Klik for at vælge fil eller træk og slip her</UploadText>
+            <UploadSubtext>JPG, PNG • Maks 20MB</UploadSubtext>
           </>
         )}
       </UploadArea>
@@ -336,8 +336,8 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
           onChange={(e) => setConsent(e.target.checked)}
         />
         <CheckboxLabel htmlFor="billConsent">
-          Jag samtycker till att min elräkning lagras säkert för analys och förbättring av tjänsten. 
-          Alla uppgifter behandlas enligt vår integritetspolicy.
+          Jeg accepterer, at min elregning gemmes sikkert til analyse og forbedring af tjenesten. 
+          Alle oplysninger behandles i henhold til vores privatlivspolitik.
         </CheckboxLabel>
       </ConsentCheckbox>
 
@@ -345,7 +345,7 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
         onClick={handleAnalyze} 
         disabled={!file || !consent || loading}
       >
-        {loading ? 'Analyserar...' : 'Analysera elräkning'}
+        {loading ? 'Analyserer...' : 'Analyser elregning'}
       </AnalyzeButton>
     </BillUploadContainer>
   );

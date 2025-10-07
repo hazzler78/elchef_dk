@@ -116,7 +116,7 @@ export default function CampaignBanner() {
     } catch {}
   }, [variant]);
 
-  const href = withDefaultCtaUtm('/fakturaanalys', 'banner', `variant${variant}`, 'ai-savings');
+  const href = withDefaultCtaUtm('/faktura-analyse', 'banner', `variant${variant}`, 'ai-savings');
 
   const handleClick = () => {
     try {
@@ -135,13 +135,13 @@ export default function CampaignBanner() {
   // Expanded text variants
   const textA = (
     <>
-      Nyhet! Låt vår <Highlight>AI</Highlight> analysera din elräkning och räkna ut din möjliga besparing.
+      Nyt! Lad vores <Highlight>AI</Highlight> analysere din elregning og beregne din mulige besparelse.
     </>
   );
 
   const textB = (
     <>
-      Testa vår <Highlight>AI</Highlight> – ladda upp din faktura och se hur mycket du kan spara.
+      Test vores <Highlight>AI</Highlight> – upload din faktura og se hvor meget du kan spare.
     </>
   );
 
@@ -149,16 +149,16 @@ export default function CampaignBanner() {
   const collapsedTextA = (
     <CollapsedText>
       <Image src="/favicon.svg" alt="Elchef" width={16} height={16} style={{ verticalAlign: 'middle' }} />
-      <Highlight>AI</Highlight>analys av din elräkning
-      <StyledLink href={href} onClick={handleClick}>Prova nu</StyledLink>
+      <Highlight>AI</Highlight>analyse af din elregning
+      <StyledLink href={href} onClick={handleClick}>Prøv nu</StyledLink>
     </CollapsedText>
   );
 
   const collapsedTextB = (
     <CollapsedText>
       <Image src="/favicon.svg" alt="Elchef" width={16} height={16} style={{ verticalAlign: 'middle' }} />
-      Ladda upp faktura med <Highlight>AI</Highlight>
-      <StyledLink href={href} onClick={handleClick}>Prova nu</StyledLink>
+      Upload faktura med <Highlight>AI</Highlight>
+      <StyledLink href={href} onClick={handleClick}>Prøv nu</StyledLink>
     </CollapsedText>
   );
 
@@ -171,8 +171,8 @@ export default function CampaignBanner() {
           <Image src="/favicon.svg" alt="Elchef" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
           {variant === 'A' ? textA : textB}
           <br />
-          Ladda upp din faktura och få en tydlig genomgång –
-          <StyledLink href={href} onClick={handleClick}>Prova nu</StyledLink>
+          Upload din faktura og få en tydelig gennemgang –
+          <StyledLink href={href} onClick={handleClick}>Prøv nu</StyledLink>
         </>
       )}
     </Banner>

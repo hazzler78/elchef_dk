@@ -190,17 +190,17 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
 
   return (
     <ContactFormContainer>
-      <Title>📞 Kontakta oss</Title>
+      <Title>📞 Kontakt os</Title>
       
       {submitStatus === 'success' && (
         <Message $type="success">
-          ✅ Tack! Vi återkommer så snart som möjligt.
+          ✅ Tak! Vi vender tilbage hurtigst muligt.
         </Message>
       )}
 
       {submitStatus === 'error' && (
         <Message $type="error">
-          ❌ Ett fel uppstod. Försök igen.
+          ❌ Der opstod en fejl. Prøv igen.
         </Message>
       )}
 
@@ -208,7 +208,7 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
         <Input
           type="email"
           name="email"
-          placeholder="Din e-postadress *"
+          placeholder="Din e-mailadresse *"
           value={formData.email}
           onChange={handleInputChange}
           required
@@ -217,7 +217,7 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
         <Input
           type="tel"
           name="phone"
-          placeholder="Telefonnummer (valfritt)"
+          placeholder="Telefonnummer (valgfrit)"
           value={formData.phone}
           onChange={handleInputChange}
         />
@@ -231,12 +231,12 @@ export default function ChatContactForm({ onClose, onSubmitted }: ChatContactFor
             onChange={handleInputChange}
           />
           <CheckboxLabel htmlFor="chatSubscribeNewsletter">
-            Prenumerera på nyhetsbrev
+            Abonner på nyhedsbrev
           </CheckboxLabel>
         </CheckboxGroup>
 
         <SubmitButton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Skickar...' : 'Skicka'}
+          {isSubmitting ? 'Sender...' : 'Send'}
         </SubmitButton>
       </Form>
     </ContactFormContainer>

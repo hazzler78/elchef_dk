@@ -279,12 +279,12 @@ export default function NewsletterHero() {
     e.preventDefault();
     
     if (!email) {
-      setError('Ange din e-postadress');
+      setError('Indtast din e-mailadresse');
       return;
     }
     
     if (!consent) {
-      setError('Du måste godkänna att få nyhetsbrev');
+      setError('Du skal acceptere at modtage nyhedsbrev');
       return;
     }
     
@@ -302,7 +302,7 @@ export default function NewsletterHero() {
       });
       
       if (response.ok) {
-        setSuccess('Tack! Du är nu anmäld till vårt nyhetsbrev. Vi skickar dig snart de bästa elpriserna!');
+        setSuccess('Tak! Du er nu tilmeldt vores nyhedsbrev. Vi sender dig snart de bedste elpriser!');
         setEmail('');
         setConsent(false);
 
@@ -321,10 +321,10 @@ export default function NewsletterHero() {
         } catch { /* no-op */ }
       } else {
         const data = await response.json();
-        setError(data.error || 'Ett fel uppstod. Försök igen senare.');
+        setError(data.error || 'Der opstod en fejl. Prøv igen senere.');
       }
     } catch {
-      setError('Ett fel uppstod. Försök igen senare.');
+      setError('Der opstod en fejl. Prøv igen senere.');
     } finally {
       setIsSubmitting(false);
     }
@@ -333,23 +333,23 @@ export default function NewsletterHero() {
   return (
     <NewsletterHeroSection>
       <Container>
-        <Title>Få de bästa elpriserna först</Title>
+        <Title>Få de bedste elpriser først</Title>
         <Subtitle>
-          Registrera dig för vårt nyhetsbrev och få exklusiva erbjudanden, 
-          elprisuppdateringar och tips för att spara pengar på din elräkning.
+          Tilmeld dig vores nyhedsbrev og få eksklusive tilbud, 
+          elprisopdateringer og tips til at spare penge på din elregning.
         </Subtitle>
         
         <NewsletterForm onSubmit={handleSubmit}>
           <InputGroup>
             <EmailInput
               type="email"
-              placeholder="Din e-postadress"
+              placeholder="Din e-mailadresse"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
             />
             <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Anmäler...' : 'Anmäl dig gratis'}
+              {isSubmitting ? 'Tilmelder...' : 'Tilmeld dig gratis'}
             </SubmitButton>
           </InputGroup>
           
@@ -362,8 +362,8 @@ export default function NewsletterHero() {
               disabled={isSubmitting}
             />
             <CheckboxLabel htmlFor="newsletter-hero-consent">
-              Jag godkänner att få nyhetsbrev från Elchef med erbjudanden och uppdateringar om elpriser. 
-              Du kan när som helst avprenumerera genom att klicka på länken i mailet.
+              Jeg accepterer at modtage nyhedsbrev fra Elchef med tilbud og opdateringer om elpriser. 
+              Du kan til enhver tid afmelde dig ved at klikke på linket i mailen.
             </CheckboxLabel>
           </CheckboxGroup>
           
@@ -372,16 +372,16 @@ export default function NewsletterHero() {
         </NewsletterForm>
 
         <NewsletterBenefits>
-          <BenefitsTitle>Nyhetsbrev med extra värde – vi meddelar dig när:</BenefitsTitle>
+          <BenefitsTitle>Nyhedsbrev med ekstra værdi – vi underretter dig når:</BenefitsTitle>
           <BenefitsList>
             <BenefitItem>
-              Ditt avtal går ut
+              Din aftale udløber
             </BenefitItem>
             <BenefitItem>
-              En ny kampanj är tillgänglig
+              En ny kampagne er tilgængelig
             </BenefitItem>
             <BenefitItem>
-              Det är dags att byta för att undvika dyrare el
+              Det er tid at skifte for at undgå dyrere el
             </BenefitItem>
           </BenefitsList>
         </NewsletterBenefits>
@@ -389,18 +389,18 @@ export default function NewsletterHero() {
         <Benefits>
           <Benefit>
             <RocketIcon />
-            <h3>Exklusiva erbjudanden</h3>
-            <p>Få först tillgång till de bästa elpriserna</p>
+            <h3>Eksklusive tilbud</h3>
+            <p>Få først adgang til de bedste elpriser</p>
           </Benefit>
           <Benefit>
             <ChartIcon />
-            <h3>Elprisuppdateringar</h3>
-            <p>Håll dig uppdaterad om marknadens utveckling</p>
+            <h3>Elprisopdateringer</h3>
+            <p>Hold dig opdateret om markedsudviklingen</p>
           </Benefit>
           <Benefit>
             <PiggyIcon />
-            <h3>Sparatips</h3>
-            <p>Få tips för att minska din elräkning</p>
+            <h3>Sparetips</h3>
+            <p>Få tips til at reducere din elregning</p>
           </Benefit>
         </Benefits>
       </Container>

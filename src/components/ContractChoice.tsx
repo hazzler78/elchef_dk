@@ -29,10 +29,10 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
         marginLeft: 8,
       }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, opacity: 0.7 }}>
-          Grodan
+          Frøen
         </div>
         <div style={{ marginBottom: 12 }}>
-          <strong>Välj ditt avtal:</strong>
+          <strong>Vælg din aftale:</strong>
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -66,10 +66,10 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
           >
             <div style={{ fontWeight: 700, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Image src="/globe.svg" alt="Globe" width={16} height={16} />
-              Rörligt avtal
+              Variabel aftale
             </div>
             <div style={{ fontSize: 12, opacity: 0.8 }}>
-              Följer marknadspriset • Oftast billigast långsiktigt • Inga bindningstider
+              Følger markedsprisen • Ofte billigst på lang sigt • Ingen bindingsperioder
             </div>
           </button>
           
@@ -106,7 +106,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
               Fastpris
             </div>
             <div style={{ fontSize: 12, opacity: 0.8 }}>
-              Låst pris 1-3 år • Trygghet • Förutsägbara kostnader
+              Fast pris 1-3 år • Sikkerhed • Forudsigelige omkostninger
             </div>
           </button>
         </div>
@@ -126,7 +126,7 @@ export default function ContractChoice({ onSelect, onClose }: ContractChoiceProp
             WebkitBackdropFilter: 'var(--glass-blur)',
           }}
         >
-          Nej tack, jag tänker mig för
+          Nej tak, jeg vil tænke over det
         </button>
       </div>
     </div>

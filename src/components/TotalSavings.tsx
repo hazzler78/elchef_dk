@@ -106,13 +106,13 @@ export default function TotalSavings() {
         const response = await fetch('/api/total-savings');
         
         if (!response.ok) {
-          throw new Error('Kunde inte hämta besparingsdata');
+          throw new Error('Kunne ikke hente besparelsesdata');
         }
         
         const data = await response.json();
         setSavingsData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Ett fel uppstod');
+        setError(err instanceof Error ? err.message : 'Der opstod en fejl');
       } finally {
         setLoading(false);
       }
@@ -127,9 +127,9 @@ export default function TotalSavings() {
         <div className="container">
           <SavingsContainer>
             <SavingsContent>
-              <SavingsTitle>Så här mycket pengar har vi sparat svenska folket!</SavingsTitle>
+              <SavingsTitle>Så meget har vi sparet det danske folk!</SavingsTitle>
               <LoadingSpinner />
-              <SavingsSubtitle>Laddar besparingsdata...</SavingsSubtitle>
+              <SavingsSubtitle>Indlæser besparelsesdata...</SavingsSubtitle>
             </SavingsContent>
           </SavingsContainer>
         </div>
@@ -143,7 +143,7 @@ export default function TotalSavings() {
         <div className="container">
           <SavingsContainer>
             <SavingsContent>
-              <SavingsTitle>Så här mycket pengar har vi sparat svenska folket!</SavingsTitle>
+              <SavingsTitle>Så meget har vi sparet det danske folk!</SavingsTitle>
               <ErrorMessage>{error}</ErrorMessage>
             </SavingsContent>
           </SavingsContainer>
@@ -157,10 +157,10 @@ export default function TotalSavings() {
       <div className="container">
         <SavingsContainer>
           <SavingsContent>
-            <SavingsTitle>Så här mycket pengar har vi sparat svenska folket!</SavingsTitle>
+            <SavingsTitle>Så meget har vi sparet det danske folk!</SavingsTitle>
             <SavingsAmount>{savingsData?.formattedSavings || '0 kr'}</SavingsAmount>
             <SavingsSubtitle>
-              Baserat på {savingsData?.count || 0} elavtalsbyten genom vår tjänst
+              Baseret på {savingsData?.count || 0} elaftaleskift gennem vores tjeneste
             </SavingsSubtitle>
           </SavingsContent>
         </SavingsContainer>
