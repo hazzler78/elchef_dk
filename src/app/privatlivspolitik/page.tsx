@@ -50,73 +50,73 @@ export default function Integritetspolicy() {
         <div style={{ fontSize: '1px', color: 'transparent', position: 'absolute', left: '-9999px' }}>
           tiktok-developers-site-verification=i7h859t0QF0G6Dua8q4h9qJUXwuPQoof
         </div>
-        <Title>Integritetspolicy för elchef.se</Title>
-        <Updated>Senast uppdaterad: Augusti 2025</Updated>
+        <Title>Privatlivspolitik for elchef.dk</Title>
+        <Updated>Sidst opdateret: August 2025</Updated>
 
-        <SectionTitle>1. Vårt ansvar för din personuppgifter</SectionTitle>
+        <SectionTitle>1. Vores ansvar for dine personoplysninger</SectionTitle>
         <Paragraph>
-          VKNG LTD (benämnt som &quot;Elchef.se&quot;, &quot;vi&quot; eller &quot;oss&quot;) är personuppgiftsansvarig för behandlingen av dina personuppgifter när du använder vår webbplats elchef.se. Denna integritetspolicy förklarar hur vi samlar in, använder och skyddar din personliga information.
-        </Paragraph>
-
-        <SectionTitle>2. Vilka personuppgifter vi samlar in</SectionTitle>
-        <Paragraph>
-          Vi samlar in information som du ger oss direkt, såsom namn, e-postadress, telefonnummer och adress när du använder våra tjänster. Vi samlar också in teknisk information om hur du använder webbplatsen, inklusive IP-adress, webbläsartyp och besöksdata.
+          VKNG LTD (benævnt som &quot;Elchef.dk&quot;, &quot;vi&quot; eller &quot;os&quot;) er dataansvarlig for behandlingen af dine personoplysninger, når du bruger vores hjemmeside elchef.dk. Denne privatlivspolitik forklarer, hvordan vi indsamler, bruger og beskytter dine personlige oplysninger.
         </Paragraph>
 
-        <SectionTitle>3. Hur vi använder dina personuppgifter</SectionTitle>
+        <SectionTitle>2. Hvilke personoplysninger vi indsamler</SectionTitle>
         <Paragraph>
-          Vi använder dina personuppgifter för att tillhandahålla våra tjänster, förbättra användarupplevelsen, kommunicera med dig och följa lagkrav. Vi delar inte dina personuppgifter med tredje part utan ditt samtycke, förutom när det krävs för att leverera våra tjänster.
+          Vi indsamler oplysninger, som du giver os direkte, såsom navn, e-mailadresse, telefonnummer og adresse, når du bruger vores tjenester. Vi indsamler også teknisk information om, hvordan du bruger hjemmesiden, herunder IP-adresse, browsertype og besøgsdata.
         </Paragraph>
 
-        <SectionTitle>4. Behandling av fakturabilder (OCR)</SectionTitle>
+        <SectionTitle>3. Hvordan vi bruger dine personoplysninger</SectionTitle>
         <Paragraph>
-          När du laddar upp en bild av din elräkning för analys behandlas bilden för att vi ska kunna ge dig en analys här och nu. Denna omedelbara behandling sker med stöd av avtal/berättigat intresse och bilden behöver inte sparas permanent för att tjänsten ska fungera.
+          Vi bruger dine personoplysninger til at levere vores tjenester, forbedre brugeroplevelsen, kommunikere med dig og overholde lovkrav. Vi deler ikke dine personoplysninger med tredjepart uden dit samtykke, undtagen når det kræves for at levere vores tjenester.
+        </Paragraph>
+
+        <SectionTitle>4. Behandling af fakturabilleder (OCR)</SectionTitle>
+        <Paragraph>
+          Når du uploader et billede af din elregning til analyse, behandles billedet, så vi kan give dig en analyse her og nu. Denne øjeblikkelige behandling sker med hjemmel i aftale/legitim interesse, og billedet behøver ikke gemmes permanent for at tjenesten fungerer.
         </Paragraph>
         <Paragraph>
-          <strong>Samtycke för lagring:</strong> Om du vill hjälpa oss att förbättra tjänsten kan du ge ett <em>frivilligt, uttryckligt samtycke</em> till att vi lagrar din fakturabild under en begränsad tid för kvalitetssäkring och utveckling. Samtycke lämnas via en omarkerad kryssruta i samband med uppladdningen och kan återkallas när som helst.
+          <strong>Samtykke til lagring:</strong> Hvis du vil hjælpe os med at forbedre tjenesten, kan du give et <em>frivilligt, udtrykkelig samtykke</em> til, at vi gemmer dit fakturabillede i en begrænset periode til kvalitetssikring og udvikling. Samtykke gives via en umarkeret afkrydsningsboks i forbindelse med upload og kan tilbagekaldes når som helst.
         </Paragraph>
         <Paragraph>
-          <strong>Vad som kan lagras vid samtycke:</strong>
+          <strong>Hvad der kan gemmes ved samtykke:</strong>
         </Paragraph>
         <ul>
-          <li>Originalbilden av fakturan</li>
-          <li>Teknisk metadata om bilden (t.ex. filtyp och storlek)</li>
-          <li>Bildens kryptografiska kontrollsumma (SHA‑256) för identifiering/deduplicering</li>
-          <li>Koppling till sessions‑ID och tidpunkt för uppladdning</li>
+          <li>Originalbilledet af fakturaen</li>
+          <li>Teknisk metadata om billedet (f.eks. filtype og størrelse)</li>
+          <li>Billedets kryptografiske checksum (SHA‑256) til identifikation/deduplikering</li>
+          <li>Kobling til sessions-ID og tidspunkt for upload</li>
         </ul>
         <Paragraph>
-          <strong>Lagring, mottagare och överföringar:</strong> Bilder lagras i en privat, åtkomstskyddad lagringslösning hos vår driftleverantör (Supabase). För OCR/analys använder vi en AI‑leverantör (OpenAI) som biträde. Behandlingen kan innebära överföring av uppgifter utanför EU/EES; i sådant fall används standardavtalsklausuler (SCC) och andra relevanta skyddsåtgärder enligt GDPR.
+          <strong>Lagring, modtagere og overførsler:</strong> Billeder gemmes i en privat, adgangsbeskyttet lagringsløsning hos vores driftsleverandør (Supabase). Til OCR/analyse bruger vi en AI-leverandør (OpenAI) som databehandler. Behandlingen kan indebære overførsel af data uden for EU/EØS; i så fald anvendes standardkontraktbestemmelser (SCC) og andre relevante beskyttelsesforanstaltninger i henhold til GDPR.
         </Paragraph>
         <Paragraph>
-          <strong>Lagringstid:</strong> Vid samtycke sparas fakturabilden i upp till 90 dagar, därefter raderas den automatiskt. Du kan när som helst återkalla ditt samtycke, varpå vi raderar bilden snarast möjligt.
+          <strong>Lagringsperiode:</strong> Ved samtykke gemmes fakturabilledet i op til 90 dage, hvorefter det slettes automatisk. Du kan til enhver tid tilbagekalde dit samtykke, hvorefter vi sletter billedet hurtigst muligt.
         </Paragraph>
         <Paragraph>
-          <strong>Utan samtycke:</strong> Vi sparar inte själva bilden. Vi kan dock spara AI:ns textanalys och begränsad teknisk metadata (t.ex. hashvärde) för felsökning, statistik och för att förhindra dubbla uppladdningar.
-        </Paragraph>
-
-        <SectionTitle>5. Dina rättigheter</SectionTitle>
-        <Paragraph>
-          Du har rätt att få information om vilka personuppgifter vi har om dig, begära rättelse av felaktig information, begära radering av dina uppgifter och invända mot vår behandling. Du kan också begära att få dina uppgifter överförda till en annan leverantör.
+          <strong>Uden samtykke:</strong> Vi gemmer ikke selve billedet. Vi kan dog gemme AI'ens tekstanalyse og begrænset teknisk metadata (f.eks. hashværdi) til fejlsøgning, statistik og for at forhindre dobbelt upload.
         </Paragraph>
 
-        <SectionTitle>6. Cookies och spårning</SectionTitle>
+        <SectionTitle>5. Dine rettigheder</SectionTitle>
         <Paragraph>
-          Vi använder cookies och liknande tekniker för att förbättra webbplatsens funktionalitet och analysera användningsmönster. Du kan hantera dina cookie-inställningar i din webbläsare.
+          Du har ret til at få oplysninger om, hvilke personoplysninger vi har om dig, anmode om rettelse af fejlagtige oplysninger, anmode om sletning af dine oplysninger og gøre indsigelse mod vores behandling. Du kan også anmode om at få dine oplysninger overført til en anden leverandør.
         </Paragraph>
 
-        <SectionTitle>7. Säkerhet</SectionTitle>
+        <SectionTitle>6. Cookies og sporing</SectionTitle>
         <Paragraph>
-          Vi implementerar lämpliga tekniska och organisatoriska säkerhetsåtgärder för att skydda dina personuppgifter mot obehörig åtkomst, förlust eller förstörelse.
+          Vi bruger cookies og lignende teknologier til at forbedre hjemmesidens funktionalitet og analysere brugsmønstre. Du kan administrere dine cookie-indstillinger i din browser.
+        </Paragraph>
+
+        <SectionTitle>7. Sikkerhed</SectionTitle>
+        <Paragraph>
+          Vi implementerer passende tekniske og organisatoriske sikkerhedsforanstaltninger for at beskytte dine personoplysninger mod uautoriseret adgang, tab eller ødelæggelse.
         </Paragraph>
 
         <SectionTitle>8. Kontakt</SectionTitle>
         <Paragraph>
-          Vid frågor om denna integritetspolicy eller vår behandling av personuppgifter, kontakta oss via e-post: <Mail href="mailto:info@elchef.se">info@elchef.se</Mail>
+          Ved spørgsmål om denne privatlivspolitik eller vores behandling af personoplysninger, kontakt os via e-mail: <Mail href="mailto:info@elchef.dk">info@elchef.dk</Mail>
         </Paragraph>
 
-        <SectionTitle>9. Ändringar av denna policy</SectionTitle>
+        <SectionTitle>9. Ændringer af denne politik</SectionTitle>
         <Paragraph>
-          Vi kan uppdatera denna integritetspolicy vid behov. Alla ändringar meddelas på webbplatsen och träder i kraft när de publiceras.
+          Vi kan opdatere denne privatlivspolitik ved behov. Alle ændringer meddeles på hjemmesiden og træder i kraft, når de publiceres.
         </Paragraph>
       </Container>
     </Section>

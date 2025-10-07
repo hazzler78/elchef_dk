@@ -202,29 +202,29 @@ export default function AffiliatePage() {
   return (
     <Section>
       <Container>
-        <Title>Bli partner med Elchef</Title>
+        <Title>Bliv partner med Elchef</Title>
         <Lead>
-          Har du många följare eller driver en community? Ansök om att bli partner och få en unik länk.
+          Har du mange følgere eller driver du et fællesskab? Ansøg om at blive partner og få et unikt link.
         </Lead>
 
         <Tabs>
           <TabButton $active={activeTab==='influencer'} onClick={()=>setActiveTab('influencer')}>Influencer / Affiliate</TabButton>
-          <TabButton $active={activeTab==='company'} onClick={()=>setActiveTab('company')}>Företagspartner</TabButton>
+          <TabButton $active={activeTab==='company'} onClick={()=>setActiveTab('company')}>Virksomhedspartner</TabButton>
         </Tabs>
 
         <Grid>
           <Card>
             <b>Provision</b>
-            <Small>Fast ersättning per kvalificerad lead. Detaljer bekräftas vid godkännande.</Small>
+            <Small>Fast betaling per kvalificeret lead. Detaljer bekræftes ved godkendelse.</Small>
           </Card>
           <Card>
-            <b>Spårning</b>
-            <Small>Ref-kod i URL (t.ex. ?ref=dittnamn) lagras i 30 dagar.</Small>
+            <b>Sporing</b>
+            <Small>Ref-kode i URL (f.eks. ?ref=ditnavn) gemmes i 30 dage.</Small>
           </Card>
           <Card>
-            <b>Kampanjkod</b>
+            <b>Kampagnekode</b>
             <Small>
-              Du kan få en kampanjkod (t.ex. ELJAN25) för dina följare. Koden kopplas till din ref och lagras i 30 dagar.
+              Du kan få en kampagnekode (f.eks. ELJAN25) til dine følgere. Koden kobles til din ref og gemmes i 30 dage.
             </Small>
           </Card>
         </Grid>
@@ -233,59 +233,59 @@ export default function AffiliatePage() {
         <Form onSubmit={onSubmit}>
           <Row>
             <div>
-              <Label>Namn</Label>
+              <Label>Navn</Label>
               <Input value={form.name} onChange={e=>setForm(f=>({...f, name: e.target.value}))} required />
             </div>
             <div>
-              <Label>E-post</Label>
+              <Label>E-mail</Label>
               <Input type="email" value={form.email} onChange={e=>setForm(f=>({...f, email: e.target.value}))} required />
             </div>
           </Row>
           <Row>
             <div>
-              <Label>Kanal (t.ex. Instagram/TikTok/YouTube/Webb)</Label>
-              <Input value={form.channel} onChange={e=>setForm(f=>({...f, channel: e.target.value}))} placeholder="@dittkonto eller URL" />
+              <Label>Kanal (f.eks. Instagram/TikTok/YouTube/Web)</Label>
+              <Input value={form.channel} onChange={e=>setForm(f=>({...f, channel: e.target.value}))} placeholder="@dinkonto eller URL" />
             </div>
             <div>
-              <Label>Följare</Label>
-              <Input value={form.followers} onChange={e=>setForm(f=>({...f, followers: e.target.value}))} placeholder="t.ex. 25 000" />
+              <Label>Følgere</Label>
+              <Input value={form.followers} onChange={e=>setForm(f=>({...f, followers: e.target.value}))} placeholder="f.eks. 25 000" />
             </div>
           </Row>
           <div>
-            <Label>Övrigt</Label>
-            <Textarea value={form.notes} onChange={e=>setForm(f=>({...f, notes: e.target.value}))} placeholder="Berätta kort hur du vill promota Elchef" />
+            <Label>Øvrigt</Label>
+            <Textarea value={form.notes} onChange={e=>setForm(f=>({...f, notes: e.target.value}))} placeholder="Fortæl kort hvordan du vil promovere Elchef" />
           </div>
-          {ref && <Small>Din ref-kod hittades: <b>{ref}</b></Small>}
-          {campaign && <Small>Din kampanjkod hittades: <b>{campaign}</b></Small>}
+          {ref && <Small>Din ref-kode fundet: <b>{ref}</b></Small>}
+          {campaign && <Small>Din kampagnekode fundet: <b>{campaign}</b></Small>}
           <Button type="submit" disabled={status==='sending'}>
-            {status==='sending' ? 'Skickar...' : 'Skicka ansökan'}
+            {status==='sending' ? 'Sender...' : 'Send ansøgning'}
           </Button>
-          {status==='success' && <Small>✅ Tack! Vi återkommer inom kort.</Small>}
-          {status==='error' && <Small>❌ Något gick fel. Försök igen.</Small>}
+          {status==='success' && <Small>✅ Tak! Vi vender tilbage snart.</Small>}
+          {status==='error' && <Small>❌ Noget gik galt. Prøv igen.</Small>}
         </Form>
         )}
 
         {activeTab === 'company' && (
         <>
         <Prose>
-          <p><b>Är ni ett elhandelsbolag eller strömsällskap som vill växa?</b> Elchef hjälper hushåll att hitta rätt elavtal på ett enkelt och transparent sätt. Vi samarbetar med utvalda leverantörer som erbjuder schyssta villkor och konkurrenskraftiga priser – utan dolda avgifter.</p>
-          <p><b>Så fungerar partnerskapet:</b></p>
+          <p><b>Er I et elhandelsselskab eller strømselskab, der vil vokse?</b> Elchef hjælper husstande med at finde den rette elaftale på en enkel og transparent måde. Vi samarbejder med udvalgte leverandører, der tilbyder fair vilkår og konkurrencedygtige priser – uden skjulte gebyrer.</p>
+          <p><b>Sådan fungerer partnerskabet:</b></p>
           <ul>
-            <li>Vi presenterar era aktuella erbjudanden på Elchef.se där de passar kundens behov.</li>
-            <li>Ni får kvalificerade leads och avslut från kunder som redan förstått ert erbjudande.</li>
-            <li>Spårning sker via ref-länk och kampanjkod med 30 dagars attribuering.</li>
-            <li>Ni får regelbunden återkoppling och kan enkelt uppdatera kampanjer.</li>
+            <li>Vi præsenterer jeres aktuelle tilbud på Elchef.dk, hvor de passer kundens behov.</li>
+            <li>I får kvalificerede leads og afslutninger fra kunder, der allerede har forstået jeres tilbud.</li>
+            <li>Sporing sker via ref-link og kampagnekode med 30 dages attribuering.</li>
+            <li>I får regelmæssig feedback og kan nemt opdatere kampagner.</li>
           </ul>
-          <p><b>Vad vi letar efter:</b> Tydliga avtal, rimliga påslag, transparent prissättning och möjlighet till kampanjer som skapar verkligt kundvärde.</p>
+          <p><b>Hvad vi leder efter:</b> Klare aftaler, rimelige tillæg, transparent prissætning og mulighed for kampagner, der skaber reel kundeværdi.</p>
         </Prose>
         <Form onSubmit={onSubmitCompany}>
           <Row>
             <div>
-              <Label>Företagsnamn</Label>
+              <Label>Virksomhedsnavn</Label>
               <Input value={companyForm.companyName} onChange={e=>setCompanyForm(f=>({...f, companyName: e.target.value}))} required />
             </div>
             <div>
-              <Label>Organisationsnummer</Label>
+              <Label>CVR-nummer</Label>
               <Input value={companyForm.orgNumber} onChange={e=>setCompanyForm(f=>({...f, orgNumber: e.target.value}))} />
             </div>
           </Row>
@@ -295,7 +295,7 @@ export default function AffiliatePage() {
               <Input value={companyForm.contactName} onChange={e=>setCompanyForm(f=>({...f, contactName: e.target.value}))} required />
             </div>
             <div>
-              <Label>E-post</Label>
+              <Label>E-mail</Label>
               <Input type="email" value={companyForm.email} onChange={e=>setCompanyForm(f=>({...f, email: e.target.value}))} required />
             </div>
           </Row>
@@ -305,22 +305,22 @@ export default function AffiliatePage() {
               <Input value={companyForm.phone} onChange={e=>setCompanyForm(f=>({...f, phone: e.target.value}))} />
             </div>
             <div>
-              <Label>Webbplats</Label>
+              <Label>Hjemmeside</Label>
               <Input value={companyForm.website} onChange={e=>setCompanyForm(f=>({...f, website: e.target.value}))} placeholder="https://..." />
             </div>
           </Row>
           
           <div>
-            <Label>Övrigt</Label>
-            <Textarea value={companyForm.notes} onChange={e=>setCompanyForm(f=>({...f, notes: e.target.value}))} placeholder="Beskriv kort hur du vill samarbeta" />
+            <Label>Øvrigt</Label>
+            <Textarea value={companyForm.notes} onChange={e=>setCompanyForm(f=>({...f, notes: e.target.value}))} placeholder="Beskriv kort hvordan du vil samarbejde" />
           </div>
-          {ref && <Small>Ref-kod: <b>{ref}</b></Small>}
-          {campaign && <Small>Kampanjkod: <b>{campaign}</b></Small>}
+          {ref && <Small>Ref-kode: <b>{ref}</b></Small>}
+          {campaign && <Small>Kampagnekode: <b>{campaign}</b></Small>}
           <Button type="submit" disabled={companyStatus==='sending'}>
-            {companyStatus==='sending' ? 'Skickar...' : 'Skicka ansökan'}
+            {companyStatus==='sending' ? 'Sender...' : 'Send ansøgning'}
           </Button>
-          {companyStatus==='success' && <Small>✅ Tack! Vi återkommer inom kort.</Small>}
-          {companyStatus==='error' && <Small>❌ Något gick fel. Försök igen.</Small>}
+          {companyStatus==='success' && <Small>✅ Tak! Vi vender tilbage snart.</Small>}
+          {companyStatus==='error' && <Small>❌ Noget gik galt. Prøv igen.</Small>}
         </Form>
         </>
         )}

@@ -34,7 +34,7 @@ function DeladKalkylContent() {
         setLoading(false);
       }, 1000);
     } else {
-      setError('Ingen kalkyl hittades');
+      setError('Ingen beregning fundet');
       setLoading(false);
     }
   }, [calculationId]);
@@ -80,9 +80,9 @@ function DeladKalkylContent() {
           boxShadow: 'var(--glass-shadow-medium)',
           textAlign: 'center'
         }}>
-          <h2 style={{ color: 'white', marginBottom: '1rem' }}>Kalkyl inte hittad</h2>
+          <h2 style={{ color: 'white', marginBottom: '1rem' }}>Beregning ikke fundet</h2>
           <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '2rem' }}>
-            Den delade kalkylen kunde inte hittas eller har tagits bort.
+            Den delte beregning kunne ikke findes eller er blevet slettet.
           </p>
           <GlassButton
             variant="primary"
@@ -90,9 +90,9 @@ function DeladKalkylContent() {
             background="linear-gradient(135deg, var(--primary), var(--secondary))"
             disableScrollEffect
             disableHoverEffect
-            onClick={() => window.location.href = '/fakturaanalys'}
+            onClick={() => window.location.href = '/faktura-analyse'}
           >
-            Skapa din egen AI-analys
+            Lav din egen AI-analyse
           </GlassButton>
         </div>
       </main>
@@ -119,7 +119,7 @@ function DeladKalkylContent() {
           textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
           textAlign: 'center'
         }}>
-          Delad AI-kalkyl
+          Delt AI-beregning
         </h1>
         
         <div style={{
@@ -136,14 +136,14 @@ function DeladKalkylContent() {
             fontWeight: 600,
             marginBottom: '0.5rem'
           }}>
-            {calculation.savingsAmount.toLocaleString('sv-SE')} kr/år
+            {calculation.savingsAmount.toLocaleString('da-DK')} kr/år
           </h2>
           <p style={{
             color: 'rgba(255, 255, 255, 0.9)',
             fontSize: '1.1rem',
             margin: 0
           }}>
-            Potentiell besparing genom att byta elavtal
+            Potentiel besparelse ved at skifte elaftale
           </p>
         </div>
 
@@ -159,22 +159,22 @@ function DeladKalkylContent() {
             fontWeight: 600,
             marginBottom: '1rem'
           }}>
-            Om denna analys
+            Om denne analyse
           </h3>
           <p style={{
             color: 'rgba(255, 255, 255, 0.9)',
             lineHeight: 1.6,
             marginBottom: '1rem'
           }}>
-            Denna AI-analys visar hur mycket som kan sparas genom att identifiera och undvika onödiga avgifter på elräkningen. 
-            Vår AI läser av alla kostnader och identifierar dolda avgifter som många missar.
+            Denne AI-analyse viser, hvor meget der kan spares ved at identificere og undgå unødvendige gebyrer på elregningen. 
+            Vores AI læser alle omkostninger og identificerer skjulte gebyrer, som mange overser.
           </p>
           <p style={{
             color: 'rgba(255, 255, 255, 0.8)',
             fontSize: '0.9rem',
             margin: 0
           }}>
-            Analysen delades från {calculation.platform} • {new Date(calculation.analysisDate).toLocaleDateString('sv-SE')}
+            Analysen blev delt fra {calculation.platform} • {new Date(calculation.analysisDate).toLocaleDateString('da-DK')}
           </p>
         </div>
 
@@ -191,7 +191,7 @@ function DeladKalkylContent() {
             marginBottom: '0.5rem',
             textAlign: 'center'
           }}>
-            Vill du också upptäcka dina dolda elavgifter?
+            Vil du også opdage dine skjulte elgebyrer?
           </h3>
           
           <GlassButton
@@ -200,9 +200,9 @@ function DeladKalkylContent() {
             background="linear-gradient(135deg, var(--primary), var(--secondary))"
             disableScrollEffect
             disableHoverEffect
-            onClick={() => window.location.href = withDefaultCtaUtm('/fakturaanalys', 'shared-calc', 'cta-analyze')}
+            onClick={() => window.location.href = withDefaultCtaUtm('/faktura-analyse', 'shared-calc', 'cta-analyze')}
           >
-            Analysera min elräkning med AI
+            Analyser min elregning med AI
           </GlassButton>
           
           <p style={{
@@ -211,7 +211,7 @@ function DeladKalkylContent() {
             textAlign: 'center',
             margin: 0
           }}>
-            Helt gratis • Tar bara några minuter • Ingen bindning
+            Helt gratis • Tager kun få minutter • Ingen binding
           </p>
         </div>
       </div>
@@ -233,7 +233,7 @@ function DeladKalkylContent() {
           marginBottom: '1rem',
           textAlign: 'center'
         }}>
-          Så fungerar AI-analysen
+          Sådan fungerer AI-analysen
         </h3>
         
         <div style={{
@@ -260,9 +260,9 @@ function DeladKalkylContent() {
             }}>
               📸
             </div>
-            <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>1. Ladda upp</h4>
+            <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>1. Upload</h4>
             <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', margin: 0 }}>
-              Ta en bild på din elräkning
+              Tag et billede af din elregning
             </p>
           </div>
           
@@ -285,9 +285,9 @@ function DeladKalkylContent() {
             }}>
               🤖
             </div>
-            <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>2. AI-analys</h4>
+            <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>2. AI-analyse</h4>
             <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', margin: 0 }}>
-              AI:n identifierar dolda avgifter
+              AI'en identificerer skjulte gebyrer
             </p>
           </div>
           
@@ -310,9 +310,9 @@ function DeladKalkylContent() {
             }}>
               💰
             </div>
-            <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>3. Besparing</h4>
+            <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>3. Besparelse</h4>
             <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', margin: 0 }}>
-              Se exakt hur mycket du kan spara
+              Se præcis hvor meget du kan spare
             </p>
           </div>
         </div>
