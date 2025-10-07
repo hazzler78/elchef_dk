@@ -148,8 +148,8 @@ export default function Hero() {
     } catch {}
   }, [variant]);
 
-  const heroTitle = variant === 'A' ? 'Elchef gör det enkelt att välja rätt elavtal!' : 'Välj rätt elavtal – utan krångel';
-  const heroSub = variant === 'A' ? 'Vi lyfter fram avtal värda att överväga och sköter bytet åt dig.' : 'Snabbt, gratis och tryggt. Vi hjälper dig hela vägen.';
+  const heroTitle = variant === 'A' ? 'Elchef gør det nemt at vælge den rette elaftale!' : 'Vælg den rette elaftale – uden besvær';
+  const heroSub = variant === 'A' ? 'Vi fremhæver aftaler, der er værd at overveje, og tager os af skiftet for dig.' : 'Hurtigt, gratis og trygt. Vi hjælper dig hele vejen.';
 
   const trackHeroClick = useCallback((target: 'rorligt' | 'fastpris', href: string) => {
     try {
@@ -243,7 +243,7 @@ export default function Hero() {
                     e.currentTarget.style.filter = 'brightness(1)';
                   }, [])}
                   onClick={() => {
-                    trackHeroClick('rorligt', '/rorligt-avtal');
+                    trackHeroClick('rorligt', '/variabel-aftale');
                     // TikTok InitiateCheckout-style event when we send user to Salesys flow
                     try {
                       const ttq: any = (window as any).ttq;
@@ -258,7 +258,7 @@ export default function Hero() {
                       }
                     } catch { /* no-op */ }
                     const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-                    const url = '/rorligt-avtal' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
+                    const url = '/variabel-aftale' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
                     window.location.href = url;
                   }}
                   >
@@ -266,11 +266,11 @@ export default function Hero() {
                        variant="primary" 
                        size="lg"
                        background="linear-gradient(135deg, var(--primary), var(--secondary))"
-                       aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                       aria-label="Variabel aftale - 0 kr i gebyrer første år – uden bindingsperiode"
                        disableScrollEffect={true}
                        disableHoverEffect={true}
                      >
-                     Rörligt avtal
+                     Variabel aftale
                    </GlassButton>
                  </div>
                  <div style={{ 
@@ -286,7 +286,7 @@ export default function Hero() {
                   position: 'relative',
                   zIndex: 10
                 }}>
-                   0 kr i avgifter första året – utan bindningstid
+                   0 kr i gebyrer første år – uden bindingsperiode
                  </div>
                </div>
                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
@@ -304,8 +304,8 @@ export default function Hero() {
                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
                      e.currentTarget.style.filter = 'brightness(1)';
                    }, [])}
-                                       onClick={() => {
-                      trackHeroClick('fastpris', '/fastpris-avtal');
+                   onClick={() => {
+                     trackHeroClick('fastpris', '/fastpris-aftale');
                       try {
                         const ttq: any = (window as any).ttq;
                         const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
@@ -319,7 +319,7 @@ export default function Hero() {
                         }
                       } catch { /* no-op */ }
                       const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-                      const url = '/fastpris-avtal' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
+                      const url = '/fastpris-aftale' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
                       window.location.href = url;
                     }}
                    >
@@ -352,9 +352,9 @@ export default function Hero() {
                </div>
             </ButtonRow>
             <USPList>
-              <li>✔️ Vi lyfter bara fram elavtal som är värda att överväga.</li>
-              <li>✔️ Gratis byte – din gamla avtal sägs upp automatiskt.</li>
-              <li>✔️ Full valfrihet – välj mellan rörligt elpris eller fastpris med avtalad period.</li>
+              <li>✔️ Vi fremhæver kun elaftaler, der er værd at overveje.</li>
+              <li>✔️ Gratis skift – din gamle aftale opsiges automatisk.</li>
+              <li>✔️ Fuld valgfrihed – vælg mellem variabel elpris eller fastpris med aftalt periode.</li>
             </USPList>
           </TextContent>
           <VideoWrapper>
@@ -374,10 +374,10 @@ export default function Hero() {
               }}
               onClick={handleVideoClick}
               style={{ cursor: 'pointer' }}
-              title="Klicka för att växla ljud av/på"
+              title="Klik for at slå lyd til/fra"
             >
               <source src="/grodan-presentation.mp4" type="video/mp4" />
-              Din webbläsare stöder inte video-elementet.
+              Din browser understøtter ikke video-elementet.
             </video>
           </VideoWrapper>
         </HeroContent>

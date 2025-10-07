@@ -102,24 +102,24 @@ function BottomNavContent() {
   return (
     <Nav offset={bottomOffset}>
       <NavItem href={withDefaultCtaUtm('/', 'bottomnav', 'home')} className={pathname === '/' ? 'active' : ''}>
-        Hem
+        Hjem
         {pathname === '/' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href={withDefaultCtaUtm('/fakturaanalys', 'bottomnav', 'compare')} className={pathname === '/fakturaanalys' ? 'active' : ''}>
-        Fakturaanalys
-        {pathname === '/fakturaanalys' && <ActiveIndicator />}
+      <NavItem href={withDefaultCtaUtm('/faktura-analyse', 'bottomnav', 'compare')} className={pathname === '/faktura-analyse' ? 'active' : ''}>
+        Fakturaanalyse
+        {pathname === '/faktura-analyse' && <ActiveIndicator />}
       </NavItem>
       <NavItem href={withDefaultCtaUtm('/media', 'bottomnav', 'media')} className={pathname === '/media' ? 'active' : ''}>
-        Media
+        Medier
         {pathname === '/media' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href={withDefaultCtaUtm('/foretag', 'bottomnav', 'b2b')} className={pathname === '/foretag' ? 'active' : ''}>
-        Företag
-        {pathname === '/foretag' && <ActiveIndicator />}
+      <NavItem href={withDefaultCtaUtm('/erhverv', 'bottomnav', 'b2b')} className={pathname === '/erhverv' ? 'active' : ''}>
+        Erhverv
+        {pathname === '/erhverv' && <ActiveIndicator />}
       </NavItem>
-      <NavItem href={withDefaultCtaUtm('/om-oss', 'bottomnav', 'about')} className={pathname === '/om-oss' ? 'active' : ''}>
-        Om oss
-        {pathname === '/om-oss' && <ActiveIndicator />}
+      <NavItem href={withDefaultCtaUtm('/om-os', 'bottomnav', 'about')} className={pathname === '/om-os' ? 'active' : ''}>
+        Om os
+        {pathname === '/om-os' && <ActiveIndicator />}
       </NavItem>
     </Nav>
   );

@@ -295,14 +295,14 @@ export default function ContactForm() {
   return (
     <ContactSection>
       <Container>
-        <Title>Kontakta oss</Title>
+        <Title>Kontakt os</Title>
         <Subtitle>
-          Har du frågor om elavtal eller behöver hjälp? Vi finns här för dig!
+          Har du spørgsmål om elaftaler eller brug for hjælp? Vi er her for dig!
         </Subtitle>
         
         <Form onSubmit={handleSubmit}>
           <FormGroup>
-            <Label htmlFor="name">Namn</Label>
+            <Label htmlFor="name">Navn</Label>
             <Input
               type="text"
               id="name"
@@ -338,14 +338,14 @@ export default function ContactForm() {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="message">Meddelande</Label>
+            <Label htmlFor="message">Besked</Label>
             <Textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              placeholder="Berätta mer om vad du behöver hjälp med..."
+              placeholder="Fortæl mere om, hvad du har brug for hjælp til..."
             />
           </FormGroup>
 
@@ -358,24 +358,24 @@ export default function ContactForm() {
               onChange={handleChange}
             />
             <CheckboxLabel htmlFor="newsletter">
-              Jag vill prenumerera på nyhetsbrev med tips om elavtal och energibesparing
+              Jeg vil gerne abonnere på nyhedsbrev med tips om elaftaler og energibesparelse
             </CheckboxLabel>
           </CheckboxGroup>
 
           <SubmitButton type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Skickar...' : 'Skicka meddelande'}
+            {isSubmitting ? 'Sender...' : 'Send besked'}
           </SubmitButton>
         </Form>
 
         {submitStatus === 'success' && (
           <SuccessMessage>
-            ✅ Tack för ditt meddelande! Vi återkommer så snart som möjligt.
+            ✅ Tak for din besked! Vi vender tilbage hurtigst muligt.
           </SuccessMessage>
         )}
 
         {submitStatus === 'error' && (
           <ErrorMessage>
-            ❌ Ett fel uppstod. Kontrollera att du har fyllt i alla obligatoriska fält och försök igen.
+            ❌ Der opstod en fejl. Kontroller at du har udfyldt alle obligatoriske felter og prøv igen.
           </ErrorMessage>
         )}
       </Container>

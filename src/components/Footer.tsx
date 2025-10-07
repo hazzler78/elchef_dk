@@ -94,18 +94,18 @@ export default function Footer() {
           <FooterColumn>
             <h3>Om Elchef</h3>
             <p style={{ color: 'var(--gray-300)', marginBottom: '1rem' }}>
-              Vi hjälper dig hitta och byta till marknadens bästa elavtal. 
-              Enkelt, tryggt och helt kostnadsfritt.
+              Vi hjælper dig med at finde og skifte til markedets bedste elaftale. 
+              Nemt, trygt og helt gratis.
             </p>
             <ContactInfo>
               <p>
-                <FaPhone /> 073-686 23 60
+                <FaPhone /> +45 XX XX XX XX
                 <span style={{ fontSize: '0.8rem', color: 'var(--gray-400)', marginLeft: '0.5rem' }}>
-                  09:00-13:00 Vardagar
+                  09:00-13:00 Hverdage
                 </span>
               </p>
               <p>
-                <FaEnvelope /> info@elchef.se
+                <FaEnvelope /> info@elchef.dk
               </p>
             </ContactInfo>
             <SocialLinks>
@@ -122,32 +122,32 @@ export default function Footer() {
           </FooterColumn>
 
           <FooterColumn>
-            <h3>Tjänster</h3>
+            <h3>Tjenester</h3>
             <ul>
-              <li><Link href={withDefaultCtaUtm('/byt-elavtal', 'footer', 'services-byt')}>Byt elavtal</Link></li>
-              <li><Link href={withDefaultCtaUtm('/fakturaanalys', 'footer', 'services-jamfor')}>Fakturaanalys</Link></li>
+              <li><Link href={withDefaultCtaUtm('/skift-elaftale', 'footer', 'services-byt')}>Skift elaftale</Link></li>
+              <li><Link href={withDefaultCtaUtm('/faktura-analyse', 'footer', 'services-jamfor')}>Fakturaanalyse</Link></li>
               <li><Link href={withDefaultCtaUtm('/elpriskollen', 'footer', 'services-elpriskollen')}>Elpriskollen</Link></li>
               <li><Link href={withDefaultCtaUtm('/energiradgivning', 'footer', 'services-energiradgivning')}>Energirådgivning</Link></li>
-              <li><Link href={withDefaultCtaUtm('/foretag', 'footer', 'services-foretag')}>Företag</Link></li>
+              <li><Link href={withDefaultCtaUtm('/erhverv', 'footer', 'services-foretag')}>Erhverv</Link></li>
             </ul>
           </FooterColumn>
 
           <FooterColumn>
             <h3>Information</h3>
             <ul>
-              <li><Link href={withDefaultCtaUtm('/om-oss', 'footer', 'info-om-oss')}>Om oss</Link></li>
-              <li><Link href={withDefaultCtaUtm('/vanliga-fragor', 'footer', 'info-faq')}>Vanliga frågor</Link></li>
+              <li><Link href={withDefaultCtaUtm('/om-os', 'footer', 'info-om-oss')}>Om os</Link></li>
+              <li><Link href={withDefaultCtaUtm('/ofte-stillede-sporgsmal', 'footer', 'info-faq')}>Ofte stillede spørgsmål</Link></li>
               <li><Link href={withDefaultCtaUtm('/kontakt', 'footer', 'info-kontakt')}>Kontakt</Link></li>
-              <li><Link href={withDefaultCtaUtm('/media', 'footer', 'info-media')}>Media</Link></li>
+              <li><Link href={withDefaultCtaUtm('/media', 'footer', 'info-media')}>Medier</Link></li>
               <li><Link href={withDefaultCtaUtm('/partner', 'footer', 'info-partner')}>Partner</Link></li>
             </ul>
           </FooterColumn>
 
           <FooterColumn>
-            <h3>Juridiskt</h3>
+            <h3>Juridisk</h3>
             <ul>
-              <li><Link href={withDefaultCtaUtm('/villkor', 'footer', 'legal-villkor')}>Användarvillkor</Link></li>
-              <li><Link href={withDefaultCtaUtm('/integritetspolicy', 'footer', 'legal-integritet')}>Integritetspolicy</Link></li>
+              <li><Link href={withDefaultCtaUtm('/vilkar', 'footer', 'legal-villkor')}>Brugervilkår</Link></li>
+              <li><Link href={withDefaultCtaUtm('/privatlivspolitik', 'footer', 'legal-integritet')}>Privatlivspolitik</Link></li>
               <li><Link href={withDefaultCtaUtm('/cookies', 'footer', 'legal-cookies')}>Cookies</Link></li>
               <li><Link href={withDefaultCtaUtm('/gdpr', 'footer', 'legal-gdpr')}>GDPR</Link></li>
             </ul>
@@ -155,7 +155,7 @@ export default function Footer() {
         </FooterGrid>
 
         <BottomBar>
-          <p>© 2025 Elchef.se. Alla rättigheter förbehållna.</p>
+          <p>© 2025 Elchef.dk. Alle rettigheder forbeholdes.</p>
         </BottomBar>
       </div>
     </FooterWrapper>

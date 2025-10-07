@@ -1,36 +1,36 @@
-# Elchef.se
+# Elchef.dk
 
-Elchef är en svensk tjänst för att jämföra och byta elavtal – enkelt, tryggt och kostnadsfritt. Hitta marknadens bästa elavtal för just dina behov och byt direkt online.
+Elchef er en dansk tjeneste til at sammenligne og skifte elaftaler – nemt, trygt og gratis. Find markedets bedste elaftaler til netop dine behov og skift direkte online.
 
 ## Funktioner
-- Jämför elpriser i realtid baserat på postnummer
-- Byt elavtal direkt via tjänsten
-- Få expertråd och svar på vanliga frågor
-- GDPR- och cookie-kompatibel
-- Mobilvänlig design med bottennavigering
-- Flera informationssidor (Om oss, Företag, Kontakt, Blogg, m.fl.)
+- Sammenlign elpriser i realtid baseret på postnummer
+- Skift elaftale direkte via tjenesten
+- Få ekspertråd og svar på ofte stillede spørgsmål
+- GDPR- og cookie-kompatibel
+- Mobilvenlig design med bundnavigation
+- Flere informationssider (Om os, Erhverv, Kontakt, Medier, m.fl.)
 
-## Installation & utveckling
+## Installation & udvikling
 
 ```bash
 npm install
 npm run dev
 ```
 
-Öppna [http://localhost:3000](http://localhost:3000) i din webbläsare.
+Åbn [http://localhost:3000](http://localhost:3000) i din browser.
 
-## Bygg & deploy
+## Byg & deploy
 
 ### Cloudflare Pages (Next.js on Pages)
 
-För produktion på Cloudflare Pages med `@cloudflare/next-on-pages`:
+For produktion på Cloudflare Pages med `@cloudflare/next-on-pages`:
 
-1) Installera beroenden
+1) Installer afhængigheder
 ```bash
 npm install
 ```
 
-2) Bygg för Cloudflare
+2) Byg til Cloudflare
 ```bash
 npm run cf:build
 ```
@@ -40,15 +40,15 @@ npm run cf:build
 npm run cf:preview
 ```
 
-4) Deploy till Pages
+4) Deploy til Pages
 ```bash
 npm run cf:deploy
 ```
 
-Konfigurationen styrs via `wrangler.toml` (ange `account_id`, projektets namn under `[pages]`, samt miljövariabler under `[vars]`).
+Konfigurationen styres via `wrangler.toml` (angiv `account_id`, projektets navn under `[pages]`, samt miljøvariabler under `[vars]`).
 
-### Miljövariabler
-Sätt följande variabler i Cloudflare Pages-projektet (Production och Preview):
+### Miljøvariabler
+Sæt følgende variabler i Cloudflare Pages-projektet (Production og Preview):
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_URL`
@@ -60,18 +60,18 @@ Sätt följande variabler i Cloudflare Pages-projektet (Production och Preview):
 - `OPENAI_API_KEY`
 - `XAI_API_KEY`
 
-### Cronersättning
-Tidigare Vercel-crons (`vercel.json`) ersätts av en Cloudflare Worker (`functions/cron-worker.ts`) som schemaläggs via `wrangler.toml` `triggers.crons`. Den pingar:
+### Cron-erstatning
+Tidligere Vercel-crons (`vercel.json`) erstattes af en Cloudflare Worker (`functions/cron-worker.ts`) som scheduleres via `wrangler.toml` `triggers.crons`. Den pinger:
 - `/api/reminders/send`
 - `/api/update-prices`
 
-Sätt `CRON_TARGET_BASE_URL` i Pages miljövariabler till din publik URL (t.ex. `https://www.elchef.se`).
+Sæt `CRON_TARGET_BASE_URL` i Pages miljøvariabler til din offentlige URL (f.eks. `https://www.elchef.dk`).
 
 ## Preview-deploy
 
-Denna notering är tillagd för att trigga en Vercel preview-deploy för branchen `preview-form`.
+Denne notering er tilføjet for at trigge en Vercel preview-deploy for branchen `preview-form`.
 
-## Teknikstack
+## Teknologi stack
 - [Next.js](https://nextjs.org/) (App Router)
 - [React](https://react.dev/)
 - [styled-components](https://styled-components.com/)
@@ -79,10 +79,10 @@ Denna notering är tillagd för att trigga en Vercel preview-deploy för branche
 - Hosting: Cloudflare Pages
 
 ## Kontakt
-- E-post: info@elchef.se
-- Telefon: 073-686 23 60
-- [elchef.se](https://elchef.se)
+- E-mail: info@elchef.dk
+- Telefon: +45 XX XX XX XX
+- [elchef.dk](https://elchef.dk)
 
 ---
 
-*Denna README är en grund – fyll gärna på med mer info om API, Grok AI, bidrag, licens m.m. vid behov.*
+*Denne README er en base – fyld gerne mere info om API, Grok AI, bidrag, licens m.m. ved behov.*
