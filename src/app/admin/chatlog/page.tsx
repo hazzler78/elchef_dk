@@ -542,7 +542,7 @@ export default function AdminChatlog() {
                   <td style={{ padding: 8, border: "1px solid #e5e7eb" }}>{log.messages?.length || 0}</td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb", fontSize: 12 }}>{log.user_agent}</td>
                   <td style={{ padding: 8, border: "1px solid #e5e7eb" }}>
-                    <div style={{ display: "flex", gap: 4 }}>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                       <button onClick={() => setExpanded(expanded === log.session_id ? null : log.session_id)} style={{ fontSize: 14 }}>
                         {expanded === log.session_id ? "Dölj" : "Visa"}
                       </button>
@@ -561,6 +561,14 @@ export default function AdminChatlog() {
                       >
                         🗑
                       </button>
+                      <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                        <span style={{ fontSize: 12, color: "#64748b" }}>Betyg:</span>
+                        {[1,2,3,4,5].map((r) => (
+                          <button key={r} onClick={() => rateLog(log.id, r)} disabled={saving} style={{ padding: "2px 6px", border: "1px solid #e5e7eb", borderRadius: 4 }}>
+                            {r}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </td>
                 </tr>
