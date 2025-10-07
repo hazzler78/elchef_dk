@@ -1,145 +1,147 @@
-# Kontraktsklick-tracking Setup
+# Kontrakts-klik tracking Setup
 
-## Översikt
-Detta system spårar klick på "Rörligt avtal" och "Fastpris" knapparna från användare som har fått AI-analys på `/jamfor-elpriser` sidan. Detta ger insikt i hur många som går vidare från AI-analys till att faktiskt välja ett avtal.
+## Oversigt
+Dette system sporer klik på "Variabel aftale" og "Fast
+
+pris" knapperne fra brugere, der har fået AI-analyse på `/sammenlign-elpriser` siden. Dette giver indsigt i hvor mange der går videre fra AI-analyse til faktisk at vælge en aftale.
 
 ## Komponenter
 
 ### 1. API Endpoint
 **Fil:** `src/app/api/events/contract-click/route.ts`
 
-Spårar kontraktsklick och lagrar följande data:
-- `contract_type`: 'rorligt' eller 'fastpris'
-- `log_id`: Referens till AI-analysen (kan vara null)
-- `savings_amount`: Besparingsbelopp från AI-analysen
-- `session_id`: Användarens sessions-ID
-- `source`: Varifrån klicket kom (default: 'jamfor-elpriser')
-- UTM-parametrar för kampanjspårning
-- User agent och referer
+Sporer kontraktsklik og gemmer følgende data:
+- `contract_type`: 'variabel' eller 'fastpris'
+- `log_id`: Reference til AI-analysen (kan være null)
+- `savings_amount`: Besparelsesbeløb fra AI-analysen
+- `session_id`: Brugerens sessions-ID
+- `source`: Hvorfra klikket kom (default: 'sammenlign-elpriser')
+- UTM-parametre til kampagnesporing
+- User agent og referer
 
-### 2. Databas Schema
+### 2. Database Schema
 **Fil:** `supabase-contract-clicks.sql`
 
-Skapar tabellen `contract_clicks` med:
-- Foreign key till `invoice_ocr` för att koppla till AI-analyser
-- Index för bättre prestanda
+Opretter tabellen `contract_clicks` med:
+- Foreign key til `invoice_ocr` for at koble til AI-analyser
+- Index for bedre performance
 - RLS (Row Level Security) policies
-- Cleanup-funktion för gamla poster
+- Cleanup-funktion for gamle poster
 
-### 3. Tracking på /jamfor-elpriser
-**Fil:** `src/app/jamfor-elpriser/page.tsx`
+### 3. Tracking på /sammenlign-elpriser
+**Fil:** `src/app/sammenlign-elpriser/page.tsx`
 
-Uppdaterade knappar som:
-- Anropar `trackContractClick()` innan navigering
-- Extraherar besparingsbelopp från AI-analysen
-- Skickar all relevant kontextdata
+Opdaterede knapper som:
+- Kalder `trackContractClick()` før navigering
+- Udtrækker besparelsesbeløb fra AI-analysen
+- Sender al relevant kontekstdata
 
 ### 4. Admin Dashboard
 **Fil:** `src/app/admin/contract-clicks/page.tsx`
 
-Visar statistik över:
-- Totalt antal klick på kontraktsknappar
-- Fördelning mellan rörligt/fastpris
-- Antal klick från användare med AI-analys
-- Genomsnittlig besparing
-- Konverteringsgrad (AI-analys → kontraktsklick)
-- Kvalitet på klick (andelen med AI-analys)
-- Detaljerad lista över senaste klick
+Viser statistik over:
+- Totalt antal klik på kontraktsknapper
+- Fordeling mellem variabel/fastpris
+- Antal klik fra brugere med AI-analyse
+- Gennemsnitlig besparelse
+- Konverteringsrate (AI-analyse → kontraktsklik)
+- Kvalitet af klik (andelen med AI-analyse)
+- Detaljeret liste over seneste klik
 
 ## Installation
 
-### 1. Kör SQL-schemat
+### 1. Kør SQL-skemaet
 ```sql
--- Kör i Supabase SQL Editor
+-- Kør i Supabase SQL Editor
 \i supabase-contract-clicks.sql
 ```
 
-### 2. Verifiera miljövariabler
-Kontrollera att följande finns i `.env.local`:
+### 2. Verificer miljøvariabler
+Kontroller at følgende findes i `.env.local`:
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
-### 3. Testa tracking
-1. Gå till `/jamfor-elpriser`
-2. Ladda upp en faktura och få AI-analys
-3. Klicka på "Rörligt avtal" eller "Fastpris"
-4. Kontrollera i admin-panelen `/admin/contract-clicks`
+### 3. Test tracking
+1. Gå til `/sammenlign-elpriser`
+2. Upload en faktura og få AI-analyse
+3. Klik på "Variabel aftale" eller "Fastpris"
+4. Kontroller i admin-panelet `/admin/contract-clicks`
 
-## Användning
+## Brug
 
 ### Admin Dashboard
-Gå till `/admin/contract-clicks` för att se:
-- **Totalt klick**: Alla kontraktsklick
-- **Rörligt avtal**: Antal klick på rörligt avtal
-- **Fastpris**: Antal klick på fastpris
-- **Med AI-analys**: Klick från användare som fått AI-analys
-- **Genomsnittlig besparing**: Medelvärdet av besparingsbelopp
-- **Konverteringsgrad**: Procent som går från AI-analys till kontraktsklick
+Gå til `/admin/contract-clicks` for at se:
+- **Totalt klik**: Alle kontraktsklik
+- **Variabel aftale**: Antal klik på variabel aftale
+- **Fastpris**: Antal klik på fastpris
+- **Med AI-analyse**: Klik fra brugere der har fået AI-analyse
+- **Gennemsnitlig besparelse**: Gennemsnit af besparelsesbeløb
+- **Konverteringsrate**: Procent der går fra AI-analyse til kontraktsklik
 
 ### Filtrering
-Använd datumfilter för att se data för olika perioder:
-- Senaste 7 dagarna
-- Senaste 30 dagarna  
-- Senaste 90 dagarna
-- Alla tider
+Brug datofilter for at se data for forskellige perioder:
+- Seneste 7 dage
+- Seneste 30 dage  
+- Seneste 90 dage
+- Alle tider
 
-## Dataanalys
+## Dataanalyse
 
-### Viktiga KPI:er
-1. **Konverteringsgrad**: Hur många % av AI-användare klickar på kontraktsknappar
-2. **Fördelning**: Vilken typ av avtal som är populärast
-3. **Besparingskorrelation**: Om högre besparingar leder till fler klick
-4. **Tidsmönster**: När användare klickar (tid på dagen/veckan)
+### Vigtige KPI'er
+1. **Konverteringsrate**: Hvor mange % af AI-brugere klikker på kontraktsknapper
+2. **Fordeling**: Hvilken type aftale der er mest populær
+3. **Besparelseskorrelation**: Om højere besparelser fører til flere klik
+4. **Tidsmønster**: Når brugere klikker (tid på dagen/ugen)
 
-### Exempel på insikter
-- "Av 100 AI-analyser klickar 25% på kontraktsknappar"
-- "Rörligt avtal är 60% populärare än fastpris"
-- "Användare med >1000 kr besparing klickar 40% oftare"
+### Eksempel på indsigter
+- "Af 100 AI-analyser klikker 25% på kontraktsknapper"
+- "Variabel aftale er 60% mere populær end fastpris"
+- "Brugere med >1000 kr besparelse klikker 40% oftere"
 
-## Tekniska Detaljer
+## Tekniske Detaljer
 
-### Tracking-metod
-- Använder `navigator.sendBeacon()` för bättre tillförlitlighet
-- Fallback till `fetch()` om sendBeacon inte stöds
-- Asynkron tracking som inte blockerar navigering
+### Tracking-metode
+- Bruger `navigator.sendBeacon()` for bedre pålidelighed
+- Fallback til `fetch()` hvis sendBeacon ikke understøttes
+- Asynkron tracking som ikke blokerer navigering
 
-### Datasäkerhet
-- RLS policies tillåter alla att läsa/skriva för tracking
-- Känslig data (session_id) lagras men visas bara delvis i admin
-- Automatisk cleanup av gamla poster (1 år)
+### Datasikkerhed
+- RLS policies tillader alle at læse/skrive til tracking
+- Følsom data (session_id) gemmes men vises kun delvist i admin
+- Automatisk cleanup af gamle poster (1 år)
 
-### Prestanda
-- Index på viktiga kolumner för snabba queries
-- Begränsning till 100 senaste poster i admin-listan
-- Effektiva databas-queries med filtrering
+### Performance
+- Index på vigtige kolonner for hurtige queries
+- Begrænsning til 100 seneste poster i admin-listen
+- Effektive database-queries med filtrering
 
-## Felsökning
+## Fejlsøgning
 
-### Vanliga problem
-1. **Inga klick spåras**: Kontrollera att API-endpointen fungerar
-2. **Fel i admin**: Verifiera Supabase-anslutning och RLS policies
-3. **Saknade AI-kopplingar**: Kontrollera att `log_id` sparas korrekt
+### Almindelige problemer
+1. **Ingen klik spores**: Kontroller at API-endpointet fungerer
+2. **Fejl i admin**: Verificer Supabase-forbindelse og RLS policies
+3. **Manglende AI-koblinger**: Kontroller at `log_id` gemmes korrekt
 
 ### Debugging
 ```javascript
-// Kontrollera i browser console
+// Kontroller i browser console
 console.log('Session ID:', localStorage.getItem('invoiceSessionId'));
 console.log('Log ID:', logId);
 ```
 
-## Framtida Förbättringar
+## Fremtidige Forbedringer
 
-### Möjliga tillägg
-1. **A/B-testning**: Olika knapptexter och färger
-2. **Heatmaps**: Var användare klickar på sidan
-3. **Funnel-analys**: Steg-för-steg konvertering
-4. **E-postuppföljning**: Kontakta användare som inte klickade
+### Mulige tilføjelser
+1. **A/B-testning**: Forskellige knaptekster og farver
+2. **Heatmaps**: Hvor brugere klikker på siden
+3. **Funnel-analyse**: Trin-for-trin konvertering
+4. **E-mailopfølgning**: Kontakt brugere der ikke klikkede
 5. **Realtids-dashboard**: Live statistik med WebSocket
 
 ### Integrationer
-- Google Analytics för djupare analys
-- Email-marketing för uppföljning
-- CRM-system för lead-hantering
+- Google Analytics for dybere analyse
+- Email-marketing for opfølgning
+- CRM-system for lead-håndtering
