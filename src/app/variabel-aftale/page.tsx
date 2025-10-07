@@ -125,12 +125,12 @@ export default function RorligtAvtalPage() {
       const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
       if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
         ttq.track('ViewContent', {
-          content_id: 'rorligt-avtal',
-          content_name: 'Rörligt avtal',
+          content_id: 'variabel-aftale',
+          content_name: 'Variabel aftale',
           content_type: 'product'
         });
         if ((window as any).__ttq_capi) {
-          (window as any).__ttq_capi('ViewContent', { content_id: 'rorligt-avtal', content_name: 'Rörligt avtal', content_type: 'product' });
+          (window as any).__ttq_capi('ViewContent', { content_id: 'variabel-aftale', content_name: 'Variabel aftale', content_type: 'product' });
         }
       }
     } catch { /* no-op */ }
@@ -185,7 +185,7 @@ export default function RorligtAvtalPage() {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                    form: 'rorligt-avtal',
+                    form: 'variabel-aftale',
                     field: 'personnummer',
                     action: 'filled',
                     valueMasked: masked,
@@ -215,7 +215,7 @@ export default function RorligtAvtalPage() {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                form: 'rorligt-avtal',
+                form: 'variabel-aftale',
                 field: 'personnummer',
                 action: 'filled',
                 valueMasked: masked,
@@ -246,19 +246,19 @@ export default function RorligtAvtalPage() {
   return (
     <PageContainer>
       <Content>
-        <Title>Byt elavtal</Title>
-        <Subtitle>Fyll i formuläret nedan för att påbörja bytet.</Subtitle>
+        <Title>Skift elaftale</Title>
+        <Subtitle>Udfyld formularen nedenfor for at påbegynde skiftet.</Subtitle>
 
         {showSupplier && (
           <SupplierInfo>
             <SupplierLogo src="/cheap-logo.png" alt="Cheap Energi" />
-            <SupplierText>Du kommer att få ett rörligt elavtal från Cheap Energi</SupplierText>
-            <PromoTitle style={{ marginTop: '1rem' }}>Kampanjpris i 12 månader</PromoTitle>
+            <SupplierText>Du vil få en variabel elaftale fra Cheap Energi</SupplierText>
+            <PromoTitle style={{ marginTop: '1rem' }}>Kampagnepris i 12 måneder</PromoTitle>
             <PromoBullets>
-              <PromoBullet>0 kr i månadsavgift – 0 öre i påslag</PromoBullet>
+              <PromoBullet>0 kr i månedsgebyr – 0 øre i tillæg</PromoBullet>
             </PromoBullets>
             <PromoText>
-              Byt elavtal idag och ta del av ett riktigt förmånligt erbjudande. Du betalar endast för den el du använder – inga dolda avgifter, inga påslag. Gäller i 12 månader från startdatumet.
+              Skift elaftale i dag og få del i et rigtig fordelagtigt tilbud. Du betaler kun for den el, du bruger – ingen skjulte gebyrer, ingen tillæg. Gælder i 12 måneder fra startdatoen.
             </PromoText>
           </SupplierInfo>
         )}

@@ -64,7 +64,7 @@ const RecommendationIcon = () => (
   </svg>
 );
 
-export default function JamforElpriser() {
+export default function Fakturaanalys() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -89,20 +89,17 @@ export default function JamforElpriser() {
     } catch {}
   }, []);
 
-  // Spåra sidvisning med UTM-parametrar
+  // Spåra sidvisning med UTM-parametrar (uppdaterad path)
   useEffect(() => {
     try {
       if (typeof window === 'undefined') return;
       const sid = sessionIdRef.current || localStorage.getItem('invoiceSessionId') || '';
-      
-      // Hämta UTM-parametrar från URL
       const params = new URLSearchParams(window.location.search);
       const utmSource = params.get('utm_source') || undefined;
       const utmMedium = params.get('utm_medium') || undefined;
       const utmCampaign = params.get('utm_campaign') || undefined;
-      
       const payload = JSON.stringify({ 
-        path: '/jamfor-elpriser', 
+        path: '/faktura-analyse', 
         sessionId: sid,
         utmSource,
         utmMedium,
@@ -118,51 +115,40 @@ export default function JamforElpriser() {
     } catch {}
   }, []);
 
-  // Funktion för att spåra kontraktsklick från AI-användare
+  // Funktion för att spåra kontraktsklick från AI-användare (uppdaterad source)
   const trackContractClick = (contractType: 'rorligt' | 'fastpris') => {
     try {
-      // Extrahera besparingsbelopp från AI-analysen
       const extractSavings = (text: string): number => {
-        // Försök olika format som används i GPT-svaret
         const patterns = [
-          /spara totalt\s*(\d+(?:[,.]\d+)?)/i,  // "spara totalt 150"
-          /spara\s*(\d+(?:[,.]\d+)?)\s*kr\/år/i,  // "spara 150 kr/år"
-          /(\d+(?:[,.]\d+)?)\s*kr.*?(?:spar|bespar|minska)/i,  // ursprunglig pattern
-          /Din årliga besparing:\s*(\d+(?:[,.]\d+)?)/i,  // "Din årliga besparing: 150"
-          /Total besparing:\s*(\d+(?:[,.]\d+)?)/i  // "Total besparing: 150"
+          /spara totalt\s*(\d+(?:[,.]\d+)?)/i,
+          /spara\s*(\d+(?:[,.]\d+)?)\s*kr\/år/i,
+          /(\d+(?:[,.]\d+)?)\s*kr.*?(?:spar|bespar|minska)/i,
+          /Din årliga besparing:\s*(\d+(?:[,.]\d+)?)/i,
+          /Total besparing:\s*(\d+(?:[,.]\d+)?)/i
         ];
-        
         for (const pattern of patterns) {
           const match = text.match(pattern);
           if (match) {
             const amount = parseFloat(match[1].replace(',', '.'));
-            if (amount > 0) {
-              return amount;
-            }
+            if (amount > 0) return amount;
           }
         }
-        
         return 0;
       };
 
       const savingsAmount = gptResult ? extractSavings(gptResult) : 0;
-      
-      // Debug: Logga extraktionsresultat
-      console.log('GPT Result:', gptResult);
-      console.log('Extracted savings amount:', savingsAmount);
-      
+
       const payload = JSON.stringify({
         contractType,
         logId,
         savingsAmount,
         sessionId: sessionIdRef.current,
-        source: 'jamfor-elpriser',
-        utmSource: 'jamfor',
+        source: 'faktura-analyse',
+        utmSource: 'faktura-analyse',
         utmMedium: 'cta',
         utmCampaign: `cta-${contractType}`
       });
 
-      // Använd sendBeacon för bättre tillförlitlighet
       if (navigator.sendBeacon) {
         const blob = new Blob([payload], { type: 'application/json' });
         navigator.sendBeacon('/api/events/contract-click', blob);
@@ -204,45 +190,29 @@ export default function JamforElpriser() {
           'x-session-id': sessionIdRef.current || '',
         },
       });
-      
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
       }
-      
       const data = await res.json();
-      
       if (!data.gptAnswer) {
         throw new Error('Inget svar från AI:n');
       }
       setLogId(typeof data.logId === 'number' ? data.logId : null);
-      
-      // Kontrollera om AI:n returnerade ett felmeddelande
       if (data.gptAnswer.includes("I'm sorry") || data.gptAnswer.includes("can't assist") || 
-          data.gptAnswer.includes("Tyvärr") || data.gptAnswer.includes("kan inte") ||
-          data.gptAnswer.includes("Jag kan inte") || data.gptAnswer.includes("kan inte hjälpa")) {
+          data.gptAnswer.includes('Tyvärr') || data.gptAnswer.includes('kan inte') ||
+          data.gptAnswer.includes('Jag kan inte') || data.gptAnswer.includes('kan inte hjälpa')) {
         throw new Error('AI:n kunde inte analysera fakturan. Kontrollera att bilden är tydlig och innehåller en elräkning. Prova att ladda upp bilden igen - det fungerar ofta på andra försöket!');
       }
-      
-      // Rensa bort matematiska formler från svaret
       let cleanedResult = data.gptAnswer;
-      
-      // Ta bort formler som ( \frac{...}{...} = ... )
       cleanedResult = cleanedResult.replace(/\( \\frac\{[^}]+\}\{[^}]+\} = [^)]+ \)/g, '');
-      
-      // Ta bort formler som ( ... + ... = ... )
       cleanedResult = cleanedResult.replace(/\( [^)]*\+[^)]* = [^)]* \)/g, '');
-      
-      // Ta bort formler som ( ... × ... = ... )
       cleanedResult = cleanedResult.replace(/\( [^)]*×[^)]* = [^)]* \)/g, '');
-      
-      // Ta bort tomma rader som kan ha skapats
       cleanedResult = cleanedResult.replace(/\n\s*\n\s*\n/g, '\n\n');
-      
       setGptResult(cleanedResult);
     } catch (error) {
       console.error('Error analyzing invoice:', error);
-      setError(`Kunde inte analysera fakturan: ${error instanceof Error ? error.message : 'Okänt fel'}. Prova att ladda upp bilden igen - det fungerar ofta på andra försöket!`);
+      setError(`Kunne ikke analysere fakturaen: ${error instanceof Error ? error.message : 'Ukendt fejl'}. Prøv at uploade billedet igen - det fungerer ofte på andet forsøg!`);
     } finally {
       setLoading(false);
     }
@@ -256,7 +226,7 @@ export default function JamforElpriser() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ logId, isCorrect, correctionNotes: notes || '' })
       });
-      alert(isCorrect ? 'Tack! Vi har registrerat att analysen stämde.' : 'Tack! Din feedback är registrerad.');
+      alert(isCorrect ? 'Tak! Vi har registreret at analysen stemmer.' : 'Tak! Din feedback er registreret.');
     } catch {}
   }
 
@@ -269,77 +239,47 @@ export default function JamforElpriser() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
-  // Funktion för att extrahera endast slutsatsen och nedåt
   function getSummarySection(text: string) {
     if (!text) return '';
-    
     const lines = text.split('\n');
-    const startIndex = lines.findIndex(line => line.includes('Slutsats'));
-    
-    if (startIndex === -1) {
-      // Om ingen slutsats hittas, visa allt
-      return text;
-    }
-    
+    const startIndex = lines.findIndex(line => line.includes('Konklusion') || line.includes('Slutsats'));
+    if (startIndex === -1) return text;
     return lines.slice(startIndex).join('\n');
   }
 
-  // Funktion för att extrahera allt före slutsatsen
   function getDetailedSection(text: string) {
     if (!text) return '';
-    
     const lines = text.split('\n');
-    const startIndex = lines.findIndex(line => line.includes('Slutsats'));
-    
-    if (startIndex === -1) {
-      // Om ingen slutsats hittas, returnera tomt
-      return '';
-    }
-    
+    const startIndex = lines.findIndex(line => line.includes('Konklusion') || line.includes('Slutsats'));
+    if (startIndex === -1) return '';
     return lines.slice(0, startIndex).join('\n');
   }
 
-  // Funktion för att kontrollera om texten innehåller en slutsats
   function hasSummarySection(text: string) {
     if (!text) return false;
-    return text.includes('Slutsats');
+    return text.includes('Konklusion') || text.includes('Slutsats');
   }
 
-  // Funktion för att validera beräkningar
   function validateCalculations(text: string) {
-    if (!text) return { isValid: true, warnings: [] };
-    
-    const warnings = [];
-    
-    // Hitta siffror och kontrollera rimlighet
+    if (!text) return { isValid: true, warnings: [] } as { isValid: boolean; warnings: string[] };
+    const warnings: string[] = [];
     const numbers = text.match(/\d+[,.]?\d*/g) || [];
     const largeNumbers = numbers.filter(n => parseFloat(n.replace(',', '.')) > 10000);
-    
-    if (largeNumbers.length > 0) {
-      warnings.push('Stora siffror hittades - kontrollera beräkningarna');
-    }
-    
-    // Kontrollera om besparingar verkar orimligt höga
+    if (largeNumbers.length > 0) warnings.push('Stora siffror hittades - kontrollera beräkningarna');
     const savingMatches = text.match(/sparat.*?(\d+[,.]?\d*)/gi);
     if (savingMatches) {
       savingMatches.forEach(match => {
         const amount = parseFloat(match.match(/\d+[,.]?\d*/)?.[0]?.replace(',', '.') || '0');
-        if (amount > 1000) {
-          warnings.push('Hög besparing hittad - kontrollera beräkningen');
-        }
+        if (amount > 1000) warnings.push('Hög besparing hittad - kontrollera beräkningen');
       });
     }
-    
-    return {
-      isValid: warnings.length === 0,
-      warnings
-    };
+    return { isValid: warnings.length === 0, warnings };
   }
 
   return (
     <>
       <main className="container" style={{ maxWidth: 800, margin: '0 auto', padding: 'var(--section-spacing) 0' }}>
-          <div style={{ 
+        <div style={{ 
           background: 'var(--glass-bg)', 
           backdropFilter: 'var(--glass-blur)', 
           WebkitBackdropFilter: 'var(--glass-blur)',
@@ -357,7 +297,7 @@ export default function JamforElpriser() {
             textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             textAlign: 'center'
           }}>
-            Jämför din elräkning med AI
+            Fakturaanalyse med AI
           </h1>
           <p style={{ 
             fontSize: '1.25rem', 
@@ -366,9 +306,8 @@ export default function JamforElpriser() {
             textAlign: 'center',
             textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
           }}>
-            Ladda upp en bild på din elräkning och få en smart, tydlig analys direkt!
+            Upload et billede af din elregning og få en smart, tydelig analyse med det samme!
           </p>
-          
           {!loading && !gptResult && (
             <div style={{ 
               display: 'flex', 
@@ -380,57 +319,57 @@ export default function JamforElpriser() {
                 display: 'flex', 
                 flexDirection: 'column',
                 gap: '1rem',
-              alignItems: 'stretch'
-            }}>
-              <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
+                alignItems: 'stretch'
+              }}>
+                <label htmlFor="file-upload" style={{ display: 'flex', justifyContent: 'center' }}>
                   <GlassButton as="span" variant="primary" size="lg" background="linear-gradient(135deg, var(--primary), var(--secondary))" disableScrollEffect disableHoverEffect>
-                  Välj fakturabild
-                </GlassButton>
-              </label>
-              <input
-                id="file-upload"
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-              />
-              <div style={{ 
+                    Vælg fakturabillede
+                  </GlassButton>
+                </label>
+                <input
+                  id="file-upload"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                />
+                <div style={{ 
                   color: 'rgba(255, 255, 255, 0.8)', 
                   fontSize: '1rem', 
-                textAlign: 'center',
+                  textAlign: 'center',
                   padding: '0.5rem 0',
                   background: 'rgba(255, 255, 255, 0.1)',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid rgba(255, 255, 255, 0.2)'
-              }}>
-                {file ? file.name : 'Ingen fil vald'}
+                }}>
+                  {file ? file.name : 'Ingen fil valgt'}
+                </div>
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', color: 'rgba(255, 255, 255, 0.9)' }}>
+                  <input
+                    type="checkbox"
+                    checked={consentToStore}
+                    onChange={(e) => setConsentToStore(e.target.checked)}
+                    style={{ marginTop: 2 }}
+                  />
+                  <span style={{ lineHeight: 1.4 }}>
+                    Jeg accepterer, at mit fakturabillede gemmes sikkert for at forbedre AI-analysen. Jeg kan anmode om sletning når som helst. Læs mere i vores <a href={withDefaultCtaUtm('/privatlivspolitik', 'faktura-analyse', 'privatlivspolitik')} target="_blank" rel="noreferrer" style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 600 }}>privatlivspolitik</a>.
+                  </span>
+                </label>
               </div>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', color: 'rgba(255, 255, 255, 0.9)' }}>
-                <input
-                  type="checkbox"
-                  checked={consentToStore}
-                  onChange={(e) => setConsentToStore(e.target.checked)}
-                  style={{ marginTop: 2 }}
-                />
-                <span style={{ lineHeight: 1.4 }}>
-                  Jag godkänner att min fakturabild lagras säkert för att förbättra AI‑analysen. Jag kan begära radering när som helst. Läs mer i vår <a href={withDefaultCtaUtm('/integritetspolicy', 'jamfor', 'integritetspolicy')} target="_blank" rel="noreferrer" style={{ color: '#ffffff', textDecoration: 'underline', fontWeight: 600 }}>integritetspolicy</a>.
-                </span>
-              </label>
-            </div>
-            <GlassButton
-              onClick={handleGptOcr}
-              disabled={!file || loading}
-              variant="primary"
+              <GlassButton
+                onClick={handleGptOcr}
+                disabled={!file || loading}
+                variant="primary"
                 size="lg"
                 background="linear-gradient(135deg, var(--primary), var(--secondary))"
-              disableScrollEffect
-              disableHoverEffect
-            >
-              Analysera faktura
-            </GlassButton>
-          </div>
-        )}
+                disableScrollEffect
+                disableHoverEffect
+              >
+                Analyser faktura
+              </GlassButton>
+            </div>
+          )}
         </div>
 
         {error && (
@@ -449,8 +388,8 @@ export default function JamforElpriser() {
           </div>
         )}
 
-                 {loading && (
-           <div style={{ 
+        {loading && (
+          <div style={{ 
             marginTop: '2rem', 
             background: 'var(--glass-bg)', 
             backdropFilter: 'var(--glass-blur)',
@@ -459,17 +398,17 @@ export default function JamforElpriser() {
             borderRadius: 'var(--radius-lg)', 
             padding: '3rem 2rem', 
             boxShadow: 'var(--glass-shadow-medium)',
-             textAlign: 'center'
-           }}>
-             <div style={{ 
-               width: 60, 
-               height: 60, 
+            textAlign: 'center'
+          }}>
+            <div style={{ 
+              width: 60, 
+              height: 60, 
               border: '4px solid rgba(255, 255, 255, 0.3)', 
               borderTop: '4px solid var(--primary)', 
-               borderRadius: '50%', 
-               animation: 'spin 1s linear infinite',
+              borderRadius: '50%', 
+              animation: 'spin 1s linear infinite',
               margin: '0 auto 1.5rem auto'
-             }}></div>
+            }}></div>
             <h3 style={{ 
               fontSize: '1.5rem', 
               fontWeight: 600, 
@@ -477,18 +416,18 @@ export default function JamforElpriser() {
               color: 'white',
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
-               Analyserar din faktura...
-             </h3>
+              Analyserer din faktura...
+            </h3>
             <p style={{ 
               fontSize: '1.1rem', 
               color: 'rgba(255, 255, 255, 0.8)', 
               margin: 0,
               textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
             }}>
-               AI:n läser av alla kostnader och identifierar dolda avgifter
-             </p>
-           </div>
-         )}
+              AI'en læser alle omkostninger og identificerer skjulte gebyrer
+            </p>
+          </div>
+        )}
 
         {gptResult && (
           <div className="analysis-fade-in" style={{ 
@@ -501,23 +440,22 @@ export default function JamforElpriser() {
             padding: '2rem', 
             boxShadow: 'var(--glass-shadow-medium)' 
           }}>
-                          <h3 style={{ 
-                fontSize: '1.75rem', 
-                fontWeight: 600, 
-                marginBottom: '1.5rem', 
-                color: 'white',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                textAlign: 'center',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.75rem'
-              }}>
-                <AnalysisIcon />
-                Elbespararens analys
-              </h3>
-            
-            {/* Visa varningar om beräkningar verkar felaktiga */}
+            <h3 style={{ 
+              fontSize: '1.75rem', 
+              fontWeight: 600, 
+              marginBottom: '1.5rem', 
+              color: 'white',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              textAlign: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem'
+            }}>
+              <AnalysisIcon />
+              Elsparerens analyse
+            </h3>
+
             {(() => {
               const validation = validateCalculations(gptResult);
               if (!validation.isValid) {
@@ -542,7 +480,7 @@ export default function JamforElpriser() {
                       gap: '0.5rem',
                       textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                     }}>
-                      Varning - Kontrollera beräkningarna
+                      Advarsel - Kontroller beregningerne
                     </h4>
                     <ul style={{ 
                       color: 'rgba(255, 255, 255, 0.9)', 
@@ -561,8 +499,7 @@ export default function JamforElpriser() {
               }
               return null;
             })()}
-            
-            {/* Visa endast sammanfattningen först */}
+
             <div style={{
               background: 'rgba(255, 255, 255, 0.05)',
               borderRadius: 'var(--radius-md)',
@@ -574,8 +511,7 @@ export default function JamforElpriser() {
                 components={{
                   h3: (props) => {
                     const content = props.children?.toString() || '';
-                    let Icon = null;
-                    
+                    let Icon = null as null | typeof AnalysisIcon;
                     if (content.includes('Analys av din elräkning')) {
                       Icon = AnalysisIcon;
                     } else if (content.includes('Totala kostnader')) {
@@ -589,7 +525,6 @@ export default function JamforElpriser() {
                     } else if (content.includes('Rekommendation')) {
                       Icon = RecommendationIcon;
                     }
-                    
                     return (
                       <h3 style={{
                         color: 'black', 
@@ -610,14 +545,12 @@ export default function JamforElpriser() {
                   },
                   h4: (props) => {
                     const content = props.children?.toString() || '';
-                    let Icon = null;
-                    
+                    let Icon = null as null | typeof AnalysisIcon;
                     if (content.includes('Elförbrukning och kostnader')) {
                       Icon = AnalysisIcon;
                     } else if (content.includes('Viktig information')) {
                       Icon = RecommendationIcon;
                     }
-                    
                     return (
                       <h4 style={{
                         color: 'black', 
@@ -680,7 +613,6 @@ export default function JamforElpriser() {
                       border: '1px solid rgba(0, 201, 107, 0.2)'
                     }} {...props} />
                   ),
-                  // Custom styling för viktiga siffror och slutsatser
                   div: (props) => {
                     const content = props.children?.toString() || '';
                     if (content.includes('Detta är summan du har i el:') || 
@@ -703,7 +635,6 @@ export default function JamforElpriser() {
               </ReactMarkdown>
             </div>
 
-            {/* Visa knapp för att expandera endast om det finns en slutsats */}
             {hasSummarySection(gptResult) && (
               <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
                 <GlassButton
@@ -714,12 +645,11 @@ export default function JamforElpriser() {
                   disableHoverEffect
                   onClick={() => setShowFullAnalysis(!showFullAnalysis)}
                 >
-                  {showFullAnalysis ? 'Dölj detaljerad uträkning' : 'Visa hela uträkningen'}
+                  {showFullAnalysis ? 'Skjul detaljeret udregning' : 'Vis hele udregningen'}
                 </GlassButton>
               </div>
             )}
 
-            {/* Visa detaljerad uträkning om expanderad */}
             {showFullAnalysis && hasSummarySection(gptResult) && (
               <div className="analysis-slide-in" style={{ 
                 marginTop: '1.5rem', 
@@ -741,14 +671,13 @@ export default function JamforElpriser() {
                   gap: '0.5rem'
                 }}>
                   <AnalysisIcon />
-                  Detaljerad uträkning
+                  Detaljeret udregning
                 </h4>
-            <ReactMarkdown
-              components={{
+                <ReactMarkdown
+                  components={{
                     h3: (props) => {
                       const content = props.children?.toString() || '';
-                      let Icon = null;
-                      
+                      let Icon = null as null | typeof AnalysisIcon;
                       if (content.includes('Analys av din elräkning')) {
                         Icon = AnalysisIcon;
                       } else if (content.includes('Totala kostnader')) {
@@ -762,7 +691,6 @@ export default function JamforElpriser() {
                       } else if (content.includes('Rekommendation')) {
                         Icon = RecommendationIcon;
                       }
-                      
                       return (
                         <h3 style={{
                           color: 'black', 
@@ -782,14 +710,12 @@ export default function JamforElpriser() {
                     },
                     h4: (props) => {
                       const content = props.children?.toString() || '';
-                      let Icon = null;
-                      
+                      let Icon = null as null | typeof AnalysisIcon;
                       if (content.includes('Elförbrukning och kostnader')) {
                         Icon = AnalysisIcon;
                       } else if (content.includes('Viktig information')) {
                         Icon = RecommendationIcon;
                       }
-                      
                       return (
                         <h4 style={{
                           color: 'black', 
@@ -835,11 +761,10 @@ export default function JamforElpriser() {
                   }}
                 >
                   {getDetailedSection(gptResult)}
-            </ReactMarkdown>
+                </ReactMarkdown>
               </div>
             )}
-            
-            {/* Highlighted summary section */}
+
             <div className="analysis-slide-in" style={{ 
               marginTop: '2rem', 
               background: 'rgba(245, 158, 11, 0.1)', 
@@ -857,11 +782,11 @@ export default function JamforElpriser() {
                 fontWeight: 600, 
                 marginBottom: '0.75rem',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'center', 
                 gap: '0.5rem',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
-                Viktig information
+                Vigtig information
               </h4>
               <p style={{ 
                 color: 'rgba(255, 255, 255, 0.9)', 
@@ -870,7 +795,7 @@ export default function JamforElpriser() {
                 lineHeight: 1.5,
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
               }}>
-                AI:n visar ett estimat baserat på din faktura. För mer exakt analys och personlig hjälp, kontakta oss så hjälper vi dig hitta det bästa elavtalet för din situation.
+                AI'en viser et estimat baseret på din faktura. For mere præcis analyse og personlig hjælp, kontakt os, så hjælper vi dig med at finde den bedste elaftale til din situation.
               </p>
               {logId && (
                 <label style={{ 
@@ -887,13 +812,12 @@ export default function JamforElpriser() {
                       const checked = e.target.checked;
                       setAnalysisConfirmed(checked);
                       if (checked) {
-                        // Skicka positiv feedback endast när man markerar rutan
                         sendFeedback(true);
                       }
                     }}
                     style={{ width: 18, height: 18 }}
                   />
-                  <span style={{ userSelect: 'none' }}>Analysen stämmer</span>
+                  <span style={{ userSelect: 'none' }}>Analysen stemmer</span>
                 </label>
               )}
             </div>
@@ -913,7 +837,7 @@ export default function JamforElpriser() {
                 marginBottom: '0.5rem',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
-                Just nu rekommenderar vi ett av dessa elavtal, beroende på om du vill ha rörligt avtal eller fastprisavtal.
+                Lige nu anbefaler vi en af disse elaftaler, afhængigt af om du vil have variabel aftale eller fastprisaftale.
               </h4>
               <div style={{ 
                 display: 'flex', 
@@ -930,11 +854,11 @@ export default function JamforElpriser() {
                     disableHoverEffect={true}
                     onClick={() => {
                       trackContractClick('rorligt');
-                      window.location.href = withDefaultCtaUtm('/rorligt-avtal', 'jamfor', 'cta-rorligt');
+                      window.location.href = withDefaultCtaUtm('/variabel-aftale', 'faktura-analyse', 'cta-rorligt');
                     }}
-                    aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                    aria-label="Variabel aftale - 0 kr i gebyrer første år – uden bindingsperiode"
                   >
-                    Rörligt avtal
+                    Variabel aftale
                   </GlassButton>
                   <div style={{ 
                     fontSize: '0.9rem', 
@@ -947,7 +871,7 @@ export default function JamforElpriser() {
                     backdropFilter: 'blur(8px)',
                     boxShadow: '0 4px 16px rgba(0,0,0,0.08)'
                   }}>
-                    0 kr i avgifter första året – utan bindningstid
+                    0 kr i gebyrer første år – uden bindingsperiode
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
@@ -959,7 +883,7 @@ export default function JamforElpriser() {
                     disableHoverEffect={true}
                     onClick={() => {
                       trackContractClick('fastpris');
-                      window.location.href = withDefaultCtaUtm('/fastpris-avtal', 'jamfor', 'cta-fastpris');
+                      window.location.href = withDefaultCtaUtm('/fastpris-aftale', 'faktura-analyse', 'cta-fastpris');
                     }}
                     aria-label="Fastpris - Fastpris med prisgaranti"
                   >
@@ -988,21 +912,18 @@ export default function JamforElpriser() {
                 disableHoverEffect 
                 onClick={handleUploadNew}
               >
-                Ladda upp ny faktura
+                Upload ny faktura
               </GlassButton>
             </div>
 
-            {/* Share results section */}
             <ShareResults 
               analysisResult={gptResult}
               logId={logId}
               onShare={(platform) => {
-                // Spåra delning för analytics
                 console.log(`Shared on ${platform}`);
               }}
             />
 
-            {/* Contact form section */}
             <div className="analysis-slide-in" style={{ 
               marginTop: '3rem'
             }}>
@@ -1013,4 +934,6 @@ export default function JamforElpriser() {
       </main>
     </>
   );
-} 
+}
+
+

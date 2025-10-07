@@ -102,12 +102,12 @@ export default function FastprisAvtalPage() {
       const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
       if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
         ttq.track('ViewContent', {
-          content_id: 'fastpris-avtal',
-          content_name: 'Fastprisavtal',
+          content_id: 'fastpris-aftale',
+          content_name: 'Fastprisaftale',
           content_type: 'product'
         });
         if ((window as any).__ttq_capi) {
-          (window as any).__ttq_capi('ViewContent', { content_id: 'fastpris-avtal', content_name: 'Fastprisavtal', content_type: 'product' });
+          (window as any).__ttq_capi('ViewContent', { content_id: 'fastpris-aftale', content_name: 'Fastprisaftale', content_type: 'product' });
         }
       }
     } catch { /* no-op */ }
@@ -158,7 +158,7 @@ export default function FastprisAvtalPage() {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                    form: 'fastpris-avtal',
+                    form: 'fastpris-aftale',
                     field: 'personnummer',
                     action: 'filled',
                     valueMasked: masked,
@@ -187,7 +187,7 @@ export default function FastprisAvtalPage() {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                form: 'fastpris-avtal',
+                form: 'fastpris-aftale',
                 field: 'personnummer',
                 action: 'filled',
                 valueMasked: masked,
@@ -215,12 +215,12 @@ export default function FastprisAvtalPage() {
   return (
     <PageContainer>
       <Content>
-        <Title>Fastprisavtal</Title>
-        <Subtitle>Se dina personliga priser och påbörja bytet till fastpris</Subtitle>
+        <Title>Fastprisaftale</Title>
+        <Subtitle>Se dine personlige priser og påbegynd skiftet til fastpris</Subtitle>
         
         <SupplierInfo>
           <SupplierLogo src="/svealand-logo.png" alt="Svealands Elbolag" />
-          <SupplierText>Se dina personliga priser från Svealands Elbolag</SupplierText>
+          <SupplierText>Se dine personlige priser fra Svealands Elbolag</SupplierText>
         </SupplierInfo>
 
         <FormContainer>

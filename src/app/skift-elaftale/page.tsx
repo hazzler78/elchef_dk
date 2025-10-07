@@ -208,55 +208,55 @@ const NextStepsList = styled.ol`
 
 export default function BytElavtal() {
   const handleRorligtClick = () => {
-    window.location.href = '/rorligt-avtal';
+    window.location.href = '/variabel-aftale';
   };
 
   const handleFastprisClick = () => {
-    window.location.href = '/fastpris-avtal';
+    window.location.href = '/fastpris-aftale';
   };
 
   return (
     <PageContainer>
       <Content>
         <Header>
-          <Title>Välj ditt nya elavtal</Title>
-          <Subtitle>Jämför rörligt och fastpris - välj det som passar dig bäst</Subtitle>
+          <Title>Vælg din nye elaftale</Title>
+          <Subtitle>Sammenlign variabel og fastpris - vælg det der passer dig bedst</Subtitle>
         </Header>
 
         <InfoSection>
-          <InfoTitle>Vad händer härnäst?</InfoTitle>
+          <InfoTitle>Hvad sker nu?</InfoTitle>
           <InfoText>
-            När du klickar på ett av alternativen nedan kommer du till ett enkelt formulär där du fyller i dina uppgifter. 
-            Vi hjälper dig sedan att byta avtal till det bästa priset på marknaden - helt kostnadsfritt för dig.
+            Når du klikker på et af alternativerne nedenfor, kommer du til en enkel formular, hvor du udfylder dine oplysninger. 
+            Vi hjælper dig derefter med at skifte aftale til den bedste pris på markedet - helt gratis for dig.
           </InfoText>
         </InfoSection>
 
         <ComparisonGrid>
           <ContractCard>
-            <ContractTitle>Rörligt avtal</ContractTitle>
+            <ContractTitle>Variabel aftale</ContractTitle>
             <ContractDescription>
-              Priset följer marknadspriset och kan variera från månad till månad. 
-              Perfekt om du vill ha flexibilitet och tror att elpriserna kommer att sjunka.
+              Prisen følger markedsprisen og kan variere fra måned til måned. 
+              Perfekt hvis du vil have fleksibilitet og tror, at elpriserne vil falde.
             </ContractDescription>
             <ContractFeatures>
-              <FeatureItem>0 kr i avgifter första året</FeatureItem>
-              <FeatureItem>Ingen bindningstid</FeatureItem>
-              <FeatureItem>Följer marknadspriset</FeatureItem>
-              <FeatureItem>Kan spara pengar vid låga priser</FeatureItem>
+              <FeatureItem>0 kr i gebyrer første år</FeatureItem>
+              <FeatureItem>Ingen bindingsperiode</FeatureItem>
+              <FeatureItem>Følger markedsprisen</FeatureItem>
+              <FeatureItem>Kan spare penge ved lave priser</FeatureItem>
             </ContractFeatures>
           </ContractCard>
 
           <ContractCard>
-            <ContractTitle>Fastpris avtal</ContractTitle>
+            <ContractTitle>Fastpris aftale</ContractTitle>
             <ContractDescription>
-              Du betalar samma pris hela avtalsperioden, oavsett vad som händer på elmarknaden. 
-              Perfekt om du vill ha förutsägbarhet och tror att elpriserna kommer att stiga.
+              Du betaler samme pris gennem hele aftaleperioden, uanset hvad der sker på elmarkedet. 
+              Perfekt hvis du vil have forudsigelighed og tror, at elpriserne vil stige.
             </ContractDescription>
             <ContractFeatures>
-              <FeatureItem>Fast pris i hela perioden</FeatureItem>
-              <FeatureItem>Förutsägbar kostnad</FeatureItem>
-              <FeatureItem>Skydd mot prisstegringar</FeatureItem>
-              <FeatureItem>Personliga priser baserat på din förbrukning</FeatureItem>
+              <FeatureItem>Fast pris i hele perioden</FeatureItem>
+              <FeatureItem>Forudsigelig omkostning</FeatureItem>
+              <FeatureItem>Beskyttelse mod prisstigninger</FeatureItem>
+              <FeatureItem>Personlige priser baseret på dit forbrug</FeatureItem>
             </ContractFeatures>
           </ContractCard>
         </ComparisonGrid>
@@ -284,15 +284,15 @@ export default function BytElavtal() {
                 variant="primary" 
                 size="lg"
                 background="linear-gradient(135deg, var(--primary), var(--secondary))"
-                aria-label="Rörligt avtal - 0 kr i avgifter första året – utan bindningstid"
+                aria-label="Variabel aftale - 0 kr i gebyrer første år – uden bindingsperiode"
                 disableScrollEffect={true}
                 disableHoverEffect={true}
               >
-                Välj rörligt avtal
+                Vælg variabel aftale
               </GlassButton>
             </div>
             <RorligtLabel>
-              0 kr i avgifter första året – utan bindningstid
+              0 kr i gebyrer første år – uden bindingsperiode
             </RorligtLabel>
           </ButtonWrapper>
 
@@ -322,7 +322,7 @@ export default function BytElavtal() {
                 disableScrollEffect={true}
                 disableHoverEffect={true}
               >
-                Välj fastpris avtal
+                Vælg fastpris aftale
               </GlassButton>
             </div>
             <FastprisLabel>
@@ -332,12 +332,12 @@ export default function BytElavtal() {
         </ButtonContainer>
 
         <NextSteps>
-          <NextStepsTitle>Vad behöver du ha redo?</NextStepsTitle>
+          <NextStepsTitle>Hvad skal du have klar?</NextStepsTitle>
           <NextStepsList>
-            <li>Ditt personnummer</li>
-            <li>Din adress och kontaktuppgifter</li>
-            <li>Ungefärlig årsförbrukning (om du vet den)</li>
-            <li>5 minuter av din tid</li>
+            <li>Dit CPR-nummer</li>
+            <li>Din adresse og kontaktoplysninger</li>
+            <li>Omtrentligt årsforbrug (hvis du kender det)</li>
+            <li>5 minutter af din tid</li>
           </NextStepsList>
         </NextSteps>
       </Content>
