@@ -636,7 +636,8 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
               if (!uploadedOk) {
                 try {
                   const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
-                  const restUrl = `${cleanSupabaseUrl}/storage/v1/object/${bucketName}/${encodeURIComponent(storageKey)}`;
+                  // Important: Do NOT URL-encode the full path; slashes must remain as separators
+                  const restUrl = `${cleanSupabaseUrl}/storage/v1/object/${bucketName}/${storageKey}`;
                   const arrayBuffer = await file.arrayBuffer();
                   const restRes = await fetch(restUrl, {
                     method: 'POST',
