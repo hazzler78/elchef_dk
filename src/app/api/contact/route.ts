@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
     // Validera e-postadress
     if (!data.email || !data.email.includes('@')) {
       return NextResponse.json(
-        { error: 'Ogiltig e-postadress' },
+        { error: 'Ugyldig e-mailadresse' },
         { status: 400 }
       );
     }
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Contact form submission error:', error);
     return NextResponse.json(
-      { error: 'Ett fel uppstod vid skickande av kontaktförfrågan' },
+      { error: 'Der opstod en fejl ved afsendelse af kontaktanmodning' },
       { status: 500 }
     );
   }

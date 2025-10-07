@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const fileSize = (file as File).size;
     
     if (!['image/png', 'image/jpeg', 'image/jpg'].includes(mimeType)) {
-      return NextResponse.json({ error: 'Endast PNG och JPG stöds just nu.' }, { status: 400 });
+      return NextResponse.json({ error: 'Kun PNG og JPG understøttes lige nu.' }, { status: 400 });
     }
 
     // Konvertera bilden till base64 (utan Buffer)

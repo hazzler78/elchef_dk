@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     // Validera e-postadress
     if (!email || !email.includes('@')) {
       return NextResponse.json(
-        { error: 'Ogiltig e-postadress' },
+        { error: 'Ugyldig e-mailadresse' },
         { status: 400 }
       );
     }
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     if (!MAILERLITE_API_KEY) {
       console.error('MAILERLITE_API_KEY saknas i miljövariabler');
       return NextResponse.json(
-        { error: 'Konfigurationsfel' },
+        { error: 'Konfigurationsfejl' },
         { status: 500 }
       );
     }
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       // Hantera specifika fel
       if (response.status === 409) {
         return NextResponse.json(
-          { error: 'Denna e-postadress är redan registrerad' },
+          { error: 'Denne e-mailadresse er allerede registreret' },
           { status: 409 }
         );
       }
@@ -81,18 +81,18 @@ export async function POST(request: NextRequest) {
       const message: string | undefined = (errorData && (errorData.message || errorData.error || errorData?.errors?.[0])) as string | undefined;
       if (message && message.toLowerCase().includes('subscriber') && message.toLowerCase().includes('limit')) {
         return NextResponse.json(
-          { error: 'Vi har nått gränsen för prenumeranter i vårt nyhetsbrev just nu. Försök gärna igen senare.' },
+          { error: 'Vi har nået grænsen for abonnenter på vores nyhedsbrev lige nu. Prøv gerne igen senere.' },
           { status: 429 }
         );
       }
       if (errorData?.errors?.['groups.0']?.includes('The selected groups.0 is invalid.')) {
         return NextResponse.json(
-          { error: 'Felaktigt grupp-ID för Mailerlite. Kontrollera att MAILERLITE_GROUP_ID är korrekt eller ta bort den från .env.local för att lägga till prenumeranter i "All subscribers".' },
+          { error: 'Forkert gruppe-ID til Mailerlite. Kontroller at MAILERLITE_GROUP_ID er korrekt, eller fjern den fra .env.local for at tilføje abonnenter til "All subscribers".' },
           { status: 400 }
         );
       }
       return NextResponse.json(
-        { error: 'Kunde inte registrera e-postadressen' },
+        { error: 'Kunne ikke registrere e-mailadressen' },
         { status: 500 }
       );
     }
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Newsletter subscription error:', error);
     return NextResponse.json(
-      { error: 'Ett fel uppstod vid registrering' },
+      { error: 'Der opstod en fejl ved registrering' },
       { status: 500 }
     );
   }
