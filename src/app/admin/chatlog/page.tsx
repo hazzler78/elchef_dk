@@ -39,6 +39,7 @@ export default function AdminChatlog() {
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [selectedSessions, setSelectedSessions] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -86,6 +87,54 @@ export default function AdminChatlog() {
     if (!authed) return;
     fetchLogs();
   }, [authed]);
+
+  const rateLog = async (id: number, rating: number) => {
+    setSaving(true);
+    try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+      );
+      await supabase.from('chat_feedback').insert([{ chatlog_id: id, rating }]);
+      alert(`Betyg ${rating}/5 sparat`);
+    } catch {}
+    setSaving(false);
+  };
+
+  const exportJSON = () => {
+    const payload = viewMode === 'grouped' ? sessionGroups : logs;
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = viewMode === 'grouped' ? 'chat_sessions.json' : 'chat_logs.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCSV = () => {
+    const rows: string[] = [];
+    rows.push(['id','session_id','created_at','user_message','ai_response','total_tokens'].join(','));
+    logs.forEach(l => {
+      const lastUser = (l.messages || []).filter(m => m.role === 'user').slice(-1)[0]?.content || '';
+      const vals = [
+        String(l.id),
+        '"' + (l.session_id || '').replace(/"/g,'""') + '"',
+        '"' + l.created_at + '"',
+        '"' + (lastUser || '').replace(/"/g,'""').replace(/\n/g,' ') + '"',
+        '"' + (l.ai_response || '').replace(/"/g,'""').replace(/\n/g,' ') + '"',
+        String(l.total_tokens || 0)
+      ];
+      rows.push(vals.join(','));
+    });
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'chat_logs.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const deleteLog = async (id: number) => {
     if (!confirm("Är du säker på att du vill radera denna logg?")) return;
@@ -351,6 +400,8 @@ export default function AdminChatlog() {
         <span style={{ fontSize: 14, color: "#666" }}>
           {viewMode === "grouped" ? `${sessionGroups.length} sessioner` : `${logs.length} meddelanden`}
         </span>
+        <button onClick={exportJSON} style={{ padding: "8px 16px", background: "#0ea5e9", color: "white", border: "none", borderRadius: 6 }}>Export JSON</button>
+        <button onClick={exportCSV} style={{ padding: "8px 16px", background: "#10b981", color: "white", border: "none", borderRadius: 6 }}>Export CSV</button>
         
         {/* Cleanup button */}
         <button
