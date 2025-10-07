@@ -91,7 +91,7 @@ export default function Integritetspolicy() {
           <strong>Lagringsperiode:</strong> Ved samtykke gemmes fakturabilledet i op til 90 dage, hvorefter det slettes automatisk. Du kan til enhver tid tilbagekalde dit samtykke, hvorefter vi sletter billedet hurtigst muligt.
         </Paragraph>
         <Paragraph>
-          <strong>Uden samtykke:</strong> Vi gemmer ikke selve billedet. Vi kan dog gemme AI'ens tekstanalyse og begrænset teknisk metadata (f.eks. hashværdi) til fejlsøgning, statistik og for at forhindre dobbelt upload.
+          <strong>Uden samtykke:</strong> Vi gemmer ikke selve billedet. Vi kan dog gemme AI&apos;ens tekstanalyse og begrænset teknisk metadata (f.eks. hashværdi) til fejlsøgning, statistik og for at forhindre dobbelt upload.
         </Paragraph>
 
         <SectionTitle>5. Dine rettigheder</SectionTitle>

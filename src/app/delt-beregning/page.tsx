@@ -287,7 +287,7 @@ function DeladKalkylContent() {
             </div>
             <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>2. AI-analyse</h4>
             <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', margin: 0 }}>
-              AI'en identificerer skjulte gebyrer
+              AI&apos;en identificerer skjulte gebyrer
             </p>
           </div>
           

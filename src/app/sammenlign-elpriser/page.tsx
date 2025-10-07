@@ -485,7 +485,7 @@ export default function JamforElpriser() {
               margin: 0,
               textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
             }}>
-               AI'en læser alle omkostninger og identificerer skjulte gebyrer
+               AI&apos;en læser alle omkostninger og identificerer skjulte gebyrer
              </p>
            </div>
          )}
@@ -870,7 +870,7 @@ export default function JamforElpriser() {
                 lineHeight: 1.5,
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
               }}>
-                AI'en viser et estimat baseret på din faktura. For mere præcis analyse og personlig hjælp, kontakt os, så hjælper vi dig med at finde den bedste elaftale til din situation.
+                AI&apos;en viser et estimat baseret på din faktura. For mere præcis analyse og personlig hjælp, kontakt os, så hjælper vi dig med at finde den bedste elaftale til din situation.
               </p>
               {logId && (
                 <label style={{ 

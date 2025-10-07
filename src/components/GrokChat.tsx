@@ -521,7 +521,7 @@ export default function GrokChat() {
                       // Add a message indicating the form was submitted
                       const newMessages = [...messages, { 
                         role: 'assistant', 
-                        content: 'Tak for din henvendelse! Vi vender tilbage hurtigst muligt. Ha' en god dag!' 
+                        content: 'Tak for din henvendelse! Vi vender tilbage hurtigst muligt. Ha&apos; en god dag!' 
                       }];
                       setMessages(newMessages);
                       setContactFormSubmitted(true);

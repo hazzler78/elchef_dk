@@ -121,7 +121,7 @@ export default function RootLayout({
           `}
         </Script>
         <noscript>
-          <img height="1" width="1" style={{display: 'none'}}
+          <img height="1" width="1" style={{display: 'none'}} alt=""
             src="https://www.facebook.com/tr?id=780636244595001&ev=PageView&noscript=1"
           />
         </noscript>
