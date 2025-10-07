@@ -130,7 +130,7 @@ const VideoBox = styled.div`
   border-radius: var(--radius-md);
   padding: 1.2rem;
   margin: 1.5rem 0;
-  box-shadow: 0 2px 8px rgba(0,106,167,0.12);
+  box-shadow: 0 2px 8px rgba(224,24,43,0.12);
 `;
 
 const HallandspostenLink = styled.a`
@@ -175,7 +175,7 @@ const CTAButton = styled.a`
 const PageBackground = styled.div`
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(120deg, rgba(0,106,167,0.10) 0%, rgba(254,204,0,0.10) 100%);
+  background: linear-gradient(120deg, rgba(224,24,43,0.10) 0%, rgba(255,255,255,0.10) 100%);
   padding: 0;
 `;
 

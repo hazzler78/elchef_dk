@@ -492,13 +492,13 @@ export default function AdminReminders() {
           <h3 style={{ marginTop: 0, marginBottom: '1rem', color: '#0c4a6e' }}>🔧 Systemstatus</h3>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ padding: '0.75rem', background: systemStatus.cronConfigured ? 'rgba(254,204,0,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.cronConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.cronConfigured ? 'black' : undefined }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.cronConfigured ? 'rgba(255,255,255,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.cronConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.cronConfigured ? 'black' : undefined }}>
               <strong>Cron Jobs:</strong> {systemStatus.cronConfigured ? '✅ Konfigurerade' : '❌ Saknas'}
             </div>
-            <div style={{ padding: '0.75rem', background: systemStatus.telegramConfigured ? 'rgba(254,204,0,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.telegramConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.telegramConfigured ? 'black' : undefined }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.telegramConfigured ? 'rgba(255,255,255,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.telegramConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.telegramConfigured ? 'black' : undefined }}>
               <strong>Telegram:</strong> {systemStatus.telegramConfigured ? '✅ Konfigurerat' : '❌ Saknas'}
             </div>
-            <div style={{ padding: '0.75rem', background: systemStatus.secretKeyConfigured ? 'rgba(254,204,0,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.secretKeyConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.secretKeyConfigured ? 'black' : undefined }}>
+            <div style={{ padding: '0.75rem', background: systemStatus.secretKeyConfigured ? 'rgba(255,255,255,0.1)' : '#fef2f2', border: `1px solid ${systemStatus.secretKeyConfigured ? 'var(--secondary)' : '#ef4444'}`, borderRadius: '4px', color: systemStatus.secretKeyConfigured ? 'black' : undefined }}>
               <strong>Secret Key:</strong> {systemStatus.secretKeyConfigured ? '✅ Konfigurerat' : '❌ Saknas'}
             </div>
           </div>
@@ -555,7 +555,7 @@ export default function AdminReminders() {
             <div style={{ 
               marginTop: '1rem', 
               padding: '0.75rem', 
-              background: testResult.includes('✅') ? 'rgba(254,204,0,0.1)' : '#fef2f2', 
+              background: testResult.includes('✅') ? 'rgba(255,255,255,0.1)' : '#fef2f2', 
               border: `1px solid ${testResult.includes('✅') ? 'var(--secondary)' : '#ef4444'}`, 
               borderRadius: '4px',
               whiteSpace: 'pre-line'

@@ -221,7 +221,7 @@ export default function AdminHeroAnalytics() {
             </tr>
           </thead>
                      <tbody>
-            <tr style={{ background: winner === 'A' ? 'rgba(0,106,167,0.08)' : undefined }}>
+            <tr style={{ background: winner === 'A' ? 'rgba(224,24,43,0.08)' : undefined }}>
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
                  <div><strong>A</strong></div>
                  <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['A']}</div>
@@ -230,7 +230,7 @@ export default function AdminHeroAnalytics() {
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aClk}</td>
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{aCtr}</td>
              </tr>
-            <tr style={{ background: winner === 'B' ? 'rgba(0,106,167,0.08)' : undefined }}>
+            <tr style={{ background: winner === 'B' ? 'rgba(224,24,43,0.08)' : undefined }}>
                <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
                  <div><strong>B</strong></div>
                  <div style={{ fontSize: '0.8em', color: '#666' }}>{variantNames['B']}</div>

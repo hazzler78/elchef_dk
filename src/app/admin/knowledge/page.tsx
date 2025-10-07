@@ -352,7 +352,7 @@ export default function AdminKnowledge() {
       {success && (
         <div style={{ 
           padding: "12px", 
-          background: "rgba(254,204,0,0.1)", 
+          background: "rgba(255,255,255,0.1)", 
           border: "1px solid var(--secondary)", 
           borderRadius: 6, 
           color: "black", 

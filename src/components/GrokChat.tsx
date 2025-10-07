@@ -509,7 +509,7 @@ export default function GrokChat() {
                   maxWidth: 300,
                   fontSize: 16,
                   fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(0,106,167,0.12)',
+                  boxShadow: '0 2px 8px rgba(224,24,43,0.12)',
                   marginLeft: 8,
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>

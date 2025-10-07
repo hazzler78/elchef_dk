@@ -1,9 +1,9 @@
 :root {
   /* Brand Colors - Updated for glassmorphism */
-  --primary: #006aa7;
-  --primary-dark: #00588c;
-  --secondary: #fecc00;
-  --secondary-dark: #d4ad00;
+  --primary: #e0182b;
+  --primary-dark: #b01322;
+  --secondary: #ffffff;
+  --secondary-dark: #f0f0f0;
   --background: #ffffff;
   --foreground: #171717;
   
@@ -14,8 +14,8 @@
   --glass-blur: blur(12px);
   
   /* Gradient Colors */
-  --gradient-start: #006aa7;
-  --gradient-end: #fecc00;
+  --gradient-start: #e0182b;
+  --gradient-end: #ffffff;
   
   /* Legacy colors for compatibility */
   --gray-50: #f9fafb;
@@ -155,7 +155,7 @@ p {
 .glass-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 106, 167, 0.1);
+  box-shadow: 0 0 0 3px rgba(224, 24, 43, 0.1);
   transform: translateY(-1px);
 }
 
@@ -238,8 +238,8 @@ p {
   height: 200%;
   pointer-events: none;
   background:
-    radial-gradient(120px 120px at 0% 50%, rgba(254, 204, 0, 0.14), transparent 60%),
-    radial-gradient(120px 120px at 100% 50%, rgba(0, 106, 167, 0.12), transparent 60%);
+    radial-gradient(120px 120px at 0% 50%, rgba(255, 255, 255, 0.14), transparent 60%),
+    radial-gradient(120px 120px at 100% 50%, rgba(224, 24, 43, 0.12), transparent 60%);
   transform: translateX(-20%);
   animation: btn-sweep 8s ease-in-out infinite;
   filter: blur(6px);
@@ -319,13 +319,13 @@ p {
 
 @keyframes highlightPulse {
   0% {
-    box-shadow: 0 4px 12px rgba(0,106,167,0.3);
+    box-shadow: 0 4px 12px rgba(224,24,43,0.3);
   }
   50% {
-    box-shadow: 0 4px 20px rgba(0,106,167,0.5);
+    box-shadow: 0 4px 20px rgba(224,24,43,0.5);
   }
   100% {
-    box-shadow: 0 4px 12px rgba(0,106,167,0.3);
+    box-shadow: 0 4px 12px rgba(224,24,43,0.3);
   }
 }
 
@@ -370,12 +370,12 @@ p {
 }
 
 .analysis-summary {
-  background: linear-gradient(135deg, #006aa7 0%, #fecc00 100%);
+  background: linear-gradient(135deg, #e0182b 0%, #ffffff 100%);
   color: white;
   padding: 20px;
   border-radius: 12px;
   margin: 20px 0;
-  box-shadow: 0 8px 25px rgba(0,106,167,0.3);
+  box-shadow: 0 8px 25px rgba(224,24,43,0.3);
   position: relative;
   overflow: hidden;
 }

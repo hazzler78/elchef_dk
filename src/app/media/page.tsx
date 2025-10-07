@@ -36,7 +36,7 @@ const Lead = styled.p`
 const PageBackground = styled.div`
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(120deg, rgba(0,106,167,0.10) 0%, rgba(254,204,0,0.10) 100%);
+  background: linear-gradient(120deg, rgba(224,24,43,0.10) 0%, rgba(255,255,255,0.10) 100%);
   padding: 0;
 `;
 

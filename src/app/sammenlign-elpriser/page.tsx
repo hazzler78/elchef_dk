@@ -8,57 +8,57 @@ import { withDefaultCtaUtm } from '@/lib/utm';
 
 // SVG Ikoner i glassmorphism-stil
 const AnalysisIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.2))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.18)" />
-    <path d="M12 3c2.5 0 5 2.5 5 5 0 3-3 7-5 10C10 15 7 11 7 8c0-2.5 2.5-5 5-5z" fill="url(#analysis-gradient)" stroke="rgba(0,106,167,0.6)" strokeWidth="1.2" />
-    <circle cx="12" cy="8" r="2" fill="#fff" stroke="rgba(0,106,167,0.7)" strokeWidth="1" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(224,24,43,0.2))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(224,24,43,0.18)" />
+    <path d="M12 3c2.5 0 5 2.5 5 5 0 3-3 7-5 10C10 15 7 11 7 8c0-2.5 2.5-5 5-5z" fill="url(#analysis-gradient)" stroke="rgba(224,24,43,0.6)" strokeWidth="1.2" />
+    <circle cx="12" cy="8" r="2" fill="#fff" stroke="rgba(224,24,43,0.7)" strokeWidth="1" />
     <defs>
       <linearGradient id="analysis-gradient" x1="7" y1="3" x2="17" y2="18" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#006aa7" />
-        <stop offset="1" stopColor="#fecc00" />
+        <stop stopColor="#e0182b" />
+        <stop offset="1" stopColor="#ffffff" />
       </linearGradient>
     </defs>
   </svg>
 );
 
 const SavingsIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.18))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.13)" />
-    <ellipse cx="12" cy="12" rx="6" ry="4.5" fill="url(#savings-gradient)" stroke="#006aa7" strokeWidth="1" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(224,24,43,0.18))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(224,24,43,0.13)" />
+    <ellipse cx="12" cy="12" rx="6" ry="4.5" fill="url(#savings-gradient)" stroke="#e0182b" strokeWidth="1" />
     <circle cx="10" cy="11" r="0.8" fill="#fff" />
-    <rect x="14" y="14" width="2" height="3" rx="1" fill="#1693FF" />
+    <rect x="14" y="14" width="2" height="3" rx="1" fill="#e0182b" />
     <defs>
       <linearGradient id="savings-gradient" x1="6" y1="7.5" x2="18" y2="16.5" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#006aa7" />
-        <stop offset="1" stopColor="#fecc00" />
+        <stop stopColor="#e0182b" />
+        <stop offset="1" stopColor="#ffffff" />
       </linearGradient>
     </defs>
   </svg>
 );
 
 const ConclusionIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.2))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.13)" />
-    <circle cx="12" cy="12" r="6" fill="url(#conclusion-gradient)" stroke="#006aa7" strokeWidth="1.2" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(224,24,43,0.2))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(224,24,43,0.13)" />
+    <circle cx="12" cy="12" r="6" fill="url(#conclusion-gradient)" stroke="#e0182b" strokeWidth="1.2" />
     <path d="M9 12l2 2 4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <defs>
       <linearGradient id="conclusion-gradient" x1="6" y1="6" x2="18" y2="18" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#006aa7" />
-        <stop offset="1" stopColor="#fecc00" />
+        <stop stopColor="#e0182b" />
+        <stop offset="1" stopColor="#ffffff" />
       </linearGradient>
     </defs>
   </svg>
 );
 
 const RecommendationIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(0,106,167,0.2))' }}>
-    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(0,106,167,0.18)" />
-    <path d="M12 3c-1.5 0-3 1.5-3 3v6c0 1.5 1.5 3 3 3s3-1.5 3-3V6c0-1.5-1.5-3-3-3z" fill="url(#recommendation-gradient)" stroke="rgba(0,106,167,0.6)" strokeWidth="1.2" />
-    <circle cx="12" cy="8" r="1.5" fill="#fff" stroke="rgba(0,106,167,0.7)" strokeWidth="1" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8, filter: 'drop-shadow(0 2px 4px rgba(224,24,43,0.2))' }}>
+    <ellipse cx="12" cy="21" rx="6" ry="2" fill="rgba(224,24,43,0.18)" />
+    <path d="M12 3c-1.5 0-3 1.5-3 3v6c0 1.5 1.5 3 3 3s3-1.5 3-3V6c0-1.5-1.5-3-3-3z" fill="url(#recommendation-gradient)" stroke="rgba(224,24,43,0.6)" strokeWidth="1.2" />
+    <circle cx="12" cy="8" r="1.5" fill="#fff" stroke="rgba(224,24,43,0.7)" strokeWidth="1" />
     <defs>
       <linearGradient id="recommendation-gradient" x1="9" y1="3" x2="15" y2="15" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#006aa7" />
-        <stop offset="1" stopColor="#fecc00" />
+        <stop stopColor="#e0182b" />
+        <stop offset="1" stopColor="#ffffff" />
       </linearGradient>
     </defs>
   </svg>
