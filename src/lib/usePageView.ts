@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 /**
  * Hook för att spåra sidvisningar med UTM-parametrar
- * @param path - Sökvägen för sidan (t.ex. '/', '/jamfor-elpriser')
+ * @param path - Stien til siden (f.eks. '/', '/sammenlign-elpriser')
  */
 export function usePageView(path: string) {
   useEffect(() => {

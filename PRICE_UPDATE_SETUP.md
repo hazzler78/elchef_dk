@@ -1,36 +1,36 @@
-# Automatisk prisuppdatering för Elchef
+# Automatisk prisopdatering for Elchef
 
-## Översikt
-Denna lösning hämtar automatiskt elpriser från Cheap Energy's JSON-fil och uppdaterar dem varje natt för att hålla priserna aktuella på hemsidan.
+## Oversigt
+Denne løsning henter automatisk elpriser fra Cheap Energy's JSON-fil og opdaterer dem hver nat for at holde priserne aktuelle på hjemmesiden.
 
-## Hur det fungerar
+## Sådan fungerer det
 
 ### 1. API Routes
-- `/api/prices` - Hämtar priser från Cheap Energy (cachad i 1 timme)
-- `/api/update-prices` - Manuell uppdatering av priser (kräver autentisering)
+- `/api/prices` - Henter priser fra Cheap Energy (cachet i 1 time)
+- `/api/update-prices` - Manuel opdatering af priser (kræver autentifikation)
 
 ### 2. Prisstruktur
-Priserna hämtas från: `https://www.cheapenergy.se/Site_Priser_CheapEnergy_de.json`
+Priserne hentes fra: `https://www.cheapenergy.se/Site_Priser_CheapEnergy_de.json`
 
-**Inkluderar:**
-- Rörliga priser (spot) för alla elområden (SE1, SE2, SE3, SE4)
-- Fastprisavtal för olika bindningstider (3, 6, 12, 24, 36, 48, 60, 120 månader)
-- Fasta avgifter
+**Inkluderer:**
+- Variable priser (spot) for alle elområder (DK1, DK2)
+- Fastprisaftaler for forskellige bindingsperioder (3, 6, 12, 24, 36, 48, 60, 120 måneder)
+- Faste gebyrer
 
-### 3. Automatisk uppdatering
+### 3. Automatisk opdatering
 
-#### Alternativ A: Cron Job (Rekommenderat)
-Skapa en cron job som kör varje natt kl 00:00:
+#### Alternativ A: Cron Job (Anbefalet)
+Opret en cron job der kører hver nat kl. 00:00:
 
 ```bash
-# Lägg till i crontab
-0 0 * * * curl -X POST https://din-domain.se/api/update-prices \
+# Tilføj i crontab
+0 0 * * * curl -X POST https://din-domain.dk/api/update-prices \
   -H "Authorization: Bearer DIN_SECRET_KEY" \
   -H "Content-Type: application/json"
 ```
 
 #### Alternativ B: Vercel Cron Jobs
-Om du använder Vercel, lägg till i `vercel.json`:
+Hvis du bruger Vercel, tilføj i `vercel.json`:
 
 ```json
 {
@@ -43,30 +43,30 @@ Om du använder Vercel, lägg till i `vercel.json`:
 }
 ```
 
-#### Alternativ C: Extern tjänst
-Använd tjänster som:
+#### Alternativ C: Ekstern tjeneste
+Brug tjenester som:
 - [cron-job.org](https://cron-job.org)
 - [EasyCron](https://www.easycron.com)
 - [UptimeRobot](https://uptimerobot.com)
 
-## Miljövariabler
+## Miljøvariabler
 
-Lägg till i din `.env.local` fil:
+Tilføj i din `.env.local` fil:
 
 ```env
-UPDATE_SECRET_KEY=din_hemliga_nyckel_här
+UPDATE_SECRET_KEY=din_hemmelige_nøgle_her
 ```
 
-## Testa uppdateringen
+## Test opdateringen
 
-### Manuell test:
+### Manuel test:
 ```bash
-curl -X POST https://din-domain.se/api/update-prices \
+curl -X POST https://din-domain.dk/api/update-prices \
   -H "Authorization: Bearer DIN_SECRET_KEY" \
   -H "Content-Type: application/json"
 ```
 
-### Förväntat svar:
+### Forventet svar:
 ```json
 {
   "success": true,
@@ -74,59 +74,53 @@ curl -X POST https://din-domain.se/api/update-prices \
   "timestamp": "2025-01-27T00:00:00.000Z",
   "prices": {
     "spot": {
-      "se1": 14.08,
-      "se2": 15.08,
-      "se3": 42.94,
-      "se4": 60.01
+      "dk1": 14.08,
+      "dk2": 42.94
     },
     "fixed_6m": {
-      "se1": 45.59,
-      "se2": 45.59,
-      "se3": 81.59,
-      "se4": 95.99
+      "dk1": 45.59,
+      "dk2": 81.59
     },
     "fixed_12m": {
-      "se1": 44.79,
-      "se2": 44.79,
-      "se3": 78.39,
-      "se4": 95.19
+      "dk1": 44.79,
+      "dk2": 78.39
     }
   }
 }
 ```
 
-## Loggning
+## Logging
 
-Alla prisuppdateringar loggas i konsolen med:
-- ✅ Framgångsrik uppdatering
-- ❌ Fel vid uppdatering
-- 📊 Aktuella priser för alla områden
+Alle prisopdateringer logges i konsollen med:
+- ✅ Vellykket opdatering
+- ❌ Fejl ved opdatering
+- 📊 Aktuelle priser for alle områder
 
-## Felsökning
+## Fejlsøgning
 
-### Vanliga problem:
+### Almindelige problemer:
 
 1. **401 Unauthorized**
-   - Kontrollera att `UPDATE_SECRET_KEY` är korrekt satt
-   - Verifiera Authorization header
+   - Kontroller at `UPDATE_SECRET_KEY` er korrekt sat
+   - Verificer Authorization header
 
 2. **500 Internal Server Error**
-   - Kontrollera att Cheap Energy's JSON-fil är tillgänglig
-   - Verifiera nätverksanslutning
+   - Kontroller at Cheap Energy's JSON-fil er tilgængelig
+   - Verificer netværksforbindelse
 
-3. **Priser visas inte**
-   - Kontrollera att `/api/prices` returnerar data
-   - Verifiera att cache är uppdaterad
+3. **Priser vises ikke**
+   - Kontroller at `/api/prices` returnerer data
+   - Verificer at cache er opdateret
 
-## Säkerhet
+## Sikkerhed
 
-- Använd en stark `UPDATE_SECRET_KEY`
-- Begränsa åtkomst till `/api/update-prices` endast till auktoriserade källor
-- Överväg att lägga till rate limiting för API:et
+- Brug en stærk `UPDATE_SECRET_KEY`
+- Begræns adgang til `/api/update-prices` kun til autoriserede kilder
+- Overvej at tilføje rate limiting for API'et
 
-## Framtida förbättringar
+## Fremtidige forbedringer
 
-- Databaslagring av prishistorik
-- E-postnotifieringar vid fel
-- Dashboard för att övervaka prisuppdateringar
-- Backup-priskällor 
+- Databaselagring af prishistorik
+- E-mailnotifikationer ved fejl
+- Dashboard til at overvåge prisopdateringer
+- Backup-priskilder

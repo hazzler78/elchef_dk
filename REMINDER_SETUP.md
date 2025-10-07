@@ -1,29 +1,29 @@
-# Kundpåminnelse System - Setup Guide
+# Kundpåmindelses System - Setup Guide
 
-## Översikt
-Detta system hjälper dig att påminna kunder om att förlänga sina elavtal innan de går över till dyrare tillsvidareavtal. Systemet skickar automatiska Telegram-notifieringar 11 månader innan avtalet går ut.
+## Oversigt
+Dette system hjælper dig med at minde kunder om at forny deres elaftaler inden de overgår til dyrere løbende aftaler. Systemet sender automatiske Telegram-notifikationer 11 måneder før aftalen udløber.
 
 **Ny workflow:**
-1. Kund kontaktar er via kontaktformuläret
-2. Ni får Telegram-notifiering om ny kontaktförfrågan
-3. Ni svarar på Telegram-meddelandet med avtalstyp och startdatum
-4. Systemet skapar automatiskt en påminnelse baserat på era svar
+1. Kunde kontakter jer via kontaktformularen
+2. I får Telegram-notifikation om ny kontaktanmodning
+3. I svarer på Telegram-beskeden med aftaletype og startdato
+4. Systemet opretter automatisk en påmindelse baseret på jeres svar
 
 ## Funktioner
-- ✅ Automatisk påminnelse 11 månader före avtalsutgång
-- ✅ Stöd för olika avtalstyper (12, 24, 36 månader)
-- ✅ Telegram-notifieringar till ditt team
-- ✅ Interaktiva svar via Telegram för att skapa påminnelser
-- ✅ Databaslagring av alla påminnelser
-- ✅ Integration med kontaktformuläret
+- ✅ Automatisk påmindelse 11 måneder før aftaleudløb
+- ✅ Support for forskellige aftaletyper (12, 24, 36 måneder)
+- ✅ Telegram-notifikationer til dit team
+- ✅ Interaktive svar via Telegram for at oprette påmindelser
+- ✅ Databaselagring af alle påmindelser
+- ✅ Integration med kontaktformularen
 
-## Databas Setup
+## Database Setup
 
-### 1. Skapa tabeller i Supabase
-Kör följande SQL i Supabase SQL Editor:
+### 1. Opret tabeller i Supabase
+Kør følgende SQL i Supabase SQL Editor:
 
 ```sql
--- Skapa customer_reminders tabell
+-- Opret customer_reminders tabel
 CREATE TABLE customer_reminders (
   id SERIAL PRIMARY KEY,
   customer_name VARCHAR(255) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE customer_reminders (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Skapa pending_reminders tabell för väntande kontaktförfrågningar
+-- Opret pending_reminders tabel for ventende kontaktanmodninger
 CREATE TABLE pending_reminders (
   id SERIAL PRIMARY KEY,
   customer_name VARCHAR(255) NOT NULL,
@@ -48,99 +48,99 @@ CREATE TABLE pending_reminders (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Skapa index för effektiv sökning
+-- Opret index for effektiv søgning
 CREATE INDEX idx_reminder_date ON customer_reminders(reminder_date, is_sent);
 CREATE INDEX idx_customer_email ON customer_reminders(email);
 CREATE INDEX idx_pending_created_at ON pending_reminders(created_at);
 
--- Aktivera Row Level Security (valfritt)
+-- Aktiver Row Level Security (valgfrit)
 ALTER TABLE customer_reminders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pending_reminders ENABLE ROW LEVEL SECURITY;
 
--- Skapa RLS-policies för customer_reminders
+-- Opret RLS-policies for customer_reminders
 CREATE POLICY "Allow all operations for customer_reminders" ON customer_reminders
   FOR ALL USING (true) WITH CHECK (true);
 
--- Skapa RLS-policies för pending_reminders  
+-- Opret RLS-policies for pending_reminders  
 CREATE POLICY "Allow all operations for pending_reminders" ON pending_reminders
   FOR ALL USING (true) WITH CHECK (true);
 ```
 
-## Miljövariabler
+## Miljøvariabler
 
-Lägg till följande i din `.env.local` fil:
+Tilføj følgende i din `.env.local` fil:
 
 ```env
-# Supabase Configuration (redan konfigurerat)
+# Supabase Configuration (allerede konfigureret)
 SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# Telegram Bot Configuration (redan konfigurerat)
+# Telegram Bot Configuration (allerede konfigureret)
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHAT_IDS=123456789,987654321
 
 # Reminder System
 UPDATE_SECRET_KEY=your_secret_key_for_cron_jobs
-NEXT_PUBLIC_BASE_URL=https://din-domain.se
+NEXT_PUBLIC_BASE_URL=https://din-domain.dk
 ```
 
 ## Telegram Webhook Setup
 
-### 1. Konfigurera webhook
-Efter att du har deployat till Vercel, kör följande kommando för att sätta webhook:
+### 1. Konfigurer webhook
+Efter at du har deployet til Vercel, kør følgende kommando for at sætte webhook:
 
 ```bash
-curl -X GET "https://din-domain.se/api/telegram-webhook"
+curl -X GET "https://din-domain.dk/api/telegram-webhook"
 ```
 
-### 2. Testa webhook
-Skicka ett testmeddelande till din bot för att verifiera att webhook fungerar.
+### 2. Test webhook
+Send en testbesked til din bot for at verificere at webhook fungerer.
 
 ## API Endpoints
 
-### 1. Kontaktformulär
+### 1. Kontaktformular
 **POST** `/api/contact`
-Skickar Telegram-notifiering och skapar pending reminder.
+Sender Telegram-notifikation og opretter pending reminder.
 
 ### 2. Telegram Webhook
 **POST** `/api/telegram-webhook`
-Hanterar svar från teamet och skapar påminnelser.
+Håndterer svar fra teamet og opretter påmindelser.
 
-### 3. Skapa påminnelse manuellt
+### 3. Opret påmindelse manuelt
 **POST** `/api/reminders`
 ```json
 {
-  "customer_name": "Anna Andersson",
+  "customer_name": "Anna Andersen",
   "email": "anna@example.com",
-  "phone": "070-123 45 67",
+  "phone": "012-345 67 89",
   "contract_type": "12_months",
   "contract_start_date": "2025-01-15",
-  "notes": "Manuellt skapad"
+  "notes": "Manuelt oprettet"
 }
 ```
 
-### 4. Hämta påminnelser för idag
+### 4. Hent påmindelser for i dag
 **GET** `/api/reminders`
-Returnerar alla påminnelser som ska skickas idag.
+Returnerer alle påmindelser der skal sendes i dag.
 
-### 5. Skicka påminnelser
+### 5. Send påmindelser
 **POST** `/api/reminders/send`
-Kontrollerar och skickar alla påminnelser som är förfallna idag.
+Kontrollerer og sender alle påmindelser der er forfaldne i dag.
 
-## Automatisk körning
+## Automatisk kørsel
 
-### Alternativ A: Cron Job (Rekommenderat)
-Skapa en cron job som kör varje dag kl 09:00:
+### Alternativ A: Cron Job (Anbefalet)
+Opret en cron job der kører hver dag kl. 09:00:
 
 ```bash
-# Lägg till i crontab
-0 9 * * * curl -X POST https://din-domain.se/api/reminders/send \
+# Tilføj i crontab
+0 9 * * * curl -X POST https://din-domain.dk/api/reminders/send \
   -H "Authorization: Bearer DIN_SECRET_KEY" \
   -H "Content-Type: application/json"
 ```
 
 ### Alternativ B: Vercel Cron Jobs
-Lägg till i `vercel.json`:
+Tilføj i `vercel.json`:
 
 ```json
 {
@@ -153,153 +153,59 @@ Lägg till i `vercel.json`:
 }
 ```
 
-### Alternativ C: Extern tjänst
-Använd tjänster som:
+### Alternativ C: Ekstern tjeneste
+Brug tjenester som:
 - [cron-job.org](https://cron-job.org)
 - [EasyCron](https://www.easycron.com)
 - [UptimeRobot](https://uptimerobot.com)
 
-## Användning
+## Brug
 
-### 1. Kund kontaktar er
-När kunder fyller i kontaktformuläret skickas en Telegram-notifiering till ditt team.
+### 1. Kunde kontakter jer
+Når kunder udfylder kontaktformularen sendes en Telegram-notifikation til dit team.
 
-### 2. Ni svarar via Telegram
-Svara på Telegram-meddelandet med formatet:
-- `12m 2025-02-15` (12 månaders avtal som startar 15 februari 2025)
-- `24m 2025-02-15` (24 månaders avtal som startar 15 februari 2025)
-- `36m 2025-02-15` (36 månaders avtal som startar 15 februari 2025)
+### 2. I svarer via Telegram
+Svar på Telegram-beskeden med formatet:
+- `12m 2025-02-15` (12 måneders aftale der starter 15. februar 2025)
+- `24m 2025-02-15` (24 måneders aftale der starter 15. februar 2025)
+- `36m 2025-02-15` (36 måneders aftale der starter 15. februar 2025)
 
-### 3. Systemet skapar påminnelse
-När ni svarar skapas automatiskt en påminnelse som skickas 11 månader före avtalsutgång.
+### 3. Systemet opretter påmindelse
+Når I svarer oprettes automatisk en påmindelse som sendes 11 måneder før aftaleudløb.
 
-## Exempel på Telegram-meddelande
+## Fejlsøgning
 
-### Kontaktförfrågan:
-```
-🔔 Ny kontaktförfrågan
+### Almindelige problemer:
 
-🙍‍♂️ Namn: Anna Andersson
-📧 E-post: anna@example.com
-📞 Telefon: 070-123 45 67
-📰 Nyhetsbrev: Ja
+1. **Ingen påmindelser sendes**
+   - Kontroller at `UPDATE_SECRET_KEY` er korrekt sat
+   - Verificer at `TELEGRAM_BOT_TOKEN` er gyldig
+   - Kontroller at `TELEGRAM_CHAT_IDS` indeholder rigtige chat-ID'er
+   - Test manuelt med admin-panelet
 
-📝 Meddelande: Vill ha hjälp med att byta elavtal
+2. **Forsinkede påmindelser**
+   - Brug "Marker forsinkede som sendte" i admin-panelet
+   - Kontroller at cron job kører regelmæssigt
+   - Verificer at API'et fungerer med manuel test
 
-⏰ Tidpunkt: 2025-01-27 14:30:25
-🌐 Källa: Elchef.se kontaktformulär
+3. **Telegram-beskeder kommer ikke frem**
+   - Verificer at bot-token er korrekt
+   - Kontroller at chat-ID'er er rigtige
+   - Test bot-beskeder manuelt
 
-💡 Svara med avtalstyp och startdatum för att skapa påminnelse:
-Format: "12m 2025-02-15" eller "24m 2025-02-15" eller "36m 2025-02-15"
-```
+## Sikkerhed
 
-### Bekräftelse på skapad påminnelse:
-```
-✅ Påminnelse skapad!
+- Brug en stærk `UPDATE_SECRET_KEY`
+- Begræns adgang til API'er kun til autoriserede kilder
+- Overvej at tilføje rate limiting
+- Brug HTTPS for alle API-kald
+- Verificer Telegram webhook-signaturer (kan tilføjes senere)
 
-👤 Kund: Anna Andersson
-📋 Avtalstyp: 12 månader
-📅 Startdatum: 15/02/2025
-⏰ Avtal går ut: 15/02/2026
-🔔 Påminnelse skickas: 15/03/2025
+## Fremtidige forbedringer
 
-Påminnelse kommer skickas 11 månader före avtalsutgång.
-```
-
-### Påminnelse när avtalet går ut:
-```
-🔔 Kundpåminnelse - Avtal går ut snart
-
-👤 Kund: Anna Andersson
-📧 E-post: anna@example.com
-📞 Telefon: 070-123 45 67
-📋 Avtalstyp: 12 månader
-📅 Avtal startade: 15/02/2025
-⏰ Avtal går ut: 15/02/2026
-
-💡 Åtgärd krävs: Ring kunden för att förlänga avtalet innan det går över till dyrare tillsvidareavtal.
-
-🌐 Källa: Elchef.se påminnelsesystem
-```
-
-## Felsökning
-
-### Vanliga problem:
-
-1. **Inga påminnelser skickas**
-   - Kontrollera att `UPDATE_SECRET_KEY` är korrekt satt
-   - Verifiera att `TELEGRAM_BOT_TOKEN` är giltig
-   - Kontrollera att `TELEGRAM_CHAT_IDS` innehåller rätt chat-ID:n
-   - Testa manuellt med admin-panelen
-
-2. **Försenade påminnelser**
-   - Använd "Markera försenade som skickade" i admin-panelen
-   - Kontrollera att cron job körs regelbundet
-   - Verifiera att API:et fungerar med manuell test
-
-3. **Telegram-meddelanden kommer inte fram**
-   - Verifiera att bot-token är korrekt
-   - Kontrollera att chat-ID:n är rätt
-   - Testa bot-meddelanden manuellt
-
-### Snabbdiagnostik:
-
-1. **Gå till admin-panelen** (`/admin/reminders`)
-2. **Kontrollera systemstatus** - alla indikatorer ska vara gröna
-3. **Testa påminnelsesystemet** - klicka på "Testa påminnelsesystem"
-4. **Hantera försenade påminnelser** - markera som skickade om de redan hanterats
-
-### Miljövariabler som behövs:
-
-```env
-# Telegram-konfiguration
-TELEGRAM_BOT_TOKEN=your_bot_token_here
-TELEGRAM_CHAT_IDS=123456789,987654321
-
-# Cron job autentisering
-UPDATE_SECRET_KEY=your_secret_key_for_cron_jobs
-
-# Supabase-konfiguration
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-```
-
-### Testa manuellt:
-
-```bash
-# Testa reminder API
-curl -X POST https://din-domain.se/api/reminders/send \
-  -H "Authorization: Bearer DIN_UPDATE_SECRET_KEY" \
-  -H "Content-Type: application/json"
-```
-
-### Loggar att kontrollera:
-
-- Vercel Function Logs (i Vercel Dashboard)
-- Supabase Logs (i Supabase Dashboard)
-- Telegram Bot Logs (via BotFather)
-
-### Nästa steg om problemet kvarstår:
-
-1. Kontrollera att alla miljövariabler är korrekt satta
-2. Verifiera att cron job körs (kolla Vercel logs)
-3. Testa Telegram-boten manuellt
-4. Kontrollera Supabase-anslutningen
-5. Använd admin-panelens diagnostikverktyg
-
-## Säkerhet
-
-- Använd en stark `UPDATE_SECRET_KEY`
-- Begränsa åtkomst till API:er endast till auktoriserade källor
-- Överväg att lägga till rate limiting
-- Använd HTTPS för alla API-anrop
-- Verifiera Telegram webhook-signaturer (kan läggas till senare)
-
-## Framtida förbättringar
-
-- E-postnotifieringar som backup
-- Dashboard för att hantera påminnelser
-- Möjlighet att schemalägga flera påminnelser
+- E-mailnotifikationer som backup
+- Dashboard til at administrere påmindelser
+- Mulighed for at planlægge flere påmindelser
 - Integration med CRM-system
-- Statistik och rapporter
-- Telegram webhook-signaturverifiering
+- Statistik og rapporter
+- Telegram webhook-signaturverifikation

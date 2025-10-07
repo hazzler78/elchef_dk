@@ -204,7 +204,7 @@ export default function ContractClicksAdmin() {
           📊 Vad spåras här?
         </h3>
         <p style={{ margin: '0 0 0.5rem 0', color: '#64748b', fontSize: '0.9rem', lineHeight: 1.4 }}>
-          <strong>AI-analyser:</strong> Antal som klickar &quot;Analysera faktura&quot; på /jamfor-elpriser<br/>
+          <strong>AI-analyser:</strong> Antal der klikker &quot;Analyser faktura&quot; på /sammenlign-elpriser<br/>
           <strong>Kontraktsklick:</strong> Antal som klickar &quot;Rörligt avtal&quot; eller &quot;Fastpris&quot; efter AI-analys<br/>
           <strong>Konverteringsgrad:</strong> Hur många % av AI-användare som går vidare till kontraktsval
         </p>

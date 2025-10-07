@@ -1,28 +1,27 @@
-# AI Kunskapsbas Setup Guide
+# AI Vidensbase Setup Guide
 
-## Översikt
-Denna guide hjälper dig att sätta upp en dynamisk kunskapsbas för AI-chatten som kan uppdateras enkelt utan att ändra koden.
+## Oversigt
+Denne guide hjælper dig med at sætte op en dynamisk vidensbase til AI-chatten, der kan opdateres nemt uden at ændre koden.
 
-## Databas Setup
+## Database Setup
 
-### 1. Skapa tabeller i Supabase
-Kör följande SQL i Supabase SQL Editor:
+### 1. Opret tabeller i Supabase
+Kør følgende SQL i Supabase SQL Editor:
 
 ```sql
--- Skapa ai_knowledge tabell
+-- Opret ai_knowledge tabel
 CREATE TABLE ai_knowledge (
   id SERIAL PRIMARY KEY,
   category VARCHAR(100) NOT NULL,
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
   keywords TEXT[] NOT NULL DEFAULT '{}',
-  -- Använd snake_case i databasen för konsekvens
   last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Skapa ai_campaigns tabell
+-- Opret ai_campaigns tabel
 CREATE TABLE ai_campaigns (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -33,119 +32,119 @@ CREATE TABLE ai_campaigns (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Skapa ai_providers tabell
+-- Opret ai_providers tabel
 CREATE TABLE ai_providers (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  type VARCHAR(50) NOT NULL CHECK (type IN ('rorligt', 'fastpris', 'foretag')),
+  type VARCHAR(50) NOT NULL CHECK (type IN ('variabel', 'fastpris', 'erhverv')),
   features TEXT[] NOT NULL DEFAULT '{}',
   url TEXT NOT NULL,
   active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Skapa index för effektiv sökning
+-- Opret index for effektiv søgning
 CREATE INDEX idx_knowledge_category ON ai_knowledge(category, active);
 CREATE INDEX idx_knowledge_keywords ON ai_knowledge USING GIN(keywords);
 CREATE INDEX idx_campaigns_dates ON ai_campaigns(validFrom, validTo, active);
 CREATE INDEX idx_providers_type ON ai_providers(type, active);
 ```
 
-### 2. Lägg till exempeldata
-Kör följande SQL för att lägga till grundläggande kunskap:
+### 2. Tilføj eksempeldata
+Kør følgende SQL for at tilføje grundlæggende viden:
 
 ```sql
--- Lägg till exempel kunskapsartiklar
+-- Tilføj eksempel vidensartikler
 INSERT INTO ai_knowledge (category, question, answer, keywords, active) VALUES
-('elavtal', 'Hur hittar jag bra elavtal?', 'Registrera din e-post i formuläret i foten av sidan för att få tidiga erbjudanden innan de blir fullbokade.', ARRAY['hitta', 'bra', 'erbjudanden', 'registrera', 'e-post'], true),
-('elavtal', 'Vad ska jag välja - Fastpris eller Rörligt?', '**Fastpris**: Förutsägbart under hela avtalsperioden, bra om du vill undvika prisschocker. **Rörligt**: Följer marknaden, historiskt billigare över tid men kan variera. Fundera: Tror du elpriserna blir billigare eller dyrare framöver?', ARRAY['fastpris', 'rorligt', 'val', 'prisschocker', 'marknad'], true),
-('byte', 'Måste jag säga upp mitt gamla elavtal om jag byter leverantör?', 'Nej, du behöver oftast inte säga upp ditt gamla elavtal själv. När du byter elleverantör hanterar den nya leverantören vanligtvis bytet åt dig, inklusive uppsägningen av ditt tidigare avtal.', ARRAY['uppsaga', 'gamla', 'avtal', 'byte', 'leverantör'], true),
-('avgifter', 'Är det någon avgift för att säga upp ett elavtal?', 'Rörliga elavtal kan oftast sägas upp utan avgift och har normalt en uppsägningstid på en månad. Fastprisavtal däremot har en bindningstid, och om du vill avsluta avtalet i förtid kan det tillkomma en brytavgift (även kallad lösenavgift).', ARRAY['avgift', 'uppsaga', 'brytavgift', 'lösenavgift', 'bindningstid'], true),
-('elomraden', 'Vilket Elområde/Elzon tillhör jag?', 'Sverige är indelat i fyra elområden: **SE1** - Norra Sverige, **SE2** - Norra Mellansverige, **SE3** - Södra Mellansverige, **SE4** - Södra Sverige. Vilket elområde du tillhör beror på var du bor och påverkar elpriset i din region.', ARRAY['elområde', 'elzon', 'SE1', 'SE2', 'SE3', 'SE4', 'region'], true),
-('angerratt', 'Kan jag ångra mitt elavtal?', 'Ja, enligt distansavtalslagen har du ångerrätt i 14 dagar när du tecknar ett avtal på distans. Det innebär att du kan ångra avtalet utan kostnad inom denna period. Undantag: betald förbrukad el under ångerperioden.', ARRAY['ångra', 'avtal', '14 dagar', 'distansavtalslagen', 'kostnad'], true);
+('elaftale', 'Hvordan finder jeg gode elaftaler?', 'Registrer din e-mail i formularen i sidefoden for at få tidlige tilbud før de bliver fuldt bookede.', ARRAY['find', 'god', 'tilbud', 'registrer', 'e-mail'], true),
+('elaftale', 'Hvad skal jeg vælge - Fastpris eller Variabel?', '**Fastpris**: Forudsigeligt gennem hele aftaleperioden, godt hvis du vil undgå prisschok. **Variabel**: Følger markedet, historisk billigere over tid men kan variere. Tænk: Tror du elpriserne bliver billigere eller dyrere fremover?', ARRAY['fastpris', 'variabel', 'valg', 'prisschok', 'marked'], true),
+('skifte', 'Skal jeg opsige min gamle elaftale hvis jeg skifter leverandør?', 'Nej, du behøver som regel ikke at opsige din gamle elaftale selv. Når du skifter elleverandør, håndterer den nye leverandør normalt skiftet for dig, inklusive opsigelsen af din tidligere aftale.', ARRAY['opsige', 'gammel', 'aftale', 'skifte', 'leverandør'], true),
+('gebyrer', 'Er der gebyr for at opsige en elaftale?', 'Variable elaftaler kan som regel opsiges uden gebyr og har normalt en opsigelsestid på en måned. Fastprisaftaler derimod har en bindingsperiode, og hvis du vil afslutte aftalen før tid, kan der komme et brudgebyr (også kaldet indfrielsesgebyr).', ARRAY['gebyr', 'opsige', 'brudgebyr', 'indfrielsesgebyr', 'bindingsperiode'], true),
+('elomrader', 'Hvilket Elområde tilhører jeg?', 'Danmark er inddelt i to elområder: **DK1** - Vest for Storebælt, **DK2** - Øst for Storebælt. Hvilket elområde du tilhører afhænger af hvor du bor og påvirker elprisen i din region.', ARRAY['elområde', 'DK1', 'DK2', 'region'], true),
+('fortrydelsesret', 'Kan jeg fortryde min elaftale?', 'Ja, ifølge fortrydelsesloven har du fortrydelsesret i 14 dage når du indgår en aftale på distancesalg. Det betyder at du kan fortryde aftalen uden omkostninger inden for denne periode. Undtagelse: betalt forbrug el i fortrydelsesperioden.', ARRAY['fortryde', 'aftale', '14 dage', 'fortrydelsesloven', 'omkostning'], true);
 
--- Lägg till exempel kampanjer
+-- Tilføj eksempel kampagner
 INSERT INTO ai_campaigns (title, description, validFrom, validTo, active) VALUES
-('Rörligt avtal - 0 kr i avgifter', '0 kr i avgifter första året – utan bindningstid', '2025-01-01', '2025-12-31', true),
-('Fastprisavtal med prisgaranti', 'Prisgaranti med valfri bindningstid (1-3 år)', '2025-01-01', '2025-12-31', true),
-('Företagsavtal via Energi2.se', 'Särskilda företagsavtal för företag', '2025-01-01', '2025-12-31', true);
+('Variabel aftale - 0 kr i gebyrer', '0 kr i gebyrer første år – uden bindingsperiode', '2025-01-01', '2025-12-31', true),
+('Fastprisaftale med prisgaranti', 'Prisgaranti med valgfri bindingsperiode (1-3 år)', '2025-01-01', '2025-12-31', true),
+('Erhvervsaftale via Energi2.se', 'Særlige erhvervsaftaler for virksomheder', '2025-01-01', '2025-12-31', true);
 
--- Lägg till exempel leverantörer
+-- Tilføj eksempel leverandører
 INSERT INTO ai_providers (name, type, features, url, active) VALUES
-('Cheap Energy', 'rorligt', ARRAY['0 kr månadsavgift', '0 öre påslag', 'Ingen bindningstid'], 'https://www.cheapenergy.se/elchef-rorligt/', true),
- ('Svealands Elbolag', 'fastpris', ARRAY['Prisgaranti', 'Valfri bindningstid', 'Inga dolda avgifter'], 'https://www.svealandselbolag.se/elchef-fastpris/', true),
-('Energi2.se', 'foretag', ARRAY['Företagsavtal', 'Skräddarsydda lösningar', 'Volymrabatter'], 'https://energi2.se/elchef/', true);
+('Cheap Energy', 'variabel', ARRAY['0 kr månedligt gebyr', '0 øre tillæg', 'Ingen bindingsperiode'], 'https://www.cheapenergy.se/elchef-variabel/', true),
+('Svealands Elbolag', 'fastpris', ARRAY['Prisgaranti', 'Valgfri bindingsperiode', 'Ingen skjulte gebyrer'], 'https://www.svealandselbolag.se/elchef-fastpris/', true),
+('Energi2.se', 'erhverv', ARRAY['Erhvervsaftaler', 'Skræddersyede løsninger', 'Mængderabatter'], 'https://energi2.se/elchef/', true);
 ```
 
-## Användning
+## Brug
 
-### 1. Admin-sida
-Gå till `/admin/knowledge` för att hantera kunskapsbasen:
-- **Lösenord**: `grodan2025`
-- **Kunskapsartiklar**: Lägg till, redigera eller ta bort FAQ-artiklar
-- **Kampanjer**: Hantera aktiva kampanjer och erbjudanden
-- **Leverantörer**: Uppdatera leverantörsinformation
+### 1. Admin-side
+Gå til `/admin/knowledge` for at administrere vidensbasen:
+- **Password**: `grodan2025`
+- **Vidensartikler**: Tilføj, rediger eller slet FAQ-artikler
+- **Kampagner**: Administrer aktive kampagner og tilbud
+- **Leverandører**: Opdater leverandørinformation
 
-### 2. Automatisk uppdatering
-Kunskapsbasen uppdateras automatiskt när du:
-- Lägger till nya kunskapsartiklar
-- Aktiverar/inaktiverar kampanjer
-- Uppdaterar leverantörsinformation
+### 2. Automatisk opdatering
+Vidensbasen opdateres automatisk når du:
+- Tilføjer nye vidensartikler
+- Aktiverer/deaktiverer kampagner
+- Opdaterer leverandørinformation
 
-### 3. AI-chatten använder kunskapsbasen
-AI-chatten kommer automatiskt att:
-- Hämta aktuell information från databasen
-- Ge svar baserat på den senaste kunskapsbasen
-- Inkludera aktuella kampanjer och erbjudanden
+### 3. AI-chatten bruger vidensbasen
+AI-chatten vil automatisk:
+- Hente aktuel information fra databasen
+- Give svar baseret på den seneste vidensbase
+- Inkludere aktuelle kampagner og tilbud
 
-## Fördelar med denna lösning
+## Fordele ved denne løsning
 
-✅ **Enkel uppdatering**: Uppdatera kunskap utan att ändra kod
-✅ **Realtidsinformation**: AI:n får alltid senaste informationen
-✅ **Strukturerad data**: Organiserad kunskapsbas med kategorier
-✅ **Admin-gränssnitt**: Användarvänligt gränssnitt för uppdateringar
-✅ **Automatisk synkronisering**: Ingen omstart av servern krävs
+✅ **Nem opdatering**: Opdater viden uden at ændre kode
+✅ **Realtidsinformation**: AI'en får altid seneste information
+✅ **Struktureret data**: Organiseret vidensbase med kategorier
+✅ **Admin-grænseflade**: Brugervenligt interface til opdateringer
+✅ **Automatisk synkronisering**: Ingen genstart af serveren kræves
 
-## Framtida utbyggnad
+## Fremtidig udbygning
 
 ### 1. API-integration
-Skapa API-endpoints för att:
-- Hämta kunskap baserat på nyckelord
-- Få aktuella kampanjer
-- Hämta leverantörsinformation
+Opret API-endpoints for at:
+- Hente viden baseret på nøgleord
+- Få aktuelle kampagner
+- Hente leverandørinformation
 
-### 2. Automatisk uppdatering
-Implementera:
-- Schemalagda uppdateringar
+### 2. Automatisk opdatering
+Implementer:
+- Planlagte opdateringer
 - Webhook-integration
-- Import från externa källor
+- Import fra eksterne kilder
 
-### 3. Analys och rapporter
-Lägg till:
-- Användningsstatistik
-- Populära frågor
-- Effektivitetsmätning
+### 3. Analyse og rapporter
+Tilføj:
+- Brugsstatistik
+- Populære spørgsmål
+- Effektivitetsmåling
 
-## Felsökning
+## Fejlsøgning
 
-### Vanliga problem:
+### Almindelige problemer:
 
 **"Table does not exist"**
-- Kontrollera att du körde SQL-koden i rätt databas
-- Verifiera att tabellerna skapades korrekt
+- Kontroller at du kørte SQL-koden i den rigtige database
+- Verificer at tabellerne blev oprettet korrekt
 
 **"Permission denied"**
-- Kontrollera att din Supabase-nyckel har rätt behörigheter
-- Verifiera RLS-policies om de är aktiverade
+- Kontroller at din Supabase-nøgle har de rigtige rettigheder
+- Verificer RLS-policies hvis de er aktiveret
 
 **"Data not loading"**
-- Kontrollera nätverksanslutningen
-- Verifiera att miljövariablerna är korrekt inställda
+- Kontroller netværksforbindelsen
+- Verificer at miljøvariablerne er korrekt indstillet
 
 ## Support
 
-Om du stöter på problem:
-1. Kontrollera Supabase-loggarna
-2. Verifiera databasanslutningen
-3. Testa med en enkel fråga först
-4. Kontrollera att alla tabeller finns och har rätt struktur
+Hvis du støder på problemer:
+1. Kontroller Supabase-loggene
+2. Verificer databaseforbindelsen
+3. Test med en simpel forespørgsel først
+4. Kontroller at alle tabeller findes og har korrekt struktur

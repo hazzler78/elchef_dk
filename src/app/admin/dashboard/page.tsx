@@ -506,9 +506,9 @@ export default function AdminDashboard() {
           marginBottom: 24
         }}>
           <strong>ℹ️ Ingen data ännu:</strong> Inga besökare har registrerats i page_views tabellen. 
-          Besök startsidan eller /jamfor-elpriser för att generera data.
+          Besøg startsiden eller /sammenlign-elpriser for at generere data.
           <div style={{ marginTop: 8, fontSize: '0.875rem' }}>
-            Tracking är aktiverat på: / och /jamfor-elpriser
+            Tracking er aktiveret på: / og /sammenlign-elpriser
           </div>
         </div>
       )}

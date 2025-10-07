@@ -39,7 +39,7 @@ export default function FunnelAdmin() {
       let pvQuery = supabase
         .from('page_views')
         .select('*', { count: 'exact', head: true })
-        .eq('path', '/jamfor-elpriser');
+        .eq('path', '/sammenlign-elpriser');
       if (from) pvQuery = pvQuery.gte('created_at', from);
       const { count: pageViews } = await pvQuery;
 
@@ -127,7 +127,7 @@ export default function FunnelAdmin() {
       <div style={{ marginTop: '1.5rem', background: 'white', borderRadius: 8, border: '1px solid #eee', padding: '1rem' }}>
         <h2 style={{ marginTop: 0 }}>Definitioner</h2>
         <ul>
-          <li>Besök: Antal page views på <code>/jamfor-elpriser</code>.</li>
+          <li>Besøg: Antal page views på <code>/sammenlign-elpriser</code>.</li>
           <li>AI‑analyser: Antal analyser körda (rader i <code>invoice_ocr</code>).</li>
           <li>Kontraktsklick med AI: Klick där <code>log_id</code> finns.</li>
           <li>Kontraktsklick utan AI: Klick där <code>log_id</code> saknas.</li>

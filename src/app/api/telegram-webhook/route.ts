@@ -126,7 +126,7 @@ async function fetchPageSummary(url: string): Promise<{ title: string; text: str
 async function summarizeWithXAI(title: string, content: string): Promise<string | null> {
   if (!XAI_API_KEY) return null;
   const system = [
-    'Du är en svensk redaktör för elchef.se. Du får en artikel (titel + text) från en extern länk.',
+    'Du er en dansk redaktør for elchef.dk. Du modtager en artikel (titel + tekst) fra et eksternt link.',
     'Skapa en kort sammanfattning anpassad för Telegram i Markdown med:',
     '- En tydlig rubrik (fetstil).',
     '- 3–6 viktigaste punkter i punktlista, konkreta och korta.',

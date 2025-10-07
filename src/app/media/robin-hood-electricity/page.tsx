@@ -250,7 +250,7 @@ export default function RobinHoodElectricity() {
               Eller välja fast pris och slippa höstrusket i plånboken.
             </p>
             
-            <SubTitle>Därför ska du byta med elchef.se</SubTitle>
+            <SubTitle>Derfor skal du skifte med elchef.dk</SubTitle>
             <CustomList>
               <CustomListItem>
                 <CheckIcon />
@@ -272,11 +272,11 @@ export default function RobinHoodElectricity() {
             
             <div style={{ textAlign: 'center' }}>
               <CTAButton 
-                href="https://elchef.se" 
+                href="https://elchef.dk" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
-                Redo att hitta bästa elavtalet? Byt enkelt på elchef.se <ArrowIcon />
+                Klar til at finde den bedste elaftale? Skift nemt på elchef.dk <ArrowIcon />
               </CTAButton>
             </div>
           </Article>

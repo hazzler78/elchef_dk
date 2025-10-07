@@ -1,84 +1,84 @@
-# Telegram Bot Setup för Kontaktformulär
+# Telegram Bot Setup til Kontaktformular
 
-## Steg 1: Skapa en Telegram Bot
+## Trin 1: Opret en Telegram Bot
 
-1. **Öppna Telegram** och sök efter `@BotFather`
-2. **Starta en chatt** med BotFather
-3. **Skicka kommandot** `/newbot`
-4. **Följ instruktionerna**:
-   - Ange ett namn för din bot (t.ex. "Elchef Contact Bot")
-   - Ange ett användarnamn som slutar med "bot" (t.ex. "elchef_contact_bot")
-5. **Spara bot token** som BotFather ger dig
+1. **Åbn Telegram** og søg efter `@BotFather`
+2. **Start en chat** med BotFather
+3. **Send kommandoen** `/newbot`
+4. **Følg instruktionerne**:
+   - Angiv et navn til din bot (f.eks. "Elchef Contact Bot")
+   - Angiv et brugernavn der slutter med "bot" (f.eks. "elchef_contact_bot")
+5. **Gem bot token** som BotFather giver dig
 
-## Steg 2: Hitta ditt Chat ID
+## Trin 2: Find dit Chat ID
 
-### Alternativ 1: Skicka meddelande till bot
-1. **Sök efter din bot** med användarnamnet du skapade
-2. **Starta en chatt** med boten
-3. **Skicka ett meddelande** (vad som helst)
-4. **Gå till** `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
-5. **Hitta chat_id** i svaret
+### Alternativ 1: Send besked til bot
+1. **Søg efter din bot** med det brugernavn du oprettede
+2. **Start en chat** med botten
+3. **Send en besked** (hvad som helst)
+4. **Gå til** `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
+5. **Find chat_id** i svaret
 
-### Alternativ 2: Använd @userinfobot
-1. **Sök efter** `@userinfobot`
-2. **Starta en chatt** och skicka `/start`
-3. **Kopiera ditt ID** från svaret
+### Alternativ 2: Brug @userinfobot
+1. **Søg efter** `@userinfobot`
+2. **Start en chat** og send `/start`
+3. **Kopier dit ID** fra svaret
 
-## Steg 3: Konfigurera Miljövariabler
+## Trin 3: Konfigurer Miljøvariabler
 
-Lägg till följande i din `.env.local` fil:
+Tilføj følgende i din `.env.local` fil:
 
 ```env
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 TELEGRAM_CHAT_IDS=123456789,987654321,555666777
 
-# Mailerlite Configuration (redan konfigurerat)
+# Mailerlite Configuration (allerede konfigureret)
 MAILERLITE_API_KEY=your_mailerlite_api_key
 MAILERLITE_GROUP_ID=your_group_id
 ```
 
-### Flera Chat IDs
-För att skicka notifieringar till flera personer, separera chat IDs med kommatecken:
+### Flere Chat IDs
+For at sende notifikationer til flere personer, separer chat IDs med komma:
 - `TELEGRAM_CHAT_IDS=123456789,987654321,555666777`
-- Varje person måste ha startat en chatt med boten
-- Du kan lägga till eller ta bort chat IDs när som helst
+- Hver person skal have startet en chat med botten
+- Du kan tilføje eller fjerne chat IDs når som helst
 
-## Steg 4: Testa Konfigurationen
+## Trin 4: Test Konfigurationen
 
-1. **Starta utvecklingsservern**: `npm run dev`
-2. **Fyll i kontaktformuläret** på din webbplats
-3. **Kontrollera Telegram** för notifiering
+1. **Start udviklingsserveren**: `npm run dev`
+2. **Udfyld kontaktformularen** på din hjemmeside
+3. **Kontroller Telegram** for notifikation
 
-## Exempel på Telegram-meddelande
+## Eksempel på Telegram-besked
 
 ```
-🔔 Ny kontaktförfrågan
+🔔 Ny kontaktanmodning
 
-📧 E-post: anna@example.com
-📞 Telefon: 070-123 45 67
-📰 Nyhetsbrev: Ja
+📧 E-mail: anna@example.com
+📞 Telefon: 012-345 67 89
+📰 Nyhedsbrev: Ja
 
-⏰ Tidpunkt: 2024-01-15 14:30:25
-🌐 Källa: Elchef.se kontaktformulär
+⏰ Tidspunkt: 2024-01-15 14:30:25
+🌐 Kilde: Elchef.dk kontaktformular
 ```
 
-## Felsökning
+## Fejlsøgning
 
-### Bot svarar inte
-- Kontrollera att bot token är korrekt
-- Se till att du har startat en chatt med boten
+### Bot svarer ikke
+- Kontroller at bot token er korrekt
+- Sørg for at du har startet en chat med botten
 
-### Inga notifieringar
-- Verifiera att TELEGRAM_CHAT_ID är korrekt
-- Kontrollera att boten har behörighet att skicka meddelanden
+### Ingen notifikationer
+- Verificer at TELEGRAM_CHAT_ID er korrekt
+- Kontroller at botten har tilladelse til at sende beskeder
 
-### Mailerlite-integration fungerar inte
-- Verifiera MAILERLITE_API_KEY och MAILERLITE_GROUP_ID
-- Kontrollera att API-nyckeln har rätt behörigheter
+### Mailerlite-integration virker ikke
+- Verificer MAILERLITE_API_KEY og MAILERLITE_GROUP_ID
+- Kontroller at API-nøglen har de rigtige rettigheder
 
-## Säkerhet
+## Sikkerhed
 
-- **Dela aldrig** din bot token offentligt
-- **Använd miljövariabler** för alla känsliga data
-- **Begränsa bot-åtkomst** till endast nödvändiga funktioner 
+- **Del aldrig** din bot token offentligt
+- **Brug miljøvariabler** for alle følsomme data
+- **Begræns bot-adgang** til kun nødvendige funktioner

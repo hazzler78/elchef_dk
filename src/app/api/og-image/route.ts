@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     // Fetch HTML with a sane UA
     const res = await fetch(targetUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; ElchefBot/1.0; +https://elchef.se)',
+        'User-Agent': 'Mozilla/5.0 (compatible; ElchefBot/1.0; +https://elchef.dk)',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       },
     });

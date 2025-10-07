@@ -1,149 +1,149 @@
-# Social Delning av AI-Kalkyler - Setup Guide
+# Social Deling af AI-Beregninger - Setup Guide
 
-## 🎯 Översikt
+## 🎯 Oversigt
 
-Detta system låter användare dela sina AI-kalkyler från `/jamfor-elpriser` på sociala medier, vilket skapar viral marknadsföring och ökar trafik till er webbplats.
+Dette system lader brugere dele deres AI-beregninger fra `/sammenlign-elpriser` på sociale medier, hvilket skaber viral markedsføring og øger trafik til jeres hjemmeside.
 
 ## 🚀 Funktioner
 
-### 1. **Automatisk Delning efter AI-analys**
-- Delningsknappar visas efter att användaren fått sin AI-analys
-- Automatisk extraktion av besparingsbelopp från analysen
-- Plattformsspecifika texter för Facebook, Instagram, LinkedIn och Twitter
+### 1. **Automatisk Deling efter AI-analyse**
+- Delingsknapper vises efter at brugeren har fået sin AI-analyse
+- Automatisk ekstraktion af besparelsesbeløb fra analysen
+- Platformsspecifikke tekster for Facebook, Instagram, LinkedIn og Twitter
 
-### 2. **Unika Delningslänkar**
-- Varje delning får en unik länk: `elchef.se/delad-kalkyl?id={logId}`
-- Delade kalkyler visas på en dedikerad sida
-- Automatisk rensning av gamla delningar (30 dagar)
+### 2. **Unikke Delingsl Links**
+- Hver deling får et unikt link: `elchef.dk/delt-beregning?id={logId}`
+- Delte beregninger vises på en dedikeret side
+- Automatisk rensning af gamle delinger (30 dage)
 
-### 3. **Spårning och Analytics**
-- Spårar vilka plattformar som används mest
-- Mäter besparingsbelopp för delade kalkyler
-- Kopplar delningar till ursprungliga AI-analyser
+### 3. **Sporing og Analytics**
+- Sporer hvilke platforme der bruges mest
+- Måler besparelsesbeløb for delte beregninger
+- Kobler delinger til oprindelige AI-analyser
 
-## 📁 Filer som skapats
+## 📁 Filer der er oprettet
 
 ### Komponenter
-- `src/components/ShareResults.tsx` - Huvudkomponent för social delning
-- `src/app/delad-kalkyl/page.tsx` - Sida för att visa delade kalkyler
+- `src/components/ShareResults.tsx` - Hovedkomponent for social deling
+- `src/app/delt-beregning/page.tsx` - Side for at vise delte beregninger
 
-### API:er
-- `src/app/api/events/share-click/route.ts` - Spårar delningar
+### API'er
+- `src/app/api/events/share-click/route.ts` - Sporer delinger
 
-### Databas
-- `supabase-share-tracking.sql` - SQL schema för spårning
+### Database
+- `supabase-share-tracking.sql` - SQL schema for sporing
 
 ## 🛠 Installation
 
-### 1. Kör SQL-schemat
+### 1. Kør SQL-skemaet
 ```sql
--- Kör supabase-share-tracking.sql i din Supabase SQL editor
+-- Kør supabase-share-tracking.sql i din Supabase SQL editor
 ```
 
-### 2. Uppdatera miljövariabler
-Inga nya miljövariabler behövs - använder befintlig Supabase-konfiguration.
+### 2. Opdater miljøvariabler
+Ingen nye miljøvariabler behøves - bruger eksisterende Supabase-konfiguration.
 
-### 3. Testa funktionaliteten
-1. Gå till `/jamfor-elpriser`
-2. Ladda upp en elräkning och få AI-analys
-3. Klicka på "Dela resultat" efter analysen
-4. Testa delning på olika plattformar
+### 3. Test funktionaliteten
+1. Gå til `/sammenlign-elpriser`
+2. Upload en elregning og få AI-analyse
+3. Klik på "Del resultat" efter analysen
+4. Test deling på forskellige platforme
 
-## 📊 Förväntade Resultat
+## 📊 Forventede Resultater
 
-### Delningstexter per plattform:
+### Delingstekster per platform:
 
 **Facebook/LinkedIn:**
 ```
-💡 AI-analys av min elräkning visar att jag betalar 2,400 kr/år i onödiga avgifter!
+💡 AI-analyse af min elregning viser at jeg betaler 2,400 kr/år i unødvendige gebyrer!
 
-🔍 Testa själv på elchef.se/jamfor-elpriser
+🔍 Test selv på elchef.dk/sammenlign-elpriser
 
-#Elbesparing #AI #Elchef
+#Elbesparelse #AI #Elchef
 ```
 
 **Instagram:**
 ```
-💡 AI-analys av min elräkning visar att jag betalar 2,400 kr/år i onödiga avgifter!
+💡 AI-analyse af min elregning viser at jeg betaler 2,400 kr/år i unødvendige gebyrer!
 
-🔍 Testa själv på elchef.se/jamfor-elpriser
+🔍 Test selv på elchef.dk/sammenlign-elpriser
 
-#Elbesparing #AI #Elchef #Energi
+#Elbesparelse #AI #Elchef #Energi
 ```
 
 **Twitter:**
 ```
-💡 AI-analys av min elräkning visar att jag betalar 2,400 kr/år i onödiga avgifter!
+💡 AI-analyse af min elregning viser at jeg betaler 2,400 kr/år i unødvendige gebyrer!
 
-🔍 Testa själv: elchef.se/jamfor-elpriser
+🔍 Test selv: elchef.dk/sammenlign-elpriser
 
-#Elbesparing #AI #Elchef
+#Elbesparelse #AI #Elchef
 ```
 
-## 🎨 Anpassningsmöjligheter
+## 🎨 Tilpasningsmuligheder
 
-### 1. **Anpassa delningstexter**
-Redigera `generateShareText()` i `ShareResults.tsx` för att ändra texterna.
+### 1. **Tilpas delingstekster**
+Rediger `generateShareText()` i `ShareResults.tsx` for at ændre teksterne.
 
-### 2. **Lägg till fler plattformar**
-Lägg till nya plattformar i `handleShare()` funktionen.
+### 2. **Tilføj flere platforme**
+Tilføj nye platforme i `handleShare()` funktionen.
 
-### 3. **Förbättra delade kalkyler**
-Uppdatera `delad-kalkyl/page.tsx` för att visa mer detaljerad information.
+### 3. **Forbedre delte beregninger**
+Opdater `delt-beregning/page.tsx` for at vise mere detaljeret information.
 
-## 📈 Analytics och Spårning
+## 📈 Analytics og Sporing
 
-### Spårade data:
-- **Plattform** - Var delningen skedde
-- **Besparingsbelopp** - Hur mycket användaren kan spara
-- **Session ID** - Kopplar till ursprunglig analys
-- **Timestamp** - När delningen skedde
+### Sporet data:
+- **Platform** - Hvor delingen skete
+- **Besparelsesbeløb** - Hvor meget brugeren kan spare
+- **Session ID** - Kobler til oprindelig analyse
+- **Timestamp** - Hvornår delingen skete
 
 ### Supabase-tabeller:
-- `share_clicks` - Spårar alla delningar
-- `shared_calculations` - Lagrar delade kalkyler (framtida funktionalitet)
+- `share_clicks` - Sporer alle delinger
+- `shared_calculations` - Gemmer delte beregninger (fremtidig funktionalitet)
 
-## 🔒 Säkerhet och Integritet
+## 🔒 Sikkerhed og Integritet
 
-- **Anonyma delningar** - Inga personuppgifter sparas
-- **Begränsad livslängd** - Delade kalkyler tas bort efter 30 dagar
-- **RLS-policies** - Säker databasåtkomst
-- **Ingen känslig data** - Endast besparingsbelopp och metadata
+- **Anonyme delinger** - Ingen personoplysninger gemmes
+- **Begrænset levetid** - Delte beregninger fjernes efter 30 dage
+- **RLS-policies** - Sikker databaseadgang
+- **Ingen følsom data** - Kun besparelsesbeløb og metadata
 
-## 🚀 Framtida Förbättringar
+## 🚀 Fremtidige Forbedringer
 
-### 1. **Visuella Grafiska**
-- Generera automatiska grafer över kostnadsfördelning
-- Skapa Instagram Stories-templates
-- Visuella besparingsdiagram
+### 1. **Visuelle Grafik**
+- Generer automatiske grafer over omkostningsfordeling
+- Opret Instagram Stories-templates
+- Visuelle besparelsesdiagrammer
 
-### 2. **Avancerad Spårning**
-- Spåra konvertering från delningar till nya användare
-- A/B-testning av delningstexter
-- ROI-analys för social delning
+### 2. **Avanceret Sporing**
+- Spor konvertering fra delinger til nye brugere
+- A/B-testning af delingstekster
+- ROI-analyse for social deling
 
 ### 3. **Gamification**
-- Poängsystem för delningar
-- Badges för "besparingsambassadörer"
-- Leaderboards för mest delade kalkyler
+- Pointsystem for delinger
+- Badges for "besparelsesambassadører"
+- Leaderboards for mest delte beregninger
 
-## 🎯 Marknadsföringsstrategi
+## 🎯 Markedsføringsstrategi
 
 ### 1. **Viral Koefficient**
-- Varje delning exponerar Elchef för nya användare
-- Besparingsbelopp skapar FOMO (Fear of Missing Out)
-- Social proof genom delade resultat
+- Hver deling eksponerer Elchef for nye brugere
+- Besparelsesbeløb skaber FOMO (Fear of Missing Out)
+- Social proof gennem delte resultater
 
-### 2. **Innehållsmarknadsföring**
-- Delade kalkyler blir användargenererat innehåll
-- Olika besparingsbelopp skapar variation
-- Hashtags ökar synlighet
+### 2. **Indholdsmarkedsføring**
+- Delte beregninger bliver brugergenereret indhold
+- Forskellige besparelsesbeløb skaber variation
+- Hashtags øger synlighed
 
 ### 3. **Konverteringsoptimering**
-- Delade kalkyler leder tillbaka till kalkylatorn
-- "Testa själv"-CTA på varje delning
-- Social proof ökar förtroende
+- Delte beregninger fører tilbage til beregneren
+- "Test selv"-CTA på hver deling
+- Social proof øger tillid
 
 ## 📞 Support
 
-För frågor eller problem med social delning, kontakta utvecklingsteamet eller skapa en issue i projektet.
+For spørgsmål eller problemer med social deling, kontakt udviklingsteamet eller opret en issue i projektet.

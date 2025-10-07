@@ -292,7 +292,7 @@ export default function WeatherElectricityPrices() {
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div>Hos oss elchef.se får du rörligt pris utan påslag – bara marknadspriset.</div>
+                <div>Hos os elchef.dk får du variabel pris uden tillæg – kun markedsprisen.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
@@ -324,11 +324,11 @@ export default function WeatherElectricityPrices() {
             
             <div style={{ textAlign: 'center' }}>
               <CTAButton 
-                href="https://elchef.se" 
+                href="https://elchef.dk" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
-                Redo att fixa bästa elavtalet? Byt direkt på elchef.se <ArrowIcon />
+                Klar til at finde den bedste elaftale? Skift direkte på elchef.dk <ArrowIcon />
               </CTAButton>
             </div>
           </Article>
