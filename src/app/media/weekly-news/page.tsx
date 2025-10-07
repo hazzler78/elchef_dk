@@ -184,152 +184,152 @@ export default function WeeklyNews() {
         <Container>
           <BackButton href="/media">
             <BackIcon />
-            Tillbaka till Media
+            Tilbage til Medier
           </BackButton>
           
-          <Title>Veckans nyheter från elmarknaden</Title>
+          <Title>Ugens nyheder fra elmarkedet</Title>
           <Lead>
-            Här samlar vi de senaste nyheterna och uppdateringarna från elmarknaden som påverkar dig som konsument. Vi håller dig uppdaterad med de viktigaste händelserna som kan påverka ditt elavtal och energianvändning.
+            Her samler vi de seneste nyheder og opdateringer fra elmarkedet, der påvirker dig som forbruger. Vi holder dig opdateret med de vigtigste begivenheder, der kan påvirke din elaftale og energiforbrug.
           </Lead>
 
           <Article>
-            <SubTitle>Senaste utvecklingar:</SubTitle>
+            <SubTitle>Seneste udvikling:</SubTitle>
             <CustomList>
               <CustomListItem>
                 <ArrowRight />
-                <div><strong>Nya elavtal lanseras</strong> – flera leverantörer har justerat sina priser för att konkurrera bättre.</div>
+                <div><strong>Nye elaftaler lanceres</strong> – flere leverandører har justeret deres priser for at konkurrere bedre.</div>
               </CustomListItem>
               <CustomListItem>
                 <ArrowRight />
-                <div><strong>Vindkraftsexpansion</strong> – nya vindkraftsparker planeras vilket kan pressa priserna ytterligare.</div>
+                <div><strong>Vindkraftudvidelse</strong> – nye vindmølleparker planlægges, hvilket kan presse priserne yderligere.</div>
               </CustomListItem>
               <CustomListItem>
                 <ArrowRight />
-                <div><strong>Regleringsändringar</strong> – nya EU-direktiv påverkar hur elpriserna ska presenteras för konsumenter.</div>
+                <div><strong>Reguleringsændringer</strong> – nye EU-direktiver påvirker, hvordan elpriserne skal præsenteres for forbrugere.</div>
               </CustomListItem>
               <CustomListItem>
                 <WarningIcon />
-                <div><strong>Väderprognoser</strong> – kommande veckor förväntas ha blandat väder vilket kan påverka prisvolatiliteten.</div>
+                <div><strong>Vejrudsigter</strong> – de kommende uger forventes at have blandet vejr, hvilket kan påvirke prisvolatiliteten.</div>
               </CustomListItem>
             </CustomList>
             
-            <SubTitle>🚨 Varning: Dolda avgifter och orimliga bindningstider</SubTitle>
+            <SubTitle>🚨 Advarsel: Skjulte gebyrer og urimelige bindingsperioder</SubTitle>
             <p>
-              Vi har upptäckt några riktigt dåliga exempel på hur vissa leverantörer försöker lura kunder:
+              Vi har opdaget nogle rigtig dårlige eksempler på, hvordan visse leverandører forsøger at snyde kunder:
             </p>
             <CustomList>
               <CustomListItem>
                 <WarningIcon />
-                <div><strong>Öresundskraft&apos;s &quot;flyttkram&quot;</strong> – 252 kronor bara för att du flyttar in! Vi tackar för skämtet men säger nej tack.</div>
+                <div><strong>Øresundskrafts &quot;flytteknus&quot;</strong> – 252 kroner bare fordi du flytter ind! Vi takker for skæmtet, men siger nej tak.</div>
               </CustomListItem>
               <CustomListItem>
                 <WarningIcon />
-                <div><strong>Lingon&apos;s 60-månaders bindning</strong> – längre än de flesta förhållanden håller! Tur att vi hann rycka in – annars hade det blivit 35 000 kronor i el-sorg.</div>
+                <div><strong>Lingons 60-måneders binding</strong> – længere end de fleste forhold holder! Godt vi nåede at gribe ind – ellers var det blevet 35 000 kroner i el-sorg.</div>
               </CustomListItem>
             </CustomList>
             
             <Quote>
-              &quot;Nu har vi fått fullmakt och laddar pilbågen – pengarna ska tillbaka!&quot;
+              &quot;Nu har vi fået fuldmagt og spænder buen – pengene skal tilbage!&quot;
             </Quote>
             
-            <SubTitle>💚 Elchef till undsättning</SubTitle>
+            <SubTitle>💚 Elchef til undsætning</SubTitle>
             <CustomList>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Inga flyttkramar eller dolda avgifter</strong> – bara marknadens bästa priser.</div>
+                <div><strong>Ingen flytteknus eller skjulte gebyrer</strong> – kun markedets bedste priser.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Inga orimliga bindningstider</strong> – du är fri att byta när du vill.</div>
+                <div><strong>Ingen urimelige bindingsperioder</strong> – du er fri til at skifte, når du vil.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Personlig hjälp</strong> – lämna ditt telefonnummer så ringer vi upp och hjälper till.</div>
+                <div><strong>Personlig hjælp</strong> – efterlad dit telefonnummer, så ringer vi op og hjælper.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Elens Robin Hood</strong> – vi tar kontakt och hjälper med alla frågor och manuell registrering.</div>
+                <div><strong>Elens Robin Hood</strong> – vi tager kontakt og hjælper med alle spørgsmål og manuel registrering.</div>
               </CustomListItem>
             </CustomList>
             
             <Quote>
-              &quot;Det är viktigt att hålla sig uppdaterad med marknadsutvecklingen för att fatta informerade beslut om ditt elavtal.&quot;
+              &quot;Det er vigtigt at holde sig opdateret med markedsudviklingen for at træffe informerede beslutninger om din elaftale.&quot;
             </Quote>
             
-            <SubTitle>Vad betyder detta för dig?</SubTitle>
+            <SubTitle>Hvad betyder dette for dig?</SubTitle>
             <CustomList>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Bättre konkurrens</strong> – fler alternativ och potentiellt lägre priser.</div>
+                <div><strong>Bedre konkurrence</strong> – flere alternativer og potentielt lavere priser.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Mer transparens</strong> – tydligare information om vad du faktiskt betalar för.</div>
+                <div><strong>Mere gennemsigtighed</strong> – tydeligere information om, hvad du faktisk betaler for.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Flexibilitet</strong> – möjlighet att byta till bättre avtal när marknaden förändras.</div>
+                <div><strong>Fleksibilitet</strong> – mulighed for at skifte til bedre aftaler, når markedet ændrer sig.</div>
               </CustomListItem>
             </CustomList>
             
             <InfoBox>
-              <h4>Vill du vara först med nyheterna?</h4>
-              <p>Prenumerera på vårt nyhetsbrev för att få de senaste uppdateringarna direkt i din inkorg.</p>
+              <h4>Vil du være først med nyhederne?</h4>
+              <p>Abonner på vores nyhedsbrev for at få de seneste opdateringer direkte i din indbakke.</p>
               <CustomList>
                 <CustomListItem>
                   <CheckIcon />
-                  <div>Vi meddelar dig när ditt avtal går ut</div>
+                  <div>Vi underretter dig, når din aftale udløber</div>
                 </CustomListItem>
                 <CustomListItem>
                   <CheckIcon />
-                  <div>Vi meddelar dig när en ny kampanj är tillgänglig</div>
+                  <div>Vi underretter dig, når en ny kampagne er tilgængelig</div>
                 </CustomListItem>
                 <CustomListItem>
                   <CheckIcon />
-                  <div>Vi meddelar dig när det är dags att byta för att undvika dyrare el</div>
+                  <div>Vi underretter dig, når det er tid at skifte for at undgå dyrere el</div>
                 </CustomListItem>
                 <CustomListItem>
                   <CheckIcon />
-                  <div>Veckovis sammanfattning av marknadsutvecklingen</div>
+                  <div>Ugentlig sammenfatning af markedsudviklingen</div>
                 </CustomListItem>
                 <CustomListItem>
                   <CheckIcon />
-                  <div>Exklusiva erbjudanden för prenumeranter</div>
+                  <div>Eksklusive tilbud til abonnenter</div>
                 </CustomListItem>
               </CustomList>
             </InfoBox>
             
-            <SubTitle>Kommande händelser att hålla koll på:</SubTitle>
+            <SubTitle>Kommende begivenheder at holde øje med:</SubTitle>
             <CustomList>
               <CustomListItem>
                 <ArrowRight />
-                <div><strong>Nästa vecka:</strong> Ny rapport om energibesparingstips för vintermånaderna.</div>
+                <div><strong>Næste uge:</strong> Ny rapport om energisparetips til vintermånederne.</div>
               </CustomListItem>
               <CustomListItem>
                 <ArrowRight />
-                <div><strong>Om två veckor:</strong> Lansering av ny prisjämförelsetjänst med realtidsdata.</div>
+                <div><strong>Om to uger:</strong> Lancering af ny prissammenligningtjeneste med realtidsdata.</div>
               </CustomListItem>
               <CustomListItem>
                 <ArrowRight />
-                <div><strong>Månadens slut:</strong> Kvartalsrapport från energimyndigheten om marknadsutvecklingen.</div>
+                <div><strong>Månedens slutning:</strong> Kvartalsrapport fra energimyndigheden om markedsudviklingen.</div>
               </CustomListItem>
             </CustomList>
             
             <InfoBox>
-              <h4>☀️ Njut av solen – och tipsa gärna vänner och familj!</h4>
+              <h4>☀️ Nyd solen – og tip gerne venner og familie!</h4>
               <p>
-                Tipsa gärna vänner och familj om Elchef, så de slipper månadsavgifter och dyra påslag på elräkningen. 
-                Elräkningen ska vara som sommaren: ljus, lätt – och inte ruinera dig.
+                Tip gerne venner og familie om Elchef, så de slipper for månedsgebyrer og dyre tillæg på elregningen. 
+                Elregningen skal være som sommeren: lys, let – og ikke ruinere dig.
               </p>
             </InfoBox>
             
             <div style={{ textAlign: 'center' }}>
               <CTAButton 
-                href="https://elchef.se" 
+                href="https://elchef.dk" 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
-                Upptäck dina alternativ på elchef.se <ArrowIcon />
+                Opdag dine muligheder på elchef.dk <ArrowIcon />
               </CTAButton>
             </div>
           </Article>

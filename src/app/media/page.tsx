@@ -231,7 +231,7 @@ function categorize(url: string, title: string, summary: string) {
   if (domain.includes('youtube') || content.includes('video')) return { type: 'video', tag: 'Video' };
   if (domain.includes('linkedin') || content.includes('linkedin')) return { type: 'article', tag: 'LinkedIn' };
   if (domain.includes('twitter') || domain.includes('x.com')) return { type: 'social', tag: 'Social' };
-  if (content.includes('nyhet')) return { type: 'news', tag: 'Nyheter' };
+  if (content.includes('nyhed')) return { type: 'news', tag: 'Nyheder' };
   return { type: 'article', tag: 'Artikel' };
 }
 
@@ -271,7 +271,7 @@ export default function Media() {
           setFiltered([]);
         }
       } catch {
-        setError('Kunde inte ladda innehåll');
+        setError('Kunne ikke indlæse indhold');
       } finally {
         setLoading(false);
       }
@@ -294,22 +294,22 @@ export default function Media() {
     <PageBackground>
       <Section>
         <Container>
-          <Title>Media</Title>
+          <Title>Medier</Title>
           <Lead>
-            <b>Vi arbetar aktivt med att sprida kunskap om energibesparing och hållbara elavtal.</b>
+            <b>Vi arbejder aktivt med at sprede viden om energibesparelse og bæredygtige elaftaler.</b>
           </Lead>
           <p>
-            Läs mer om vårt arbete och våra senaste nyheter, eller upptäck våra rapporter och analyser om elmarknaden.
+            Læs mere om vores arbejde og vores seneste nyheder, eller opdag vores rapporter og analyser om elmarkedet.
           </p>
 
           <SearchContainer>
-            <SearchInput placeholder="Sök artiklar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <SearchInput placeholder="Søg artikler..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             <FilterContainer>
               {[
-                { k: 'all', n: 'Alla' },
+                { k: 'all', n: 'Alle' },
                 { k: 'video', n: 'Video' },
-                { k: 'article', n: 'Artiklar' },
-                { k: 'news', n: 'Nyheter' },
+                { k: 'article', n: 'Artikler' },
+                { k: 'news', n: 'Nyheder' },
                 { k: 'social', n: 'Social' },
               ].map((b) => (
                 <FilterButton key={b.k} active={activeFilter === b.k} onClick={() => setActiveFilter(b.k)}>
@@ -320,11 +320,11 @@ export default function Media() {
           </SearchContainer>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>Laddar innehåll...</div>
+            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>Indlæser indhold...</div>
           ) : error ? (
             <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>{error}</div>
           ) : filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>Inga artiklar hittades</div>
+            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>Ingen artikler fundet</div>
           ) : (
             <CardsGrid>
               {filtered.map((card) => (
