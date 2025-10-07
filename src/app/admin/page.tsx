@@ -7,70 +7,70 @@ const ADMIN_PASSWORD = "grodan2025";
 const adminSections = [
   {
     title: "Dashboard",
-    description: "Översiktlig statistik och KPI:er för hela hemsidan",
+    description: "Oversigt over statistik og KPI'er for hele hjemmesiden",
     href: "/admin/dashboard",
     icon: "📊",
     color: "bg-gradient-to-br from-purple-500 to-blue-500"
   },
   {
     title: "Hero A/B Analytics",
-    description: "Analysera A/B-test för hero-sektionen (huvudrubrik)",
+    description: "Analyser A/B-test for hero-sektionen (hovedoverskrift)",
     href: "/admin/hero-analytics",
     icon: "🎯",
     color: "bg-blue-500"
   },
   {
     title: "Form Analytics",
-    description: "Statistik över alla formulärinlämningar på hemsidan",
+    description: "Statistik over alle formularindsendelser på hjemmesiden",
     href: "/admin/form-analytics",
     icon: "📝",
     color: "bg-indigo-500"
   },
   {
     title: "Banner Analytics", 
-    description: "Analysera A/B-test för AI-kalkylator banner",
+    description: "Analyser A/B-test for AI-beregner banner",
     href: "/admin/banner-clicks",
     icon: "🎨",
     color: "bg-green-500"
   },
   {
     title: "Invoices",
-    description: "Hantera fakturor och OCR-analyser",
+    description: "Administrer fakturaer og OCR-analyser",
     href: "/admin/invoices",
     icon: "🧾",
     color: "bg-purple-500"
   },
   {
     title: "Reminders",
-    description: "Hantera påminnelser och notifikationer",
+    description: "Administrer påmindelser og notifikationer",
     href: "/admin/reminders",
     icon: "⏰",
     color: "bg-orange-500"
   },
   {
     title: "Chat Logs",
-    description: "Visa chatthistorik och AI-konversationer",
+    description: "Vis chathistorik og AI-samtaler",
     href: "/admin/chatlog",
     icon: "💬",
     color: "bg-pink-500"
   },
   {
-    title: "AI Kunskapsbas",
-    description: "Hantera AI-chattens kunskap, kampanjer och leverantörer",
+    title: "AI Vidensbase",
+    description: "Administrer AI-chattens viden, kampagner og leverandører",
     href: "/admin/knowledge",
     icon: "🧠",
     color: "bg-emerald-500"
   },
   {
-    title: "Kontraktsklick",
-    description: "Spåra klick på Rörligt/Fastpris från AI-användare",
+    title: "Kontraktklik",
+    description: "Spor klik på Variabel/Fastpris fra AI-brugere",
     href: "/admin/contract-clicks",
     icon: "📈",
     color: "bg-cyan-500"
   },
   {
-    title: "Delade länkar",
-    description: "Hantera kort som delats via Telegram (redigera/ta bort)",
+    title: "Delte links",
+    description: "Administrer kort delt via Telegram (rediger/slet)",
     href: "/admin/shared-cards",
     icon: "🔗",
     color: "bg-teal-500"
@@ -95,7 +95,7 @@ export default function AdminPage() {
       sessionStorage.setItem('admin_authed', 'true');
       setError('');
     } else {
-      setError('Fel lösenord!');
+      setError('Forkert adgangskode!');
     }
   }
 
@@ -110,13 +110,13 @@ export default function AdminPage() {
         background: 'white',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
       }}>
-        <h2 style={{ marginBottom: 16, textAlign: 'center' }}>Admininloggning</h2>
+        <h2 style={{ marginBottom: 16, textAlign: 'center' }}>Adminindlogning</h2>
         <form onSubmit={handleLogin}>
           <input
             type="password"
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder="Lösenord"
+            placeholder="Adgangskode"
             style={{ 
               width: '100%', 
               padding: 12, 
@@ -142,7 +142,7 @@ export default function AdminPage() {
               cursor: 'pointer'
             }}
           >
-            Logga in
+            Log ind
           </button>
         </form>
         {error && <div style={{ color: 'red', marginTop: 8, textAlign: 'center' }}>{error}</div>}
@@ -177,7 +177,7 @@ export default function AdminPage() {
           opacity: 0.9,
           margin: 0
         }}>
-          Hantera och analysera Elchef.se
+          Administrer og analyser Elchef.dk
         </p>
       </div>
 
