@@ -37,6 +37,7 @@ CREATE INDEX IF NOT EXISTS idx_invoice_ocr_consent ON invoice_ocr(consent);
 
 -- RLS för invoice_ocr
 ALTER TABLE invoice_ocr ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow all operations on invoice_ocr" ON invoice_ocr;
 CREATE POLICY "Allow all operations on invoice_ocr" ON invoice_ocr
   FOR ALL USING (true);
 
@@ -67,6 +68,7 @@ CREATE INDEX IF NOT EXISTS idx_invoice_ocr_logs_created_at ON invoice_ocr_logs(c
 
 -- RLS för invoice_ocr_logs
 ALTER TABLE invoice_ocr_logs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow all operations on invoice_ocr_logs" ON invoice_ocr_logs;
 CREATE POLICY "Allow all operations on invoice_ocr_logs" ON invoice_ocr_logs
   FOR ALL USING (true);
 
