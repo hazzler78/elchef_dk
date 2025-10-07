@@ -624,11 +624,37 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
                 } catch {}
               }
               const storageKey = `${logId}/${imageSha256}.${mimeType === 'image/png' ? 'png' : 'jpg'}`;
+              // First try SDK upload (works in many environments)
               const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, file, {
                 contentType: mimeType,
                 upsert: false,
               });
-              if (!uploadRes.error) {
+
+              let uploadedOk = !uploadRes.error;
+
+              // If SDK upload failed (common on edge runtimes), fall back to Storage REST API
+              if (!uploadedOk) {
+                try {
+                  const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
+                  const restUrl = `${cleanSupabaseUrl}/storage/v1/object/${bucketName}/${encodeURIComponent(storageKey)}`;
+                  const arrayBuffer = await file.arrayBuffer();
+                  const restRes = await fetch(restUrl, {
+                    method: 'POST',
+                    headers: {
+                      apikey: SUPABASE_SERVICE_ROLE_KEY,
+                      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+                      'Content-Type': mimeType,
+                      'x-upsert': 'false',
+                    },
+                    body: arrayBuffer,
+                  });
+                  uploadedOk = restRes.ok;
+                } catch (restErr) {
+                  console.error('REST upload to Supabase Storage failed:', restErr);
+                }
+              }
+
+              if (uploadedOk) {
                 await supabase.from('invoice_ocr_files').insert([
                   {
                     invoice_ocr_id: logId,
