@@ -1,9 +1,8 @@
 "use client";
 
 import styled from 'styled-components';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
 
 const Section = styled.section`
   padding: var(--section-spacing) 0;
@@ -34,26 +33,6 @@ const Lead = styled.p`
   margin-bottom: 2rem;
 `;
 
-const SubTitle = styled.h3`
-  font-size: 1.3rem;
-  margin: 2.5rem 0 1.5rem 0;
-  color: var(--primary-dark);
-  font-weight: 700;
-  position: relative;
-  padding-bottom: 0.5rem;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    border-radius: 2px;
-  }
-`;
-
 const PageBackground = styled.div`
   min-height: 100vh;
   width: 100%;
@@ -61,16 +40,25 @@ const PageBackground = styled.div`
   padding: 0;
 `;
 
-// Nya komponenter för kort-design
 const CardsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 2rem;
   
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
   @media (min-width: 768px) {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2.5rem;
   }
 `;
 
@@ -119,13 +107,6 @@ const CardTitle = styled.h2`
   }
 `;
 
-const CardExcerpt = styled.p`
-  color: var(--gray-600);
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-`;
-
 const CardMeta = styled.div`
   display: flex;
   align-items: center;
@@ -154,90 +135,161 @@ const ExpandIcon = styled.div`
   }
 `;
 
-// Media artiklar data
-const mediaArticles = [
-  {
-    id: 'weather-electricity-prices',
-    title: 'Så påverkar vädret elpriset – förklarat på ett enkelt sätt',
-    excerpt: 'Elpriset svänger hela tiden – och vädret är en av de viktigaste faktorerna. På sommaren är priserna ofta lägre, men variationerna styrs ändå av regn, vind och temperatur.',
-    tag: 'Video',
-    date: '2024',
-    type: 'video',
-    href: '/media/weather-electricity-prices'
-  },
-  {
-    id: 'robin-hood-electricity',
-    title: 'Elens Robin Hood vill ha billigare el åt folket',
-    excerpt: 'Många är trötta på krångliga elavtal, dolda avgifter och dyra mellanhänder. I den här artikeln i Hallandsposten berättar Mathias Nilsson om sin plan.',
-    tag: 'Artikel',
-    date: '2024',
-    type: 'article',
-    href: '/media/robin-hood-electricity'
-  },
-  {
-    id: 'weekly-news',
-    title: 'Veckans nyheter från elmarknaden',
-    excerpt: 'Här samlar vi de senaste nyheterna och uppdateringarna från elmarknaden som påverkar dig som konsument.',
-    tag: 'Nyheter',
-    date: '2024',
-    type: 'news',
-    href: '/media/weekly-news'
+const SearchContainer = styled.div`
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
   }
-];
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 106, 167, 0.1);
+  }
+  
+  &::placeholder {
+    color: var(--gray-600);
+  }
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+`;
+
+const FilterButton = styled.button<{ active: boolean }>`
+  padding: 0.5rem 1rem;
+  border: 1px solid ${props => props.active ? 'var(--primary)' : 'rgba(0, 0, 0, 0.1)'};
+  border-radius: var(--radius-full);
+  background: ${props => props.active ? 'var(--primary)' : 'rgba(255, 255, 255, 0.9)'};
+  color: ${props => props.active ? 'white' : 'var(--gray-700)'};
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  
+  &:hover {
+    background: ${props => props.active ? 'var(--primary-dark)' : 'rgba(0, 106, 167, 0.1)'};
+    transform: translateY(-1px);
+  }
+`;
+
+const MarkdownContent = styled.div`
+  color: var(--gray-700);
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  
+  h1, h2, h3 {
+    color: var(--primary);
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+  
+  h1 { font-size: 1.1rem; }
+  h2 { font-size: 1.05rem; }
+  h3 { font-size: 1rem; }
+`;
+
+type SharedCard = {
+  id: number;
+  title: string;
+  summary: string;
+  url: string;
+  created_at: string;
+  type?: string;
+  tag?: string;
+  readTime?: string;
+  href?: string;
+  date?: string;
+};
+
+function categorize(url: string, title: string, summary: string) {
+  const domain = new URL(url).hostname.toLowerCase();
+  const content = `${title} ${summary}`.toLowerCase();
+  if (domain.includes('youtube') || content.includes('video')) return { type: 'video', tag: 'Video' };
+  if (domain.includes('linkedin') || content.includes('linkedin')) return { type: 'article', tag: 'LinkedIn' };
+  if (domain.includes('twitter') || domain.includes('x.com')) return { type: 'social', tag: 'Social' };
+  if (content.includes('nyhet')) return { type: 'news', tag: 'Nyheter' };
+  return { type: 'article', tag: 'Artikel' };
+}
+
+function renderMarkdown(summary: string) {
+  const safe = String(summary || '')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  return safe.startsWith('<p>') ? safe : `<p>${safe}</p>`;
+}
 
 export default function Media() {
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch('/api/shared-cards?limit=12', { cache: 'no-store' });
-        const data = await res.json();
-        const mount = document.getElementById('shared-cards');
-        if (!mount) return;
-        if (!data?.items?.length) {
-          mount.innerHTML = '<p style="color: var(--gray-600)">Inga delade länkar ännu.</p>';
-          return;
-        }
-        function renderMarkdown(md: string) {
-          const safe = String(md || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-          const withStrong = safe
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>')
-            .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-          const lines = withStrong.split(/\r?\n/);
-          let html = '';
-          let inList = false;
-          for (const line of lines) {
-            if (/^\s*-\s+/.test(line)) {
-              if (!inList) { html += '<ul>'; inList = true; }
-              html += '<li>' + line.replace(/^\s*-\s+/, '') + '</li>';
-            } else if (line.trim().length === 0) {
-              if (inList) { html += '</ul>'; inList = false; }
-            } else {
-              if (inList) { html += '</ul>'; inList = false; }
-              html += '<p>' + line + '</p>';
-            }
-          }
-          if (inList) html += '</ul>';
-          return html;
-        }
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [cards, setCards] = useState<SharedCard[]>([]);
+  const [filtered, setFiltered] = useState<SharedCard[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-        type SharedCard = { title: string; summary: string; url: string };
-        const items = (data.items || []) as SharedCard[];
-        const html = items.map((item) => `
-          <div style="margin: 1rem 0; padding: 1rem 1.2rem; border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; background: rgba(255,255,255,0.9); box-shadow: var(--glass-shadow-light)">
-            <div style="font-weight:700; color: var(--primary); margin-bottom: 0.4rem">${(item.title || '').replace(/</g,'&lt;')}</div>
-            <div style="color: var(--gray-700); font-size: 0.95rem; line-height: 1.6">${renderMarkdown(item.summary || '')}</div>
-            <a href="${item.url}" target="_blank" rel="noopener noreferrer" style="display:inline-block; margin-top:0.6rem; color: var(--primary); font-weight:600">Läs mer →</a>
-          </div>
-        `).join('');
-        mount.innerHTML = html;
-      } catch {}
-    }
-    load();
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/shared-cards?limit=50', { cache: 'no-store' });
+        const data = await res.json();
+        if (data?.items?.length) {
+          const processed = (data.items as SharedCard[]).map((c) => {
+            const cat = categorize(c.url, c.title, c.summary);
+            return { ...c, type: cat.type, tag: cat.tag, href: c.url, date: new Date(c.created_at).getFullYear().toString() };
+          });
+          setCards(processed);
+          setFiltered(processed);
+        } else {
+          setCards([]);
+          setFiltered([]);
+        }
+      } catch {
+        setError('Kunde inte ladda innehåll');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
+
+  useEffect(() => {
+    let f = cards;
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      f = f.filter((c) => c.title.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q));
+    }
+    if (activeFilter !== 'all') {
+      f = f.filter((c) => c.type === activeFilter);
+    }
+    setFiltered(f);
+  }, [searchTerm, activeFilter, cards]);
+
   return (
     <PageBackground>
       <Section>
@@ -250,34 +302,52 @@ export default function Media() {
             Läs mer om vårt arbete och våra senaste nyheter, eller upptäck våra rapporter och analyser om elmarknaden.
           </p>
 
-          <CardsGrid>
-            {mediaArticles.map((article) => (
-              <MediaCard 
-                key={article.id} 
-                href={article.href}
-                isExpanded={false}
-              >
-                <CardHeader>
-                  <CardTitle>{article.title}</CardTitle>
-                  <CardExcerpt>{article.excerpt}</CardExcerpt>
-                  <CardMeta>
-                    <CardTag>{article.tag}</CardTag>
-                    <span>{article.date}</span>
-                    <ExpandIcon>
-                      <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </ExpandIcon>
-                  </CardMeta>
-                </CardHeader>
-              </MediaCard>
-            ))}
-          </CardsGrid>
+          <SearchContainer>
+            <SearchInput placeholder="Sök artiklar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <FilterContainer>
+              {[
+                { k: 'all', n: 'Alla' },
+                { k: 'video', n: 'Video' },
+                { k: 'article', n: 'Artiklar' },
+                { k: 'news', n: 'Nyheter' },
+                { k: 'social', n: 'Social' },
+              ].map((b) => (
+                <FilterButton key={b.k} active={activeFilter === b.k} onClick={() => setActiveFilter(b.k)}>
+                  {b.n}
+                </FilterButton>
+              ))}
+            </FilterContainer>
+          </SearchContainer>
 
-          <SubTitle style={{ marginTop: '3rem' }}>Senaste delade länkar</SubTitle>
-          <div id="shared-cards"></div>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>Laddar innehåll...</div>
+          ) : error ? (
+            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>{error}</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem 2rem' }}>Inga artiklar hittades</div>
+          ) : (
+            <CardsGrid>
+              {filtered.map((card) => (
+                <MediaCard key={card.id} href={card.href || card.url} isExpanded={false} target="_blank" rel="noopener noreferrer">
+                  <CardHeader>
+                    <CardTitle>{card.title}</CardTitle>
+                    <MarkdownContent dangerouslySetInnerHTML={{ __html: renderMarkdown(card.summary || '') }} />
+                    <CardMeta>
+                      <CardTag>{card.tag}</CardTag>
+                      <span>{card.date}</span>
+                      <ExpandIcon>
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </ExpandIcon>
+                    </CardMeta>
+                  </CardHeader>
+                </MediaCard>
+              ))}
+            </CardsGrid>
+          )}
         </Container>
       </Section>
     </PageBackground>
   );
-} 
+}
