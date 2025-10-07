@@ -33,13 +33,13 @@ export default function TackPage() {
 
   return (
     <main className="container" style={{ padding: '4rem 1rem', minHeight: '60vh' }}>
-      <h1 style={{ marginBottom: 12 }}>Tack!</h1>
-      <p>Din förfrågan har tagits emot. Vi återkommer eller så följer du instruktionerna i nästa steg.</p>
+      <h1 style={{ marginBottom: 12 }}>Tak!</h1>
+      <p>Din forespørgsel er modtaget. Vi vender tilbage, eller du følger instruktionerne i næste trin.</p>
       {status && (
         <p style={{ marginTop: 8, opacity: 0.8 }}>Status: <strong>{status}</strong></p>
       )}
       {sid && (
-        <p style={{ marginTop: 4, opacity: 0.8 }}>Referens: <code>{sid}</code></p>
+        <p style={{ marginTop: 4, opacity: 0.8 }}>Reference: <code>{sid}</code></p>
       )}
     </main>
   );

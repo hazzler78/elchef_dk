@@ -80,16 +80,16 @@ export default function Kontakt() {
     <Section>
       <Container>
         <ContactInfo>
-          <Title>Kontakta oss</Title>
+          <Title>Kontakt os</Title>
           <Lead>
-            Har du frågor eller vill komma i kontakt med oss? 
-            Fyll i formuläret nedan eller ring oss direkt så återkommer vi så snart vi kan.
+            Har du spørgsmål eller vil du i kontakt med os? 
+            Udfyld formularen nedenfor eller ring til os direkte, så vender vi tilbage hurtigst muligt.
           </Lead>
           <Phone>
             <PhoneNumber>
-              Ring oss direkt: <PhoneLink href="tel:0736862360">073-686 23 60</PhoneLink>
+              Ring til os direkte: <PhoneLink href="tel:+4512345678">+45 12 34 56 78</PhoneLink>
             </PhoneNumber>
-            <OpeningHours>09:00-13:00 Vardagar</OpeningHours>
+            <OpeningHours>09:00-13:00 Hverdage</OpeningHours>
           </Phone>
         </ContactInfo>
         

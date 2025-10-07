@@ -51,31 +51,31 @@ export default function OmOss() {
   return (
     <Section>
       <Container>
-        <Title>Elchef.se – Om oss</Title>
+        <Title>Elchef.dk – Om os</Title>
         <Lead>
-          <b>Vilka är vi – och varför finns Elchef.se?</b>
+          <b>Hvem er vi – og hvorfor findes Elchef.dk?</b>
         </Lead>
         <p>
-          Elmarknaden i Sverige är ett enda stort kaos. Över 100 elbolag, en djungel av elavtal och prismodeller, och mängder av påslag, fasta avgifter och extratjänster smyger sig in på fakturan. Många har ingen aning om vad de faktiskt betalar för – och det vet elbolagen. Det är just där de tjänar sina pengar.
+          Elmarkedet i Danmark er ét stort kaos. Over 100 elselskaber, en jungle af elaftaler og prismodeller, og masser af tillæg, faste gebyrer og ekstra tjenester sniger sig ind på fakturaen. Mange har ingen anelse om, hvad de faktisk betaler for – og det ved elselskaberne. Det er netop dér, de tjener deres penge.
         </p>
         <p>
-          Vi skapade Elchef.se för att vi var trötta på att se människor betala för mycket – utan att ens veta om det. Vi har sett hur svårt det är att hitta ett bra elavtal bland alla erbjudanden, påslag och finstilt.
+          Vi skabte Elchef.dk, fordi vi var trætte af at se mennesker betale for meget – uden overhovedet at vide det. Vi har set, hvor svært det er at finde en god elaftale blandt alle tilbud, tillæg og det småt trykte.
         </p>
         <p>
-          Vi som står bakom Elchef.se har själva jobbat i branschen i över 30 år. Vi har sett hur det fungerar bakom kulisserna – och hur svårt det är för vanliga människor att veta vad som är ett bra avtal, och vad som bara ser bra ut på ytan.
+          Vi, der står bag Elchef.dk, har selv arbejdet i branchen i over 30 år. Vi har set, hvordan det fungerer bag kulisserne – og hvor svært det er for almindelige mennesker at vide, hvad der er en god aftale, og hvad der bare ser godt ud på overfladen.
         </p>
         <List>
-          <li>Vi är <b>inte</b> ett elbolag.</li>
-          <li>Du får aldrig en elräkning från oss.</li>
-          <li>Vi jobbar helt oberoende och samarbetar med flera elleverantörer för att lyfta fram kampanjer och rabatter som faktiskt gör skillnad – inklusive unika erbjudanden som bara gäller via Elchef.se.</li>
-          <li>Samtidigt letar vi aktivt efter nya elbolag som vill erbjuda schyssta och prisvärda avtal, utan dolda avgifter eller onödiga tillägg.</li>
+          <li>Vi er <b>ikke</b> et elselskab.</li>
+          <li>Du får aldrig en elregning fra os.</li>
+          <li>Vi arbejder helt uafhængigt og samarbejder med flere elleverandører for at fremhæve kampagner og rabatter, der faktisk gør en forskel – inklusive unikke tilbud, der kun gælder via Elchef.dk.</li>
+          <li>Samtidig søger vi aktivt efter nye elselskaber, der vil tilbyde fair og prisvenlige aftaler uden skjulte gebyrer eller unødvendige tillæg.</li>
         </List>
         <p>
-          Vårt mål är att ge dig kontrollen tillbaka. Du ska slippa lägga timmar på att leta själv. Vi visar bara fram avtal som är värda att överväga – med tydliga villkor och priser du faktiskt förstår.
+          Vores mål er at give dig kontrollen tilbage. Du skal slippe for at bruge timer på at søge selv. Vi fremhæver kun aftaler, der er værd at overveje – med klare vilkår og priser, du rent faktisk forstår.
         </p>
         <Quote>
-          Du behöver inte förstå hela elmarknaden – det är vårt jobb.<br />
-          Du behöver bara fatta ett beslut: att bli Elchef i ditt eget hem.
+          Du behøver ikke at forstå hele elmarkedet – det er vores job.<br />
+          Du skal bare træffe én beslutning: at blive Elchef i dit eget hjem.
         </Quote>
         <CTA>
           <GoHomeButton />

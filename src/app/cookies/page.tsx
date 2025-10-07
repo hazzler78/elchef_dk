@@ -54,37 +54,37 @@ export default function Cookies() {
   return (
     <Section>
       <Container>
-        <Title>Cookiepolicy för Elchef.se</Title>
-        <Updated>Senast uppdaterad: September 2024</Updated>
+        <Title>Cookiepolitik for Elchef.dk</Title>
+        <Updated>Sidst opdateret: September 2024</Updated>
 
-        <SectionTitle>Vad är cookies?</SectionTitle>
+        <SectionTitle>Hvad er cookies?</SectionTitle>
         <Paragraph>
-          Cookies är små textfiler som sparas på din dator, mobil eller surfplatta när du besöker en webbplats. De används för att webbplatsen ska fungera, för att förbättra användarupplevelsen och för att samla in statistik.
+          Cookies er små tekstfiler, der gemmes på din computer, mobil eller tablet, når du besøger en hjemmeside. De bruges til at få hjemmesiden til at fungere, til at forbedre brugeroplevelsen og til at indsamle statistik.
         </Paragraph>
 
-        <SectionTitle>Vilka cookies använder vi?</SectionTitle>
+        <SectionTitle>Hvilke cookies bruger vi?</SectionTitle>
         <Paragraph>
-          På Elchef.se använder vi:
+          På Elchef.dk bruger vi:
         </Paragraph>
         <List>
-          <li><b>Nödvändiga cookies:</b> Krävs för att webbplatsen ska fungera korrekt, t.ex. för att komma ihåg dina val och inställningar.</li>
-          <li><b>Analyscookies:</b> Hjälper oss att förstå hur besökare använder webbplatsen, så att vi kan förbättra innehåll och funktionalitet. Vi använder t.ex. Google Analytics.</li>
-          <li><b>Marknadsföringscookies:</b> Kan användas för att visa relevanta erbjudanden och annonser, men vi använder i dagsläget ingen tredjepartsannonsering.</li>
+          <li><b>Nødvendige cookies:</b> Kræves for at hjemmesiden fungerer korrekt, f.eks. for at huske dine valg og indstillinger.</li>
+          <li><b>Analyse-cookies:</b> Hjælper os med at forstå, hvordan besøgende bruger hjemmesiden, så vi kan forbedre indhold og funktionalitet. Vi bruger f.eks. Google Analytics.</li>
+          <li><b>Markedsføringscookies:</b> Kan bruges til at vise relevante tilbud og annoncer, men vi bruger i øjeblikket ingen tredjepartsannoncering.</li>
         </List>
 
-        <SectionTitle>Hur kan du hantera cookies?</SectionTitle>
+        <SectionTitle>Hvordan kan du håndtere cookies?</SectionTitle>
         <Paragraph>
-          Du kan själv välja att blockera eller ta bort cookies via inställningarna i din webbläsare. Tänk på att vissa funktioner på webbplatsen kan sluta fungera om du blockerar alla cookies.
+          Du kan selv vælge at blokere eller slette cookies via indstillingerne i din browser. Vær opmærksom på, at visse funktioner på hjemmesiden kan holde op med at fungere, hvis du blokerer alle cookies.
         </Paragraph>
 
-        <SectionTitle>Samtycke</SectionTitle>
+        <SectionTitle>Samtykke</SectionTitle>
         <Paragraph>
-          När du besöker Elchef.se för första gången får du information om att vi använder cookies. Genom att fortsätta använda webbplatsen samtycker du till vår användning av cookies enligt denna policy.
+          Når du besøger Elchef.dk for første gang, får du information om, at vi bruger cookies. Ved at fortsætte med at bruge hjemmesiden accepterer du vores brug af cookies i henhold til denne politik.
         </Paragraph>
 
-        <SectionTitle>Kontakta oss</SectionTitle>
+        <SectionTitle>Kontakt os</SectionTitle>
         <Paragraph>
-          Har du frågor om vår cookiepolicy? Kontakta oss på <Mail href="mailto:info@elchef.se">info@elchef.se</Mail>.
+          Har du spørgsmål om vores cookiepolitik? Kontakt os på <Mail href="mailto:info@elchef.dk">info@elchef.dk</Mail>.
         </Paragraph>
       </Container>
     </Section>
