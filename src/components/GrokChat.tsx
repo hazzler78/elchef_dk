@@ -91,12 +91,12 @@ const initialMessages = [
   {
     role: 'assistant',
     content:
-      'Hej! Jeg er Frøen 🐸 – spørg mig om elaftaler, skift eller elpriser, så hjælper jeg dig direkte.'
+      'Hej! Jeg er Grisleif 🐷 – spørg mig om elaftaler, skift eller elpriser, så hjælper jeg dig direkte.'
   }
 ];
 
-function GrodanIcon() {
-  return <span style={{ fontSize: 22, marginRight: 6 }}>🐸</span>;
+function GrisleifIcon() {
+  return <span style={{ fontSize: 22, marginRight: 6 }}>🐷</span>;
 }
 
 // Generera en unik session ID för denna konversation
@@ -345,7 +345,7 @@ export default function GrokChat() {
         }}
         aria-label={open ? 'Luk chat' : 'Åbn chat'}
       >
-        🐸
+        🐷
       </button>
       {/* Chat window */}
       {open && (
@@ -383,7 +383,7 @@ export default function GrokChat() {
             WebkitBackdropFilter: 'var(--glass-blur)',
             borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
           }}>
-            <span><GrodanIcon /> Frøen – AI-chat</span>
+            <span><GrisleifIcon /> Grisleif – AI-chat</span>
             <div style={{ display: 'flex', gap: 8 }}>
               <button
                 onClick={clearChat}
@@ -440,7 +440,7 @@ export default function GrokChat() {
                 flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
                 alignItems: 'flex-end',
               }}>
-                {msg.role === 'assistant' && <GrodanIcon />}
+                {msg.role === 'assistant' && <GrisleifIcon />}
                 <div style={{
                   background: msg.role === 'user' ? 'linear-gradient(135deg, var(--primary), var(--secondary))' : 'rgba(255, 255, 255, 0.9)',
                   color: msg.role === 'user' ? 'white' : '#17416b',
@@ -459,7 +459,7 @@ export default function GrokChat() {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
-                    {msg.role === 'user' ? 'Dig' : 'Frøen'}
+                    {msg.role === 'user' ? 'Dig' : 'Grisleif'}
                   </div>
                   <div dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
                 </div>
@@ -471,7 +471,7 @@ export default function GrokChat() {
                 alignItems: 'flex-end',
                 marginBottom: 18,
               }}>
-                <GrodanIcon />
+                <GrisleifIcon />
                 <div style={{
                   background: 'rgba(255, 255, 255, 0.9)',
                   color: '#17416b',
@@ -487,7 +487,7 @@ export default function GrokChat() {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
-                    Frøen
+                    Grisleif
                   </div>
                   <div>Skriver...</div>
                 </div>
@@ -500,7 +500,7 @@ export default function GrokChat() {
                 flexDirection: 'row',
                 alignItems: 'flex-start',
               }}>
-                <GrodanIcon />
+                <GrisleifIcon />
                 <div style={{
                   background: '#e0f2fe',
                   color: '#17416b',
@@ -513,7 +513,7 @@ export default function GrokChat() {
                   marginLeft: 8,
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
-                    Frøen
+                    Grisleif
                   </div>
                   <ChatContactForm 
                     onClose={() => setShowContactForm(false)} 
@@ -543,7 +543,7 @@ export default function GrokChat() {
                 flexDirection: 'row',
                 alignItems: 'flex-start',
               }}>
-                <GrodanIcon />
+                <GrisleifIcon />
                 <div style={{
                   background: '#f0fdf4',
                   color: '#17416b',
@@ -556,7 +556,7 @@ export default function GrokChat() {
                   marginLeft: 8,
                 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, opacity: 0.7 }}>
-                    Frøen
+                    Grisleif
                   </div>
                   <BillUpload 
                     onAnalyzed={handleBillAnalyzed}

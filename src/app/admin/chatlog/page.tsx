@@ -579,7 +579,7 @@ export default function AdminChatlog() {
                       <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                         {log.messages?.map((msg, idx) => (
                           <li key={idx} style={{ margin: "8px 0" }}>
-                            <span style={{ fontWeight: 600 }}>{msg.role === "user" ? "Du" : "Grodan"}:</span> {msg.content}
+                            <span style={{ fontWeight: 600 }}>{msg.role === "user" ? "Du" : "Grisleif"}:</span> {msg.content}
                           </li>
                         ))}
                       </ul>
@@ -678,7 +678,7 @@ export default function AdminChatlog() {
                               color: "#374151",
                               marginBottom: 4 
                             }}>
-                              {msg.role === "user" ? "Användare" : "Grodan"} 
+                              {msg.role === "user" ? "Användare" : "Grisleif"} 
                               <span style={{ 
                                 fontSize: 11, 
                                 color: "#6b7280", 
@@ -718,7 +718,7 @@ export default function AdminChatlog() {
                           <ul style={{ margin: "8px 0", padding: 0, listStyle: "none" }}>
                             {log.messages?.map((msg, idx) => (
                               <li key={idx} style={{ margin: "4px 0" }}>
-                                <span style={{ fontWeight: 600 }}>{msg.role === "user" ? "Användare" : "Grodan"}:</span> {msg.content}
+                                <span style={{ fontWeight: 600 }}>{msg.role === "user" ? "Användare" : "Grisleif"}:</span> {msg.content}
                               </li>
                             ))}
                           </ul>
