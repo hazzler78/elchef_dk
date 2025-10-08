@@ -69,7 +69,6 @@ const VideoWrapper = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  aspect-ratio: 16/9;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--glass-shadow-heavy);
@@ -104,7 +103,6 @@ const USPList = styled.ul`
 
 export default function Hero() {
   const [variant, setVariant] = useState<'A' | 'B'>('A');
-  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     try {
@@ -191,33 +189,6 @@ export default function Hero() {
       }
     }
   }, [variant]);
-  
-  const handleVideoClick = useCallback((event: React.MouseEvent<HTMLVideoElement>) => {
-    const video = event.currentTarget;
-    video.muted = !video.muted; // Växla mellan muted och unmuted
-    if (!video.muted) {
-      video.play().catch(() => {/* ignore */});
-    }
-  }, []);
-
-  useEffect(() => {
-    // Nudge autoplay on some browsers that require an explicit play() after attach
-    const v = videoRef.current;
-    if (!v) return;
-    
-    // Add a small delay to prevent blocking the main thread
-    const timeoutId = setTimeout(() => {
-      try {
-        v.muted = true;
-        const playPromise = v.play();
-        if (playPromise && typeof (playPromise as Promise<void>).catch === 'function') {
-          (playPromise as Promise<void>).catch(() => {/* ignore */});
-        }
-      } catch {/* ignore */}
-    }, 100);
-    
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   return (
     <HeroSection>
@@ -358,27 +329,11 @@ export default function Hero() {
             </USPList>
           </TextContent>
           <VideoWrapper>
-            <video 
-              ref={videoRef}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              onLoadedData={() => { 
-                try { 
-                  if (videoRef.current) {
-                    videoRef.current.play().catch(() => {/* ignore */});
-                  }
-                } catch {} 
-              }}
-              onClick={handleVideoClick}
-              style={{ cursor: 'pointer' }}
-              title="Klik for at slå lyd til/fra"
-            >
-              <source src="/grodan-presentation.mp4" type="video/mp4" />
-              Din browser understøtter ikke video-elementet.
-            </video>
+            <img 
+              src="/grisen.png"
+              alt="Grisleif - Elchef maskot"
+              style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+            />
           </VideoWrapper>
         </HeroContent>
       </div>
