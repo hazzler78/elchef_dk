@@ -30,11 +30,11 @@ For produktion på Cloudflare Pages med `@cloudflare/next-on-pages`:
 npm install
 ```
 
-2) Byg til Cloudflare (eller `npm run build` — samme som `cf:build`)
+2) Byg til Cloudflare (`vercel build` kalder internt `npm run build` = `next build`)
 ```bash
-npm run build
+npm run cf:build
 ```
-Med kun Next.js uden Pages-adapter: `npm run build:next`
+Kun Next.js produktionsbuild (fx lokalt): `npm run build`
 
 3) Lokal preview
 ```bash

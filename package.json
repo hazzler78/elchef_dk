@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npx @cloudflare/next-on-pages",
-    "build:next": "next build",
+    "build": "next build",
     "cf:build": "npx @cloudflare/next-on-pages",
     "cf:preview": "wrangler pages dev .vercel/output",
     "cf:deploy": "wrangler pages deploy .vercel/output",

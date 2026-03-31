@@ -1,6 +1,6 @@
 # Cloudflare Pages – Settings → Builds:
-#   Build command:  npm run build     (same as cf:build; lager .vercel/output)
-#   Deploy command: npm run deploy     (IKKE "npx wrangler deploy" — det feiler alltid)
+#   Build command:  npm run cf:build  (IKKE "npm run build" — det gir vercel build-rekursjon)
+#   Deploy command: npm run deploy     (IKKE "npx wrangler deploy")
 #
 name = "elchef-pages"
 compatibility_date = "2024-11-12"
