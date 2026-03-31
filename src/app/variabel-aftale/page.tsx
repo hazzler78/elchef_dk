@@ -256,43 +256,7 @@ export default function RorligtAvtalPage() {
       pnInput.addEventListener('input', onInput);
       // Immediate check if redan ifyllt
       onInput();
-      
-      // Track postal code searches
-      const trackPostalCode = () => {
-        try {
-          if (formInstance && typeof formInstance.getFields === 'function') {
-            const fields = formInstance.getFields();
-            if (Array.isArray(fields)) {
-              // Find the postal code field (fieldId: 66e9457420ef2d3b8c66f500)
-              const postalCodeField = fields.find((f: SalesysFormField) => {
-                // Check if this is the postal code field by checking field ID or label
-                const fieldKey = `${f?.name || ''} ${f?.label || ''}`.toLowerCase();
-                return fieldKey.includes('postnummer') || fieldKey.includes('postnummer') || 
-                       fieldKey.includes('postal') || fieldKey.includes('postcode') ||
-                       (f?.name && f.name.includes('66e9457420ef2d3b8c66f500'));
-              });
-              
-              if (postalCodeField?.value) {
-                const postalCode = String(postalCodeField.value).replace(/\D/g, '').substring(0, 5);
-                if (postalCode.length >= 3) {
-                  // Track postal code search
-                  fetch('/api/events/postal-code-search', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      postalCode,
-                      formType: 'variabel-aftale',
-                      sessionId: sessionIdRef.current,
-                    }),
-                    keepalive: true,
-                  }).catch(() => {});
-                }
-              }
-            }
-          }
-        } catch {}
-      };
-      
+
       // Track postal code changes via getFields polling
       if (formInstance && typeof formInstance.getFields === 'function') {
         let lastPostalCode = '';
