@@ -21,6 +21,13 @@ compatibility_flags = ["nodejs_compat"]
 ## [pages] table is not supported by this runner; using pages_build_output_dir instead
 
 # Environment variables are managed in Cloudflare Pages UI (Production + Preview).
+#
+# Hvis `wrangler pages deploy` fejler med Authentication error [code: 10000]:
+#   - Token under CLOUDFLARE_API_TOKEN skal have: Account → Cloudflare Pages → Edit
+#   - Eller fjern CLOUDFLARE_API_TOKEN fra Pages-miljøet og lad CI bruge standard-auth (hvis muligt)
+#   - Eller undlad wrangler i build: Build = npm run cf:build, Build output directory = .vercel/output/static,
+#     Deploy = true (Pages uploader output automatisk).
+#
 # Remove this comment if you later re-introduce a [vars] block.
 
 # Note: Pages config does not support account_id, triggers, or build/observability blocks

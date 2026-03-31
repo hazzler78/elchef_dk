@@ -48,7 +48,8 @@ npm run cf:deploy
 
 **Git-build i Cloudflare** (fejler ofte med `npx wrangler deploy` — det er Workers, ikke Pages):
 
-- **Nem løsning:** Build **`npm run cf:ci`**, Deploy **`true`** (eller tomt). Upload sker i build-trinnet.
+- **Nem løsning:** Build **`npm run cf:ci`**, Deploy **`true`** (eller tomt). Upload sker i build-trinnet. Kræver at **`CLOUDFLARE_API_TOKEN`** (hvis sat) har *Account → Cloudflare Pages → Edit*, ellers: opret nyt token eller fjern variablen og brug automatisk upload.
+- **Eller:** Build `npm run cf:build`, **Build output directory** `.vercel/output/static`, Deploy **`true`** — så behøver du ikke køre `wrangler pages deploy` i build.
 - **Eller:** Build `npm run cf:build`, Deploy **`npm run deploy`** (aldrig `npx wrangler deploy`).
 
 Konfigurationen styres via `wrangler.toml` (angiv `account_id`, projektets navn under `[pages]`, samt miljøvariabler under `[vars]`).
