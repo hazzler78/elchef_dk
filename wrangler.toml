@@ -1,6 +1,6 @@
-# Cloudflare Pages (Git-integration i dashboard):
-#   Build command:  npm run cf:build   (NOT bare "next build" — trenger .vercel/output)
-#   Deploy command: npm run deploy     (NOT "npx wrangler deploy" — det er Workers)
+# Cloudflare Pages – Settings → Builds:
+#   Build command:  npm run build     (same as cf:build; lager .vercel/output)
+#   Deploy command: npm run deploy     (IKKE "npx wrangler deploy" — det feiler alltid)
 #
 name = "elchef-pages"
 compatibility_date = "2024-11-12"
