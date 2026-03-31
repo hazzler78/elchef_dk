@@ -96,6 +96,22 @@ const FormContainer = styled.div`
 `;
 
 export default function FastprisAvtalPage() {
+  const sessionIdRef = React.useRef<string>('');
+  
+  React.useEffect(() => {
+    // Generera eller hämta session ID
+    try {
+      const existing = typeof window !== 'undefined' ? localStorage.getItem('formSessionId') : null;
+      if (existing) {
+        sessionIdRef.current = existing;
+      } else {
+        const generated = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+        sessionIdRef.current = generated;
+        if (typeof window !== 'undefined') localStorage.setItem('formSessionId', generated);
+      }
+    } catch {}
+  }, []);
+  
   React.useEffect(() => {
     try {
       const ttq: any = (window as any).ttq;
@@ -210,6 +226,64 @@ export default function FastprisAvtalPage() {
       pnInput.addEventListener('change', fireOnce);
       pnInput.addEventListener('input', onInput);
       onInput();
+      
+      // Track postal code changes via getFields polling
+      if (formInstance && typeof formInstance.getFields === 'function') {
+        let lastPostalCode = '';
+        const startedAt = Date.now();
+        const trackedPostalCodes = new Set<string>();
+        
+        const checkPostalCode = () => {
+          try {
+            const fields = formInstance.getFields?.();
+            if (Array.isArray(fields)) {
+              // Try to find postal code field by checking all fields
+              for (const f of fields) {
+                const fieldKey = `${f?.name || ''} ${f?.label || ''}`.toLowerCase();
+                const value = String(f?.value || '').replace(/\D/g, '').substring(0, 5);
+                
+                // Check if this looks like a postal code (3-5 digits) and field name suggests postal code
+                // Also check if the field ID matches the known postal code field ID
+                const isPostalCodeField = fieldKey.includes('postnummer') || 
+                                         fieldKey.includes('postal') || 
+                                         fieldKey.includes('postcode') ||
+                                         fieldKey.includes('postnummer') ||
+                                         (f?.name && f.name.includes('66e9457420ef2d3b8c66f500'));
+                
+                if (value.length >= 3 && value.length <= 5 && isPostalCodeField) {
+                  // Only track if we haven't tracked this postal code before, or if it changed
+                  if (value !== lastPostalCode && !trackedPostalCodes.has(value)) {
+                    lastPostalCode = value;
+                    trackedPostalCodes.add(value);
+                    fetch('/api/events/postal-code-search', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        postalCode: value,
+                        formType: 'fastpris-aftale',
+                        sessionId: sessionIdRef.current,
+                      }),
+                      keepalive: true,
+                    }).catch(() => {});
+                  }
+                }
+              }
+            }
+          } catch {}
+        };
+        
+        // Initial check
+        checkPostalCode();
+        
+        // Check postal code every second for 2 minutes
+        const postalCodeCheckInterval = window.setInterval(() => {
+          if (Date.now() - startedAt > 2 * 60 * 1000) {
+            window.clearInterval(postalCodeCheckInterval);
+            return;
+          }
+          checkPostalCode();
+        }, 1000);
+      }
     } catch {}
   }
   return (

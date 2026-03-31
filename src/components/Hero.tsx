@@ -2,7 +2,7 @@
 "use client";
 
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import GlassButton from './GlassButton';
 import { withDefaultCtaUtm } from '@/lib/utm';
 

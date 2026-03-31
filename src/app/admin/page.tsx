@@ -74,6 +74,13 @@ const adminSections = [
     href: "/admin/shared-cards",
     icon: "🔗",
     color: "bg-teal-500"
+  },
+  {
+    title: "Postnummersökningar",
+    description: "Se vilka elområden som är mest populära baserat på kunders postnummersökningar",
+    href: "/admin/postal-codes",
+    icon: "📍",
+    color: "bg-rose-500"
   }
 ];
 
