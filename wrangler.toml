@@ -1,14 +1,15 @@
-# Cloudflare Pages – Settings → Builds:
+# Cloudflare Git-build fejler med "wrangler deploy" i Pages → du har STADIG det i dashboard.
 #
-#   A) Anbefalt:
-#      Build:  npm run cf:build
-#      Deploy: npm run deploy        (IKKE "npx wrangler deploy" — det er Workers og feiler)
+# ═══ Kopiér dette ind i Workers & Pages → dit projekt → Settings → Builds ═══
+#   Build command:   npm run cf:ci
+#   Deploy command:  true
+# (eller Deploy: tom hvis UI tillader det — vigtigt: SLET "npx wrangler deploy")
 #
-#   B) Hvis du ikke får endret Deploy-feltet: bygg + last opp i ett steg:
-#      Build:  npm run cf:publish
-#      Deploy: (tomt) eller bare:     true
+# Alternativ — to trin:
+#   Build:  npm run cf:build
+#   Deploy: npm run deploy
 #
-#   "npm run build" alene = kun next build — brukes av vercel inni cf:build; sett aldri som ytterste CF-build.
+# "npm run build" må kun være indre Next-build; aldrig alene som Cloudflare build-kommando.
 #
 name = "elchef-pages"
 compatibility_date = "2024-11-12"

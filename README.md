@@ -46,7 +46,10 @@ npm run cf:preview
 npm run cf:deploy
 ```
 
-**Git-build i Cloudflare:** Build-kommando `npm run cf:build`, deploy-kommando **`npm run deploy`** (ikke `npx wrangler deploy`). Alternativ: ét trin — Build `npm run cf:publish`, deploy-feltet tomt eller `true`.
+**Git-build i Cloudflare** (fejler ofte med `npx wrangler deploy` — det er Workers, ikke Pages):
+
+- **Nem løsning:** Build **`npm run cf:ci`**, Deploy **`true`** (eller tomt). Upload sker i build-trinnet.
+- **Eller:** Build `npm run cf:build`, Deploy **`npm run deploy`** (aldrig `npx wrangler deploy`).
 
 Konfigurationen styres via `wrangler.toml` (angiv `account_id`, projektets navn under `[pages]`, samt miljøvariabler under `[vars]`).
 
