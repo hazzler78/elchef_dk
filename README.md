@@ -46,6 +46,8 @@ npm run cf:preview
 npm run cf:deploy
 ```
 
+**Git-build i Cloudflare:** Build-kommando `npm run cf:build`, deploy-kommando **`npm run deploy`** (ikke `npx wrangler deploy`). Alternativ: ét trin — Build `npm run cf:publish`, deploy-feltet tomt eller `true`.
+
 Konfigurationen styres via `wrangler.toml` (angiv `account_id`, projektets navn under `[pages]`, samt miljøvariabler under `[vars]`).
 
 ### Miljøvariabler

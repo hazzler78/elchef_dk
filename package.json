@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "cf:build": "npx @cloudflare/next-on-pages",
+    "cf:publish": "npx @cloudflare/next-on-pages && wrangler pages deploy .vercel/output",
     "cf:preview": "wrangler pages dev .vercel/output",
     "cf:deploy": "wrangler pages deploy .vercel/output",
     "deploy": "wrangler pages deploy .vercel/output",

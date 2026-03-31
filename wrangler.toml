@@ -1,6 +1,14 @@
 # Cloudflare Pages – Settings → Builds:
-#   Build command:  npm run cf:build  (IKKE "npm run build" — det gir vercel build-rekursjon)
-#   Deploy command: npm run deploy     (IKKE "npx wrangler deploy")
+#
+#   A) Anbefalt:
+#      Build:  npm run cf:build
+#      Deploy: npm run deploy        (IKKE "npx wrangler deploy" — det er Workers og feiler)
+#
+#   B) Hvis du ikke får endret Deploy-feltet: bygg + last opp i ett steg:
+#      Build:  npm run cf:publish
+#      Deploy: (tomt) eller bare:     true
+#
+#   "npm run build" alene = kun next build — brukes av vercel inni cf:build; sett aldri som ytterste CF-build.
 #
 name = "elchef-pages"
 compatibility_date = "2024-11-12"
