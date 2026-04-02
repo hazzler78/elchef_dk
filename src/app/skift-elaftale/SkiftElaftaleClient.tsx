@@ -220,6 +220,9 @@ const NextStepsList = styled.ol`
 `;
 
 export default function SkiftElaftaleClient({ suppliers }: { suppliers: PublicSupplier[] }) {
+  const variLeverandorer = suppliers.filter((s) => s.offers_variabel);
+  const fastLeverandorer = suppliers.filter((s) => s.offers_fastpris);
+
   const handleRorligtClick = () => {
     window.location.href = '/variabel-aftale';
   };
@@ -342,19 +345,36 @@ export default function SkiftElaftaleClient({ suppliers }: { suppliers: PublicSu
         </ButtonContainer>
 
         <PartnersSection>
-          {suppliers.length > 0 ? (
-            <SupplierChoiceGrid
-              suppliers={suppliers}
-              ctaMedium="skift-elaftale"
-              theme="light"
-              headline="Vores elleverandører — vælg og kom videre"
-              intro="Jo flere, der skifter til en aftale med lavere tillæg og færre gebyrer, desto bedre. Vælg en partner her — du kan altid sammenligne med din regning undervejs."
-            />
-          ) : (
+          {variLeverandorer.length === 0 && fastLeverandorer.length === 0 ? (
             <PartnersFallback>
               Vi opdaterer listen over samarbejdspartnere. Brug &quot;Sammenlign elpriser&quot; i menuen eller skriv til os — så hjælper vi dig
               med at finde den rigtige leverandør.
             </PartnersFallback>
+          ) : (
+            <>
+              {variLeverandorer.length > 0 ? (
+                <SupplierChoiceGrid
+                  suppliers={variLeverandorer}
+                  contractType="variabel"
+                  ctaMedium="skift-elaftale"
+                  theme="light"
+                  headline="Variabel aftale — vælg elleverandør"
+                  intro="Partnere med variabel (rørlig) aftale. Du kan også sammenligne med din nuværende regning undervejs."
+                />
+              ) : null}
+              {fastLeverandorer.length > 0 ? (
+                <div style={{ marginTop: variLeverandorer.length > 0 ? '2rem' : 0 }}>
+                  <SupplierChoiceGrid
+                    suppliers={fastLeverandorer}
+                    contractType="fastpris"
+                    ctaMedium="skift-elaftale"
+                    theme="light"
+                    headline="Fastprisaftale — vælg elleverandør"
+                    intro="Partnere hvor du kan aftale fast elpris. Den konkrete pris og bindingsvilkår ser du hos leverandøren."
+                  />
+                </div>
+              ) : null}
+            </>
           )}
         </PartnersSection>
 

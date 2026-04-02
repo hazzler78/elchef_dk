@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
-import type { PublicSupplier } from '@/lib/publicSuppliers';
+import type { PublicSupplier, PublicSupplierContractFilter } from '@/lib/publicSuppliers';
 import { withDefaultCtaUtm, withUtm } from '@/lib/utm';
 
 const Section = styled.section<{ $theme: 'light' | 'glass' }>`
@@ -140,24 +140,57 @@ function formatOre(m: number): string {
   return m.toLocaleString('da-DK', { maximumFractionDigits: 2 });
 }
 
-function pricingSummary(s: PublicSupplier): string {
+function rowContractType(
+  s: PublicSupplier,
+  pageContract?: PublicSupplierContractFilter
+): PublicSupplierContractFilter {
+  if (pageContract) return pageContract;
+  if (!s.offers_variabel && s.offers_fastpris) return 'fastpris';
+  return 'variabel';
+}
+
+function partnerSignupUrl(s: PublicSupplier, contractType: PublicSupplierContractFilter): string | null {
+  if (contractType === 'fastpris') {
+    return s.fastpris_signup_url || s.signup_url;
+  }
+  return s.signup_url;
+}
+
+function pricingSummary(s: PublicSupplier, contractType: PublicSupplierContractFilter): string {
   const ore = s.markup_ore_per_kwh;
   const fee = s.monthly_fee_dkk;
+  const feePart =
+    fee > 0
+      ? `${fee.toLocaleString('da-DK', { maximumFractionDigits: 2 })} kr. pr. måned i abonnement`
+      : '0 kr. i månedsgebyr';
+
+  if (contractType === 'fastpris') {
+    const spotRef =
+      ore > 0
+        ? `Spot-reference: ${formatOre(ore)} øre/kWh tillæg`
+        : ore < 0
+          ? `Spot-reference: ${formatOre(ore)} øre/kWh rabat`
+          : null;
+    const mid = spotRef ? `${spotRef} · ` : '';
+    return `Fastprisaftale — fast kWh-pris aftales hos leverandøren. ${mid}${feePart}`;
+  }
+
   const orePart =
     ore > 0
       ? `${formatOre(ore)} øre/kWh i tillæg til spot`
       : ore < 0
         ? `${formatOre(ore)} øre/kWh under spot (rabat)`
         : '0 øre i tillæg pr. kWh';
-  const feePart =
-    fee > 0
-      ? `${fee.toLocaleString('da-DK', { maximumFractionDigits: 2 })} kr. pr. måned i abonnement`
-      : '0 kr. i månedsgebyr';
   return `${orePart} · ${feePart}`;
 }
 
 export type SupplierChoiceGridProps = {
   suppliers: PublicSupplier[];
+  /**
+   * Når sat (fx variabel- eller fastpris-side), bruges samme type for alle kort.
+   * Udeladt (fx sammenlign): per leverandør — kun fastpris hvis de ikke tilbyder variabel.
+   */
+  contractType?: PublicSupplierContractFilter;
   ctaMedium: string;
   theme?: 'light' | 'glass';
   headline?: string;
@@ -167,6 +200,7 @@ export type SupplierChoiceGridProps = {
 
 export function SupplierChoiceGrid({
   suppliers,
+  contractType,
   ctaMedium,
   theme = 'light',
   headline = 'Vores samarbejdspartnere',
@@ -187,6 +221,7 @@ export function SupplierChoiceGrid({
       )}
       <Grid>
         {suppliers.map((s) => {
+          const ct = rowContractType(s, contractType);
           const compareHref = withDefaultCtaUtm(
             '/sammenlign-elpriser',
             ctaMedium,
@@ -199,23 +234,29 @@ export function SupplierChoiceGrid({
             s.name,
             `supplier-skift-${encodeURIComponent(s.name)}`
           );
-          const partnerHref = s.signup_url
-            ? withUtm(s.signup_url, {
+          const rawPartner = partnerSignupUrl(s, ct);
+          const partnerHref = rawPartner
+            ? withUtm(rawPartner, {
                 utm_medium: ctaMedium,
-                utm_campaign: `supplier-${encodeURIComponent(s.name)}`,
+                utm_campaign:
+                  ct === 'fastpris'
+                    ? `supplier-fp-${encodeURIComponent(s.name)}`
+                    : `supplier-${encodeURIComponent(s.name)}`,
                 utm_content: s.name,
               })
             : null;
           return (
             <Card key={s.id} $theme={theme}>
               <Name>{s.name}</Name>
-              <PriceLine>{pricingSummary(s)}</PriceLine>
+              <PriceLine>{pricingSummary(s, ct)}</PriceLine>
               {s.notes ? <Notes>{s.notes}</Notes> : null}
               <CtaRow>
                 {partnerHref ? (
                   <>
                     <CtaExternal href={partnerHref} target="_blank" rel="noopener noreferrer">
-                      Skift hos {s.name} (åbner partnerside)
+                      {ct === 'fastpris'
+                        ? `Fastpris hos ${s.name} (åbner partnerside)`
+                        : `Skift hos ${s.name} (åbner partnerside)`}
                     </CtaExternal>
                     <SecondaryCta href={compareHref}>Sammenlign elregning med AI</SecondaryCta>
                     <SecondaryCta href={skiftHref}>Overblik: skift elaftale på Elchef</SecondaryCta>
@@ -256,7 +297,11 @@ export function SupplierChoiceGridAuto(
       return;
     }
     let cancelled = false;
-    fetch('/api/public/suppliers')
+    const aftale =
+      rest.contractType === 'fastpris' || rest.contractType === 'variabel'
+        ? `?aftale=${rest.contractType}`
+        : '';
+    fetch(`/api/public/suppliers${aftale}`)
       .then((r) => (r.ok ? r.json() : []))
       .then((data: PublicSupplier[]) => {
         if (!cancelled) setRows(Array.isArray(data) ? data : []);
@@ -267,7 +312,7 @@ export function SupplierChoiceGridAuto(
     return () => {
       cancelled = true;
     };
-  }, [initial]);
+  }, [initial, rest.contractType]);
 
   if (rows === null) {
     return <LoadingText $glass={rest.theme === 'glass'}>Indlæser elleverandører…</LoadingText>;

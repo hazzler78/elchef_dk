@@ -163,6 +163,7 @@ export default function VariabelAftaleClient({ suppliers }: { suppliers: PublicS
           {suppliers.length > 0 ? (
             <SupplierChoiceGrid
               suppliers={suppliers}
+              contractType="variabel"
               ctaMedium="variabel-aftale"
               theme="light"
               headline="Vælg elleverandør til variabel aftale"

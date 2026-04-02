@@ -163,10 +163,11 @@ export default function FastprisAftaleClient({ suppliers }: { suppliers: PublicS
           {suppliers.length > 0 ? (
             <SupplierChoiceGrid
               suppliers={suppliers}
+              contractType="fastpris"
               ctaMedium="fastpris-aftale"
               theme="light"
-              headline="Vælg elleverandør til fastpris"
-              intro="Se tillæg og månedsgebyr for hver partner. Vi guider dig til sammenligning eller skift, så du får den bedste fastpris."
+              headline="Vælg elleverandør til fastprisaftale"
+              intro="Her vises partnere med fastpris. Månedsgebyr og spot-reference er vejledende — den konkrete fastpris aftaler du hos leverandøren."
             />
           ) : (
             <FallbackText>

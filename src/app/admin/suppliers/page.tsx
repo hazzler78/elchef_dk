@@ -13,6 +13,9 @@ type SupplierRow = {
   monthly_fee_dkk: number | string;
   notes: string | null;
   signup_url: string | null;
+  fastpris_signup_url: string | null;
+  offers_variabel: boolean;
+  offers_fastpris: boolean;
   sort_order: number;
   active: boolean;
   created_at: string;
@@ -44,6 +47,9 @@ export default function AdminSuppliersPage() {
   const [newFee, setNewFee] = useState('0');
   const [newNotes, setNewNotes] = useState('');
   const [newSignupUrl, setNewSignupUrl] = useState('');
+  const [newFastprisSignupUrl, setNewFastprisSignupUrl] = useState('');
+  const [newOffersVariabel, setNewOffersVariabel] = useState(true);
+  const [newOffersFastpris, setNewOffersFastpris] = useState(true);
   const [newSort, setNewSort] = useState('0');
   const [newActive, setNewActive] = useState(true);
 
@@ -81,7 +87,14 @@ export default function AdminSuppliersPage() {
         .order('sort_order', { ascending: true })
         .order('name', { ascending: true });
       if (qErr) throw qErr;
-      setRows((data as SupplierRow[]) || []);
+      setRows(
+        ((data as SupplierRow[]) || []).map((r) => ({
+          ...r,
+          offers_variabel: r.offers_variabel !== false,
+          offers_fastpris: r.offers_fastpris !== false,
+          fastpris_signup_url: r.fastpris_signup_url ?? null,
+        }))
+      );
     } catch (e) {
       console.error(e);
       setMsg(e instanceof Error ? e.message : 'Kunne ikke hente leverandører');
@@ -115,6 +128,10 @@ export default function AdminSuppliersPage() {
       return;
     }
     try {
+      if (!newOffersVariabel && !newOffersFastpris) {
+        setMsg('Vælg mindst én aftaletype: variabel eller fastpris (eller begge).');
+        return;
+      }
       const res = await fetch('/api/admin/suppliers', {
         method: 'POST',
         headers: {
@@ -132,6 +149,9 @@ export default function AdminSuppliersPage() {
           monthly_fee_dkk: parseFloat(newFee.replace(',', '.')) || 0,
           notes: newNotes.trim() || null,
           signup_url: newSignupUrl.trim() || null,
+          fastpris_signup_url: newFastprisSignupUrl.trim() || null,
+          offers_variabel: newOffersVariabel,
+          offers_fastpris: newOffersFastpris,
           sort_order: parseInt(newSort, 10) || 0,
           active: newActive,
         }),
@@ -143,6 +163,9 @@ export default function AdminSuppliersPage() {
       setNewFee('0');
       setNewNotes('');
       setNewSignupUrl('');
+      setNewFastprisSignupUrl('');
+      setNewOffersVariabel(true);
+      setNewOffersFastpris(true);
       setNewSort('0');
       setNewActive(true);
       await load();
@@ -153,6 +176,10 @@ export default function AdminSuppliersPage() {
   }
 
   async function saveRow(row: SupplierRow) {
+    if (!row.offers_variabel && !row.offers_fastpris) {
+      setMsg('Vælg mindst én aftaletype: variabel eller fastpris.');
+      return;
+    }
     const pw = getAdminPw();
     if (!pw) {
       setMsg('Log ind igen fra /admin.');
@@ -172,6 +199,9 @@ export default function AdminSuppliersPage() {
           monthly_fee_dkk: num(String(row.monthly_fee_dkk)),
           notes: row.notes?.trim() || null,
           signup_url: row.signup_url?.trim() || null,
+          fastpris_signup_url: row.fastpris_signup_url?.trim() || null,
+          offers_variabel: row.offers_variabel,
+          offers_fastpris: row.offers_fastpris,
           sort_order: row.sort_order,
           active: row.active,
         }),
@@ -287,9 +317,9 @@ export default function AdminSuppliersPage() {
 
       <p style={{ color: '#64748b', marginBottom: 24, maxWidth: 720 }}>
         Tilføj og rediger elleverandører med <strong>påslag</strong> (øre per kWh), valgfrit{' '}
-        <strong>månedsgebyr</strong> (DKK) og <strong>tilmeldingslink</strong> (ekstern URL til postnummer, forbrug,
-        CPR og signering). Data gemmes i Supabase — kør <code>supabase-supplier-markups.sql</code>, hvis tabellen
-        mangler eller der er nye kolonner.
+        <strong>månedsgebyr</strong> (DKK), <strong>variabel- og/eller fastpris-aftale</strong> (hvad de vises under),
+        samt <strong>tilmeldingslink</strong> (valgfrit separat link til fastpris). Data gemmes i Supabase — kør{' '}
+        <code>supabase-supplier-markups.sql</code>, hvis tabellen mangler eller der er nye kolonner.
       </p>
       <p style={{ color: '#334155', marginBottom: 24, fontSize: 15 }}>
         <strong>Eksisterende leverandører:</strong> Klik <strong>Rediger</strong> for fuld formular i dialog, eller
@@ -402,7 +432,9 @@ export default function AdminSuppliersPage() {
                 />
               </label>
               <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <span style={{ fontSize: 13, fontWeight: 600 }}>Tilmeldingslink</span>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>
+                  Tilmeldingslink variabel <span style={{ fontWeight: 400, color: '#64748b' }}>(rørlig)</span>
+                </span>
                 <input
                   value={editDraft.signup_url || ''}
                   onChange={(e) =>
@@ -412,6 +444,45 @@ export default function AdminSuppliersPage() {
                   style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
                 />
               </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>
+                  Tilmeldingslink fastpris{' '}
+                  <span style={{ fontWeight: 400, color: '#64748b' }}>(valgfrit; tom = brug variabel-link)</span>
+                </span>
+                <input
+                  value={editDraft.fastpris_signup_url || ''}
+                  onChange={(e) =>
+                    setEditDraft((d) =>
+                      d ? { ...d, fastpris_signup_url: e.target.value || null } : d
+                    )
+                  }
+                  placeholder="https://"
+                  style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
+                />
+              </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Aftaletyper på sitet</span>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input
+                    type="checkbox"
+                    checked={editDraft.offers_variabel}
+                    onChange={(e) =>
+                      setEditDraft((d) => (d ? { ...d, offers_variabel: e.target.checked } : d))
+                    }
+                  />
+                  <span>Tilbyder variabel aftale</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input
+                    type="checkbox"
+                    checked={editDraft.offers_fastpris}
+                    onChange={(e) =>
+                      setEditDraft((d) => (d ? { ...d, offers_fastpris: e.target.checked } : d))
+                    }
+                  />
+                  <span>Tilbyder fastprisaftale</span>
+                </label>
+              </div>
             </div>
             <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
               <button
@@ -530,7 +601,9 @@ export default function AdminSuppliersPage() {
           />
         </label>
         <label style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span style={{ fontSize: 13, fontWeight: 600 }}>Tilmeldingslink (https:// …)</span>
+          <span style={{ fontSize: 13, fontWeight: 600 }}>
+            Tilmeldingslink variabel (https:// …)
+          </span>
           <input
             value={newSignupUrl}
             onChange={(e) => setNewSignupUrl(e.target.value)}
@@ -539,6 +612,36 @@ export default function AdminSuppliersPage() {
             style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
           />
         </label>
+        <label style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 13, fontWeight: 600 }}>
+            Tilmeldingslink fastpris <span style={{ fontWeight: 400, color: '#64748b' }}>(valgfrit)</span>
+          </span>
+          <input
+            value={newFastprisSignupUrl}
+            onChange={(e) => setNewFastprisSignupUrl(e.target.value)}
+            type="url"
+            placeholder="https:// …"
+            style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
+          />
+        </label>
+        <div style={{ gridColumn: '1 / -1', display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={newOffersVariabel}
+              onChange={(e) => setNewOffersVariabel(e.target.checked)}
+            />
+            <span style={{ fontSize: 14, fontWeight: 600 }}>Vis under variabel aftale</span>
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={newOffersFastpris}
+              onChange={(e) => setNewOffersFastpris(e.target.checked)}
+            />
+            <span style={{ fontSize: 14, fontWeight: 600 }}>Vis under fastpris</span>
+          </label>
+        </div>
         <button
           type="submit"
           style={{
@@ -571,8 +674,10 @@ export default function AdminSuppliersPage() {
                 <th style={{ padding: 10 }}>Månedsgebyr (kr)</th>
                 <th style={{ padding: 10 }}>Sortering</th>
                 <th style={{ padding: 10 }}>Aktiv</th>
+                <th style={{ padding: 10 }} title="Variabel aftale">Var.</th>
+                <th style={{ padding: 10 }} title="Fastpris">Fast</th>
                 <th style={{ padding: 10 }}>Noter</th>
-                <th style={{ padding: 10 }}>Tilmeldingslink</th>
+                <th style={{ padding: 10 }}>Link var.</th>
                 <th style={{ padding: 10 }} />
               </tr>
             </thead>
@@ -617,6 +722,20 @@ export default function AdminSuppliersPage() {
                       type="checkbox"
                       checked={r.active}
                       onChange={(e) => updateRow(r.id, { active: e.target.checked })}
+                    />
+                  </td>
+                  <td style={{ padding: 8, textAlign: 'center' }}>
+                    <input
+                      type="checkbox"
+                      checked={r.offers_variabel}
+                      onChange={(e) => updateRow(r.id, { offers_variabel: e.target.checked })}
+                    />
+                  </td>
+                  <td style={{ padding: 8, textAlign: 'center' }}>
+                    <input
+                      type="checkbox"
+                      checked={r.offers_fastpris}
+                      onChange={(e) => updateRow(r.id, { offers_fastpris: e.target.checked })}
                     />
                   </td>
                   <td style={{ padding: 8 }}>

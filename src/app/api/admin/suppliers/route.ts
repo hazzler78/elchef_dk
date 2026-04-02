@@ -13,6 +13,18 @@ function parseFiniteNumber(v: unknown): number {
   return NaN;
 }
 
+function parseOfferFlag(v: unknown, defaultVal: boolean): boolean {
+  if (typeof v === 'boolean') return v;
+  if (v === '0' || v === 0) return false;
+  if (v === '1' || v === 1) return true;
+  if (typeof v === 'string') {
+    const s = v.toLowerCase();
+    if (s === 'false') return false;
+    if (s === 'true') return true;
+  }
+  return defaultVal;
+}
+
 function assertAdmin(req: NextRequest): NextResponse | null {
   const pw = req.headers.get('x-admin-password')?.trim();
   const expected = process.env.ADMIN_DASHBOARD_PASSWORD?.trim();
@@ -52,6 +64,18 @@ export async function POST(req: NextRequest) {
       console.warn('[admin/suppliers POST] 400: signup_url', parsedUrl.error);
       return NextResponse.json({ error: parsedUrl.error }, { status: 400 });
     }
+    const parsedFastprisUrl = parseOptionalSignupUrl(body.fastpris_signup_url);
+    if (!parsedFastprisUrl.ok) {
+      return NextResponse.json({ error: parsedFastprisUrl.error }, { status: 400 });
+    }
+    const offers_variabel = parseOfferFlag(body.offers_variabel, true);
+    const offers_fastpris = parseOfferFlag(body.offers_fastpris, true);
+    if (!offers_variabel && !offers_fastpris) {
+      return NextResponse.json(
+        { error: 'Vælg mindst én aftaletype (variabel eller fastpris)' },
+        { status: 400 }
+      );
+    }
     const sort_order = Number.isFinite(Number(body.sort_order)) ? Math.round(Number(body.sort_order)) : 0;
     const active = body.active !== false;
 
@@ -64,6 +88,9 @@ export async function POST(req: NextRequest) {
         monthly_fee_dkk: fee,
         notes,
         signup_url: parsedUrl.url,
+        fastpris_signup_url: parsedFastprisUrl.url,
+        offers_variabel,
+        offers_fastpris,
         sort_order,
         active,
         updated_at: new Date().toISOString(),
@@ -121,6 +148,19 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json({ error: parsedUrl.error }, { status: 400 });
       }
       updates.signup_url = parsedUrl.url;
+    }
+    if (body.fastpris_signup_url !== undefined) {
+      const parsedUrl = parseOptionalSignupUrl(body.fastpris_signup_url);
+      if (!parsedUrl.ok) {
+        return NextResponse.json({ error: parsedUrl.error }, { status: 400 });
+      }
+      updates.fastpris_signup_url = parsedUrl.url;
+    }
+    if (body.offers_variabel !== undefined) {
+      updates.offers_variabel = parseOfferFlag(body.offers_variabel, true);
+    }
+    if (body.offers_fastpris !== undefined) {
+      updates.offers_fastpris = parseOfferFlag(body.offers_fastpris, true);
     }
     if (body.sort_order !== undefined && Number.isFinite(Number(body.sort_order))) {
       updates.sort_order = Math.round(Number(body.sort_order));
