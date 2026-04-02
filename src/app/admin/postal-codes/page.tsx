@@ -156,6 +156,7 @@ export default function PostalCodesAdmin() {
     if (input === ADMIN_PASSWORD) {
       setAuthed(true);
       sessionStorage.setItem('admin_authed', 'true');
+      sessionStorage.setItem('admin_pw', input);
       setError('');
     } else {
       setError('Forkert adgangskode!');

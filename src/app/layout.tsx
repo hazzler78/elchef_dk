@@ -4,7 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import StyledComponentsRegistry from '../lib/registry';
 import BottomNav from '@/components/BottomNav';
-import CampaignBanner from '@/components/CampaignBanner';
+import CampaignBannerDynamic from '@/components/CampaignBannerDynamic';
 import GrokChat from '@/components/GrokChat';
 import Footer from '@/components/Footer';
 
@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="da">
+    <html lang="da" suppressHydrationWarning>
       <head>
         <Script 
           id="Cookiebot" 
@@ -218,7 +218,7 @@ export default function RootLayout({
         </Script>
         {/* End TikTok Pixel Code */}
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <StyledComponentsRegistry>
           {/* Tracks and stores affiliate code from query params in a cookie */}
           <Script id="affiliate-tracker" strategy="afterInteractive">
@@ -242,7 +242,7 @@ export default function RootLayout({
               })();
             `}
           </Script>
-          <CampaignBanner />
+          <CampaignBannerDynamic />
           <div id="app">
             {children}
             <BottomNav />

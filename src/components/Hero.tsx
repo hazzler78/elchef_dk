@@ -215,7 +215,7 @@ export default function Hero() {
                   }, [])}
                   onClick={() => {
                     trackHeroClick('rorligt', '/variabel-aftale');
-                    // TikTok InitiateCheckout-style event when we send user to Salesys flow
+                    // TikTok InitiateCheckout-style event when user continues to contract flow
                     try {
                       const ttq: any = (window as any).ttq;
                       const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;

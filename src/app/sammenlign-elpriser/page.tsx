@@ -5,6 +5,7 @@ import GlassButton from '@/components/GlassButton';
 import ContactForm from '@/components/ContactForm';
 import ShareResults from '@/components/ShareResults';
 import { withDefaultCtaUtm } from '@/lib/utm';
+import { SupplierChoiceGridAuto } from '@/components/suppliers/SupplierChoiceGrid';
 
 // SVG Ikoner i glassmorphism-stil
 const AnalysisIcon = () => (
@@ -431,6 +432,26 @@ export default function JamforElpriser() {
             </GlassButton>
           </div>
         )}
+        </div>
+
+        <div
+          style={{
+            marginBottom: '2rem',
+            background: 'var(--glass-bg)',
+            backdropFilter: 'var(--glass-blur)',
+            WebkitBackdropFilter: 'var(--glass-blur)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '2rem 1.5rem',
+            boxShadow: 'var(--glass-shadow-medium)',
+          }}
+        >
+          <SupplierChoiceGridAuto
+            theme="glass"
+            ctaMedium="sammenlign-elpriser"
+            headline="Klar til at skifte? Vælg en elleverandør"
+            intro="Du kan også starte med at uploade din regning ovenfor — eller gå direkte til en partner her. Alle priser er vist med tillæg og månedsgebyr, så du ved, hvad du vælger."
+          />
         </div>
 
         {error && (
@@ -913,7 +934,7 @@ export default function JamforElpriser() {
                 marginBottom: '0.5rem',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
-                Lige nu anbefaler vi en af disse elaftaler, afhængigt af om du vil have variabel aftale eller fastprisaftale.
+                Gør analysen til handling: vælg variabel eller fastpris — eller vælg en bestemt elleverandør længere nede.
               </h4>
               <div style={{ 
                 display: 'flex', 
@@ -980,6 +1001,16 @@ export default function JamforElpriser() {
                   </div>
                 </div>
               </div>
+
+              <div style={{ width: '100%', maxWidth: 960 }}>
+                <SupplierChoiceGridAuto
+                  theme="glass"
+                  ctaMedium="sammenlign-resultat"
+                  headline="Vælg elleverandør efter analysen"
+                  intro="Skift til en aftale med lavere tillæg og færre skjulte gebyrer — klik på den leverandør, du vil vide mere om."
+                />
+              </div>
+
               <GlassButton 
                 variant="secondary" 
                 size="md" 

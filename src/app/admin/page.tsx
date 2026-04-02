@@ -81,6 +81,13 @@ const adminSections = [
     href: "/admin/postal-codes",
     icon: "📍",
     color: "bg-rose-500"
+  },
+  {
+    title: "Leverandører og påslag",
+    description: "Administrer leverandører, påslag (øre/kWh) og månedsgebyr",
+    href: "/admin/suppliers",
+    icon: "⚡",
+    color: "bg-amber-500"
   }
 ];
 
@@ -100,6 +107,7 @@ export default function AdminPage() {
     if (input === ADMIN_PASSWORD) {
       setAuthed(true);
       sessionStorage.setItem('admin_authed', 'true');
+      sessionStorage.setItem('admin_pw', input);
       setError('');
     } else {
       setError('Forkert adgangskode!');

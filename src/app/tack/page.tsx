@@ -20,13 +20,13 @@ export default function TackPage() {
       const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
       if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
         ttq.track('Lead', {
-          content_name: 'salesys_redirect',
+          content_name: 'thank_you',
           event_id: sid || undefined,
           status: status || undefined
         });
       }
       if ((window as any).__ttq_capi) {
-        (window as any).__ttq_capi('Lead', { content_name: 'salesys_redirect', event_id: sid || undefined, status: status || undefined });
+        (window as any).__ttq_capi('Lead', { content_name: 'thank_you', event_id: sid || undefined, status: status || undefined });
       }
     } catch { /* no-op */ }
   }, [sid, status]);

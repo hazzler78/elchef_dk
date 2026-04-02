@@ -1,22 +1,17 @@
 "use client";
 
-import SalesysForm from "@/components/SalesysForm";
+import Link from "next/link";
 
 export default function PartnerTestFormPage() {
   return (
     <main style={{ maxWidth: 800, margin: "0 auto", padding: "24px" }}>
-      <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>Testa Salesys‑formulär</h1>
+      <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>Skjematest</h1>
       <p style={{ color: "#475569", marginBottom: 20 }}>
-        Denna sida är för att testa inbäddningen av Salesys‑formulär i Vercel Preview.
+        Indlejrede skemaer er fjernet fra denne side. Brug de offentlige flows på hjemmesiden.
       </p>
-
-      <SalesysForm
-        containerId="salesys-form-test"
-        formId="68b05450a1479b5cec96958c"
-        options={{ width: "100%", test: true }}
-      />
+      <Link href="/skift-elaftale" style={{ color: "#2563eb", fontWeight: 600 }}>
+        Gå til skift elaftale →
+      </Link>
     </main>
   );
 }
-
-
