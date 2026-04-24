@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabaseServer';
 import { parseOptionalSignupUrl } from '@/lib/supplierSignupUrl';
 
+const SUPPLIER_MARKET = 'DK';
+
 function parseFiniteNumber(v: unknown): number {
   if (typeof v === 'number' && Number.isFinite(v)) return v;
   if (typeof v === 'string') {
@@ -83,6 +85,7 @@ export async function POST(req: NextRequest) {
     const { data, error } = await supabase
       .from('supplier_markups')
       .insert({
+        market: SUPPLIER_MARKET,
         name,
         markup_ore_per_kwh: markup,
         monthly_fee_dkk: fee,
@@ -170,7 +173,13 @@ export async function PATCH(req: NextRequest) {
     }
 
     const supabase = getSupabaseServerClient();
-    const { data, error } = await supabase.from('supplier_markups').update(updates).eq('id', id).select().single();
+    const { data, error } = await supabase
+      .from('supplier_markups')
+      .update(updates)
+      .eq('id', id)
+      .eq('market', SUPPLIER_MARKET)
+      .select()
+      .single();
     if (error) {
       console.error('supplier_markups update:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -192,7 +201,11 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'id er påkrævet' }, { status: 400 });
     }
     const supabase = getSupabaseServerClient();
-    const { error } = await supabase.from('supplier_markups').delete().eq('id', id);
+    const { error } = await supabase
+      .from('supplier_markups')
+      .delete()
+      .eq('id', id)
+      .eq('market', SUPPLIER_MARKET);
     if (error) {
       console.error('supplier_markups delete:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });

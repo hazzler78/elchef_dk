@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 
 const ADMIN_PASSWORD = 'grodan2025';
+const SUPPLIER_MARKET = 'DK';
 
 type SupplierRow = {
   id: string;
+  market: string | null;
   name: string;
   markup_ore_per_kwh: number | string;
   monthly_fee_dkk: number | string;
@@ -84,6 +86,7 @@ export default function AdminSuppliersPage() {
       const { data, error: qErr } = await supabase
         .from('supplier_markups')
         .select('*')
+        .eq('market', SUPPLIER_MARKET)
         .order('sort_order', { ascending: true })
         .order('name', { ascending: true });
       if (qErr) throw qErr;
@@ -320,6 +323,9 @@ export default function AdminSuppliersPage() {
         <strong>månedsgebyr</strong> (DKK), <strong>variabel- og/eller fastpris-aftale</strong> (hvad de vises under),
         samt <strong>tilmeldingslink</strong> (valgfrit separat link til fastpris). Data gemmes i Supabase — kør{' '}
         <code>supabase-supplier-markups.sql</code>, hvis tabellen mangler eller der er nye kolonner.
+      </p>
+      <p style={{ color: '#334155', marginBottom: 12, fontSize: 14 }}>
+        Denne admin-side viser kun leverandører for marked: <strong>{SUPPLIER_MARKET}</strong>.
       </p>
       <p style={{ color: '#334155', marginBottom: 24, fontSize: 15 }}>
         <strong>Eksisterende leverandører:</strong> Klik <strong>Rediger</strong> for fuld formular i dialog, eller

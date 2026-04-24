@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export type PublicSupplier = {
   id: string;
+  market: string | null;
   name: string;
   markup_ore_per_kwh: number;
   monthly_fee_dkk: number;
@@ -15,6 +16,7 @@ export type PublicSupplier = {
 
 /** Filtrer som vises på /variabel-aftale resp. /fastpris-aftale. Udeladt = alle aktive (fx skift, sammenlign). */
 export type PublicSupplierContractFilter = 'variabel' | 'fastpris';
+const PUBLIC_SUPPLIER_MARKET = 'DK';
 
 function num(v: unknown): number {
   if (typeof v === 'number' && Number.isFinite(v)) return v;
@@ -46,9 +48,10 @@ export async function fetchActivePublicSuppliers(
   let q = supabase
     .from('supplier_markups')
     .select(
-      'id,name,markup_ore_per_kwh,monthly_fee_dkk,notes,signup_url,fastpris_signup_url,offers_variabel,offers_fastpris,sort_order'
+      'id,market,name,markup_ore_per_kwh,monthly_fee_dkk,notes,signup_url,fastpris_signup_url,offers_variabel,offers_fastpris,sort_order'
     )
-    .eq('active', true);
+    .eq('active', true)
+    .eq('market', PUBLIC_SUPPLIER_MARKET);
 
   if (contract === 'variabel') {
     q = q.eq('offers_variabel', true);
@@ -64,6 +67,7 @@ export async function fetchActivePublicSuppliers(
 
   return data.map((row) => ({
     id: String(row.id),
+    market: typeof row.market === 'string' ? row.market.trim() : null,
     name: String(row.name ?? '').trim() || 'Elleverandør',
     markup_ore_per_kwh: num(row.markup_ore_per_kwh),
     monthly_fee_dkk: num(row.monthly_fee_dkk),

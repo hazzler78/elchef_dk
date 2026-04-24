@@ -8,6 +8,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE IF NOT EXISTS public.supplier_markups (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  market TEXT,
   name TEXT NOT NULL,
   markup_ore_per_kwh NUMERIC(14, 4) NOT NULL DEFAULT 0,
   monthly_fee_dkk NUMERIC(14, 2) NOT NULL DEFAULT 0,
@@ -24,12 +25,15 @@ CREATE TABLE IF NOT EXISTS public.supplier_markups (
 
 CREATE INDEX IF NOT EXISTS idx_supplier_markups_active ON public.supplier_markups(active);
 CREATE INDEX IF NOT EXISTS idx_supplier_markups_sort ON public.supplier_markups(sort_order);
+CREATE INDEX IF NOT EXISTS idx_supplier_markups_market ON public.supplier_markups(market);
 
 -- Eksisterende projekter (CREATE TABLE IF NOT EXISTS tilføjer ikke nye kolonner):
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS signup_url TEXT;
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS fastpris_signup_url TEXT;
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS offers_variabel BOOLEAN NOT NULL DEFAULT true;
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS offers_fastpris BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS market TEXT;
+ALTER TABLE public.supplier_markups ALTER COLUMN market SET DEFAULT 'DK';
 
 ALTER TABLE public.supplier_markups ENABLE ROW LEVEL SECURITY;
 
@@ -58,6 +62,7 @@ COMMENT ON COLUMN public.supplier_markups.signup_url IS 'Tilmeldingslink til var
 COMMENT ON COLUMN public.supplier_markups.fastpris_signup_url IS 'Valgfrit separat link til fastprisaftale; tom = brug signup_url';
 COMMENT ON COLUMN public.supplier_markups.offers_variabel IS 'Om leverandøren vises på variabel-sider';
 COMMENT ON COLUMN public.supplier_markups.offers_fastpris IS 'Om leverandøren vises på fastpris-sider';
+COMMENT ON COLUMN public.supplier_markups.market IS 'Marked/land (fx DK, SE). Appen filtrerer nu på DK.';
 
 -- Uppdatera PostgREST cache (undvik "schema cache" efter skapning)
 NOTIFY pgrst, 'reload schema';
