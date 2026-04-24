@@ -37,9 +37,18 @@ export function getSupabaseServerClient(): SupabaseClient {
   const url =
     sanitizeEnv(process.env.SUPABASE_URL) ||
     sanitizeEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
-  const key = sanitizeEnv(process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const key =
+    sanitizeEnv(process.env.SUPABASE_SERVICE_ROLE_KEY) ||
+    sanitizeEnv(process.env.SUPABASE_SERVICE_KEY) ||
+    sanitizeEnv(process.env.SUPABASE_SECRET_KEY);
   if (!url || !key) {
-    throw new Error('Supabase credentials are not configured');
+    const missing: string[] = [];
+    if (!url) missing.push('SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL)');
+    if (!key)
+      missing.push(
+        'SUPABASE_SERVICE_ROLE_KEY (or SUPABASE_SERVICE_KEY / SUPABASE_SECRET_KEY)'
+      );
+    throw new Error(`Supabase credentials are not configured. Missing: ${missing.join(', ')}`);
   }
   assertServiceRoleJwt(key);
   return createClient(url, key, {
