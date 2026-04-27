@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.supplier_markups (
   market TEXT,
   name TEXT NOT NULL,
   markup_ore_per_kwh NUMERIC(14, 4) NOT NULL DEFAULT 0,
+  fixed_price_ore_per_kwh NUMERIC(14, 4),
   monthly_fee_dkk NUMERIC(14, 2) NOT NULL DEFAULT 0,
   notes TEXT,
   signup_url TEXT,
@@ -33,6 +34,7 @@ ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS fastpris_signup_url
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS offers_variabel BOOLEAN NOT NULL DEFAULT true;
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS offers_fastpris BOOLEAN NOT NULL DEFAULT true;
 ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS market TEXT;
+ALTER TABLE public.supplier_markups ADD COLUMN IF NOT EXISTS fixed_price_ore_per_kwh NUMERIC(14, 4);
 ALTER TABLE public.supplier_markups ALTER COLUMN market SET DEFAULT 'DK';
 
 ALTER TABLE public.supplier_markups ENABLE ROW LEVEL SECURITY;
@@ -57,6 +59,7 @@ CREATE POLICY "supplier_markups_service_role_all" ON public.supplier_markups
 
 COMMENT ON TABLE public.supplier_markups IS 'El-leverandørers påslag (øre/kWh) og gebyrer til intern visning og beregning';
 COMMENT ON COLUMN public.supplier_markups.markup_ore_per_kwh IS 'Påslag i øre per kWh (spot/afregning); negativ værdi = rabat under spot';
+COMMENT ON COLUMN public.supplier_markups.fixed_price_ore_per_kwh IS 'Faktisk fastpris i øre/kWh (bruges på fastpris-sider), valgfri';
 COMMENT ON COLUMN public.supplier_markups.monthly_fee_dkk IS 'Fast månedsgebyr i DKK';
 COMMENT ON COLUMN public.supplier_markups.signup_url IS 'Tilmeldingslink til variabel (rørlig) elaftale; bruges også til fastpris hvis fastpris_signup_url er tom';
 COMMENT ON COLUMN public.supplier_markups.fastpris_signup_url IS 'Valgfrit separat link til fastprisaftale; tom = brug signup_url';

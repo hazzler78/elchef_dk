@@ -51,6 +51,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Navn er påkrævet' }, { status: 400 });
     }
     const markup = parseFiniteNumber(body.markup_ore_per_kwh);
+    const fixedPriceRaw = body.fixed_price_ore_per_kwh;
+    const fixedPrice =
+      fixedPriceRaw === null || fixedPriceRaw === undefined || fixedPriceRaw === ''
+        ? null
+        : parseFiniteNumber(fixedPriceRaw);
     const fee = parseFiniteNumber(body.monthly_fee_dkk ?? 0);
     if (!Number.isFinite(markup)) {
       console.warn('[admin/suppliers POST] 400: ugyldigt påslag', body.markup_ore_per_kwh);
@@ -59,6 +64,9 @@ export async function POST(req: NextRequest) {
     if (!Number.isFinite(fee) || fee < 0) {
       console.warn('[admin/suppliers POST] 400: ugyldigt månedsgebyr', body.monthly_fee_dkk);
       return NextResponse.json({ error: 'Ugyldigt månedsgebyr' }, { status: 400 });
+    }
+    if (fixedPrice !== null && (!Number.isFinite(fixedPrice) || fixedPrice < 0)) {
+      return NextResponse.json({ error: 'Ugyldig fastpris (øre/kWh)' }, { status: 400 });
     }
     const notes = typeof body.notes === 'string' ? body.notes.trim() || null : null;
     const parsedUrl = parseOptionalSignupUrl(body.signup_url);
@@ -88,6 +96,7 @@ export async function POST(req: NextRequest) {
         market: SUPPLIER_MARKET,
         name,
         markup_ore_per_kwh: markup,
+        fixed_price_ore_per_kwh: fixedPrice,
         monthly_fee_dkk: fee,
         notes,
         signup_url: parsedUrl.url,
@@ -141,6 +150,20 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json({ error: 'Ugyldigt månedsgebyr' }, { status: 400 });
       }
       updates.monthly_fee_dkk = v;
+    }
+    if (body.fixed_price_ore_per_kwh !== undefined) {
+      if (
+        body.fixed_price_ore_per_kwh === null ||
+        body.fixed_price_ore_per_kwh === ''
+      ) {
+        updates.fixed_price_ore_per_kwh = null;
+      } else {
+        const v = parseFiniteNumber(body.fixed_price_ore_per_kwh);
+        if (!Number.isFinite(v) || v < 0) {
+          return NextResponse.json({ error: 'Ugyldig fastpris (øre/kWh)' }, { status: 400 });
+        }
+        updates.fixed_price_ore_per_kwh = v;
+      }
     }
     if (body.notes !== undefined) {
       updates.notes = typeof body.notes === 'string' ? body.notes.trim() || null : null;

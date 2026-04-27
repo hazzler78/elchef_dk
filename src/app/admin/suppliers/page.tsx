@@ -12,6 +12,7 @@ type SupplierRow = {
   market: string | null;
   name: string;
   markup_ore_per_kwh: number | string;
+  fixed_price_ore_per_kwh: number | string | null;
   monthly_fee_dkk: number | string;
   notes: string | null;
   signup_url: string | null;
@@ -46,6 +47,7 @@ export default function AdminSuppliersPage() {
 
   const [newName, setNewName] = useState('');
   const [newMarkup, setNewMarkup] = useState('0');
+  const [newFixedPrice, setNewFixedPrice] = useState('');
   const [newFee, setNewFee] = useState('0');
   const [newNotes, setNewNotes] = useState('');
   const [newSignupUrl, setNewSignupUrl] = useState('');
@@ -149,6 +151,13 @@ export default function AdminSuppliersPage() {
             const n = parseFloat(t);
             return Number.isFinite(n) ? n : 0;
           })(),
+          fixed_price_ore_per_kwh: (() => {
+            const t = newFixedPrice.replace(/\s/g, '').replace(',', '.').trim();
+            if (t === '') return null;
+            if (t === '-' || t === '+') return null;
+            const n = parseFloat(t);
+            return Number.isFinite(n) ? n : null;
+          })(),
           monthly_fee_dkk: parseFloat(newFee.replace(',', '.')) || 0,
           notes: newNotes.trim() || null,
           signup_url: newSignupUrl.trim() || null,
@@ -163,6 +172,7 @@ export default function AdminSuppliersPage() {
       if (!res.ok) throw new Error(j.error || 'Fejl');
       setNewName('');
       setNewMarkup('0');
+      setNewFixedPrice('');
       setNewFee('0');
       setNewNotes('');
       setNewSignupUrl('');
@@ -199,6 +209,10 @@ export default function AdminSuppliersPage() {
           id: row.id,
           name: row.name.trim(),
           markup_ore_per_kwh: parseMarkupInput(String(row.markup_ore_per_kwh)),
+          fixed_price_ore_per_kwh:
+            row.fixed_price_ore_per_kwh === null || String(row.fixed_price_ore_per_kwh).trim() === ''
+              ? null
+              : parseMarkupInput(String(row.fixed_price_ore_per_kwh)),
           monthly_fee_dkk: num(String(row.monthly_fee_dkk)),
           notes: row.notes?.trim() || null,
           signup_url: row.signup_url?.trim() || null,
@@ -320,7 +334,8 @@ export default function AdminSuppliersPage() {
 
       <p style={{ color: '#64748b', marginBottom: 24, maxWidth: 720 }}>
         Tilføj og rediger elleverandører med <strong>påslag</strong> (øre per kWh), valgfrit{' '}
-        <strong>månedsgebyr</strong> (DKK), <strong>variabel- og/eller fastpris-aftale</strong> (hvad de vises under),
+        <strong>fastpris i øre/kWh</strong> for fastprisaftaler, valgfrit <strong>månedsgebyr</strong> (DKK),{' '}
+        <strong>variabel- og/eller fastpris-aftale</strong> (hvad de vises under),
         samt <strong>tilmeldingslink</strong> (valgfrit separat link til fastpris). Data gemmes i Supabase — kør{' '}
         <code>supabase-supplier-markups.sql</code>, hvis tabellen mangler eller der er nye kolonner.
       </p>
@@ -388,6 +403,30 @@ export default function AdminSuppliersPage() {
                     )
                   }
                   inputMode="decimal"
+                  style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
+                />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>
+                  Fastpris (øre/kWh) <span style={{ fontWeight: 400, color: '#64748b' }}>(valgfrit)</span>
+                </span>
+                <input
+                  value={editDraft.fixed_price_ore_per_kwh === null ? '' : String(editDraft.fixed_price_ore_per_kwh)}
+                  onChange={(e) =>
+                    setEditDraft((d) =>
+                      d
+                        ? {
+                            ...d,
+                            fixed_price_ore_per_kwh:
+                              e.target.value.trim() === ''
+                                ? null
+                                : (e.target.value as unknown as number),
+                          }
+                        : d
+                    )
+                  }
+                  inputMode="decimal"
+                  placeholder="f.eks. 89,95"
                   style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
                 />
               </label>
@@ -576,6 +615,19 @@ export default function AdminSuppliersPage() {
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 13, fontWeight: 600 }}>
+            Fastpris (øre/kWh) <span style={{ fontWeight: 400, color: '#64748b' }}>(valgfrit)</span>
+          </span>
+          <input
+            value={newFixedPrice}
+            onChange={(e) => setNewFixedPrice(e.target.value)}
+            type="text"
+            inputMode="decimal"
+            placeholder="f.eks. 89,95"
+            style={{ padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
+          />
+        </label>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           <span style={{ fontSize: 13, fontWeight: 600 }}>Månedsgebyr (kr)</span>
           <input
             value={newFee}
@@ -677,6 +729,7 @@ export default function AdminSuppliersPage() {
               <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
                 <th style={{ padding: 10 }}>Navn</th>
                 <th style={{ padding: 10 }}>Påslag (øre/kWh, − = rabat)</th>
+                <th style={{ padding: 10 }}>Fastpris (øre/kWh)</th>
                 <th style={{ padding: 10 }}>Månedsgebyr (kr)</th>
                 <th style={{ padding: 10 }}>Sortering</th>
                 <th style={{ padding: 10 }}>Aktiv</th>
@@ -704,6 +757,21 @@ export default function AdminSuppliersPage() {
                         updateRow(r.id, { markup_ore_per_kwh: e.target.value as unknown as number })
                       }
                       style={{ width: 96, padding: 6, borderRadius: 4, border: '1px solid #e2e8f0' }}
+                    />
+                  </td>
+                  <td style={{ padding: 8 }}>
+                    <input
+                      value={r.fixed_price_ore_per_kwh === null ? '' : String(r.fixed_price_ore_per_kwh)}
+                      onChange={(e) =>
+                        updateRow(r.id, {
+                          fixed_price_ore_per_kwh:
+                            e.target.value.trim() === ''
+                              ? null
+                              : (e.target.value as unknown as number),
+                        })
+                      }
+                      style={{ width: 110, padding: 6, borderRadius: 4, border: '1px solid #e2e8f0' }}
+                      placeholder="-"
                     />
                   </td>
                   <td style={{ padding: 8 }}>

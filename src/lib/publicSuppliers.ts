@@ -5,6 +5,7 @@ export type PublicSupplier = {
   market: string | null;
   name: string;
   markup_ore_per_kwh: number;
+  fixed_price_ore_per_kwh: number | null;
   monthly_fee_dkk: number;
   notes: string | null;
   signup_url: string | null;
@@ -48,7 +49,7 @@ export async function fetchActivePublicSuppliers(
   let q = supabase
     .from('supplier_markups')
     .select(
-      'id,market,name,markup_ore_per_kwh,monthly_fee_dkk,notes,signup_url,fastpris_signup_url,offers_variabel,offers_fastpris,sort_order'
+      'id,market,name,markup_ore_per_kwh,fixed_price_ore_per_kwh,monthly_fee_dkk,notes,signup_url,fastpris_signup_url,offers_variabel,offers_fastpris,sort_order'
     )
     .eq('active', true)
     .eq('market', PUBLIC_SUPPLIER_MARKET);
@@ -70,6 +71,10 @@ export async function fetchActivePublicSuppliers(
     market: typeof row.market === 'string' ? row.market.trim() : null,
     name: String(row.name ?? '').trim() || 'Elleverandør',
     markup_ore_per_kwh: num(row.markup_ore_per_kwh),
+    fixed_price_ore_per_kwh:
+      row.fixed_price_ore_per_kwh === null || row.fixed_price_ore_per_kwh === undefined
+        ? null
+        : num(row.fixed_price_ore_per_kwh),
     monthly_fee_dkk: num(row.monthly_fee_dkk),
     notes: typeof row.notes === 'string' && row.notes.trim() ? row.notes.trim() : null,
     signup_url:

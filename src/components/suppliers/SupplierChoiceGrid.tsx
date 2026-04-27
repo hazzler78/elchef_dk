@@ -158,6 +158,7 @@ function partnerSignupUrl(s: PublicSupplier, contractType: PublicSupplierContrac
 
 function pricingSummary(s: PublicSupplier, contractType: PublicSupplierContractFilter): string {
   const ore = s.markup_ore_per_kwh;
+  const fixedOre = s.fixed_price_ore_per_kwh;
   const fee = s.monthly_fee_dkk;
   const feePart =
     fee > 0
@@ -165,14 +166,10 @@ function pricingSummary(s: PublicSupplier, contractType: PublicSupplierContractF
       : '0 kr. i månedsgebyr';
 
   if (contractType === 'fastpris') {
-    const spotRef =
-      ore > 0
-        ? `Spot-reference: ${formatOre(ore)} øre/kWh tillæg`
-        : ore < 0
-          ? `Spot-reference: ${formatOre(ore)} øre/kWh rabat`
-          : null;
-    const mid = spotRef ? `${spotRef} · ` : '';
-    return `Fastprisaftale — fast kWh-pris aftales hos leverandøren. ${mid}${feePart}`;
+    if (fixedOre !== null && Number.isFinite(fixedOre)) {
+      return `Fastprisaftale: ${formatOre(fixedOre)} øre/kWh · ${feePart}`;
+    }
+    return `Fastprisaftale — fast kWh-pris aftales hos leverandøren. ${feePart}`;
   }
 
   const orePart =
