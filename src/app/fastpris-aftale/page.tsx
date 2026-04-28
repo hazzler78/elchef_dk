@@ -1,7 +1,7 @@
 import { fetchActivePublicSuppliers } from '@/lib/publicSuppliers';
 import FastprisAftaleClient from './FastprisAftaleClient';
 
-export const revalidate = 120;
+export const dynamic = 'force-dynamic';
 
 export default async function FastprisAftalePage() {
   const suppliers = await fetchActivePublicSuppliers('fastpris');
