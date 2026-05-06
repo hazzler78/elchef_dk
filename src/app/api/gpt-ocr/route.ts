@@ -50,8 +50,8 @@ export async function POST(req: NextRequest) {
     const extractionPrompt = `Du är en expert på danske elregninger fra ALLE elleverandører. Din opgave er at udtrække ALLE omkostninger fra fakturaen og strukturere dem i JSON-format.
 
 VIKTIGT - FLEXIBILITET:
-- Du MÅSTE hantera fakturor från ALLA elleverantörer (E.ON, Fortum, Vattenfall, EDF, Göteborg Energi, Stockholm Exergi, m.fl.)
-- Olika leverantörer har olika fakturaformat och terminologi - anpassa dig efter varje faktura
+- Du SKAL kunne håndtere danske fakturaer fra alle elleverandører (fx Andel Energi, OK, Norlys, Ewii, Nettopower, Velkommen, Modstrøm, b.energy, Kärnfull m.fl.)
+- Fakturaer har forskellig layout og terminologi - tilpas dig hver faktura
 - Du SKAL altid svare på dansk, uanset hvilket sprog fakturaen er på
 - Brug kun danske ord og termer
 
@@ -59,7 +59,7 @@ EXTRAKTIONSREGEL:
 Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Varje kostnad ska ha:
 - "name": exakt text från fakturan (t.ex. "Fast månadsavgift", "Elavtal årsavgift")
 - "amount": belopp i kr från "Totalt"-kolumnen (t.ex. 31.20, 44.84) - INTE från "öre/kWh" eller "kr/mån"
-- "section": vilken sektion den tillhör ("Elnät" eller "Elhandel")
+- "section": hvilken sektion den tilhører ("Net", "Elnät", "Elhandel", "Leverandør", "Abonnement")
 - "description": kort beskrivning av vad kostnaden är
 
 KRITISKT FÖR BELOPP:
@@ -112,6 +112,12 @@ LEVERANTÖRSSPECIFIKA TERMER:
 - EDF: "Abonnemangsavgift", "Påslag", "Serviceavgift"
 - Göteborg Energi: "Månadsavgift", "Påslag", "Elcertifikat"
 - Stockholm Exergi: "Fast avgift", "Påslag", "Årsavgift"
+- DANSKE TERMER (meget vigtige):
+- "Abonnement", "Abonnementspris", "Abonnementsgebyr", "Månedligt abonnement", "Aftalegebyr", "Aftale årsgebyr", "Administrationsgebyr"
+- "Tillæg", "Spot-tillæg", "Handelstillæg", "Påslag", "Variabelt tillæg", "Fast tillæg", "Balancetarif"
+- "Nettarif", "Systemtarif", "Transport", "Tarif", "Netabonnement", "Netydelse", "Abonnement til netselskab"
+- "Elafgift", "Moms", "Systemydelse", "PSO", "Elleverance", "Abonnementsbidrag"
+- "KWh-pris", "Energi", "Forbrug", "A conto", "Modregning", "Rabat", "Kampagnerabat"
 - Andra leverantörer: Anpassa efter fakturans terminologi
 
 JSON-FORMAT KRITISKT:
@@ -166,6 +172,10 @@ ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):
 - Dröjsmålsränta, Påminnelsesavgift, Priskollen
 - Rent vatten, Fossilfri, Fossilfri ingår
 - Profilpris, Bundet profilpris
+- DANSKA ALIAS:
+- Abonnement, Abonnementspris, Abonnementsgebyr, Aftalegebyr, Aftale årsgebyr, Administrationsgebyr
+- Handelstillæg, Spot-tillæg, Variabelt tillæg, Fast tillæg, Balancetarif (når det står under leverandør/elhandel)
+- Servicegebyr, Leverandørgebyr, Miljøtillæg, Klima-/grønt tillæg
 
 LEVERANTÖRSSPECIFIKA ONÖDIGA KOSTNADER:
 - E.ON: "Elavtal årsavgift", "Fast påslag", "Rörliga kostnader"
@@ -181,6 +191,9 @@ EXKLUDERA (räknas INTE som onödiga):
 - **OBS**: Moms inkluderas i besparingsberäkningen eftersom konsumenten betalar den verkliga kostnaden inklusive moms
 - Bundet elpris, Fastpris (själva energipriset), Rörligt elpris (själva energipriset)
 - Förbrukning, kWh, Öre/kWh, Kr/kWh
+- DANSKE EXKLUDERINGER:
+- Nettarif, Systemtarif, Elafgift, Transport, Netydelse, Tariffer fra netselskab (nødvendige netomkostninger)
+- Selve energiprisen per kWh (fx "Spotpris", "Fastpris per kWh", "Energi")
 
 INSTRUKTION:
 1. Gå igenom JSON-datan och identifiera alla kostnader som matchar ordlistan OCH är under "Elhandel"
@@ -220,14 +233,15 @@ VIKTIGT - SPRÅK:
 - Du SKAL altid svare på dansk, uanset hvilket sprog fakturaen er på
 - Selv om fakturaen er på svensk, norsk, dansk eller engelsk, skal du svare på dansk
 - Brug kun danske ord og termer
-- Ignorera språket i fakturan - analysera innehållet men svara på svenska
-- Använd svenska valutaformat (kr, öre) och svenska decimaler (komma istället för punkt)
+- Ignorera språket i fakturan - analysera innehållet men svara på dansk
+- Brug dansk valutaformat (kr, øre) og danske decimaler (komma i løbende tekst er ok)
 
 EXPERTIS:
 - Du förstår skillnaden mellan elöverföring (nätavgift) och elhandel (leverantörsavgift)
 - Du kan identifiera vilka avgifter som är obligatoriska vs valfria
 - Du förstår att vissa "fasta avgifter" är nätavgifter (obligatoriska) medan andra är leverantörsavgifter (valfria)
 - Kontext är avgörande: Titta på vilken sektion avgiften tillhör (Elnät vs Elhandel)
+- Kontext er afgørende: Vurdér altid sektion (Net/Netselskab vs Elhandel/Leverandør)
 
 NOGGRANN LÄSNING:
 - Läs av exakt belopp från "Totalt" eller motsvarande kolumn
@@ -274,11 +288,15 @@ ORDLISTA - ALLA DETTA RÄKNAS SOM ONÖDIGA KOSTNADER:
 - Dröjsmålsränta, Påminnelsesavgift, Priskollen
 - Rent vatten, Fossilfri, Fossilfri ingår
  - Profilpris, Bundet profilpris
+- DANSKA ALIAS:
+- Abonnement, Abonnementspris, Abonnementsgebyr, Aftalegebyr, Aftale årsgebyr, Administrationsgebyr
+- Handelstillæg, Spot-tillæg, Variabelt tillæg, Fast tillæg, Servicegebyr, Leverandørgebyr
 
 ORDLISTA - KOSTNADER SOM INTE RÄKNAS SOM EXTRA:
 - Moms, Elöverföring, Energiskatt, Medel spotpris, Spotpris, Elpris
 - Bundet elpris, Fastpris (själva energipriset), Rörligt elpris (själva energipriset)
 - Förbrukning, kWh, Öre/kWh, Kr/kWh
+- Nettarif, Systemtarif, Elafgift, Transport, Netydelse (nødvendige netomkostninger)
 
 VIKTIGT: Inkludera ALLA kostnader från första listan i summeringen av onödiga kostnader. Exkludera kostnader från andra listan.
 
@@ -392,11 +410,13 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
           console.log('Extracted JSON preview:', cleanJson.substring(0, 500));
               
               // Check for "Påslag" amount correction (match any name that contains Påslag)
-              const paaslagMatch = cleanJson.match(/"name"\s*:\s*"[^"]*Påslag[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+              const paaslagMatch = cleanJson.match(
+                /"name"\s*:\s*"[^"]*(Påslag|Tillæg|Tillägg|Handelstillæg|Spot-tillæg)[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/i
+              );
               console.log('Påslag regex match result:', paaslagMatch);
               
               if (paaslagMatch) {
-                const correctPaaslagAmount = paaslagMatch[1].replace(',', '.');
+                const correctPaaslagAmount = paaslagMatch[2].replace(',', '.');
                 console.log('Correct Påslag amount from JSON:', correctPaaslagAmount);
                 
                 // Use the amount from JSON (should be correct if AI reads from right column)
@@ -404,29 +424,34 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
                 console.log('Using Påslag amount from JSON:', finalPaaslagAmount);
                 
                 // Check if Påslag is in the result (line item may be formatted with or without numbering, with or without bold formatting)
-                const paaslagInResult = gptAnswer.match(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/);
+                const paaslagInResult = gptAnswer.match(
+                  /(\d+\.\s*)?\*?\*?(Påslag|Tillæg|Tillägg|Handelstillæg|Spot-tillæg)\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/i
+                );
                 console.log('Påslag in result regex match:', paaslagInResult);
                 
                 if (paaslagInResult) {
-                  const currentPaaslagAmount = paaslagInResult[2].replace(',', '.');
+                  const currentPaaslagAmount = paaslagInResult[3].replace(',', '.');
                   console.log('Current Påslag amount in result:', currentPaaslagAmount);
                   
                   if (Math.abs(parseFloat(currentPaaslagAmount) - parseFloat(finalPaaslagAmount)) > 0.01) {
                     console.log('Påslag amount is incorrect, correcting...');
                     
                     // Update the Påslag amount in the result
-                    gptAnswer = gptAnswer.replace(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/, `$1Påslag: ${finalPaaslagAmount} kr`);
+                    gptAnswer = gptAnswer.replace(
+                      /(\d+\.\s*)?\*?\*?(Påslag|Tillæg|Tillägg|Handelstillæg|Spot-tillæg)\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/i,
+                      `$1Tillæg: ${finalPaaslagAmount} kr`
+                    );
                     
                     // Recalculate total (both monthly and yearly)
-                    const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
+                    const currentTotal = gptAnswer.match(/(spara totalt|spar(?:er)? i alt)[^0-9]*(\d+(?:[,.]\d+)?)/i);
                     if (currentTotal) {
                       const totalDiff = parseFloat(finalPaaslagAmount) - parseFloat(currentPaaslagAmount);
-                      const newMonthlyTotal = (parseFloat(currentTotal[1].replace(',', '.')) + totalDiff).toFixed(2);
+                      const newMonthlyTotal = (parseFloat(currentTotal[2].replace(',', '.')) + totalDiff).toFixed(2);
                       const newYearlyTotal = (parseFloat(newMonthlyTotal) * 12).toFixed(2);
                       
                       gptAnswer = gptAnswer.replace(
-                        /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                        `spara totalt ${newMonthlyTotal}`
+                        /(spara totalt|spar(?:er)? i alt)[^0-9]*(\d+(?:[,.]\d+)?)/i,
+                        `sparer i alt ${newMonthlyTotal}`
                       );
                       gptAnswer = gptAnswer.replace(
                         /= (\d+(?:[,.]\d+)?) kr\/år/i,
@@ -445,24 +470,26 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
                   console.log('Påslag not found in result, but exists in JSON - checking if it should be added');
                   
                   // Check if Påslag is already in the result (to avoid duplicates)
-                  const paaslagCount = (gptAnswer.match(/\*?\*?Påslag\*?\*?:/g) || []).length;
+                  const paaslagCount = (gptAnswer.match(/\*?\*?(Påslag|Tillæg|Tillägg|Handelstillæg|Spot-tillæg)\*?\*?:/gi) || []).length;
                   console.log('Påslag count in result:', paaslagCount);
-                  const paaslagAlreadyExists = gptAnswer.match(/(\d+\.\s*)?\*?\*?Påslag\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/);
+                  const paaslagAlreadyExists = gptAnswer.match(
+                    /(\d+\.\s*)?\*?\*?(Påslag|Tillæg|Tillägg|Handelstillæg|Spot-tillæg)\*?\*?:\s*(\d+(?:[,.]\d+)?)\s*kr/i
+                  );
                   console.log('Påslag already exists check:', paaslagAlreadyExists);
                   if (paaslagCount === 0) {
                     // Add Påslag to the result if it's missing
-                    const currentTotal = gptAnswer.match(/spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i);
+                    const currentTotal = gptAnswer.match(/(spara totalt|spar(?:er)? i alt)[^0-9]*(\d+(?:[,.]\d+)?)/i);
                     if (currentTotal) {
-                      const newMonthlyTotal = (parseFloat(currentTotal[1].replace(',', '.')) + parseFloat(finalPaaslagAmount)).toFixed(2);
+                      const newMonthlyTotal = (parseFloat(currentTotal[2].replace(',', '.')) + parseFloat(finalPaaslagAmount)).toFixed(2);
                       const newYearlyTotal = (parseFloat(newMonthlyTotal) * 12).toFixed(2);
                       
                       gptAnswer = gptAnswer.replace(
-                      /Onödiga kostnader:([\s\S]*?)Total besparing:/,
-                      `Onödiga kostnader:$1Påslag: ${finalPaaslagAmount} kr\nTotal besparing:`
+                      /(Onödiga kostnader|Unødige omkostninger):([\s\S]*?)(Total besparing|Samlet besparelse):/i,
+                      `Unødige omkostninger:$2Tillæg: ${finalPaaslagAmount} kr\nSamlet besparelse:`
                       );
                       gptAnswer = gptAnswer.replace(
-                        /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                        `spara totalt ${newMonthlyTotal}`
+                        /(spara totalt|spar(?:er)? i alt)[^0-9]*(\d+(?:[,.]\d+)?)/i,
+                        `sparer i alt ${newMonthlyTotal}`
                       );
                       gptAnswer = gptAnswer.replace(
                         /= (\d+(?:[,.]\d+)?) kr\/år/i,
@@ -483,14 +510,18 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
               }
               
               // Check for missed "Elavtal årsavgift"
-              if (!gptAnswer.includes('Elavtal årsavgift')) {
-                console.log('Elavtal årsavgift not found in result, checking extracted JSON...');
+              if (
+                !/Elavtal årsavgift|Aftale årsgebyr|Årsabonnement|Årsgebyr/i.test(gptAnswer)
+              ) {
+                console.log('Årsgebyr line not found in result, checking extracted JSON...');
                 
-                const elavtalMatch = cleanJson.match(/"name"\s*:\s*"Elavtal årsavgift"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/);
+                const elavtalMatch = cleanJson.match(
+                  /"name"\s*:\s*"[^"]*(Elavtal årsavgift|Aftale årsgebyr|Årsabonnement|Årsgebyr)[^"]*"[^}]*"amount"\s*:\s*(\d+(?:[,.]\d+)?)/i
+                );
                 console.log('Elavtal regex match result:', elavtalMatch);
                 
                 if (elavtalMatch) {
-                  const amount = elavtalMatch[1].replace(',', '.');
+                  const amount = elavtalMatch[2].replace(',', '.');
                   console.log('Found Elavtal årsavgift amount:', amount);
                   
                   const currentTotal = gptAnswer.match(/total[^0-9]*(\d+(?:[,.]\d+)?)/i);
@@ -502,12 +533,12 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
                     console.log('New monthly total:', newMonthlyTotal, 'New yearly total:', newYearlyTotal);
                     
                     gptAnswer = gptAnswer.replace(
-                      /Onödiga kostnader:([\s\S]*?)Total besparing:/,
-                      `Onödiga kostnader:$1Elavtal årsavgift: ${amount} kr\nTotal besparing:`
+                      /(Onödiga kostnader|Unødige omkostninger):([\s\S]*?)(Total besparing|Samlet besparelse):/i,
+                      `Unødige omkostninger:$2Aftale årsgebyr: ${amount} kr\nSamlet besparelse:`
                     );
                     gptAnswer = gptAnswer.replace(
-                      /spara totalt [^0-9]*(\d+(?:[,.]\d+)?)/i,
-                      `spara totalt ${newMonthlyTotal}`
+                      /(spara totalt|spar(?:er)? i alt)[^0-9]*(\d+(?:[,.]\d+)?)/i,
+                      `sparer i alt ${newMonthlyTotal}`
                     );
                     gptAnswer = gptAnswer.replace(
                       /= (\d+(?:[,.]\d+)?) kr\/år/i,

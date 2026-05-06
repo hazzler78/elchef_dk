@@ -33,18 +33,18 @@ export async function POST(req: NextRequest) {
     }
 
     // Step 1: Extract structured data
-    const extractionPrompt = `Du är en expert på svenska elräkningar. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
+    const extractionPrompt = `Du er en ekspert i danske elregninger. Din opgave er at udtrække ALLE omkostninger fra fakturaen og strukturere dem i JSON-format.
 
-**VIKTIGT - SPRÅK:**
-- Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
-- Använd endast svenska ord och termer
+**VIGTIGT - SPROG:**
+- Du SKAL altid svare på dansk, uanset hvilket sprog fakturaen er på
+- Brug kun danske ord og termer
 
 **EXTRAKTIONSREGEL:**
-Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Varje kostnad ska ha:
-- "name": exakt text från fakturan (t.ex. "Fast månadsavgift", "Elavtal årsavgift")
-- "amount": belopp i kr (t.ex. 31.20, 44.84)
-- "section": vilken sektion den tillhör ("Elnät" eller "Elhandel")
-- "description": kort beskrivning av vad kostnaden är
+Udtræk ALLE omkostninger fra fakturaen og returnér dem som en JSON-array. Hver omkostning skal have:
+- "name": præcis tekst fra fakturaen (fx "Abonnement", "Aftale årsgebyr")
+- "amount": beløb i kr (fx 31.20, 44.84)
+- "section": hvilken sektion den tilhører ("Net", "Elnät", "Elhandel", "Leverandør", "Abonnement")
+- "description": kort beskrivelse af omkostningen
 
 **EXEMPEL JSON:**
 [
@@ -68,13 +68,11 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
   }
 ]
 
-**VIKTIGT:**
-- Inkludera ALLA kostnader, även de som inte är "onödiga"
-- Läs exakt belopp från "Totalt" eller motsvarande kolumn
-- **KRITISKT**: Leta särskilt efter "Elavtal årsavgift" - denna kostnad missas ofta men är viktig
-- Var särskilt uppmärksam på "Fast månadsavgift", "Profilpris", "Rörliga kostnader", "Fast påslag"
-- Om en kostnad har både års- och månadsbelopp, inkludera månadsbeloppet
-- **EXTRA VIKTIGT**: "Elavtal årsavgift" kan stå som en egen rad eller som del av en längre text - leta efter den överallt
+**VIGTIGT:**
+- Inkludér ALLE omkostninger, også dem der ikke er "unødige"
+- Læs præcist beløb fra "Total/Totalt/I alt" eller sidste beløbskolonne
+- Vær ekstra opmærksom på danske termer: "Abonnement", "Aftalegebyr", "Aftale årsgebyr", "Handelstillæg", "Spot-tillæg"
+- Hvis en post har både års- og månedsbeløb, brug månedsbeløbet i "amount"
 
 Svara ENDAST med JSON-arrayen, inget annat.`;
 
@@ -130,9 +128,9 @@ Svara ENDAST med JSON-arrayen, inget annat.`;
         const parsedData = JSON.parse(extractedJson);
         debugInfo.parsedData = parsedData;
         
-        // Check if Elavtal årsavgift is in the data
+        // Check if annual fee line is in the data (SE/DK aliases)
         const elavtalItem = parsedData.find((item: { name?: string }) => 
-          item.name && item.name.toLowerCase().includes('elavtal årsavgift')
+          item.name && /(elavtal årsavgift|aftale årsgebyr|årsabonnement|årsgebyr)/i.test(item.name)
         );
         
         if (elavtalItem) {
@@ -141,7 +139,9 @@ Svara ENDAST med JSON-arrayen, inget annat.`;
         }
         
         // Test regex pattern
-        const elavtalMatch = extractedJson.match(/["']?Elavtal årsavgift["']?\s*[,\]]\s*["']?(\d+(?:[,.]\d+)?)["']?\s*kr/);
+        const elavtalMatch = extractedJson.match(
+          /["']?(Elavtal årsavgift|Aftale årsgebyr|Årsabonnement|Årsgebyr)["']?\s*[,\]]\s*["']?(\d+(?:[,.]\d+)?)["']?\s*kr/i
+        );
         debugInfo.regexMatch = elavtalMatch;
         
       } catch (parseError) {

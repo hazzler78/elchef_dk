@@ -246,13 +246,28 @@ export default function BillUpload({ onAnalyzed }: BillUploadProps) {
         body: formData,
       });
 
+      const contentType = response.headers.get('content-type') || '';
+      const rawBody = await response.text();
+      const data = contentType.includes('application/json')
+        ? JSON.parse(rawBody)
+        : null;
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Något gick fel vid analysen');
+        if (data?.error) {
+          throw new Error(data.error);
+        }
+        const shortBody = rawBody.slice(0, 140).replace(/\s+/g, ' ').trim();
+        throw new Error(
+          contentType.includes('text/html')
+            ? `Serveren returnerede HTML i stedet for JSON (HTTP ${response.status}).`
+            : shortBody || 'Noget gik galt ved analysen'
+        );
       }
 
-      const data = await response.json();
-      
+      if (!data) {
+        throw new Error('Serveren returnerede ikke JSON fra /api/gpt-ocr.');
+      }
+
       if (!data.gptAnswer) {
         throw new Error('Intet svar fra AI\'en');
       }

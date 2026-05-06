@@ -190,11 +190,23 @@ export default function Fakturaanalys() {
           'x-session-id': sessionIdRef.current || '',
         },
       });
+      const contentType = res.headers.get('content-type') || '';
+      const rawBody = await res.text();
+      const data = contentType.includes('application/json')
+        ? JSON.parse(rawBody)
+        : null;
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
+        if (data?.error) throw new Error(data.error);
+        const shortBody = rawBody.slice(0, 140).replace(/\s+/g, ' ').trim();
+        throw new Error(
+          contentType.includes('text/html')
+            ? `Serveren returnerede HTML i stedet for JSON (HTTP ${res.status}).`
+            : `HTTP ${res.status}: ${shortBody || res.statusText}`
+        );
       }
-      const data = await res.json();
+      if (!data) {
+        throw new Error('Serveren returnerede ikke JSON fra /api/gpt-ocr.');
+      }
       if (!data.gptAnswer) {
         throw new Error('Inget svar från AI:n');
       }
