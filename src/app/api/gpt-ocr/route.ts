@@ -4,6 +4,13 @@ export const runtime = 'edge';
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 const XAI_OCR_MODEL = process.env.XAI_OCR_MODEL || 'grok-4.3';
 const INVOICE_MARKET = 'DK';
+const INVOICE_SITE = process.env.OCR_SITE || 'elchef_dk';
+
+function sanitizeEnv(value: string | undefined): string | undefined {
+  if (!value) return value;
+  const trimmed = value.trim();
+  return trimmed.replace(/^"|"$/g, '');
+}
 
 async function sha256Hex(buffer: ArrayBuffer): Promise<string> {
   const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
@@ -325,11 +332,30 @@ Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år (inklusive
 
 Svar på dansk og vær hjælpsom og pædagogisk.`;
 
-    const xaiApiKey = process.env.XAI_API_KEY;
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const xaiApiKey = sanitizeEnv(process.env.XAI_API_KEY);
+    const SUPABASE_URL =
+      sanitizeEnv(process.env.SUPABASE_URL) || sanitizeEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
+    const SUPABASE_SERVICE_ROLE_KEY =
+      sanitizeEnv(process.env.SUPABASE_SERVICE_ROLE_KEY) ||
+      sanitizeEnv(process.env.SUPABASE_SERVICE_KEY) ||
+      sanitizeEnv(process.env.SUPABASE_SECRET_KEY);
     if (!xaiApiKey) {
       return NextResponse.json({ error: 'Missing XAI API key' }, { status: 500 });
+    }
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      const missing: string[] = [];
+      if (!SUPABASE_URL) missing.push('SUPABASE_URL (eller NEXT_PUBLIC_SUPABASE_URL)');
+      if (!SUPABASE_SERVICE_ROLE_KEY) {
+        missing.push(
+          'SUPABASE_SERVICE_ROLE_KEY (eller SUPABASE_SERVICE_KEY / SUPABASE_SECRET_KEY)'
+        );
+      }
+      return NextResponse.json(
+        {
+          error: `Supabase env saknas: ${missing.join(', ')}. Analysen stoppas för att undvika logId=null och borttappad data.`,
+        },
+        { status: 500 }
+      );
     }
 
     // Two-step approach: Extract JSON first, then calculate
@@ -606,107 +632,114 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
       return NextResponse.json({ error: 'XAI Vision error - both two-step and fallback approaches failed' }, { status: 500 });
     }
 
-    // Försök logga analysen i Supabase
+    // Logga analysen i Supabase (fail-loud: om detta misslyckas returneras fel)
     let logId: number | null = null;
     try {
-      if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
-        const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-        const sessionId = req.headers.get('x-session-id') || `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
-        const userAgent = req.headers.get('user-agent') || 'unknown';
+      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const sessionId = req.headers.get('x-session-id') || `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+      const userAgent = req.headers.get('user-agent') || 'unknown';
 
-        const { data: insertData, error } = await supabase
-          .from('invoice_ocr')
-          .insert([
-            {
-              session_id: sessionId,
-              market: INVOICE_MARKET,
-              user_agent: userAgent,
-              file_mime: mimeType,
-              file_size: fileSize,
-              image_sha256: imageSha256,
-              model: XAI_OCR_MODEL,
-              system_prompt_version: '2025-01-vision-v1',
-              gpt_answer: gptAnswer,
-              consent: consent,
-            }
-          ])
-          .select('id')
-          .single();
+      const { data: insertData, error } = await supabase
+        .from('invoice_ocr')
+        .insert([
+          {
+            session_id: sessionId,
+            market: INVOICE_MARKET,
+            user_agent: userAgent,
+            file_mime: mimeType,
+            file_size: fileSize,
+            image_sha256: imageSha256,
+            model: XAI_OCR_MODEL,
+            system_prompt_version: `2025-01-vision-v1|site=${INVOICE_SITE}`,
+            gpt_answer: gptAnswer,
+            consent: consent,
+          }
+        ])
+        .select('id')
+        .single();
 
-        if (!error && insertData) {
-          logId = insertData.id as number;
-          // Om samtycke: ladda upp filen till privat bucket och spara referensen
-          if (consent) {
-            try {
-              const bucketName = 'invoice-ocr';
-              // Ensure the storage bucket exists (create if missing)
-              try {
-                const { data: existingBucket, error: getBucketError } = await supabase.storage.getBucket(bucketName);
-                if (getBucketError || !existingBucket) {
-                  await supabase.storage.createBucket(bucketName, {
-                    public: false,
-                    fileSizeLimit: 20 * 1024 * 1024, // 20 MB
-                    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-                  });
-                }
-              } catch {
-                try {
-                  await supabase.storage.createBucket(bucketName, {
-                    public: false,
-                    fileSizeLimit: 20 * 1024 * 1024,
-                    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-                  });
-                } catch {}
-              }
-              const storageKey = `${logId}/${imageSha256}.${mimeType === 'image/png' ? 'png' : 'jpg'}`;
-              // First try SDK upload (works in many environments)
-              const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, file, {
-                contentType: mimeType,
-                upsert: false,
+      if (error || !insertData) {
+        return NextResponse.json(
+          { error: `Kunde ikke gemme analyse i Supabase: ${error?.message || 'insert failed'}` },
+          { status: 500 }
+        );
+      }
+
+      logId = insertData.id as number;
+      // Om samtycke: ladda upp filen till privat bucket och spara referensen
+      if (consent) {
+        try {
+          const bucketName = 'invoice-ocr';
+          // Ensure the storage bucket exists (create if missing)
+          try {
+            const { data: existingBucket, error: getBucketError } = await supabase.storage.getBucket(bucketName);
+            if (getBucketError || !existingBucket) {
+              await supabase.storage.createBucket(bucketName, {
+                public: false,
+                fileSizeLimit: 20 * 1024 * 1024, // 20 MB
+                allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
               });
+            }
+          } catch {
+            try {
+              await supabase.storage.createBucket(bucketName, {
+                public: false,
+                fileSizeLimit: 20 * 1024 * 1024,
+                allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+              });
+            } catch {}
+          }
+          const storageKey = `${logId}/${imageSha256}.${mimeType === 'image/png' ? 'png' : 'jpg'}`;
+          // First try SDK upload (works in many environments)
+          const uploadRes = await supabase.storage.from(bucketName).upload(storageKey, file, {
+            contentType: mimeType,
+            upsert: false,
+          });
 
-              let uploadedOk = !uploadRes.error;
+          let uploadedOk = !uploadRes.error;
 
-              // If SDK upload failed (common on edge runtimes), fall back to Storage REST API
-              if (!uploadedOk) {
-                try {
-                  const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
-                  // Important: Do NOT URL-encode the full path; slashes must remain as separators
-                  const restUrl = `${cleanSupabaseUrl}/storage/v1/object/${bucketName}/${storageKey}`;
-                  const arrayBuffer = await file.arrayBuffer();
-                  const restRes = await fetch(restUrl, {
-                    method: 'POST',
-                    headers: {
-                      apikey: SUPABASE_SERVICE_ROLE_KEY,
-                      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-                      'Content-Type': mimeType,
-                      'x-upsert': 'false',
-                    },
-                    body: arrayBuffer,
-                  });
-                  uploadedOk = restRes.ok;
-                } catch (restErr) {
-                  console.error('REST upload to Supabase Storage failed:', restErr);
-                }
-              }
-
-              if (uploadedOk) {
-                await supabase.from('invoice_ocr_files').insert([
-                  {
-                    invoice_ocr_id: logId,
-                    storage_key: storageKey,
-                    image_sha256: imageSha256,
-                  }
-                ]);
-              }
-            } catch (e) {
-              console.error('Failed to upload invoice image to storage:', e);
+          // If SDK upload failed (common on edge runtimes), fall back to Storage REST API
+          if (!uploadedOk) {
+            try {
+              const cleanSupabaseUrl = SUPABASE_URL.replace(/"/g, '').replace(/\/$/, '');
+              // Important: Do NOT URL-encode the full path; slashes must remain as separators
+              const restUrl = `${cleanSupabaseUrl}/storage/v1/object/${bucketName}/${storageKey}`;
+              const arrayBuffer = await file.arrayBuffer();
+              const restRes = await fetch(restUrl, {
+                method: 'POST',
+                headers: {
+                  apikey: SUPABASE_SERVICE_ROLE_KEY,
+                  Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+                  'Content-Type': mimeType,
+                  'x-upsert': 'false',
+                },
+                body: arrayBuffer,
+              });
+              uploadedOk = restRes.ok;
+            } catch (restErr) {
+              console.error('REST upload to Supabase Storage failed:', restErr);
             }
           }
+
+          if (uploadedOk) {
+            await supabase.from('invoice_ocr_files').insert([
+              {
+                invoice_ocr_id: logId,
+                storage_key: storageKey,
+                image_sha256: imageSha256,
+              }
+            ]);
+          }
+        } catch (e) {
+          console.error('Failed to upload invoice image to storage:', e);
         }
       }
     } catch (e) {
       console.error('Failed to log invoice OCR to Supabase:', e);
+      return NextResponse.json(
+        { error: `Kunde ikke gemme analyse i Supabase: ${e instanceof Error ? e.message : String(e)}` },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ gptAnswer, logId });
