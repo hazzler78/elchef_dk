@@ -856,7 +856,7 @@ export default function Fakturaanalys() {
                       trackContractClick('rorligt');
                       window.location.href = withDefaultCtaUtm('/variabel-aftale', 'faktura-analyse', 'cta-rorligt');
                     }}
-                    aria-label="Variabel aftale - 0 kr i gebyrer første år – uden bindingsperiode"
+                    aria-label="Variabel aftale - 0 kr i gebyrer de første 6 mdr. – uden bindingsperiode"
                   >
                     Variabel aftale
                   </GlassButton>
@@ -871,7 +871,7 @@ export default function Fakturaanalys() {
                     backdropFilter: 'blur(8px)',
                     boxShadow: '0 4px 16px rgba(0,0,0,0.08)'
                   }}>
-                    0 kr i gebyrer første år – uden bindingsperiode
+                    0 kr i gebyrer de første 6 mdr. – uden bindingsperiode
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>

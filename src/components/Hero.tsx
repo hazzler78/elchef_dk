@@ -237,7 +237,7 @@ export default function Hero() {
                        variant="primary" 
                        size="lg"
                        background="linear-gradient(135deg, var(--primary), var(--secondary))"
-                       aria-label="Variabel aftale - 0 kr i gebyrer første år – uden bindingsperiode"
+                       aria-label="Variabel aftale - 0 kr i gebyrer de første 6 mdr. – uden bindingsperiode"
                        disableScrollEffect={true}
                        disableHoverEffect={true}
                      >
@@ -257,7 +257,7 @@ export default function Hero() {
                   position: 'relative',
                   zIndex: 10
                 }}>
-                   0 kr i gebyrer første år – uden bindingsperiode
+                   0 kr i gebyrer de første 6 mdr. – uden bindingsperiode
                  </div>
                </div>
                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>

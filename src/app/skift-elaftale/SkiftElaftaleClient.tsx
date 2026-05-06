@@ -252,11 +252,10 @@ export default function SkiftElaftaleClient({ suppliers }: { suppliers: PublicSu
           <ContractCard>
             <ContractTitle>Variabel aftale</ContractTitle>
             <ContractDescription>
-              Prisen følger markedsprisen og kan variere fra måned til måned. Perfekt, hvis du vil have fleksibilitet og tror, at elpriserne
-              vil falde.
+              Prisen følger markedsprisen og kan variere fra måned til måned. Perfekt, hvis du vil have fleksibilitet.
             </ContractDescription>
             <ContractFeatures>
-              <FeatureItem>0 kr i gebyrer første år</FeatureItem>
+              <FeatureItem>0 kr i gebyrer de første 6 mdr.</FeatureItem>
               <FeatureItem>Ingen bindingsperiode</FeatureItem>
               <FeatureItem>Følger markedsprisen</FeatureItem>
               <FeatureItem>Kan spare penge ved lave priser</FeatureItem>
@@ -273,7 +272,6 @@ export default function SkiftElaftaleClient({ suppliers }: { suppliers: PublicSu
               <FeatureItem>Fast pris i hele perioden</FeatureItem>
               <FeatureItem>Forudsigelig omkostning</FeatureItem>
               <FeatureItem>Beskyttelse mod prisstigninger</FeatureItem>
-              <FeatureItem>Personlige priser baseret på dit forbrug</FeatureItem>
             </ContractFeatures>
           </ContractCard>
         </ComparisonGrid>
@@ -301,14 +299,14 @@ export default function SkiftElaftaleClient({ suppliers }: { suppliers: PublicSu
                 variant="primary"
                 size="lg"
                 background="linear-gradient(135deg, var(--primary), var(--secondary))"
-                aria-label="Variabel aftale - 0 kr i gebyrer første år – uden bindingsperiode"
+                aria-label="Variabel aftale - 0 kr i gebyrer de første 6 mdr. – uden bindingsperiode"
                 disableScrollEffect={true}
                 disableHoverEffect={true}
               >
                 Vælg variabel aftale
               </GlassButton>
             </div>
-            <RorligtLabel>0 kr i gebyrer første år – uden bindingsperiode</RorligtLabel>
+            <RorligtLabel>0 kr i gebyrer de første 6 mdr. – uden bindingsperiode</RorligtLabel>
           </ButtonWrapper>
 
           <ButtonWrapper>
