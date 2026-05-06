@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'edge';
+const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
+const XAI_OCR_MODEL = process.env.XAI_OCR_MODEL || 'grok-4.3';
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   let binary = '';
@@ -25,9 +27,9 @@ export async function POST(req: NextRequest) {
     const mimeType = file.type;
     const base64Image = `data:${mimeType};base64,${arrayBufferToBase64(arrayBuffer)}`;
 
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    if (!openaiApiKey) {
-      return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
+    const xaiApiKey = process.env.XAI_API_KEY;
+    if (!xaiApiKey) {
+      return NextResponse.json({ error: 'Missing XAI API key' }, { status: 500 });
     }
 
     // Step 1: Extract structured data
@@ -76,14 +78,14 @@ Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Var
 
 Svara ENDAST med JSON-arrayen, inget annat.`;
 
-    const extractionRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    const extractionRes = await fetch(XAI_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiApiKey}`,
+        'Authorization': `Bearer ${xaiApiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: XAI_OCR_MODEL,
         messages: [
           { role: 'system', content: extractionPrompt },
           {

@@ -6,6 +6,7 @@ import { getSupabaseServerClient } from '@/lib/supabaseServer';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const XAI_API_KEY = process.env.XAI_API_KEY;
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
+const XAI_SUMMARY_MODEL = process.env.XAI_SUMMARY_MODEL || 'grok-4.20-non-reasoning';
 
 // Do not throw at module load; guard inside handlers to avoid build-time failures
 
@@ -143,7 +144,7 @@ async function summarizeWithXAI(title: string, content: string): Promise<string 
       'Authorization': `Bearer ${XAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'grok-3-latest',
+      model: XAI_SUMMARY_MODEL,
       messages: [
         { role: 'system', content: system },
         { role: 'user', content: user },

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 export const runtime = 'edge';
+const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
+const XAI_OCR_MODEL = process.env.XAI_OCR_MODEL || 'grok-4.3';
 
 async function sha256Hex(buffer: ArrayBuffer): Promise<string> {
   const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
@@ -45,13 +47,13 @@ export async function POST(req: NextRequest) {
     const imageSha256 = await sha256Hex(arrayBuffer);
 
     // Step 1: Extract structured data from invoice
-    const extractionPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Din uppgift är att extrahera ALLA kostnader från fakturan och strukturera dem i JSON-format.
+    const extractionPrompt = `Du är en expert på danske elregninger fra ALLE elleverandører. Din opgave er at udtrække ALLE omkostninger fra fakturaen og strukturere dem i JSON-format.
 
 VIKTIGT - FLEXIBILITET:
 - Du MÅSTE hantera fakturor från ALLA elleverantörer (E.ON, Fortum, Vattenfall, EDF, Göteborg Energi, Stockholm Exergi, m.fl.)
 - Olika leverantörer har olika fakturaformat och terminologi - anpassa dig efter varje faktura
-- Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
-- Använd endast svenska ord och termer
+- Du SKAL altid svare på dansk, uanset hvilket sprog fakturaen er på
+- Brug kun danske ord og termer
 
 EXTRAKTIONSREGEL:
 Extrahera ALLA kostnader från fakturan och returnera dem som en JSON-array. Varje kostnad ska ha:
@@ -145,7 +147,7 @@ EXTRA VIKTIGT FÖR PÅSLAG:
 Svara ENDAST med JSON-arrayen, inget annat text.`;
 
     // Step 2: Calculate unnecessary costs from structured data
-    const calculationPrompt = `Du är en expert på svenska elräkningar från ALLA elleverantörer. Baserat på den extraherade JSON-datan, identifiera onödiga kostnader och beräkna total besparing.
+    const calculationPrompt = `Du är en expert på danske elregninger fra ALLE elleverandører. Baseret på den udtrukne JSON-data skal du identificere unødige omkostninger og beregne samlet besparelse.
 
 ORDLISTA - ONÖDIGA KOSTNADER (endast under Elhandel):
 - Månadsavgift, Fast månadsavgift, Fast månadsavg., Månadsavg.
@@ -209,15 +211,15 @@ Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år (inklusive
 
 ⏰ Byt idag – det tar bara 2 minuter och vi fixar allt åt dig!
 
-Svara på svenska och var hjälpsam och pedagogisk.`; // Updated fastpris text
+Svar på dansk og vær hjælpsom og pædagogisk.`; // Updated fastpris text
 
     // Original single-step prompt (fallback)
-    const systemPrompt = `Du är en expert på svenska elräkningar som hjälper användare identifiera extra kostnader, dolda avgifter och onödiga tillägg på deras elfakturor. 
+    const systemPrompt = `Du är en expert på danske elregninger som hjælper brugere med at identificere ekstra omkostninger, skjulte gebyrer og unødige tillæg på deres elfakturaer. 
 
 VIKTIGT - SPRÅK:
-- Du MÅSTE alltid svara på svenska, oavsett vilket språk fakturan är på
-- Även om fakturan är på norska, danska eller engelska, svara alltid på svenska
-- Använd endast svenska ord och termer
+- Du SKAL altid svare på dansk, uanset hvilket sprog fakturaen er på
+- Selv om fakturaen er på svensk, norsk, dansk eller engelsk, skal du svare på dansk
+- Brug kun danske ord og termer
 - Ignorera språket i fakturan - analysera innehållet men svara på svenska
 - Använd svenska valutaformat (kr, öre) och svenska decimaler (komma istället för punkt)
 
@@ -302,13 +304,13 @@ Byt till ett avtal utan dessa avgifter och spara [total × 12] kr/år (inklusive
 
 ⏰ Byt idag – det tar bara 2 minuter och vi fixar allt åt dig!"
 
-Svara på svenska och var hjälpsam och pedagogisk.`;
+Svar på dansk og vær hjælpsom og pædagogisk.`;
 
-    const openaiApiKey = process.env.OPENAI_API_KEY;
+    const xaiApiKey = process.env.XAI_API_KEY;
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!openaiApiKey) {
-      return NextResponse.json({ error: 'Missing OpenAI API key' }, { status: 500 });
+    if (!xaiApiKey) {
+      return NextResponse.json({ error: 'Missing XAI API key' }, { status: 500 });
     }
 
     // Two-step approach: Extract JSON first, then calculate
@@ -316,14 +318,14 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
     
     try {
       // Step 1: Extract structured data
-      const extractionRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      const extractionRes = await fetch(XAI_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openaiApiKey}`,
+          'Authorization': `Bearer ${xaiApiKey}`,
         },
         body: JSON.stringify({
-          model: 'gpt-4o',
+          model: XAI_OCR_MODEL,
           messages: [
             { role: 'system', content: extractionPrompt },
             {
@@ -359,14 +361,14 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
           JSON.parse(cleanJson); // Validate JSON structure
           
           // Step 2: Calculate unnecessary costs from structured data
-          const calculationRes = await fetch('https://api.openai.com/v1/chat/completions', {
+          const calculationRes = await fetch(XAI_API_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${openaiApiKey}`,
+              'Authorization': `Bearer ${xaiApiKey}`,
             },
             body: JSON.stringify({
-              model: 'gpt-4o',
+              model: XAI_OCR_MODEL,
               messages: [
                 { role: 'system', content: calculationPrompt },
                 {
@@ -539,20 +541,20 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
 
     // Fallback to original single-step approach if two-step failed
     if (!gptAnswer) {
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    const xaiRes = await fetch(XAI_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiApiKey}`,
+        'Authorization': `Bearer ${xaiApiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: XAI_OCR_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           {
             role: 'user',
             content: [
-              { type: 'text', text: 'Vad betalar jag i onödiga kostnader? Analysera denna elräkning enligt instruktionerna. SVARA ENDAST PÅ SVENSKA - oavsett vilket språk fakturan är på.' },
+              { type: 'text', text: 'Hvad betaler jeg i unødige omkostninger? Analyser denne elregning efter instruktionerne. SVAR KUN PÅ DANSK - uanset hvilket sprog fakturaen er på.' },
               { type: 'image_url', image_url: { url: base64Image } }
             ]
           }
@@ -562,14 +564,14 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
       }),
     });
 
-      if (openaiRes.ok) {
-        const gptData = await openaiRes.json();
+      if (xaiRes.ok) {
+        const gptData = await xaiRes.json();
         gptAnswer = gptData.choices?.[0]?.message?.content || '';
       }
     }
 
     if (!gptAnswer) {
-      return NextResponse.json({ error: 'OpenAI Vision error - both two-step and fallback approaches failed' }, { status: 500 });
+      return NextResponse.json({ error: 'XAI Vision error - both two-step and fallback approaches failed' }, { status: 500 });
     }
 
     // Försök logga analysen i Supabase
@@ -589,7 +591,7 @@ Svara på svenska och var hjälpsam och pedagogisk.`;
               file_mime: mimeType,
               file_size: fileSize,
               image_sha256: imageSha256,
-              model: 'gpt-4o',
+              model: XAI_OCR_MODEL,
               system_prompt_version: '2025-01-vision-v1',
               gpt_answer: gptAnswer,
               consent: consent,

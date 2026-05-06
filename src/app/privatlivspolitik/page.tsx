@@ -85,7 +85,7 @@ export default function Integritetspolicy() {
           <li>Kobling til sessions-ID og tidspunkt for upload</li>
         </ul>
         <Paragraph>
-          <strong>Lagring, modtagere og overførsler:</strong> Billeder gemmes i en privat, adgangsbeskyttet lagringsløsning hos vores driftsleverandør (Supabase). Til OCR/analyse bruger vi en AI-leverandør (OpenAI) som databehandler. Behandlingen kan indebære overførsel af data uden for EU/EØS; i så fald anvendes standardkontraktbestemmelser (SCC) og andre relevante beskyttelsesforanstaltninger i henhold til GDPR.
+          <strong>Lagring, modtagere og overførsler:</strong> Billeder gemmes i en privat, adgangsbeskyttet lagringsløsning hos vores driftsleverandør (Supabase). Til OCR/analyse bruger vi en AI-leverandør (xAI) som databehandler. Behandlingen kan indebære overførsel af data uden for EU/EØS; i så fald anvendes standardkontraktbestemmelser (SCC) og andre relevante beskyttelsesforanstaltninger i henhold til GDPR.
         </Paragraph>
         <Paragraph>
           <strong>Lagringsperiode:</strong> Ved samtykke gemmes fakturabilledet i op til 90 dage, hvorefter det slettes automatisk. Du kan til enhver tid tilbagekalde dit samtykke, hvorefter vi sletter billedet hurtigst muligt.
