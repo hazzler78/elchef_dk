@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
+const INVOICE_MARKET = 'DK';
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,7 +27,8 @@ export async function POST(req: NextRequest) {
         corrected_total_extra: typeof correctedTotalExtra === 'number' ? correctedTotalExtra : null,
         corrected_savings: typeof correctedSavings === 'number' ? correctedSavings : null,
       })
-      .eq('id', logId);
+      .eq('id', logId)
+      .eq('market', INVOICE_MARKET);
 
     if (error) {
       return NextResponse.json({ error: 'Kunde inte uppdatera feedback', details: error.message }, { status: 500 });

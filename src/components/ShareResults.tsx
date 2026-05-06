@@ -14,20 +14,45 @@ export default function ShareResults({ analysisResult, savingsAmount, logId, onS
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const parseLocalizedAmount = (raw: string): number => {
+    const cleaned = raw.replace(/\s/g, '').replace(/[^0-9,.-]/g, '');
+    if (!cleaned) return 0;
+    const normalized = cleaned.includes(',')
+      ? cleaned.replace(/\./g, '').replace(',', '.')
+      : cleaned;
+    const parsed = parseFloat(normalized);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
   // Extrahera besparingsbelopp från analysen (prioritera årlig besparing)
   const extractSavings = (text: string): number => {
-    // Först leta efter årlig besparing (kr/år)
-    const yearlyMatch = text.match(/(\d+[,.]?\d*)\s*kr\/år/i);
-    if (yearlyMatch) {
-      return parseFloat(yearlyMatch[1].replace(',', '.'));
+    const yearlyPatterns = [
+      /=\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+      /(?:spar(?:er)?\s*i\s*alt|spara\s*totalt)\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+      /(?:samlet|total)\s*besparelse[^0-9]{0,40}([0-9][0-9.\s,]*)\s*kr\/år/i,
+      /(?:din\s*årlige\s*besparing|din\s*årlige\s*besparelse|din\s*årliga\s*besparing)[^0-9]{0,40}([0-9][0-9.\s,]*)\s*kr\/år/i,
+      /(?:spara|spar(?:er)?)\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+    ];
+    for (const pattern of yearlyPatterns) {
+      const match = text.match(pattern);
+      if (match) {
+        const amount = parseLocalizedAmount(match[1]);
+        if (amount > 0) return amount;
+      }
     }
-    
-    // Sedan leta efter månatlig besparing och multiplicera med 12
-    const monthlyMatch = text.match(/(\d+[,.]?\d*)\s*kr.*?(?:spar|bespar|minska)/i);
-    if (monthlyMatch) {
-      return parseFloat(monthlyMatch[1].replace(',', '.')) * 12;
+
+    const monthlyPatterns = [
+      /(?:du\s*betaler|du\s*betalar)[^0-9]{0,40}([0-9][0-9.\s,]*)\s*kr\/m(?:å|a)nad/i,
+      /(?:unødige|onödiga)\s*(?:omkostninger|kostnader)[^0-9]{0,60}([0-9][0-9.\s,]*)\s*kr\/m(?:å|a)nad/i,
+    ];
+    for (const pattern of monthlyPatterns) {
+      const match = text.match(pattern);
+      if (match) {
+        const monthly = parseLocalizedAmount(match[1]);
+        if (monthly > 0) return monthly * 12;
+      }
     }
-    
+
     return savingsAmount || 0;
   };
 

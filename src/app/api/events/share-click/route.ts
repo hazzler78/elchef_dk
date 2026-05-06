@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+const INVOICE_MARKET = 'DK';
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
         .from('invoice_ocr')
         .select('id')
         .eq('id', logId)
+        .eq('market', INVOICE_MARKET)
         .single();
       
       if (logExists) {

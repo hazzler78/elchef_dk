@@ -5,6 +5,7 @@
 CREATE TABLE IF NOT EXISTS invoice_ocr (
   id SERIAL PRIMARY KEY,
   session_id VARCHAR(255),
+  market TEXT,
   user_agent TEXT,
   file_mime VARCHAR(100),
   file_size INTEGER,
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS invoice_ocr (
 
 -- Index för bättre prestanda
 CREATE INDEX IF NOT EXISTS idx_invoice_ocr_session_id ON invoice_ocr(session_id);
+CREATE INDEX IF NOT EXISTS idx_invoice_ocr_market ON invoice_ocr(market);
 CREATE INDEX IF NOT EXISTS idx_invoice_ocr_created_at ON invoice_ocr(created_at);
 CREATE INDEX IF NOT EXISTS idx_invoice_ocr_image_sha256 ON invoice_ocr(image_sha256);
 CREATE INDEX IF NOT EXISTS idx_invoice_ocr_consent ON invoice_ocr(consent);
@@ -36,6 +38,7 @@ CREATE POLICY "Allow all operations on invoice_ocr" ON invoice_ocr
 -- Kommentarer för dokumentation
 COMMENT ON TABLE invoice_ocr IS 'Huvudtabell för AI-analys av elräkningar med GPT-4';
 COMMENT ON COLUMN invoice_ocr.session_id IS 'Session-ID för att koppla flera analyser från samma användare';
+COMMENT ON COLUMN invoice_ocr.market IS 'Marknad för analysen, t.ex. DK/SE/NO';
 COMMENT ON COLUMN invoice_ocr.image_sha256 IS 'SHA256 hash av bilden för deduplikering';
 COMMENT ON COLUMN invoice_ocr.model IS 'AI-modell som användes (t.ex. gpt-4o)';
 COMMENT ON COLUMN invoice_ocr.system_prompt_version IS 'Version av system prompt som användes';

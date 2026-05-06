@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+const INVOICE_MARKET = 'DK';
 
 
 interface ContractClick {
@@ -133,6 +134,7 @@ export default function ContractClicksAdmin() {
       const { count: analysesCount } = await supabase
         .from('invoice_ocr')
         .select('*', { count: 'exact', head: true })
+        .eq('market', INVOICE_MARKET)
         .gte('created_at', fromForAnalyses);
 
       const totalAiAnalyses = analysesCount || 0;

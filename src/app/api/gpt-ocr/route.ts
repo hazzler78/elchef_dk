@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 export const runtime = 'edge';
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 const XAI_OCR_MODEL = process.env.XAI_OCR_MODEL || 'grok-4.3';
+const INVOICE_MARKET = 'DK';
 
 async function sha256Hex(buffer: ArrayBuffer): Promise<string> {
   const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
@@ -618,6 +619,7 @@ Svar på dansk og vær hjælpsom og pædagogisk.`;
           .insert([
             {
               session_id: sessionId,
+              market: INVOICE_MARKET,
               user_agent: userAgent,
               file_mime: mimeType,
               file_size: fileSize,

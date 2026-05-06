@@ -118,18 +118,28 @@ export default function Fakturaanalys() {
   // Funktion för att spåra kontraktsklick från AI-användare (uppdaterad source)
   const trackContractClick = (contractType: 'rorligt' | 'fastpris') => {
     try {
+      const parseLocalizedAmount = (raw: string): number => {
+        const cleaned = raw.replace(/\s/g, '').replace(/[^0-9,.-]/g, '');
+        if (!cleaned) return 0;
+        const normalized = cleaned.includes(',')
+          ? cleaned.replace(/\./g, '').replace(',', '.')
+          : cleaned;
+        const parsed = parseFloat(normalized);
+        return Number.isFinite(parsed) ? parsed : 0;
+      };
       const extractSavings = (text: string): number => {
         const patterns = [
-          /spara totalt\s*(\d+(?:[,.]\d+)?)/i,
-          /spara\s*(\d+(?:[,.]\d+)?)\s*kr\/år/i,
-          /(\d+(?:[,.]\d+)?)\s*kr.*?(?:spar|bespar|minska)/i,
-          /Din årliga besparing:\s*(\d+(?:[,.]\d+)?)/i,
-          /Total besparing:\s*(\d+(?:[,.]\d+)?)/i
+          /=\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+          /spara totalt\s*([0-9][0-9.\s,]*)/i,
+          /spara\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+          /([0-9][0-9.\s,]*)\s*kr.*?(?:spar|bespar|minska)/i,
+          /Din årliga besparing:\s*([0-9][0-9.\s,]*)/i,
+          /Total besparing:\s*([0-9][0-9.\s,]*)/i
         ];
         for (const pattern of patterns) {
           const match = text.match(pattern);
           if (match) {
-            const amount = parseFloat(match[1].replace(',', '.'));
+            const amount = parseLocalizedAmount(match[1]);
             if (amount > 0) return amount;
           }
         }

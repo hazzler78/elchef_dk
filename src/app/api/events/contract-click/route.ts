@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 // removed unused createClient
 import { getSupabaseServerClient } from '@/lib/supabaseServer';
+const INVOICE_MARKET = 'DK';
 
 // Create Supabase client per-request
 
@@ -26,6 +27,7 @@ export async function POST(request: NextRequest) {
         .from('invoice_ocr')
         .select('id')
         .eq('id', logId)
+        .eq('market', INVOICE_MARKET)
         .single();
 
       if (logExists) {

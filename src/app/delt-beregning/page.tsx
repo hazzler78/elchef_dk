@@ -20,23 +20,58 @@ function DeladKalkylContent() {
   const calculationId = searchParams.get('id');
 
   useEffect(() => {
-    if (calculationId) {
-      // Här skulle du hämta kalkyldata från din databas
-      // För nu simulerar vi data
-      setTimeout(() => {
-        setCalculation({
-          id: calculationId,
-          savingsAmount: 2400,
-          analysisDate: new Date().toISOString(),
-          platform: 'facebook',
-          isAnonymous: true
-        });
-        setLoading(false);
-      }, 1000);
-    } else {
+    if (!calculationId) {
       setError('Ingen beregning fundet');
       setLoading(false);
+      return;
     }
+
+    let cancelled = false;
+    setLoading(true);
+    setError('');
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/shared-calculation?id=${encodeURIComponent(calculationId)}`);
+        const contentType = res.headers.get('content-type') || '';
+        const body = contentType.includes('application/json') ? await res.json() : null;
+
+        if (!res.ok) {
+          const message =
+            body?.error ||
+            (res.status === 404 ? 'Beregning ikke fundet' : 'Kunne ikke hente den delte beregning');
+          throw new Error(message);
+        }
+
+        if (!body) {
+          throw new Error('Serveren returnerede ikke JSON-data');
+        }
+
+        if (!cancelled) {
+          setCalculation({
+            id: body.id,
+            savingsAmount: typeof body.savingsAmount === 'number' ? body.savingsAmount : 0,
+            analysisDate: body.analysisDate || new Date().toISOString(),
+            platform: body.platform || 'ukendt kanal',
+            isAnonymous: true,
+          });
+        }
+      } catch (err) {
+        if (!cancelled) {
+          const message = err instanceof Error ? err.message : 'Kunne ikke hente beregningen';
+          setError(message);
+          setCalculation(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [calculationId]);
 
   if (loading) {

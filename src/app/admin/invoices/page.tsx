@@ -1,8 +1,10 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const ADMIN_PASSWORD = "grodan2025";
+type Market = 'DK' | 'SE' | 'NO' | 'UNKNOWN';
+const MARKET_OPTIONS: Market[] = ['DK', 'SE', 'NO', 'UNKNOWN'];
 
 type InvoiceLog = {
   id: number;
@@ -19,6 +21,7 @@ type InvoiceLog = {
   correction_notes: string | null;
   corrected_total_extra: number | null;
   corrected_savings: number | null;
+  market?: string | null;
   consent?: boolean | null;
 };
 
@@ -31,6 +34,10 @@ export default function AdminInvoices() {
   const [expanded, setExpanded] = useState<number | null>(null);
   // no-op state removed to satisfy eslint
   const [search, setSearch] = useState("");
+  const [marketFilter, setMarketFilter] = useState<'ALL' | Market>('DK');
+  const [updatingMarketId, setUpdatingMarketId] = useState<number | null>(null);
+  const [bulkMarket, setBulkMarket] = useState<Market>('DK');
+  const [bulkUpdating, setBulkUpdating] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -101,6 +108,57 @@ export default function AdminInvoices() {
     }
   }
 
+  async function updateMarket(id: number, market: Market) {
+    setUpdatingMarketId(id);
+    setError('');
+    try {
+      const res = await fetch('/api/invoice-ocr/market', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logId: id, market }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError(err?.error || 'Kunde inte uppdatera market');
+      } else {
+        setLogs((prev) => prev.map((l) => (l.id === id ? { ...l, market } : l)));
+      }
+    } catch {
+      setError('Kunde inte uppdatera market');
+    } finally {
+      setUpdatingMarketId(null);
+    }
+  }
+
+  async function bulkUpdateMarket() {
+    const ids = filtered.map((l) => l.id);
+    if (ids.length === 0) return;
+    const ok = window.confirm(`Uppdatera ${ids.length} filtrerade rader till market ${bulkMarket}?`);
+    if (!ok) return;
+
+    setBulkUpdating(true);
+    setError('');
+    try {
+      const res = await fetch('/api/invoice-ocr/market', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logIds: ids, market: bulkMarket }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError(err?.error || 'Kunde inte bulk-uppdatera market');
+      } else {
+        setLogs((prev) =>
+          prev.map((l) => (ids.includes(l.id) ? { ...l, market: bulkMarket } : l))
+        );
+      }
+    } catch {
+      setError('Kunde inte bulk-uppdatera market');
+    } finally {
+      setBulkUpdating(false);
+    }
+  }
+
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     if (input === ADMIN_PASSWORD) {
@@ -134,17 +192,33 @@ export default function AdminInvoices() {
     );
   }
 
-  const filtered = logs.filter(l =>
-    !search ||
-    (l.session_id || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.user_agent || '').toLowerCase().includes(search.toLowerCase()) ||
-    (l.gpt_answer || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = logs.filter(l => {
+    const market = (l.market || 'UNKNOWN') as Market;
+    const marketMatch = marketFilter === 'ALL' || market === marketFilter;
+    const searchMatch =
+      !search ||
+      (l.session_id || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.user_agent || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.gpt_answer || '').toLowerCase().includes(search.toLowerCase());
+    return marketMatch && searchMatch;
+  });
 
   return (
     <div style={{ maxWidth: 1200, margin: '2rem auto', padding: 24 }}>
       <h1>Fakturaanalyser (Admin)</h1>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+        <select
+          value={marketFilter}
+          onChange={(e) => setMarketFilter(e.target.value as 'ALL' | Market)}
+          style={{ padding: 8, border: '1px solid #cbd5e1', borderRadius: 6 }}
+        >
+          <option value="ALL">Alla marknader</option>
+          {MARKET_OPTIONS.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
         <input
           placeholder="Sök (session, agent eller text)"
           value={search}
@@ -152,6 +226,28 @@ export default function AdminInvoices() {
           style={{ flex: 1, padding: 8, border: '1px solid #cbd5e1', borderRadius: 6 }}
         />
         <button onClick={fetchLogs} style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}>Uppdatera</button>
+      </div>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+        <span style={{ fontSize: 13, color: '#475569' }}>Bulk för filtrerade ({filtered.length}):</span>
+        <select
+          value={bulkMarket}
+          onChange={(e) => setBulkMarket(e.target.value as Market)}
+          style={{ padding: 8, border: '1px solid #cbd5e1', borderRadius: 6 }}
+          disabled={bulkUpdating}
+        >
+          {MARKET_OPTIONS.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={bulkUpdateMarket}
+          disabled={bulkUpdating || filtered.length === 0}
+          style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #cbd5e1' }}
+        >
+          {bulkUpdating ? 'Uppdaterar...' : 'Sätt market för filtrerade'}
+        </button>
       </div>
       {loading && <p>Laddar...</p>}
       {!loading && filtered.length === 0 && <p>Inga loggar.</p>}
@@ -164,6 +260,7 @@ export default function AdminInvoices() {
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Session</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Fil</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Agent</th>
+              <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Market</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Korrekt?</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Anteckning</th>
               <th style={{ padding: 8, border: '1px solid #e5e7eb' }}>Åtgärder</th>
@@ -172,14 +269,28 @@ export default function AdminInvoices() {
           </thead>
           <tbody>
             {filtered.map(log => (
-              <>
-                <tr key={log.id}>
+              <Fragment key={log.id}>
+                <tr>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>{new Date(log.created_at).toLocaleString()}</td>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 200, wordBreak: 'break-all' }} title={log.session_id || ''}>{log.session_id}</td>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 150 }} title={`${log.file_mime} ${typeof log.file_size === 'number' ? `• ${(log.file_size/1024).toFixed(0)} KB` : ''}`}>
                     {log.file_mime} {typeof log.file_size === 'number' ? `• ${(log.file_size/1024).toFixed(0)} KB` : ''}
                   </td>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb', fontSize: 12, maxWidth: 300, wordBreak: 'break-all' }} title={log.user_agent || ''}>{log.user_agent}</td>
+                  <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
+                    <select
+                      value={(log.market || 'UNKNOWN') as Market}
+                      onChange={(e) => updateMarket(log.id, e.target.value as Market)}
+                      disabled={updatingMarketId === log.id}
+                      style={{ padding: '4px 6px', border: '1px solid #cbd5e1', borderRadius: 6 }}
+                    >
+                      {MARKET_OPTIONS.map((m) => (
+                        <option key={m} value={m}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                   <td style={{ padding: 8, border: '1px solid #e5e7eb' }}>
                     {log.is_correct === true && '✅'}
                     {log.is_correct === false && '❌'}
@@ -266,13 +377,13 @@ export default function AdminInvoices() {
                 </tr>
                 {expanded === log.id && (
                   <tr>
-                    <td colSpan={7} style={{ background: '#f9fafb', padding: 16, border: '1px solid #e5e7eb' }}>
+                    <td colSpan={9} style={{ background: '#f9fafb', padding: 16, border: '1px solid #e5e7eb' }}>
                       <div style={{ fontSize: 12, color: '#64748b', marginBottom: 8 }}>SHA256: {log.image_sha256}</div>
                       <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>{log.gpt_answer}</div>
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>

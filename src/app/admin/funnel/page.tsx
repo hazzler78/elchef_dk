@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+const INVOICE_MARKET = 'DK';
 
 interface FunnelStats {
   pageViews: number;
@@ -46,7 +47,8 @@ export default function FunnelAdmin() {
       // AI analyses (invoice_ocr rows)
       let aiQuery = supabase
         .from('invoice_ocr')
-        .select('*', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true })
+        .eq('market', INVOICE_MARKET);
       if (from) aiQuery = aiQuery.gte('created_at', from);
       const { count: aiAnalyses } = await aiQuery;
 

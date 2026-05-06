@@ -122,21 +122,31 @@ export default function JamforElpriser() {
   // Funktion för att spåra kontraktsklick från AI-användare
   const trackContractClick = (contractType: 'rorligt' | 'fastpris') => {
     try {
+      const parseLocalizedAmount = (raw: string): number => {
+        const cleaned = raw.replace(/\s/g, '').replace(/[^0-9,.-]/g, '');
+        if (!cleaned) return 0;
+        const normalized = cleaned.includes(',')
+          ? cleaned.replace(/\./g, '').replace(',', '.')
+          : cleaned;
+        const parsed = parseFloat(normalized);
+        return Number.isFinite(parsed) ? parsed : 0;
+      };
       // Extrahera besparingsbelopp från AI-analysen
       const extractSavings = (text: string): number => {
         // Försök olika format som används i GPT-svaret
         const patterns = [
-          /spara totalt\s*(\d+(?:[,.]\d+)?)/i,  // "spara totalt 150"
-          /spara\s*(\d+(?:[,.]\d+)?)\s*kr\/år/i,  // "spara 150 kr/år"
-          /(\d+(?:[,.]\d+)?)\s*kr.*?(?:spar|bespar|minska)/i,  // ursprunglig pattern
-          /Din årliga besparing:\s*(\d+(?:[,.]\d+)?)/i,  // "Din årliga besparing: 150"
-          /Total besparing:\s*(\d+(?:[,.]\d+)?)/i  // "Total besparing: 150"
+          /=\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+          /spara totalt\s*([0-9][0-9.\s,]*)/i,
+          /spara\s*([0-9][0-9.\s,]*)\s*kr\/år/i,
+          /([0-9][0-9.\s,]*)\s*kr.*?(?:spar|bespar|minska)/i,
+          /Din årliga besparing:\s*([0-9][0-9.\s,]*)/i,
+          /Total besparing:\s*([0-9][0-9.\s,]*)/i
         ];
         
         for (const pattern of patterns) {
           const match = text.match(pattern);
           if (match) {
-            const amount = parseFloat(match[1].replace(',', '.'));
+            const amount = parseLocalizedAmount(match[1]);
             if (amount > 0) {
               return amount;
             }

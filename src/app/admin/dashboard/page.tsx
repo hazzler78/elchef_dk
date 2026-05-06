@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
+const INVOICE_MARKET = 'DK';
 import Link from 'next/link';
 
 const ADMIN_PASSWORD = "grodan2025";
@@ -104,11 +105,13 @@ export default function AdminDashboard() {
       const { count: aiAnalyses } = await supabase
         .from('invoice_ocr')
         .select('*', { count: 'exact', head: true })
+        .eq('market', INVOICE_MARKET)
         .gte('created_at', fromISO);
 
       const { count: prevAiAnalyses } = await supabase
         .from('invoice_ocr')
         .select('*', { count: 'exact', head: true })
+        .eq('market', INVOICE_MARKET)
         .gte('created_at', prevFromISO)
         .lt('created_at', fromISO);
 
@@ -268,6 +271,7 @@ export default function AdminDashboard() {
       const { data: recentAnalyses } = await supabase
         .from('invoice_ocr')
         .select('created_at')
+        .eq('market', INVOICE_MARKET)
         .gte('created_at', last7Days.toISOString());
 
       const { data: recentClicks } = await supabase
