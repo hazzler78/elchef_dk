@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabaseServer';
 
+export const runtime = 'edge';
+
 const PLATFORM_FALLBACK = 'ukendt kanal';
 const INVOICE_MARKET = 'DK';
 
