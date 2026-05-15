@@ -227,8 +227,7 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Validation: phone and email are required
-    if (!formData.email || !formData.phone) {
+    if (!formData.email) {
       setSubmitStatus('error');
       setIsSubmitting(false);
       return;
@@ -326,14 +325,13 @@ export default function ContactForm() {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="phone">Telefon *</Label>
+            <Label htmlFor="phone">Telefon (valgfrit)</Label>
             <Input
               type="tel"
               id="phone"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              required
             />
           </FormGroup>
 

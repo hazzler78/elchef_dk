@@ -97,19 +97,20 @@ const CtaRow = styled.div`
 const ctaPrimaryStyles = css`
   display: block;
   text-align: center;
-  padding: 0.65rem 1rem;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.95rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
   text-decoration: none;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: var(--cta-gradient, linear-gradient(135deg, #fbbf24, #ea580c));
+  color: #1c1917;
+  box-shadow: var(--cta-shadow, 0 8px 24px rgba(234, 88, 12, 0.35));
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    transform: translateY(-2px);
+    filter: brightness(1.04);
+    box-shadow: 0 12px 28px rgba(234, 88, 12, 0.42);
   }
 `;
 
@@ -132,6 +133,21 @@ const SecondaryCta = styled(Link)`
   color: var(--primary, #e0182b);
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(224, 24, 43, 0.25);
+`;
+
+const HelpLink = styled(Link)`
+  display: block;
+  text-align: center;
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: var(--primary, #dc2626);
+  }
 `;
 
 function formatOre(m: number): string {
@@ -193,6 +209,8 @@ export type SupplierChoiceGridProps = {
   headline?: string;
   intro?: string;
   compact?: boolean;
+  /** Én tydelig handling per kort – sekundære knapper skjules */
+  primaryOnly?: boolean;
 };
 
 export function SupplierChoiceGrid({
@@ -203,6 +221,7 @@ export function SupplierChoiceGrid({
   headline = 'Vores samarbejdspartnere',
   intro = 'Vælg den elleverandør, der passer dig — vi hjælper dig videre med sammenligning og gratis skift.',
   compact = false,
+  primaryOnly = false,
 }: SupplierChoiceGridProps) {
   if (!suppliers.length) return null;
 
@@ -251,17 +270,27 @@ export function SupplierChoiceGrid({
                 {partnerHref ? (
                   <>
                     <CtaExternal href={partnerHref} target="_blank" rel="noopener noreferrer">
-                      {ct === 'fastpris'
-                        ? `Fastpris hos ${s.name} (åbner partnerside)`
-                        : `Skift hos ${s.name} (åbner partnerside)`}
+                      {primaryOnly
+                        ? `Vælg ${s.name} – fortsæt til skift`
+                        : ct === 'fastpris'
+                          ? `Fastpris hos ${s.name} (åbner partnerside)`
+                          : `Skift hos ${s.name} (åbner partnerside)`}
                     </CtaExternal>
-                    <SecondaryCta href={compareHref}>Sammenlign elregning med AI</SecondaryCta>
-                    <SecondaryCta href={skiftHref}>Overblik: skift elaftale på Elchef</SecondaryCta>
+                    {primaryOnly ? (
+                      <HelpLink href={compareHref}>Usikker? Sammenlign din regning med AI først</HelpLink>
+                    ) : (
+                      <>
+                        <SecondaryCta href={compareHref}>Sammenlign elregning med AI</SecondaryCta>
+                        <SecondaryCta href={skiftHref}>Overblik: skift elaftale på Elchef</SecondaryCta>
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
-                    <Cta href={compareHref}>Sammenlign og vælg</Cta>
-                    <SecondaryCta href={skiftHref}>Gå til skift af aftale</SecondaryCta>
+                    <Cta href={compareHref}>
+                      {primaryOnly ? `Vælg ${s.name}` : 'Sammenlign og vælg'}
+                    </Cta>
+                    {!primaryOnly && <SecondaryCta href={skiftHref}>Gå til skift af aftale</SecondaryCta>}
                   </>
                 )}
               </CtaRow>

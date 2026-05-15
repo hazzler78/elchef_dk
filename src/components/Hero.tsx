@@ -3,7 +3,6 @@
 
 import styled from 'styled-components';
 import React, { useEffect, useState, useCallback } from 'react';
-import GlassButton from './GlassButton';
 import { withDefaultCtaUtm } from '@/lib/utm';
 
 const HeroSection = styled.section`
@@ -31,35 +30,68 @@ const HeroContent = styled.div`
 const TextContent = styled.div`
   flex: 1;
   max-width: 600px;
-  
+
   h1 {
     font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+
     @media (min-width: 768px) {
-      font-size: 3.5rem;
+      font-size: 3.25rem;
     }
   }
-  
+
   p {
-    font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 2rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 1.75rem;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    max-width: 32rem;
   }
 `;
 
-const ButtonRow = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
+const PrimaryCta = styled.button`
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  
-  @media (min-width: 768px) {
-    justify-content: flex-start;
+  min-width: min(100%, 280px);
+  padding: 1rem 2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1c1917;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  background: var(--cta-gradient);
+  box-shadow: var(--cta-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: 0 16px 40px rgba(234, 88, 12, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const CtaHint = styled.p`
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+`;
+
+const FastprisLink = styled.a`
+  color: #fde68a;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: #fef3c7;
   }
 `;
 
@@ -68,30 +100,23 @@ const VideoWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--glass-shadow-heavy);
-  max-width: 600px;
-  background: rgba(255, 255, 255, 0.1);
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius-lg);
-  }
+  border: 1px solid rgba(255, 255, 255, 0.18);
 `;
 
 const USPList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 1.5rem 0 2rem 0;
-  color: #fff;
-  font-size: 1.1rem;
+  margin: 1.75rem 0 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.05rem;
+
   li {
     display: flex;
     align-items: flex-start;
@@ -121,7 +146,9 @@ export default function Hero() {
         window.localStorage.setItem('hero_variant_expiry_v1', String(expiry));
       }
       setVariant(newVariant);
-    } catch {}
+    } catch {
+      /* no-op */
+    }
   }, []);
 
   useEffect(() => {
@@ -143,50 +170,49 @@ export default function Hero() {
         }
         window.localStorage.setItem(key, String(now));
       }
-    } catch {}
+    } catch {
+      /* no-op */
+    }
   }, [variant]);
 
-  const heroTitle = variant === 'A' ? 'Elchef gør det nemt at vælge den rette elaftale!' : 'Vælg den rette elaftale – uden besvær';
-  const heroSub = variant === 'A' ? 'Vi fremhæver aftaler, der er værd at overveje, og tager os af skiftet for dig.' : 'Hurtigt, gratis og trygt. Vi hjælper dig hele vejen.';
+  const heroTitle =
+    variant === 'A' ? 'Elchef gør det nemt at vælge den rette elaftale!' : 'Vælg den rette elaftale – uden besvær';
+  const heroSub =
+    variant === 'A'
+      ? 'Vi fremhæver aftaler, der er værd at overveje, og tager os af skiftet for dig.'
+      : 'Hurtigt, gratis og trygt. Vi hjælper dig hele vejen.';
 
-  const trackHeroClick = useCallback((target: 'rorligt' | 'fastpris', href: string) => {
+  const goToVariabel = useCallback(() => {
     try {
-      const sessionId = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-      const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-      const withSid = href + (href.includes('?') ? `&sid=${encodeURIComponent(sid)}` : `?sid=${encodeURIComponent(sid)}`);
-      const finalUrl = withDefaultCtaUtm(withSid, 'hero', `variant${variant}`, 'hero-ab');
-      const payload = JSON.stringify({ variant, sessionId, target, href: finalUrl });
+      const sessionId = typeof window !== 'undefined' ? window.localStorage.getItem('invoice_session_id') || '' : '';
+      const sid = sessionId;
+      const href = '/variabel-aftale' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
+      const finalUrl = withDefaultCtaUtm(href, 'hero', `variant${variant}`, 'hero-ab');
+      const payload = JSON.stringify({ variant, sessionId, target: 'rorligt', href: finalUrl });
       const url = '/api/events/hero-click';
       if (navigator.sendBeacon) {
-        const blob = new Blob([payload], { type: 'application/json' });
-        navigator.sendBeacon(url, blob);
+        navigator.sendBeacon(url, new Blob([payload], { type: 'application/json' }));
       } else {
         fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload }).catch(() => {});
       }
 
-      // TikTok ClickButton event (after Cookiebot marketing consent)
       try {
-        const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
         const ttq: any = (window as any).ttq;
+        const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
         if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
-          ttq.track('ClickButton', {
-            content_name: target,
-            content_type: 'button'
-          });
+          ttq.track('ClickButton', { content_name: 'hero_primary_cta', content_type: 'button' });
+          ttq.track('InitiateCheckout', { content_name: 'rorligt_avtal_click' });
           if ((window as any).__ttq_capi) {
-            (window as any).__ttq_capi('ClickButton', { content_name: target, content_type: 'button' });
+            (window as any).__ttq_capi('InitiateCheckout', { content_name: 'rorligt_avtal_click' });
           }
         }
-      } catch { /* no-op */ }
-      // Bara öppna nytt fönster för externa länkar
-      if (href.startsWith('http')) {
-        window.open(finalUrl, '_blank');
+      } catch {
+        /* no-op */
       }
+
+      window.location.href = finalUrl;
     } catch {
-      // Bara öppna nytt fönster för externa länkar
-      if (href.startsWith('http')) {
-        window.open(href, '_blank');
-      }
+      window.location.href = '/variabel-aftale';
     }
   }, [variant]);
 
@@ -197,141 +223,25 @@ export default function Hero() {
           <TextContent>
             <h1>{heroTitle}</h1>
             <p>{heroSub}</p>
-                         <ButtonRow>
-               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
-                                   <div style={{
-                    cursor: 'pointer',
-                    position: 'relative',
-                    zIndex: 10,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                    e.currentTarget.style.filter = 'brightness(1.1)';
-                  }, [])}
-                  onMouseLeave={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.filter = 'brightness(1)';
-                  }, [])}
-                  onClick={() => {
-                    trackHeroClick('rorligt', '/variabel-aftale');
-                    // TikTok InitiateCheckout-style event when user continues to contract flow
-                    try {
-                      const ttq: any = (window as any).ttq;
-                      const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
-                      if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
-                        ttq.track('InitiateCheckout', {
-                          content_name: 'rorligt_avtal_click'
-                        });
-                        if ((window as any).__ttq_capi) {
-                          (window as any).__ttq_capi('InitiateCheckout', { content_name: 'rorligt_avtal_click' });
-                        }
-                      }
-                    } catch { /* no-op */ }
-                    const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-                    const url = '/variabel-aftale' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
-                    window.location.href = url;
-                  }}
-                  >
-                                                                               <GlassButton 
-                       variant="primary" 
-                       size="lg"
-                       background="linear-gradient(135deg, var(--primary), var(--secondary))"
-                       aria-label="Variabel aftale - 0 kr i gebyrer de første 6 mdr. – uden bindingsperiode"
-                       disableScrollEffect={true}
-                       disableHoverEffect={true}
-                     >
-                     Variabel aftale
-                   </GlassButton>
-                 </div>
-                 <div style={{ 
-                  fontSize: '0.9rem', 
-                  color: 'var(--foreground)', 
-                  background: 'rgba(255, 255, 255, 0.95)', 
-                  border: '1px solid rgba(0,0,0,0.06)', 
-                  padding: '0.35rem 0.6rem', 
-                  borderRadius: 9999, 
-                  textAlign: 'center',
-                  backdropFilter: 'blur(8px)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-                  position: 'relative',
-                  zIndex: 10
-                }}>
-                   0 kr i gebyrer de første 6 mdr. – uden bindingsperiode
-                 </div>
-               </div>
-                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', minWidth: 200 }}>
-                                     <div style={{
-                     cursor: 'pointer',
-                     position: 'relative',
-                     zIndex: 10,
-                     transition: 'all 0.3s ease'
-                   }}
-                   onMouseEnter={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-                     e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                     e.currentTarget.style.filter = 'brightness(1.1)';
-                   }, [])}
-                   onMouseLeave={useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                     e.currentTarget.style.filter = 'brightness(1)';
-                   }, [])}
-                   onClick={() => {
-                     trackHeroClick('fastpris', '/fastpris-aftale');
-                      try {
-                        const ttq: any = (window as any).ttq;
-                        const cookiebot: any = (window as any).cookiebot || (window as any).Cookiebot || (window as any).CookieControl;
-                        if (ttq && (!cookiebot || cookiebot?.consent?.marketing)) {
-                          ttq.track('InitiateCheckout', {
-                            content_name: 'fastpris_avtal_click'
-                          });
-                          if ((window as any).__ttq_capi) {
-                            (window as any).__ttq_capi('InitiateCheckout', { content_name: 'fastpris_avtal_click' });
-                          }
-                        }
-                      } catch { /* no-op */ }
-                      const sid = (typeof window !== 'undefined') ? (window.localStorage.getItem('invoice_session_id') || '') : '';
-                      const url = '/fastpris-aftale' + (sid ? `?sid=${encodeURIComponent(sid)}` : '');
-                      window.location.href = url;
-                    }}
-                   >
-                                                                                                                                                                       <GlassButton 
-                         variant="secondary" 
-                         size="lg"
-                         background="linear-gradient(135deg, var(--secondary), var(--primary))"
-                         aria-label="Fastpris - Fastpris med prisgaranti"
-                         disableScrollEffect={true}
-                         disableHoverEffect={true}
-                       >
-                      Fastpris
-                    </GlassButton>
-                  </div>
-                 <div style={{ 
-                  fontSize: '0.9rem', 
-                  color: 'var(--foreground)', 
-                  background: 'rgba(255, 255, 255, 0.95)', 
-                  border: '1px solid rgba(0,0,0,0.06)', 
-                  padding: '0.35rem 0.6rem', 
-                  borderRadius: 9999, 
-                  textAlign: 'center',
-                  backdropFilter: 'blur(8px)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-                  position: 'relative',
-                  zIndex: 10
-                }}>
-                   Fastpris med prisgaranti
-                 </div>
-               </div>
-            </ButtonRow>
+            <div>
+              <PrimaryCta type="button" onClick={goToVariabel} aria-label="Kom i gang – vælg variabel elaftale">
+                Kom i gang – vælg elaftale
+              </PrimaryCta>
+              <CtaHint>
+                Foretrækker du fast pris?{' '}
+                <FastprisLink href="/fastpris-aftale">Se fastprisaftaler her</FastprisLink>
+              </CtaHint>
+            </div>
             <USPList>
-              <li>✔️ Vi fremhæver kun elaftaler, der er værd at overveje.</li>
-              <li>✔️ Gratis skift – din gamle aftale opsiges automatisk.</li>
-              <li>✔️ Fuld valgfrihed – vælg mellem variabel elpris eller fastpris med aftalt periode.</li>
+              <li>✔️ Gratis skift – vi opsiger din gamle aftale</li>
+              <li>✔️ Klare priser uden skjulte gebyrer</li>
+              <li>✔️ Du vælger variabel eller fastpris, når du er klar</li>
             </USPList>
           </TextContent>
           <VideoWrapper>
-            <img 
+            <img
               src="/grisen.png"
-              alt="Grisleif - Elchef maskot"
+              alt="Grisleif – Elchef maskot"
               style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
             />
           </VideoWrapper>
@@ -339,4 +249,4 @@ export default function Hero() {
       </div>
     </HeroSection>
   );
-} 
+}

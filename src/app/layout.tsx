@@ -80,7 +80,7 @@ export default function RootLayout({
             "logo": "https://elchef.dk/logo.png",
             "contactPoint": [{
               "@type": "ContactPoint",
-              "telephone": "+45-XX-XX-XX-XX",
+              "email": "info@elchef.dk",
               "contactType": "customer service",
               "areaServed": "DK",
               "availableLanguage": ["Danish", "English"]

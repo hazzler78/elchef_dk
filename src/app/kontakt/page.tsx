@@ -40,39 +40,22 @@ const Lead = styled.p`
   text-shadow: var(--text-shadow);
 `;
 
-const Phone = styled.div`
-  margin-top: 1rem;
-  font-size: 1.1rem;
+const EmailLine = styled.p`
+  margin: 0.5rem 0 0;
+  font-size: 1.05rem;
   color: white;
   font-weight: 600;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
   text-shadow: var(--text-shadow);
-`;
 
-const PhoneNumber = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
+  a {
+    color: #fde68a;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 
-const PhoneLink = styled.a`
-  color: var(--primary);
-  text-decoration: underline;
-  font-weight: 700;
-  transition: color var(--transition-normal) ease;
-  
-  &:hover {
-    color: var(--primary-dark);
+    &:hover {
+      color: #fef3c7;
+    }
   }
-`;
-
-const OpeningHours = styled.div`
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 400;
 `;
 
 export default function Kontakt() {
@@ -82,15 +65,12 @@ export default function Kontakt() {
         <ContactInfo>
           <Title>Kontakt os</Title>
           <Lead>
-            Har du spørgsmål eller vil du i kontakt med os? 
-            Udfyld formularen nedenfor eller ring til os direkte, så vender vi tilbage hurtigst muligt.
+            Har du spørgsmål eller vil du i kontakt med os? Udfyld formularen nedenfor, så vender vi tilbage hurtigst
+            muligt.
           </Lead>
-          <Phone>
-            <PhoneNumber>
-              Ring til os direkte: <PhoneLink href="tel:+4512345678">+45 12 34 56 78</PhoneLink>
-            </PhoneNumber>
-            <OpeningHours>09:00-13:00 Hverdage</OpeningHours>
-          </Phone>
+          <EmailLine>
+            E-mail: <a href="mailto:info@elchef.dk">info@elchef.dk</a>
+          </EmailLine>
         </ContactInfo>
         
         <ContactForm />

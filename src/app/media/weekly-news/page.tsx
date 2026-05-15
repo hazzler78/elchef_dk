@@ -244,7 +244,7 @@ export default function WeeklyNews() {
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />
-                <div><strong>Personlig hjælp</strong> – efterlad dit telefonnummer, så ringer vi op og hjælper.</div>
+                <div><strong>Personlig hjælp</strong> – skriv til os via kontaktformularen, så hjælper vi dig videre.</div>
               </CustomListItem>
               <CustomListItem>
                 <CheckIcon />

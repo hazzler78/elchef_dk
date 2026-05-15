@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { withDefaultCtaUtm } from '@/lib/utm';
-import { FaPhone, FaEnvelope, FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaEnvelope, FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 const FooterWrapper = styled.div`
   background: var(--gray-700);
@@ -98,12 +98,6 @@ export default function Footer() {
               Nemt, trygt og helt gratis.
             </p>
             <ContactInfo>
-              <p>
-                <FaPhone /> +45 XX XX XX XX
-                <span style={{ fontSize: '0.8rem', color: 'var(--gray-400)', marginLeft: '0.5rem' }}>
-                  09:00-13:00 Hverdage
-                </span>
-              </p>
               <p>
                 <FaEnvelope /> info@elchef.dk
               </p>
